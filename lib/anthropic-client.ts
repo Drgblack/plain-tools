@@ -65,12 +65,17 @@ export async function summarizeTextWithClaude(
     model?: string
     maxTokens?: number
     retries?: number
+    instruction?: string
   } = {}
 ) {
   const client = getClient()
   const model = options.model || DEFAULT_MODEL
   const maxTokens = Math.max(128, Math.min(2048, options.maxTokens ?? 600))
   const retries = Math.max(0, Math.min(5, options.retries ?? MAX_RETRIES))
+  const instruction = options.instruction?.trim()
+  const instructionLine = instruction
+    ? `\nAdditional instruction from user: ${instruction}\n`
+    : "\n"
 
   let attempt = 0
   while (attempt <= retries) {
@@ -84,7 +89,7 @@ export async function summarizeTextWithClaude(
         messages: [
           {
             role: "user",
-            content: `Summarise the following PDF text in bullet points with a short executive summary.\n\n${text}`,
+            content: `Summarise the following PDF text in bullet points with a short executive summary.${instructionLine}\n${text}`,
           },
         ],
       })

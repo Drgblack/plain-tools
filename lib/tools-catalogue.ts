@@ -151,11 +151,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-irreversible-redactor",
     name: "Plain Irreversible Redactor",
-    slug: "plain-irreversible-redactor",
+    slug: "redact-pdf",
     category: "Security & Privacy",
     description: "Burn in redaction regions and rebuild pages for irreversible removal.",
     icon: "ShieldAlert",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Irreversible Redactor")
       const regions = options?.redactionRegions
@@ -201,11 +201,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-privacy-risk-scanner",
     name: "Plain Privacy Risk Scanner",
-    slug: "plain-privacy-risk-scanner",
+    slug: "privacy-scan",
     category: "Security & Privacy",
     description: "Scan for PII risk patterns and generate redaction-ready annotations.",
     icon: "SearchCheck",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Privacy Risk Scanner")
       const { plainPrivacyRiskScanner } = await import("./pdf-privacy-scanner")
@@ -259,11 +259,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-offline-ocr-pipeline",
     name: "Plain Offline OCR Pipeline",
-    slug: "plain-offline-ocr-pipeline",
+    slug: "offline-ocr",
     category: "Performance & Edit",
     description: "Generate searchable PDFs from image-based pages fully locally.",
     icon: "ScanText",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Offline OCR Pipeline")
       const { plainOfflineOCR } = await import("./pdf-batch-engine")
@@ -273,11 +273,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-real-time-compression-previewer",
     name: "Plain Real-Time Compression Previewer",
-    slug: "plain-real-time-compression-previewer",
+    slug: "compression-preview",
     category: "Performance & Edit",
     description: "Render side-by-side previews and produce final compressed output.",
     icon: "Minimize2",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Real-Time Compression Previewer")
       const level = typeof options?.level === "number" ? options.level : 60
@@ -293,16 +293,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "AI Assistant",
     description: "Extract text locally and request a Claude summary with opt-in.",
     icon: "Sparkles",
-    available: false,
+    available: true,
   },
   {
-    id: "qa-on-pdf",
+    id: "pdf-qa",
     name: "Q&A on PDF",
-    slug: "qa-on-pdf",
+    slug: "pdf-qa",
     category: "AI Assistant",
     description: "Ask focused questions about extracted PDF text using Claude.",
     icon: "MessageSquare",
-    available: false,
+    available: true,
   },
   {
     id: "suggest-edits",
@@ -311,10 +311,9 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "AI Assistant",
     description: "Get rewrite suggestions for selected PDF text sections via Claude.",
     icon: "PencilLine",
-    available: false,
+    available: true,
   },
 ]
 
 export const getToolBySlug = (slug: string): ToolDefinition | undefined =>
   TOOL_CATALOGUE.find((tool) => tool.slug === slug)
-

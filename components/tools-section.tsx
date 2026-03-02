@@ -33,12 +33,13 @@ import { TiltCard } from "@/components/ui/tilt-card"
 import { TOOL_CATALOGUE, type ToolCategory, type ToolDefinition } from "@/lib/tools-catalogue"
 
 type CategoryConfig = {
-  id: ToolCategory
+  id: "All" | ToolCategory
   label: string
   icon: LucideIcon
 }
 
 const CATEGORY_CONFIG: CategoryConfig[] = [
+  { id: "All", label: "All", icon: Layers },
   { id: "Core", label: "Core", icon: Layers },
   { id: "Security & Privacy", label: "Security & Privacy", icon: ShieldAlert },
   { id: "Performance & Edit", label: "Performance & Edit", icon: LayoutGrid },
@@ -102,7 +103,7 @@ const getSystemBadge = (tool: ToolDefinition) => {
 }
 
 export function ToolsSection() {
-  const [activeCategory, setActiveCategory] = useState<ToolCategory>("Core")
+  const [activeCategory, setActiveCategory] = useState<"All" | ToolCategory>("All")
   const [searchQuery, setSearchQuery] = useState("")
 
   const showingSearchResults = searchQuery.trim().length > 0
@@ -116,6 +117,10 @@ export function ToolsSection() {
           tool.description.toLowerCase().includes(query) ||
           tool.slug.toLowerCase().includes(query)
       )
+    }
+
+    if (activeCategory === "All") {
+      return TOOL_CATALOGUE
     }
 
     return TOOL_CATALOGUE.filter((tool) => tool.category === activeCategory)
@@ -291,4 +296,3 @@ export function ToolsSection() {
     </section>
   )
 }
-

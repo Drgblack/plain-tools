@@ -30,6 +30,8 @@ body {
   min-height: 40px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 /* Hide Google Translate branding for cleaner integration */
@@ -46,6 +48,24 @@ body {
 
 .goog-te-gadget-simple:hover {
   border-color: #0070f3 !important;
+}
+
+#google_translate_element .goog-te-gadget {
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-size: 12px !important;
+}
+
+#google_translate_element .goog-te-combo {
+  background-color: #111 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid #333 !important;
+  border-radius: 6px !important;
+  padding: 5px 8px !important;
+  outline: none !important;
+}
+
+#google_translate_element .goog-te-combo:hover {
+  border-color: rgba(0, 112, 243, 0.8) !important;
 }
 
 /* Prevent translation of brand terms */

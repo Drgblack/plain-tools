@@ -36,6 +36,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const text = typeof body?.text === "string" ? body.text.trim() : ""
+    const summaryInstruction =
+      typeof body?.summaryInstruction === "string"
+        ? body.summaryInstruction.trim().slice(0, 500)
+        : ""
 
     if (!text) {
       return NextResponse.json(
@@ -48,6 +52,7 @@ export async function POST(request: NextRequest) {
     const summary = await summarizeTextWithClaude(truncatedText, {
       model: process.env.ANTHROPIC_MODEL,
       maxTokens: 700,
+      instruction: summaryInstruction || undefined,
     })
 
     return NextResponse.json(

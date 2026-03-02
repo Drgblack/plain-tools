@@ -11,6 +11,7 @@ export interface SummarizePdfOptions {
   maxChars?: number
   retries?: number
   allowServerProcessing?: boolean
+  summaryInstruction?: string
   onProgress?: SummariseProgress
 }
 
@@ -338,6 +339,7 @@ export async function summarizePdf(
   const allowServerProcessing = options.allowServerProcessing ?? false
   const maxChars = Math.max(2000, Math.min(200_000, options.maxChars ?? 80_000))
   const retries = Math.max(0, Math.min(5, options.retries ?? 2))
+  const summaryInstruction = options.summaryInstruction?.trim()
 
   if (!allowServerProcessing) {
     throw new Error(
@@ -365,6 +367,7 @@ export async function summarizePdf(
       body: JSON.stringify({
         fileName: file.name,
         text: extractedText,
+        summaryInstruction,
       }),
     })
 

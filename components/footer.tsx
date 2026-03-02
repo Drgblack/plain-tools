@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { GoogleTranslateWidget } from "@/components/google-translate-widget"
 
 // Status indicator component
 function StatusIndicator({ 
@@ -195,6 +196,10 @@ export function Footer() {
               ))}
             </ul>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <GoogleTranslateWidget />
         </div>
       </div>
 

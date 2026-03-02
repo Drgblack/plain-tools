@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { SupportForm } from "@/components/support-form"
 import { 
   ChevronDown, 
   ArrowLeft, 
@@ -401,6 +402,8 @@ export default function SupportPage() {
                 </span>
               </a>
             </div>
+
+            <SupportForm />
           </div>
         </section>
 

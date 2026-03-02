@@ -96,8 +96,8 @@ export function Header() {
           <div className="ms-3 hidden lg:block">
             <PrivacyShield />
           </div>
-          {/* Language Selector - Ready for Google Translate integration */}
-          <div className="ms-3 hidden md:block" id="google_translate_element">
+          {/* Language Selector */}
+          <div className="ms-3 hidden md:block">
             <LanguageSelector />
           </div>
         </nav>
