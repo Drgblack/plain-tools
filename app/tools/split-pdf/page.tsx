@@ -2,13 +2,14 @@
 
 import { useState, useCallback, useRef } from "react"
 import { PDFDocument } from "pdf-lib"
-import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown } from "lucide-react"
+import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { ShareButton } from "@/components/share-button"
+import { splitFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -47,6 +48,9 @@ export default function SplitPDFPage() {
   const [pageCount, setPageCount] = useState<number | null>(null)
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [processingStatus, setProcessingStatus] = useState("Organising split output locally.")
+  const [hardwareAccelerationActive, setHardwareAccelerationActive] = useState(false)
   const [splitMode, setSplitMode] = useState<SplitMode>("extract")
   const [selectedPages, setSelectedPages] = useState<number[]>([])
   const [pageRanges, setPageRanges] = useState("")
@@ -143,74 +147,108 @@ export default function SplitPDFPage() {
     if (!file || !pageCount || !isValidInput()) return
 
     setIsProcessing(true)
+    setProgress(0)
+    setProcessingStatus("Initialising local split engine.")
     const newResults: SplitResult[] = []
 
     try {
-      const arrayBuffer = await file.arrayBuffer()
-      const sourcePdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
-      const baseName = file.name.replace(/\.pdf$/i, "")
+      const shouldAccelerate = shouldUseParallelBatchProcessing([file])
+      setHardwareAccelerationActive(shouldAccelerate)
 
-      if (splitMode === "extract") {
-        // Extract selected pages into one PDF
-        const newPdf = await PDFDocument.create()
-        const pages = await newPdf.copyPages(sourcePdf, selectedPages.map(p => p - 1))
-        pages.forEach(page => newPdf.addPage(page))
-        
-        const pdfBytes = await newPdf.save()
-        const blob = new Blob([pdfBytes], { type: "application/pdf" })
-        const url = URL.createObjectURL(blob)
-        
-        const pageRangeLabel = selectedPages.length === 1 
-          ? `Page ${selectedPages[0]}`
-          : `Pages ${selectedPages[0]}-${selectedPages[selectedPages.length - 1]}`
-        
-        newResults.push({
-          name: `${baseName}_pages_${selectedPages.join("-")}.pdf`,
-          url,
-          pageCount: selectedPages.length,
-          pageRange: pageRangeLabel
+      if (shouldAccelerate) {
+        setProcessingStatus("Accelerating split with parallel local workers.")
+        const rangesForWorker = splitMode === "ranges" ? parsePageRanges(pageRanges, pageCount) : undefined
+        const outputs = await splitFilesWithBatchEngine(
+          [file],
+          {
+            mode: splitMode,
+            selectedPages,
+            ranges: rangesForWorker,
+          },
+          (nextProgress, status) => {
+            setProgress(nextProgress)
+            setProcessingStatus(status)
+          }
+        )
+
+        outputs.forEach((output) => {
+          const blob = new Blob([output.bytes], { type: "application/pdf" })
+          const url = URL.createObjectURL(blob)
+          newResults.push({
+            name: output.name,
+            url,
+            pageCount: output.pageCount,
+            pageRange: output.pageRange,
+          })
         })
-      } else if (splitMode === "ranges") {
-        // Split by page ranges
-        const ranges = parsePageRanges(pageRanges, pageCount)
-        
-        for (let i = 0; i < ranges.length; i++) {
-          const range = ranges[i]
+      } else {
+        const arrayBuffer = await file.arrayBuffer()
+        const sourcePdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
+        const baseName = file.name.replace(/\.pdf$/i, "")
+
+        if (splitMode === "extract") {
           const newPdf = await PDFDocument.create()
-          const pages = await newPdf.copyPages(sourcePdf, range.map(p => p - 1))
+          const pages = await newPdf.copyPages(sourcePdf, selectedPages.map(p => p - 1))
           pages.forEach(page => newPdf.addPage(page))
           
           const pdfBytes = await newPdf.save()
           const blob = new Blob([pdfBytes], { type: "application/pdf" })
           const url = URL.createObjectURL(blob)
           
-          const rangeLabel = range.length === 1 ? `page_${range[0]}` : `pages_${range[0]}-${range[range.length - 1]}`
-          const pageRangeDisplay = range.length === 1 ? `Page ${range[0]}` : `Pages ${range[0]}-${range[range.length - 1]}`
+          const pageRangeLabel = selectedPages.length === 1 
+            ? `Page ${selectedPages[0]}`
+            : `Pages ${selectedPages[0]}-${selectedPages[selectedPages.length - 1]}`
           
           newResults.push({
-            name: `${baseName}_${rangeLabel}.pdf`,
+            name: `${baseName}_pages_${selectedPages.join("-")}.pdf`,
             url,
-            pageCount: range.length,
-            pageRange: pageRangeDisplay
+            pageCount: selectedPages.length,
+            pageRange: pageRangeLabel
           })
-        }
-      } else if (splitMode === "individual") {
-        // Split into individual pages
-        for (let i = 0; i < pageCount; i++) {
-          const newPdf = await PDFDocument.create()
-          const [page] = await newPdf.copyPages(sourcePdf, [i])
-          newPdf.addPage(page)
+        } else if (splitMode === "ranges") {
+          const ranges = parsePageRanges(pageRanges, pageCount)
           
-          const pdfBytes = await newPdf.save()
-          const blob = new Blob([pdfBytes], { type: "application/pdf" })
-          const url = URL.createObjectURL(blob)
-          
-          newResults.push({
-            name: `${baseName}_page_${i + 1}.pdf`,
-            url,
-            pageCount: 1,
-            pageRange: `Page ${i + 1}`
-          })
+          for (let i = 0; i < ranges.length; i++) {
+            const range = ranges[i]
+            const newPdf = await PDFDocument.create()
+            const pages = await newPdf.copyPages(sourcePdf, range.map(p => p - 1))
+            pages.forEach(page => newPdf.addPage(page))
+            
+            const pdfBytes = await newPdf.save()
+            const blob = new Blob([pdfBytes], { type: "application/pdf" })
+            const url = URL.createObjectURL(blob)
+            
+            const rangeLabel = range.length === 1 ? `page_${range[0]}` : `pages_${range[0]}-${range[range.length - 1]}`
+            const pageRangeDisplay = range.length === 1 ? `Page ${range[0]}` : `Pages ${range[0]}-${range[range.length - 1]}`
+            
+            newResults.push({
+              name: `${baseName}_${rangeLabel}.pdf`,
+              url,
+              pageCount: range.length,
+              pageRange: pageRangeDisplay
+            })
+            setProgress(Math.round(((i + 1) / ranges.length) * 100))
+            setProcessingStatus(`Organising split range ${i + 1} of ${ranges.length}.`)
+          }
+        } else if (splitMode === "individual") {
+          for (let i = 0; i < pageCount; i++) {
+            const newPdf = await PDFDocument.create()
+            const [page] = await newPdf.copyPages(sourcePdf, [i])
+            newPdf.addPage(page)
+            
+            const pdfBytes = await newPdf.save()
+            const blob = new Blob([pdfBytes], { type: "application/pdf" })
+            const url = URL.createObjectURL(blob)
+            
+            newResults.push({
+              name: `${baseName}_page_${i + 1}.pdf`,
+              url,
+              pageCount: 1,
+              pageRange: `Page ${i + 1}`
+            })
+            setProgress(Math.round(((i + 1) / pageCount) * 100))
+            setProcessingStatus(`Organising page ${i + 1} of ${pageCount}.`)
+          }
         }
       }
 
@@ -230,6 +268,9 @@ export default function SplitPDFPage() {
     setPageRanges("")
     setResults([])
     setSplitMode("extract")
+    setProgress(0)
+    setProcessingStatus("Organising split output locally.")
+    setHardwareAccelerationActive(false)
   }
 
   const removeFile = () => {
@@ -237,6 +278,9 @@ export default function SplitPDFPage() {
     setPageCount(null)
     setSelectedPages([])
     setPageRanges("")
+    setProgress(0)
+    setProcessingStatus("Organising split output locally.")
+    setHardwareAccelerationActive(false)
   }
 
   return (
@@ -477,6 +521,14 @@ export default function SplitPDFPage() {
             {isProcessing && (
               <div className="mt-8 rounded-2xl bg-[oklch(0.14_0.005_250)] p-12 ring-1 ring-white/[0.06]">
                 <div className="flex flex-col items-center text-center">
+                  {hardwareAccelerationActive && (
+                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#0070f3]/35 bg-[#0070f3]/12 px-3 py-1.5">
+                      <Zap className="h-3.5 w-3.5 text-[#0070f3]" strokeWidth={2} />
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#7ab8ff]">
+                        Hardware Acceleration: Active
+                      </span>
+                    </div>
+                  )}
                   <div className="relative mb-8">
                     <div className="absolute -inset-4 rounded-2xl bg-accent/[0.04] blur-xl processing-pulse" />
                     <div className="relative flex h-16 w-16 items-center justify-center rounded-xl bg-accent/10 ring-1 ring-accent/20">
@@ -484,10 +536,13 @@ export default function SplitPDFPage() {
                     </div>
                   </div>
                   <p className="text-[16px] font-medium text-foreground">
-                    Processing locally in your browser...
+                    {processingStatus}
                   </p>
                   <p className="mt-3 max-w-xs text-[14px] leading-relaxed text-muted-foreground">
                     Your files remain on this device. Nothing is being uploaded.
+                  </p>
+                  <p className="mt-2 text-[12px] text-muted-foreground/70">
+                    {progress}% complete
                   </p>
                 </div>
               </div>

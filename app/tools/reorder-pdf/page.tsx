@@ -1,30 +1,13 @@
 "use client"
 
 import { useState, useCallback, useRef, useEffect } from "react"
-import { PDFDocument } from "pdf-lib"
-import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw } from "lucide-react"
+import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
-
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
-
-const loadPdfJs = async (): Promise<PdfJsModule> => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjsLib) => {
-      if (typeof window !== "undefined") {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`
-      }
-      return pdfjsLib
-    })
-  }
-
-  return pdfJsModulePromise
-}
+import { generatePagePreviews, reorderPages } from "@/lib/page-organiser-engine"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -66,6 +49,8 @@ export default function ReorderPDFPage() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isLoadingThumbnails, setIsLoadingThumbnails] = useState(false)
+  const [thumbnailStatus, setThumbnailStatus] = useState("Initialising organiser.")
+  const [hardwareAccelerationActive, setHardwareAccelerationActive] = useState(false)
   const [pages, setPages] = useState<PageThumbnail[]>([])
   const [pageOrder, setPageOrder] = useState<number[]>([])
   const [result, setResult] = useState<ReorderResult | null>(null)
@@ -73,41 +58,23 @@ export default function ReorderPDFPage() {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
   const [showOptions, setShowOptions] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const pdfDataRef = useRef<ArrayBuffer | null>(null)
 
-  const generateThumbnails = async (arrayBuffer: ArrayBuffer, numPages: number) => {
+  const generateThumbnails = async (pdfFile: File) => {
     setIsLoadingThumbnails(true)
+    setThumbnailStatus("Initialising organiser.")
     try {
-      const pdfjsLib = await loadPdfJs()
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
-      const thumbnails: PageThumbnail[] = []
+      const { thumbnails, pageCount: count, webgpuActive } = await generatePagePreviews(pdfFile, {
+        thumbnailWidth: 170,
+        onProgress: (_, status) => setThumbnailStatus(status),
+      })
 
-      for (let i = 1; i <= numPages; i++) {
-        const page = await pdf.getPage(i)
-        const viewport = page.getViewport({ scale: 0.3 })
-        
-        const canvas = document.createElement("canvas")
-        const context = canvas.getContext("2d")
-        if (!context) continue
-
-        canvas.height = viewport.height
-        canvas.width = viewport.width
-
-        await page.render({
-          canvasContext: context,
-          viewport: viewport,
-        }).promise
-
-        thumbnails.push({
-          originalIndex: i - 1,
-          dataUrl: canvas.toDataURL("image/jpeg", 0.7),
-        })
-      }
-
+      setPageCount(count)
+      setHardwareAccelerationActive(webgpuActive)
       setPages(thumbnails)
-      setPageOrder(thumbnails.map((_, i) => i))
+      setPageOrder(thumbnails.map((_, index) => index))
     } catch (error) {
-      console.error("Error generating thumbnails:", error)
+      console.error("Error organising page previews:", error)
+      setThumbnailStatus("Preview generation failed. Please try another file.")
     } finally {
       setIsLoadingThumbnails(false)
     }
@@ -117,17 +84,12 @@ export default function ReorderPDFPage() {
     if (newFile.type !== "application/pdf") return
     
     try {
-      const arrayBuffer = await newFile.arrayBuffer()
-      pdfDataRef.current = arrayBuffer
-      
-      const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
-      const count = pdf.getPageCount()
-      
       setFile(newFile)
-      setPageCount(count)
+      setPageCount(null)
       setResult(null)
+      setHardwareAccelerationActive(false)
       
-      await generateThumbnails(arrayBuffer, count)
+      await generateThumbnails(newFile)
     } catch (error) {
       console.error("Error loading PDF:", error)
     }
@@ -160,7 +122,8 @@ export default function ReorderPDFPage() {
     setPages([])
     setPageOrder([])
     setResult(null)
-    pdfDataRef.current = null
+    setHardwareAccelerationActive(false)
+    setThumbnailStatus("Initialising organiser.")
   }
 
   const reset = () => {
@@ -211,21 +174,12 @@ export default function ReorderPDFPage() {
   }
 
   const handleReorder = async () => {
-    if (!file || !pdfDataRef.current || !hasOrderChanged) return
+    if (!file || !hasOrderChanged) return
 
     setIsProcessing(true)
     try {
-      const sourcePdf = await PDFDocument.load(pdfDataRef.current, { ignoreEncryption: true })
-      const newPdf = await PDFDocument.create()
-
-      // Copy pages in new order
-      for (const orderIndex of pageOrder) {
-        const originalPageIndex = pages[orderIndex].originalIndex
-        const [copiedPage] = await newPdf.copyPages(sourcePdf, [originalPageIndex])
-        newPdf.addPage(copiedPage)
-      }
-
-      const pdfBytes = await newPdf.save()
+      const newIndexOrder = pageOrder.map((orderIndex) => pages[orderIndex].originalIndex)
+      const pdfBytes = await reorderPages(file, newIndexOrder)
       const blob = new Blob([pdfBytes], { type: "application/pdf" })
       const url = URL.createObjectURL(blob)
 
@@ -361,11 +315,20 @@ export default function ReorderPDFPage() {
                       </button>
                     </div>
 
+                    {hardwareAccelerationActive && (
+                      <div className="inline-flex items-center gap-2 rounded-full border border-[#0070f3]/35 bg-[#0070f3]/12 px-3 py-1.5">
+                        <Zap className="h-3.5 w-3.5 text-[#0070f3]" strokeWidth={2} />
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#7ab8ff]">
+                          Hardware Acceleration: Active
+                        </span>
+                      </div>
+                    )}
+
                     {/* Loading thumbnails */}
                     {isLoadingThumbnails && (
                       <div className="py-12 text-center">
                         <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
-                        <p className="mt-4 text-[14px] text-muted-foreground">Loading pages...</p>
+                        <p className="mt-4 text-[14px] text-muted-foreground">{thumbnailStatus}</p>
                       </div>
                     )}
 
@@ -476,7 +439,7 @@ export default function ReorderPDFPage() {
                         {isProcessing ? (
                           <span className="flex items-center gap-2">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-accent-foreground/30 border-t-accent-foreground" />
-                            Processing...
+                            Organising pages locally...
                           </span>
                         ) : !hasOrderChanged ? (
                           "Reorder pages to continue"

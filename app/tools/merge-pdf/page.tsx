@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react"
 import { PDFDocument } from "pdf-lib"
-import { GripVertical, X, FileText, Download, Plus, ShieldCheck, CheckCircle2 } from "lucide-react"
+import { GripVertical, X, FileText, Download, Plus, ShieldCheck, CheckCircle2, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer"
 import { ShareButton } from "@/components/share-button"
 import { PrivacyAudit } from "@/components/privacy-audit"
 import { Button } from "@/components/ui/button"
+import { mergeFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -46,6 +47,8 @@ export default function MergePDFPage() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [processingStatus, setProcessingStatus] = useState("Organising files locally.")
+  const [hardwareAccelerationActive, setHardwareAccelerationActive] = useState(false)
   const [mergedPdfUrl, setMergedPdfUrl] = useState<string | null>(null)
   const [processingTime, setProcessingTime] = useState(0)
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -130,24 +133,42 @@ const mergePDFs = async () => {
   const startTime = performance.now()
   setIsProcessing(true)
   setProgress(0)
+  setProcessingStatus("Initialising local merge engine.")
   
   try {
-  const mergedPdf = await PDFDocument.create()
-      const totalFiles = files.length
+      const sourceFiles = files.map((entry) => entry.file)
+      const shouldAccelerate = shouldUseParallelBatchProcessing(sourceFiles)
+      setHardwareAccelerationActive(shouldAccelerate)
+      setProcessingStatus(
+        shouldAccelerate
+          ? "Accelerating merge with parallel local workers."
+          : "Organising merge locally in your browser."
+      )
 
-      for (let i = 0; i < files.length; i++) {
-        const arrayBuffer = await files[i].file.arrayBuffer()
-        const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
-        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
-        pages.forEach((page) => mergedPdf.addPage(page))
-        setProgress(Math.round(((i + 1) / totalFiles) * 100))
-      }
+      const mergedPdfBytes = shouldAccelerate
+        ? await mergeFilesWithBatchEngine(sourceFiles, (nextProgress, status) => {
+            setProgress(nextProgress)
+            setProcessingStatus(status)
+          })
+        : await (async () => {
+            const mergedPdf = await PDFDocument.create()
+            for (let i = 0; i < sourceFiles.length; i++) {
+              const arrayBuffer = await sourceFiles[i].arrayBuffer()
+              const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
+              const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+              pages.forEach((page) => mergedPdf.addPage(page))
+              const nextProgress = Math.round(((i + 1) / sourceFiles.length) * 100)
+              setProgress(nextProgress)
+              setProcessingStatus(`Organising merge locally: file ${i + 1} of ${sourceFiles.length}.`)
+            }
 
-  const mergedPdfBytes = await mergedPdf.save()
-  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" })
-  const url = URL.createObjectURL(blob)
-  setMergedPdfUrl(url)
-  setProcessingTime(performance.now() - startTime)
+            return await mergedPdf.save({ useObjectStreams: true })
+          })()
+
+      const blob = new Blob([mergedPdfBytes], { type: "application/pdf" })
+      const url = URL.createObjectURL(blob)
+      setMergedPdfUrl(url)
+      setProcessingTime(performance.now() - startTime)
   } catch (error) {
       console.error("Error merging PDFs:", error)
     } finally {
@@ -162,6 +183,8 @@ const mergePDFs = async () => {
     setFiles([])
     setMergedPdfUrl(null)
     setProgress(0)
+    setProcessingStatus("Organising files locally.")
+    setHardwareAccelerationActive(false)
   }
 
   return (
@@ -333,6 +356,14 @@ const mergePDFs = async () => {
             {isProcessing && (
               <div className="mt-8 rounded-2xl bg-[oklch(0.14_0.005_250)] p-12 ring-1 ring-white/[0.06]">
                 <div className="flex flex-col items-center text-center">
+                  {hardwareAccelerationActive && (
+                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#0070f3]/35 bg-[#0070f3]/12 px-3 py-1.5">
+                      <Zap className="h-3.5 w-3.5 text-[#0070f3]" strokeWidth={2} />
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#7ab8ff]">
+                        Hardware Acceleration: Active
+                      </span>
+                    </div>
+                  )}
                   {/* Subtle breathing indicator */}
                   <div className="relative mb-8">
                     <div className="absolute -inset-4 rounded-2xl bg-accent/[0.04] blur-xl processing-pulse" />
@@ -341,10 +372,13 @@ const mergePDFs = async () => {
                     </div>
                   </div>
                   <p className="text-[16px] font-medium text-foreground">
-                    Processing locally in your browser...
+                    {processingStatus}
                   </p>
                   <p className="mt-3 max-w-xs text-[14px] leading-relaxed text-muted-foreground">
                     Your files remain on this device. Nothing is being uploaded.
+                  </p>
+                  <p className="mt-2 text-[12px] text-muted-foreground/70">
+                    {progress}% complete
                   </p>
                 </div>
               </div>
