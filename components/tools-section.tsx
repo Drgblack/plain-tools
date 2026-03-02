@@ -5,13 +5,14 @@ import Link from "next/link"
 import { 
   Merge, Split, Minimize2, ArrowUpDown, FileOutput, FileType, ArrowRight, 
   Search, Lock, Star, RefreshCw, FileText, Table, Image, Globe,
-  ShieldAlert, Unlock, Stamp, ScanText, Binary, Trash2,
+  ShieldAlert, Unlock, Stamp, ScanText, Binary, Trash2, Zap, FileSearch, PenTool, LayoutGrid,
   MessageSquare, Sparkles, Layers, LucideIcon
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { TiltCard } from "@/components/ui/tilt-card"
 
-type ToolCategory = "popular" | "convert" | "security" | "ai"
+type ToolCategory = "popular" | "convert" | "security" | "edit" | "ai"
+type ToolStatus = "Soon" | "New" | "Beta"
 
 interface Tool {
   icon: LucideIcon
@@ -22,12 +23,15 @@ interface Tool {
   category: ToolCategory
   isAI?: boolean
   aiNote?: string
+  status?: ToolStatus
+  badge?: string
 }
 
 const categories = [
   { id: "popular" as const, label: "Popular", icon: Star },
   { id: "convert" as const, label: "Convert", icon: RefreshCw },
-  { id: "security" as const, label: "Security & Edit", icon: Lock },
+  { id: "security" as const, label: "Security & Privacy", icon: Lock },
+  { id: "edit" as const, label: "Performance & Edit", icon: Binary },
   { id: "ai" as const, label: "AI Labs", icon: Sparkles },
 ]
 
@@ -86,7 +90,7 @@ const tools: Tool[] = [
   {
     icon: FileText,
     title: "PDF to Word",
-    description: "Convert PDF documents to editable Word files",
+    description: "Convert documents to editable formats without cloud uploads.",
     href: "/tools/pdf-to-word",
     available: false,
     category: "convert",
@@ -102,7 +106,7 @@ const tools: Tool[] = [
   {
     icon: Image,
     title: "Image to PDF",
-    description: "Convert JPG, PNG and other images to PDF",
+    description: "Transform photos and scans into professional PDF documents.",
     href: "/tools/image-to-pdf",
     available: false,
     category: "convert",
@@ -132,11 +136,47 @@ const tools: Tool[] = [
     category: "convert",
   },
   
-  // Security & Edit tools
+  // Security & Privacy tools
+  {
+    icon: FileSearch,
+    title: "Plain Metadata Purge",
+    description: "Permanently strip XMP, PDF, and embedded metadata with a local before/after diff view. No uploads.",
+    href: "/tools/plain-metadata-purge",
+    available: false,
+    category: "security",
+    status: "New",
+  },
+  {
+    icon: ShieldAlert,
+    title: "Plain Irreversible Redactor",
+    description: "Pixel-precise, burn-in redaction of text and regions with local SHA-256 verification. No uploads.",
+    href: "/tools/plain-irreversible-redactor",
+    available: false,
+    category: "security",
+    status: "New",
+  },
+  {
+    icon: PenTool,
+    title: "Plain Local Cryptographic Signer",
+    description: "Apply PAdES/PKCS#7 signatures using keys stored solely in your browser secure enclave. Local-only workflow.",
+    href: "/tools/plain-local-cryptographic-signer",
+    available: false,
+    category: "security",
+    status: "New",
+  },
+  {
+    icon: Unlock,
+    title: "Plain Password Breaker",
+    description: "Remove owner or user passwords using local-only recovery paths with no telemetry and no uploads.",
+    href: "/tools/plain-password-breaker",
+    available: false,
+    category: "security",
+    status: "New",
+  },
   {
     icon: ShieldAlert,
     title: "Permanent Redaction",
-    description: "Securely remove sensitive information forever",
+    description: "Physically remove sensitive information from the PDF byte-code locally.",
     href: "/tools/redact-pdf",
     available: false,
     category: "security",
@@ -144,7 +184,7 @@ const tools: Tool[] = [
   {
     icon: Unlock,
     title: "Unlock PDF",
-    description: "Remove password protection from PDF files",
+    description: "Remove password restrictions and permissions from your files.",
     href: "/tools/unlock-pdf",
     available: false,
     category: "security",
@@ -160,26 +200,67 @@ const tools: Tool[] = [
   {
     icon: Stamp,
     title: "Add Watermark",
-    description: "Apply text or image watermarks to pages",
+    description: "Apply custom text or image overlays to protect your documents.",
     href: "/tools/watermark-pdf",
     available: false,
     category: "security",
   },
+  
+  // Performance & Edit tools
+  {
+    icon: LayoutGrid,
+    title: "Plain WebGPU Page Organiser",
+    description: "Drag-and-drop reordering and rotation with hardware-accelerated local previews. No uploads.",
+    href: "/tools/plain-webgpu-page-organiser",
+    available: false,
+    category: "edit",
+    status: "New",
+    badge: "WebGPU",
+  },
+  {
+    icon: Zap,
+    title: "Plain Hardware-Accelerated Batch Engine",
+    description: "Simultaneous merge and split of large PDF sets (>2GB) via WebGPU compute shaders. Local-only processing.",
+    href: "/tools/plain-hardware-accelerated-batch-engine",
+    available: false,
+    category: "edit",
+    status: "New",
+    badge: "WebGPU",
+  },
   {
     icon: ScanText,
-    title: "OCR (Searchable PDF)",
-    description: "Make scanned documents searchable with text recognition",
+    title: "Plain Offline OCR Pipeline",
+    description: "WebGPU-optimised text recognition for scanned documents without leaving the device or uploading files.",
+    href: "/tools/plain-offline-ocr-pipeline",
+    available: false,
+    category: "edit",
+    status: "New",
+    badge: "WebGPU",
+  },
+  {
+    icon: Minimize2,
+    title: "Plain Real-Time Compression Previewer",
+    description: "Slider-driven recompression with side-by-side visual and size previews in Wasm. Fully local, no uploads.",
+    href: "/tools/plain-real-time-compression-previewer",
+    available: false,
+    category: "edit",
+    status: "New",
+  },
+  {
+    icon: ScanText,
+    title: "OCR / Searchable PDF",
+    description: "Use local optical character recognition to make scanned text searchable.",
     href: "/tools/ocr-pdf",
     available: false,
-    category: "security",
+    category: "edit",
   },
   {
     icon: Binary,
     title: "Page Numbering",
-    description: "Add customisable page numbers to your PDF",
+    description: "Add customisable headers and footers for professional indexing.",
     href: "/tools/page-numbers",
     available: false,
-    category: "security",
+    category: "edit",
   },
   {
     icon: Trash2,
@@ -193,23 +274,25 @@ const tools: Tool[] = [
   // AI Labs tools
   {
     icon: MessageSquare,
-    title: "Private AI Chat",
-    description: "Chat with your sensitive documents. No APIs, no cloud, no data training. 100% on-device.",
+    title: "AI Chat with PDF",
+    description: "Discuss your documents with a private, WebGPU-accelerated local AI.",
     href: "/tools/ai-chat-pdf",
     available: false,
     category: "ai",
     isAI: true,
     aiNote: "WebGPU Accelerated",
+    status: "Beta",
   },
   {
-    icon: Sparkles,
+    icon: Zap,
     title: "Instant Summary",
-    description: "Generate concise summaries of lengthy documents",
+    description: "Generate key insights from large documents using on-device processing.",
     href: "/tools/ai-summary",
     available: false,
     category: "ai",
     isAI: true,
     aiNote: "Powered by local WebLLM",
+    status: "New",
   },
   {
     icon: ScanText,
@@ -220,6 +303,7 @@ const tools: Tool[] = [
     category: "ai",
     isAI: true,
     aiNote: "Powered by local Wasm",
+    status: "Beta",
   },
   {
     icon: FileText,
@@ -230,6 +314,7 @@ const tools: Tool[] = [
     category: "ai",
     isAI: true,
     aiNote: "Powered by local WebLLM",
+    status: "Beta",
   },
 ]
 
@@ -367,10 +452,11 @@ export function ToolsSection() {
           {filteredTools.map((tool) => {
             const CardWrapper = tool.available ? Link : "div"
             const cardProps = tool.available ? { href: tool.href } : {}
+            const status = tool.status ?? (!tool.available ? "Soon" : undefined)
             
             return (
               <TiltCard 
-                key={tool.title} 
+                key={tool.href} 
                 className="h-full"
                 tiltIntensity={tool.available ? 8 : 3}
                 glowOnHover={tool.available}
@@ -379,8 +465,8 @@ export function ToolsSection() {
                   <Card
                     className={`group relative h-full overflow-hidden rounded-xl transition-all duration-150 ease-out outline-none ${
                       tool.available
-                        ? "bg-[#111] border border-[#333] cursor-pointer focus-visible:ring-2 focus-visible:ring-accent/50"
-                        : "bg-[#0a0a0a] border border-[#222] cursor-default opacity-70"
+                        ? "bg-[#111] border border-[#333] cursor-pointer hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)] focus-visible:ring-2 focus-visible:ring-[#0070f3]/50"
+                        : "bg-[#111] border border-[#333] cursor-default opacity-80 hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
                     }`}
                   >
                   {/* Subtle glow on hover */}
@@ -409,9 +495,15 @@ export function ToolsSection() {
                         }`}>
                           {tool.title}
                         </h3>
-                        {!tool.available && (
-                          <span className="shrink-0 inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-muted-foreground/60">
-                            Soon
+                        {status && (
+                          <span className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                            status === "New"
+                              ? "bg-[#0070f3]/20 text-[#5aa7ff]"
+                              : status === "Beta"
+                                ? "bg-[#0070f3]/12 text-[#7ab8ff]"
+                                : "bg-white/[0.06] text-muted-foreground/60"
+                          }`}>
+                            {status}
                           </span>
                         )}
                         {tool.available && (
@@ -423,6 +515,14 @@ export function ToolsSection() {
                       }`}>
                         {tool.description}
                       </p>
+
+                      {tool.badge && (
+                        <div className="mt-3 inline-flex items-center rounded-full border border-[#0070f3]/30 bg-[#0070f3]/10 px-2.5 py-1">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#0070f3]">
+                            {tool.badge}
+                          </span>
+                        </div>
+                      )}
                       
                       {/* AI note for AI tools - Security Terminal aesthetic */}
                       {tool.isAI && tool.aiNote && (
