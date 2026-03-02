@@ -2,26 +2,37 @@ import { APIError, RateLimitError } from "@anthropic-ai/sdk"
 import { NextRequest, NextResponse } from "next/server"
 
 import { summarizeTextWithClaude } from "@/lib/anthropic-client"
+import { buildCorsHeaders, isOriginAllowed } from "@/lib/api-cors"
 
 export const runtime = "nodejs"
 
 const WARNING_TEXT = "This sends text to server."
 const MAX_INPUT_CHARS = 120_000
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-}
+export function OPTIONS(request: NextRequest) {
+  const corsHeaders = buildCorsHeaders(request)
+  if (!isOriginAllowed(request)) {
+    return NextResponse.json(
+      { error: "Origin not allowed.", warning: WARNING_TEXT },
+      { status: 403, headers: corsHeaders }
+    )
+  }
 
-export function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
-    headers: CORS_HEADERS,
+    headers: corsHeaders,
   })
 }
 
 export async function POST(request: NextRequest) {
+  const corsHeaders = buildCorsHeaders(request)
+  if (!isOriginAllowed(request)) {
+    return NextResponse.json(
+      { error: "Origin not allowed.", warning: WARNING_TEXT },
+      { status: 403, headers: corsHeaders }
+    )
+  }
+
   try {
     const body = await request.json()
     const text = typeof body?.text === "string" ? body.text.trim() : ""
@@ -29,7 +40,7 @@ export async function POST(request: NextRequest) {
     if (!text) {
       return NextResponse.json(
         { error: "No text provided for summarisation." },
-        { status: 400, headers: CORS_HEADERS }
+        { status: 400, headers: corsHeaders }
       )
     }
 
@@ -44,7 +55,7 @@ export async function POST(request: NextRequest) {
         summary,
         warning: WARNING_TEXT,
       },
-      { status: 200, headers: CORS_HEADERS }
+      { status: 200, headers: corsHeaders }
     )
   } catch (error) {
     if (error instanceof RateLimitError) {
@@ -53,7 +64,7 @@ export async function POST(request: NextRequest) {
           error: "Rate limit reached. Please retry shortly.",
           warning: WARNING_TEXT,
         },
-        { status: 429, headers: CORS_HEADERS }
+        { status: 429, headers: corsHeaders }
       )
     }
 
@@ -63,7 +74,7 @@ export async function POST(request: NextRequest) {
           error: "Anthropic is rate limiting requests. Please retry shortly.",
           warning: WARNING_TEXT,
         },
-        { status: 429, headers: CORS_HEADERS }
+        { status: 429, headers: corsHeaders }
       )
     }
 
@@ -74,8 +85,7 @@ export async function POST(request: NextRequest) {
         error: message,
         warning: WARNING_TEXT,
       },
-      { status: 500, headers: CORS_HEADERS }
+      { status: 500, headers: corsHeaders }
     )
   }
 }
-

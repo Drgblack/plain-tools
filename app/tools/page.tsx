@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Merge, Split, Minimize2, ArrowUpDown, FileOutput } from "lucide-react"
+import { Merge, Split, Minimize2, ArrowUpDown, FileOutput, Sparkles } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
@@ -53,6 +53,13 @@ const tools = [
     title: "Extract Pages",
     description: "Pull specific pages from a PDF",
     href: "/tools/extract-pdf",
+    status: "active" as const,
+  },
+  {
+    icon: Sparkles,
+    title: "AI PDF Assistant",
+    description: "Summarise and ask questions about your PDF",
+    href: "/tools/ai-pdf-assistant",
     status: "active" as const,
   },
 ]
