@@ -1,15 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ShareButton } from "@/components/share-button"
 import { Logo } from "@/components/logo"
 import { PrivacyShield } from "@/components/privacy-shield"
 import { LocalHistorySidebar, HistoryIcon } from "@/components/local-history"
-import { LanguageSelector } from "@/components/language-selector"
 import { AirGapToggle } from "@/components/air-gap-toggle"
 import { Command } from "lucide-react"
+import {
+  GOOGLE_TRANSLATE_INCLUDED_LANGUAGES,
+  GOOGLE_TRANSLATE_LANGUAGES,
+} from "@/lib/google-translate-languages"
+
+declare global {
+  interface Window {
+    googleTranslateElementInit?: () => void
+    __googleTranslateInitialised?: boolean
+    google?: {
+      translate?: {
+        TranslateElement: new (
+          options: {
+            pageLanguage: string
+            includedLanguages?: string
+            autoDisplay?: boolean
+          },
+          containerId: string
+        ) => unknown
+      }
+    }
+  }
+}
+
+const GOOGLE_TRANSLATE_SCRIPT_SRC =
+  "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms)
+  })
 
 const navLinks = [
   { label: "Tools", href: "/tools" },
@@ -24,11 +54,130 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname()
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState("en")
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
     return pathname.startsWith(href)
   }
+
+  const applyLanguageToGoogleCombo = useCallback((languageCode: string) => {
+    const combo = document.querySelector<HTMLSelectElement>(
+      "#google_translate_element .goog-te-combo"
+    )
+    if (!combo) {
+      return false
+    }
+
+    combo.value = languageCode
+    combo.dispatchEvent(new Event("change", { bubbles: true }))
+    return true
+  }, [])
+
+  const ensureGoogleTranslateReady = useCallback(async () => {
+    const initialiseWidgetIfNeeded = () => {
+      const translateConstructor = window.google?.translate?.TranslateElement
+      const mountNode = document.getElementById("google_translate_element")
+      if (!translateConstructor || !mountNode) {
+        return
+      }
+
+      const hasWidget = Boolean(
+        mountNode.querySelector(".goog-te-combo") ||
+          mountNode.querySelector(".goog-te-gadget")
+      )
+      if (!hasWidget) {
+        mountNode.innerHTML = ""
+        new translateConstructor(
+          {
+            pageLanguage: "en",
+            includedLanguages: GOOGLE_TRANSLATE_INCLUDED_LANGUAGES,
+            autoDisplay: false,
+          },
+          "google_translate_element"
+        )
+      }
+
+      window.__googleTranslateInitialised = true
+    }
+
+    if (window.google?.translate?.TranslateElement) {
+      initialiseWidgetIfNeeded()
+      return
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      window.googleTranslateElementInit = () => {
+        initialiseWidgetIfNeeded()
+        resolve()
+      }
+
+      const existingScript = document.querySelector<HTMLScriptElement>(
+        `script[src="${GOOGLE_TRANSLATE_SCRIPT_SRC}"]`
+      )
+      if (existingScript) {
+        if (window.google?.translate?.TranslateElement) {
+          window.googleTranslateElementInit?.()
+          return
+        }
+
+        const onLoad = () => window.googleTranslateElementInit?.()
+        const onError = () => reject(new Error("Google Translate script failed to load."))
+        existingScript.addEventListener("load", onLoad, { once: true })
+        existingScript.addEventListener("error", onError, { once: true })
+        return
+      }
+
+      const script = document.createElement("script")
+      script.src = GOOGLE_TRANSLATE_SCRIPT_SRC
+      script.async = true
+      script.defer = true
+      script.onerror = () => reject(new Error("Google Translate script failed to load."))
+      document.head.appendChild(script)
+    })
+  }, [])
+
+  const handleHeaderLanguageChange = useCallback(
+    async (languageCode: string) => {
+      setSelectedLanguage(languageCode)
+
+      if (applyLanguageToGoogleCombo(languageCode)) {
+        return
+      }
+
+      try {
+        await ensureGoogleTranslateReady()
+        for (let attempt = 0; attempt < 12; attempt++) {
+          if (applyLanguageToGoogleCombo(languageCode)) {
+            return
+          }
+          await wait(120)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [applyLanguageToGoogleCombo, ensureGoogleTranslateReady]
+  )
+
+  useEffect(() => {
+    const cookieMatch = document.cookie.match(/(?:^|;\s*)googtrans=\/en\/([^;]+)/)
+    if (cookieMatch?.[1]) {
+      setSelectedLanguage(decodeURIComponent(cookieMatch[1]))
+    }
+
+    const handleLanguageEvent = (event: Event) => {
+      const customEvent = event as CustomEvent<string>
+      if (typeof customEvent.detail === "string" && customEvent.detail.length > 0) {
+        setSelectedLanguage(customEvent.detail)
+      }
+    }
+
+    window.addEventListener("plain:translate-language-change", handleLanguageEvent)
+    return () => {
+      window.removeEventListener("plain:translate-language-change", handleLanguageEvent)
+    }
+  }, [])
 
   return (
     <>
@@ -98,7 +247,21 @@ export function Header() {
           </div>
           {/* Language Selector */}
           <div className="ms-3 hidden md:block">
-            <LanguageSelector />
+            <label htmlFor="header-language-select" className="sr-only">
+              Translate language
+            </label>
+            <select
+              id="header-language-select"
+              value={selectedLanguage}
+              onChange={(event) => void handleHeaderLanguageChange(event.target.value)}
+              className="h-9 max-w-[160px] rounded-lg border border-[#333] bg-[#111] px-2.5 text-[12px] text-white/80 outline-none transition-all duration-150 hover:border-[#0070f3]/70 focus-visible:ring-2 focus-visible:ring-[#0070f3]/35"
+            >
+              {GOOGLE_TRANSLATE_LANGUAGES.map((language) => (
+                <option key={language.code} value={language.code}>
+                  {language.label}
+                </option>
+              ))}
+            </select>
           </div>
         </nav>
       </div>

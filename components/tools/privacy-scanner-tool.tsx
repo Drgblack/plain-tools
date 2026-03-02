@@ -24,12 +24,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  plainPrivacyRiskScanner,
   type PrivacyRiskFinding,
   type PrivacyRiskReport,
 } from "@/lib/pdf-privacy-scanner"
 import {
-  plainIrreversibleRedactor,
   type PlainRedactionRegion,
   type ProcessingStage,
 } from "@/lib/pdf-security-engines"
@@ -209,6 +207,7 @@ export default function PrivacyScannerTool() {
     clearScannerResults()
 
     try {
+      const { plainPrivacyRiskScanner } = await import("@/lib/pdf-privacy-scanner")
       const result = await plainPrivacyRiskScanner(file, {
         onProgress: (nextProgress, message) => {
           setProgress(nextProgress)
@@ -265,6 +264,7 @@ export default function PrivacyScannerTool() {
       setAutoRedactedSize(null)
 
       try {
+        const { plainIrreversibleRedactor } = await import("@/lib/pdf-security-engines")
         const bytes = await plainIrreversibleRedactor(file, regions, (stage, message) => {
           setStatus(message)
           setProgress((current) =>

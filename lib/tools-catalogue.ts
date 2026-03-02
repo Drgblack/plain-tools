@@ -85,7 +85,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "reorder-pages",
     name: "Reorder Pages",
-    slug: "reorder-pages",
+    slug: "reorder-pdf",
     category: "Core",
     description: "Drag, reorder, extract, delete, and rotate pages locally.",
     icon: "ArrowUpDown",
@@ -103,7 +103,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "extract-pages",
     name: "Extract Pages",
-    slug: "extract-pages",
+    slug: "extract-pdf",
     category: "Core",
     description: "Extract selected pages into a new local PDF file.",
     icon: "FileOutput",

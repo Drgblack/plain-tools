@@ -121,7 +121,12 @@ const reportStage = (
 
 const getPdfJs = async (): Promise<PdfJsModule> => {
   if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs")
+    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
+      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
+      }
+      return pdfjs
+    })
   }
 
   return pdfJsModulePromise

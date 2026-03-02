@@ -188,7 +188,7 @@ const mergePDFs = async () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background">
       {/* Canonical URL for SEO */}
       <link rel="canonical" href="https://plainpdf.com/tools/merge-pdf" />
       
@@ -601,7 +601,9 @@ const mergePDFs = async () => {
         </section>
       </main>
 
-      <Footer />
+      <div className="mt-auto w-full">
+        <Footer />
+      </div>
     </div>
   )
 }

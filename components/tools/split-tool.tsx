@@ -31,7 +31,12 @@ let pdfJsPromise: Promise<PdfJsModule> | null = null
 
 const getPdfJs = async () => {
   if (!pdfJsPromise) {
-    pdfJsPromise = import("pdfjs-dist/legacy/build/pdf.mjs")
+    pdfJsPromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
+      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
+      }
+      return pdfjs
+    })
   }
   return pdfJsPromise
 }

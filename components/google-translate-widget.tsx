@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import Script from "next/script"
 import { Languages } from "lucide-react"
+import { GOOGLE_TRANSLATE_INCLUDED_LANGUAGES } from "@/lib/google-translate-languages"
 
 declare global {
   interface Window {
@@ -11,7 +12,11 @@ declare global {
     google?: {
       translate?: {
         TranslateElement: new (
-          options: { pageLanguage: string },
+          options: {
+            pageLanguage: string
+            includedLanguages?: string
+            autoDisplay?: boolean
+          },
           containerId: string
         ) => unknown
       }
@@ -22,29 +27,105 @@ declare global {
 export function GoogleTranslateWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [scriptLoaded, setScriptLoaded] = useState(false)
+  const comboPollRef = useRef<number | null>(null)
 
-  useEffect(() => {
-    window.googleTranslateElementInit = () => {
-      if (window.__googleTranslateInitialised) {
+  const bindComboListener = useCallback(() => {
+    const combo = document.querySelector<HTMLSelectElement>(
+      "#google_translate_element .goog-te-combo"
+    )
+    if (!combo) {
+      return false
+    }
+
+    if (combo.dataset.listenerAttached === "1") {
+      return true
+    }
+
+    combo.dataset.listenerAttached = "1"
+    combo.addEventListener("change", () => {
+      const language = combo.value
+      if (!language || language === "en") {
+        document.cookie = "googtrans=; path=/; max-age=0"
         return
       }
 
+      document.cookie = `googtrans=/en/${language}; path=/; max-age=31536000`
+      window.dispatchEvent(new CustomEvent("plain:translate-language-change", { detail: language }))
+    })
+
+    return true
+  }, [])
+
+  const pollForComboAndBind = useCallback(() => {
+    let attempts = 0
+    const maxAttempts = 30
+
+    const run = () => {
+      if (bindComboListener()) {
+        return
+      }
+
+      attempts += 1
+      if (attempts >= maxAttempts) {
+        return
+      }
+
+      comboPollRef.current = window.setTimeout(run, 150)
+    }
+
+    run()
+  }, [bindComboListener])
+
+  useEffect(() => {
+    window.googleTranslateElementInit = () => {
       const translateConstructor = window.google?.translate?.TranslateElement
       const mountNode = document.getElementById("google_translate_element")
       if (!translateConstructor || !mountNode) {
         return
       }
 
-      mountNode.innerHTML = ""
+      const hasWidget = Boolean(
+        mountNode.querySelector(".goog-te-combo") ||
+          mountNode.querySelector(".goog-te-gadget")
+      )
+      if (!hasWidget) {
+        mountNode.innerHTML = ""
 
-      // Required init: new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element')
-      new translateConstructor({ pageLanguage: "en" }, "google_translate_element")
+        new translateConstructor(
+          {
+            pageLanguage: "en",
+            includedLanguages: GOOGLE_TRANSLATE_INCLUDED_LANGUAGES,
+            autoDisplay: false,
+          },
+          "google_translate_element"
+        )
+      }
+
       window.__googleTranslateInitialised = true
+      pollForComboAndBind()
     }
-  }, [])
+
+    if (window.google?.translate?.TranslateElement) {
+      setScriptLoaded(true)
+    }
+
+    return () => {
+      if (comboPollRef.current !== null) {
+        window.clearTimeout(comboPollRef.current)
+      }
+    }
+  }, [pollForComboAndBind])
 
   useEffect(() => {
-    if (isOpen && scriptLoaded) {
+    if (!isOpen) {
+      return
+    }
+
+    if (!scriptLoaded && window.google?.translate?.TranslateElement) {
+      setScriptLoaded(true)
+    }
+
+    if (scriptLoaded || window.google?.translate?.TranslateElement) {
       window.googleTranslateElementInit?.()
     }
   }, [isOpen, scriptLoaded])

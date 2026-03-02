@@ -19,7 +19,6 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import {
-  plainIrreversibleRedactor,
   type PlainRedactionRegion,
   type ProcessingStage,
 } from "@/lib/pdf-security-engines"
@@ -55,7 +54,12 @@ let pdfJsPromise: Promise<PdfJsModule> | null = null
 
 const getPdfJs = async () => {
   if (!pdfJsPromise) {
-    pdfJsPromise = import("pdfjs-dist/legacy/build/pdf.mjs")
+    pdfJsPromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
+      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
+      }
+      return pdfjs
+    })
   }
   return pdfJsPromise
 }
@@ -465,6 +469,7 @@ export default function RedactTool() {
     clearResult()
 
     try {
+      const { plainIrreversibleRedactor } = await import("@/lib/pdf-security-engines")
       const redactedBytes = await plainIrreversibleRedactor(
         file,
         regionPayload,

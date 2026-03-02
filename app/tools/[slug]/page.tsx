@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 
+import { Footer } from "@/components/footer"
+import { Header } from "@/components/header"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 type PageProps = {
@@ -35,28 +37,49 @@ export default async function ToolPage({ params }: PageProps) {
   const { slug } = await params
   const tool = getToolBySlug(slug)
 
-  if (!tool || !tool.available) {
+  if (!tool) {
     notFound()
   }
 
-  const ToolComponent = toolComponents[tool.slug] ?? FallbackToolComponent
+  const ToolComponent = tool.available
+    ? toolComponents[tool.slug] ?? FallbackToolComponent
+    : null
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold">{tool.name}</h1>
-      <p className="mb-6 text-muted-foreground">{tool.description}</p>
+    <div className="flex min-h-screen flex-col bg-background">
+      <Header />
 
-      {tool.category !== "AI Assistant" ? (
-        <div className="mb-4 text-sm text-green-600">100% Local Processing - No Uploads</div>
-      ) : (
-        <div className="mb-4 text-sm text-amber-600">
-          Opt-in: Text extracted locally, sent to Anthropic for processing
+      <main className="flex-1">
+        <div className="container mx-auto py-8">
+          <h1 className="text-3xl font-bold">{tool.name}</h1>
+          <p className="mb-6 text-muted-foreground">{tool.description}</p>
+
+          {tool.available ? (
+            <>
+              {tool.category !== "AI Assistant" ? (
+                <div className="mb-4 text-sm text-green-600">100% Local Processing - No Uploads</div>
+              ) : (
+                <div className="mb-4 text-sm text-amber-600">
+                  Opt-in: Text extracted locally, sent to Anthropic for processing
+                </div>
+              )}
+
+              <Suspense fallback={<div>Loading tool...</div>}>
+                <ToolComponent />
+              </Suspense>
+            </>
+          ) : (
+            <div className="rounded-xl border border-border bg-card p-6">
+              <p className="text-base font-medium text-foreground">Coming Soon</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                This tool is listed in the catalogue but its UI is not published yet.
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </main>
 
-      <Suspense fallback={<div>Loading tool...</div>}>
-        <ToolComponent />
-      </Suspense>
+      <Footer />
     </div>
   )
 }
