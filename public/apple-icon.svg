@@ -1,0 +1,10 @@
+<svg viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Solid dark background for Apple touch icon -->
+  <rect width="180" height="180" rx="40" fill="#1A1B1F"/>
+  <!-- Abstract PDF-inspired "P" shape - scaled for 180x180 -->
+  <path d="M56 45h39c12.4 0 22.5 10.1 22.5 22.5S107.4 90 95 90H78v33.5H56V45z" fill="#F2F2F2"/>
+  <!-- Inner cutout for P bowl -->
+  <path d="M73 62h19.7c4.5 0 8.2 3.7 8.2 8.2s-3.7 8.2-8.2 8.2H73V62z" fill="#1A1B1F"/>
+  <!-- Electric blue accent dot -->
+  <circle cx="135" cy="123" r="17" fill="#6385FF"/>
+</svg>

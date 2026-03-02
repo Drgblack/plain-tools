@@ -1,0 +1,191 @@
+# Plain PDF Hub - Build, Deploy & SEO Automation
+# Runs on every push to main branch
+# Validates SEO metadata, generates sitemap, pings search engines, and checks Core Web Vitals
+
+name: Build, Deploy & SEO Automation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: '20'
+  INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+  SITE_URL: 'https://plainpdf.com'
+
+jobs:
+  # ============================================
+  # Job 1: SEO Metadata Validation
+  # ============================================
+  validate-seo:
+    name: Validate SEO Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run SEO Metadata Validator
+        run: node scripts/validate-seo-metadata.js
+        env:
+          CI: true
+
+  # ============================================
+  # Job 2: Build & Generate Sitemap
+  # ============================================
+  build:
+    name: Build & Generate Sitemap
+    runs-on: ubuntu-latest
+    needs: validate-seo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Generate fresh sitemap
+        run: node scripts/generate-sitemap.js
+
+      - name: Upload build artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            .next/
+            public/sitemap.xml
+          retention-days: 7
+
+  # ============================================
+  # Job 3: Core Web Vitals (Lighthouse CI)
+  # ============================================
+  lighthouse:
+    name: Core Web Vitals Check
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download build artefacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+
+      - name: Install Lighthouse CI
+        run: pnpm add -g @lhci/cli
+
+      - name: Run Lighthouse CI
+        run: |
+          echo "Running Lighthouse CI audit..."
+          lhci autorun --config=lighthouserc.js
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  # ============================================
+  # Job 4: Ping Search Engines (IndexNow)
+  # ============================================
+  ping-search-engines:
+    name: Ping Search Engines
+    runs-on: ubuntu-latest
+    needs: [build, lighthouse]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Ping IndexNow API
+        run: node scripts/ping-indexnow.js
+        env:
+          INDEXNOW_KEY: ${{ env.INDEXNOW_KEY }}
+          SITE_URL: ${{ env.SITE_URL }}
+
+      - name: Ping Google Search Console
+        run: |
+          echo "Submitting sitemap to Google..."
+          curl -s "https://www.google.com/ping?sitemap=${{ env.SITE_URL }}/sitemap.xml"
+          echo "Sitemap submitted to Google Search Console."
+
+      - name: Ping Bing Webmaster Tools
+        run: |
+          echo "Submitting sitemap to Bing..."
+          curl -s "https://www.bing.com/ping?sitemap=${{ env.SITE_URL }}/sitemap.xml"
+          echo "Sitemap submitted to Bing Webmaster Tools."
+
+  # ============================================
+  # Job 5: Deploy Summary
+  # ============================================
+  summary:
+    name: Deployment Summary
+    runs-on: ubuntu-latest
+    needs: [validate-seo, build, lighthouse, ping-search-engines]
+    if: always()
+    steps:
+      - name: Generate deployment summary
+        run: |
+          echo "============================================"
+          echo "Plain PDF Hub - Deployment Summary"
+          echo "============================================"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Author: ${{ github.actor }}"
+          echo "Timestamp: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          echo "============================================"
+          echo "Job Results:"
+          echo "  - SEO Validation: ${{ needs.validate-seo.result }}"
+          echo "  - Build: ${{ needs.build.result }}"
+          echo "  - Lighthouse: ${{ needs.lighthouse.result }}"
+          echo "  - Search Engine Ping: ${{ needs.ping-search-engines.result }}"
+          echo "============================================"
