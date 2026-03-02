@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://plainpdf.com'
+  const baseUrl = 'https://plain.tools'
 
   return {
     rules: [

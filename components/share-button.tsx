@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Share2, Link2, Check, Mail } from "lucide-react"
+import { Share2, Link2, Check, Mail, X as XIcon } from "lucide-react"
 
 interface ShareButtonProps {
   variant?: "icon" | "inline" | "subtle"

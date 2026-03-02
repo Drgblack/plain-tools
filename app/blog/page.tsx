@@ -80,7 +80,7 @@ const articles: Article[] = [
     density: "Advanced",
     readingTime: 15,
     aiTakeaway: "WebGPU provides direct GPU access in browsers, enabling local LLM inference at speeds comparable to cloud APIs while keeping all data on-device.",
-    linkedTools: ["ai-chat-pdf", "ai-summary"],
+    linkedTools: ["pdf-qa", "summarize-pdf"],
   },
   {
     slug: "browser-memory-management-large-pdfs",
@@ -591,7 +591,7 @@ export default function BlogPage() {
 
   const handleShare = (slug: string, title: string) => {
     setSharePost({
-      url: `https://plainpdf.com/blog/${slug}`,
+      url: `https://plain.tools/blog/${slug}`,
       title,
     })
   }

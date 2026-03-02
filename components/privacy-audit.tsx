@@ -95,7 +95,7 @@ export function PrivacyAudit({
 ║  using WebAssembly technology. No data was transmitted to     ║
 ║  any external server.                                         ║
 ║                                                               ║
-║  Verify at: https://plainpdf.com/verify-claims                ║
+║  Verify at: https://plain.tools/verify-claims                ║
 ║                                                               ║
 ╚══════════════════════════════════════════════════════════════╝
 `.trim()

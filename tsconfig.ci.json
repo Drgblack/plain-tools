@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "components/command-palette.tsx",
+    "components/footer.tsx",
+    "components/google-translate-widget.tsx",
+    "lib/schema-markup.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -22,7 +22,8 @@ import {
   Lock,
   FileText,
   Sparkles,
-  BookOpen
+  BookOpen,
+  Search,
 } from "lucide-react"
 
 // Structured data for the Learning Centre collection

@@ -10,7 +10,7 @@
  * 
  * Environment variables:
  *   - INDEXNOW_KEY: Your IndexNow API key
- *   - SITE_URL: The site URL (default: https://plainpdf.com)
+ *   - SITE_URL: The site URL (default: https://plain.tools)
  */
 
 import fs from 'fs';
@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 // Configuration
-const SITE_URL = process.env.SITE_URL || 'https://plainpdf.com';
+const SITE_URL = process.env.SITE_URL || 'https://plain.tools';
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY;
 const INDEXNOW_ENDPOINT = 'https://api.indexnow.org/indexnow';
 

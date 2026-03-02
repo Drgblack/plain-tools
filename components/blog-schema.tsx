@@ -9,7 +9,7 @@
 
 import Script from "next/script"
 
-const BASE_URL = "https://plainpdf.com"
+const BASE_URL = "https://plain.tools"
 const ORGANISATION_NAME = "Plain PDF"
 const LOGO_URL = `${BASE_URL}/logo.png`
 
@@ -35,7 +35,7 @@ const TOOL_MAPPINGS: Record<string, { name: string; description: string }> = {
     name: "Unlock PDF",
     description: "Remove password protection from PDF files. All processing happens locally in your browser.",
   },
-  "ocr-pdf": {
+  "offline-ocr": {
     name: "OCR PDF",
     description: "Convert scanned documents to searchable PDFs using local WebGPU-accelerated text recognition.",
   },
@@ -43,9 +43,13 @@ const TOOL_MAPPINGS: Record<string, { name: string; description: string }> = {
     name: "Reorder PDF",
     description: "Rearrange, rotate, and delete pages in PDF documents. Drag-and-drop interface with local processing.",
   },
-  "ai-chat-pdf": {
+  "pdf-qa": {
     name: "Private AI Chat",
     description: "Chat with your PDF documents using on-device AI. Zero cloud APIs, WebGPU-powered.",
+  },
+  "summarize-pdf": {
+    name: "Summarize PDF",
+    description: "Generate concise summaries of PDF documents while keeping processing privacy-focused.",
   },
 }
 

@@ -4,11 +4,10 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  Search, Merge, Split, Minimize2, ArrowUpDown, FileOutput, FileType,
-  FileText, Table, Image, Code, EyeOff, KeyRound, Droplets, ScanText,
-  Hash, Trash2, MessageSquare, Sparkles, BookOpen, Shield, Cpu, 
+  Search, Merge, Split, Minimize2, ArrowUpDown, FileOutput, EyeOff, ScanText,
+  MessageSquare, Sparkles, Shield, Cpu, 
   History, ToggleLeft, Gauge, Command, CornerDownLeft, ArrowUp, ArrowDown,
-  Zap, HardDrive, Lock, X
+  Zap, HardDrive, Lock, X, PencilLine
 } from "lucide-react"
 
 // Types
@@ -84,21 +83,15 @@ export function CommandPalette() {
     { id: "merge-pdf", title: "Merge PDF", description: "Combine multiple PDFs into one", category: "tools", icon: Merge, href: "/tools/merge-pdf" },
     { id: "split-pdf", title: "Split PDF", description: "Separate a PDF into individual pages", category: "tools", icon: Split, href: "/tools/split-pdf" },
     { id: "compress-pdf", title: "Compress PDF", description: "Reduce file size whilst maintaining quality", category: "tools", icon: Minimize2, href: "/tools/compress-pdf" },
-    { id: "reorder-pages", title: "Reorder Pages", description: "Rearrange pages in your PDF", category: "tools", icon: ArrowUpDown, href: "/tools/reorder-pages" },
-    { id: "extract-pages", title: "Extract Pages", description: "Pull specific pages from a PDF", category: "tools", icon: FileOutput, href: "/tools/extract-pages" },
-    { id: "rotate-pdf", title: "Rotate PDF", description: "Rotate pages to correct orientation", category: "tools", icon: FileType, href: "/tools/rotate-pdf" },
-    { id: "pdf-to-word", title: "PDF to Word", description: "Convert to editable Word files", category: "tools", icon: FileText, href: "/tools/pdf-to-word" },
-    { id: "pdf-to-excel", title: "PDF to Excel", description: "Extract tables to spreadsheet format", category: "tools", icon: Table, href: "/tools/pdf-to-excel" },
-    { id: "image-to-pdf", title: "Image to PDF", description: "Convert images to PDF", category: "tools", icon: Image, href: "/tools/image-to-pdf" },
-    { id: "html-to-pdf", title: "HTML to PDF", description: "Convert web pages to PDF", category: "tools", icon: Code, href: "/tools/html-to-pdf" },
-    { id: "redaction", title: "Redaction Tool", description: "Permanently remove sensitive content", category: "tools", icon: EyeOff, href: "/tools/redaction" },
-    { id: "unlock-pdf", title: "Unlock PDF", description: "Remove password protection", category: "tools", icon: KeyRound, href: "/tools/unlock-pdf" },
-    { id: "add-watermark", title: "Add Watermark", description: "Apply text or image watermarks", category: "tools", icon: Droplets, href: "/tools/add-watermark" },
-    { id: "ocr", title: "OCR (Searchable PDF)", description: "Make scanned PDFs searchable", category: "tools", icon: ScanText, href: "/tools/ocr" },
-    { id: "page-numbering", title: "Page Numbering", description: "Add page numbers to your PDF", category: "tools", icon: Hash, href: "/tools/page-numbering" },
-    { id: "delete-pages", title: "Delete Pages", description: "Remove specific pages from PDF", category: "tools", icon: Trash2, href: "/tools/delete-pages" },
-    { id: "ai-chat", title: "AI Chat with PDF", description: "Ask questions about your document", category: "tools", icon: MessageSquare, href: "/tools/ai-chat" },
-    { id: "ai-summary", title: "AI Summariser", description: "Generate instant document summaries", category: "tools", icon: Sparkles, href: "/tools/ai-summary" },
+    { id: "reorder-pdf", title: "Reorder PDF", description: "Rearrange pages in your PDF", category: "tools", icon: ArrowUpDown, href: "/tools/reorder-pdf" },
+    { id: "extract-pdf", title: "Extract PDF", description: "Pull specific pages from a PDF", category: "tools", icon: FileOutput, href: "/tools/extract-pdf" },
+    { id: "redact-pdf", title: "Redact PDF", description: "Permanently remove sensitive content", category: "tools", icon: EyeOff, href: "/tools/redact-pdf" },
+    { id: "privacy-scan", title: "Privacy Scan", description: "Scan PDF for PII risks", category: "tools", icon: Shield, href: "/tools/privacy-scan" },
+    { id: "offline-ocr", title: "Offline OCR", description: "Make scanned PDFs searchable", category: "tools", icon: ScanText, href: "/tools/offline-ocr" },
+    { id: "compression-preview", title: "Compression Preview", description: "Preview compression before download", category: "tools", icon: Zap, href: "/tools/compression-preview" },
+    { id: "summarize-pdf", title: "Summarize PDF", description: "Generate concise summaries", category: "tools", icon: Sparkles, href: "/tools/summarize-pdf" },
+    { id: "pdf-qa", title: "Q&A on PDF", description: "Ask questions about your document", category: "tools", icon: MessageSquare, href: "/tools/pdf-qa" },
+    { id: "suggest-edits", title: "Suggest Edits", description: "Get rewrite suggestions for PDF text", category: "tools", icon: PencilLine, href: "/tools/suggest-edits" },
     
     // Learning Centre articles
     { id: "learn-wasm", title: "WebAssembly Explained", description: "How your data stays in-browser", category: "learning", icon: Cpu, href: "/learn/wasm-security" },

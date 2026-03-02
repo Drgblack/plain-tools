@@ -123,8 +123,8 @@ export function Footer() {
               {[
                 { label: "Merge PDF", href: "/tools/merge-pdf" },
                 { label: "Redact", href: "/tools/redact-pdf" },
-                { label: "AI Summariser", href: "/tools/ai-summary" },
-                { label: "OCR", href: "/tools/ocr" },
+                { label: "AI Summariser", href: "/tools/summarize-pdf" },
+                { label: "OCR", href: "/tools/offline-ocr" },
                 { label: "All Tools", href: "/tools" },
               ].map((link) => (
                 <li key={link.href}>

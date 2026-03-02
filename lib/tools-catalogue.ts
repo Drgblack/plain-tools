@@ -9,7 +9,9 @@ export type ToolCategory =
 export type ToolHandlerResult =
   | Uint8Array
   | Blob[]
-  | { report: any; annotatedBytes: Uint8Array }
+  | { report: unknown; annotatedBytes: Uint8Array }
+
+type ToolOptions = Record<string, unknown>
 
 export interface ToolDefinition {
   id: string
@@ -22,7 +24,7 @@ export interface ToolDefinition {
   component?: ComponentType
   handler?: (
     files: File[],
-    options?: any
+    options?: ToolOptions
   ) => Promise<ToolHandlerResult>
 }
 

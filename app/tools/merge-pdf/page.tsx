@@ -190,7 +190,7 @@ const mergePDFs = async () => {
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background">
       {/* Canonical URL for SEO */}
-      <link rel="canonical" href="https://plainpdf.com/tools/merge-pdf" />
+      <link rel="canonical" href="https://plain.tools/tools/merge-pdf" />
       
       <Script
         id="software-app-json-ld"

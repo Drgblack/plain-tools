@@ -26,8 +26,8 @@ const glossaryTerms = [
     definition: "A modern web API that provides hardware-accelerated graphics and compute capabilities. WebGPU enables direct access to GPU resources for parallel processing tasks, making on-device AI inference practical within the browser environment.",
     privacyImpact: "WebGPU allows AI models to run entirely on your device's graphics hardware. Your prompts and documents are processed locally, never transmitted to external AI APIs or training servers.",
     relatedTools: [
-      { name: "AI Chat with PDF", href: "/tools/ai-chat-pdf" },
-      { name: "Instant Summary", href: "/tools/summarise-pdf" },
+      { name: "AI Chat with PDF", href: "/tools/pdf-qa" },
+      { name: "Instant Summary", href: "/tools/summarize-pdf" },
     ],
     letter: "W",
   },
@@ -54,7 +54,7 @@ const glossaryTerms = [
     definition: "A security mechanism that isolates web content from the underlying operating system and other applications. The browser sandbox creates a restricted execution environment where website code cannot access files, processes, or resources outside its designated boundaries.",
     privacyImpact: "Browser sandboxing provides an additional security layer for Plain's tools. Even the code processing your documents cannot access other files on your system or persist data beyond your session.",
     relatedTools: [
-      { name: "Unlock PDF", href: "/tools/unlock-pdf" },
+      { name: "Unlock PDF", href: "/tools" },
     ],
     letter: "B",
   },
@@ -63,7 +63,7 @@ const glossaryTerms = [
     definition: "A cryptographic approach where data is encrypted and decrypted entirely on the user's device, with encryption keys never transmitted to or stored on external servers. This ensures only the user possesses the means to access their encrypted content.",
     privacyImpact: "When Plain applies password protection to your PDFs, the encryption occurs locally. Your passwords and encryption keys exist only in your browser's memory and are never transmitted anywhere.",
     relatedTools: [
-      { name: "Protect PDF", href: "/tools/protect-pdf" },
+      { name: "Protect PDF", href: "/tools" },
     ],
     letter: "E",
   },
@@ -108,7 +108,7 @@ const glossaryTerms = [
     definition: "Technology that converts images of text (such as scanned documents or photographs) into machine-readable text data. OCR analyses visual patterns to identify characters and words, enabling text search and extraction from image-based PDFs.",
     privacyImpact: "Plain's OCR runs entirely in your browser using Wasm-compiled engines. Your scanned documents are never uploaded to cloud OCR services that might retain or analyse your content.",
     relatedTools: [
-      { name: "OCR / Searchable PDF", href: "/tools/ocr-pdf" },
+      { name: "OCR / Searchable PDF", href: "/tools/offline-ocr" },
     ],
     letter: "O",
   },
@@ -117,7 +117,7 @@ const glossaryTerms = [
     definition: "An ISO-standardised subset of PDF designed for long-term digital preservation. PDF/A documents are self-contained, embedding all necessary fonts and colour profiles, and prohibiting features that could compromise future readability.",
     privacyImpact: "Converting to PDF/A locally ensures your archival documents meet compliance standards without exposing potentially sensitive content to third-party conversion services.",
     relatedTools: [
-      { name: "Convert to PDF/A", href: "/tools/convert-pdfa" },
+      { name: "Convert to PDF/A", href: "/tools" },
     ],
     letter: "P",
   },
@@ -171,7 +171,7 @@ const glossaryTerms = [
     definition: "Data that provides information about other data. In PDFs, metadata includes properties like author name, creation date, software used, and editing history. This hidden information can inadvertently expose sensitive details.",
     privacyImpact: "Plain can remove PDF metadata locally, eliminating hidden information that might reveal authorship, editing history, or software details you wish to keep private.",
     relatedTools: [
-      { name: "Remove Metadata", href: "/tools/remove-metadata" },
+      { name: "Remove Metadata", href: "/tools/privacy-scan" },
     ],
     letter: "M",
   },
@@ -189,8 +189,8 @@ const glossaryTerms = [
     definition: "A framework for running large language models directly in web browsers using WebGPU acceleration. WebLLM enables private AI capabilities without requiring server infrastructure or API calls.",
     privacyImpact: "Plain's AI features use WebLLM to run language models on your device. Your questions and document content are processed by your own hardware, not external AI services.",
     relatedTools: [
-      { name: "AI Chat with PDF", href: "/tools/ai-chat-pdf" },
-      { name: "Instant Summary", href: "/tools/summarise-pdf" },
+      { name: "AI Chat with PDF", href: "/tools/pdf-qa" },
+      { name: "Instant Summary", href: "/tools/summarize-pdf" },
     ],
     letter: "W",
   },
@@ -201,7 +201,7 @@ function generateGlossarySchema() {
   return {
     "@context": "https://schema.org",
     "@type": "DefinedTermSet",
-    "@id": "https://plainpdf.com/learn/glossary",
+    "@id": "https://plain.tools/learn/glossary",
     "name": "Plain PDF Technical Glossary",
     "description": "Comprehensive glossary of privacy-first document processing terminology including WebAssembly, WebGPU, and browser-based security concepts.",
     "inLanguage": "en-GB",
@@ -209,7 +209,7 @@ function generateGlossarySchema() {
       "@type": "DefinedTerm",
       "name": item.term,
       "description": item.definition,
-      "inDefinedTermSet": "https://plainpdf.com/learn/glossary",
+      "inDefinedTermSet": "https://plain.tools/learn/glossary",
     })),
   }
 }
@@ -469,3 +469,4 @@ export default function GlossaryPage() {
     </div>
   )
 }
+

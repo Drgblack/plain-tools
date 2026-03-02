@@ -1,135 +1,71 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
 
-const BASE_URL = 'https://plainpdf.com'
-const LAST_MODIFIED = '2026-03-02'
+import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+
+const BASE_URL = "https://plain.tools"
+
+const STATIC_ROUTES = [
+  "/",
+  "/about",
+  "/blog",
+  "/compare",
+  "/comparisons",
+  "/extension",
+  "/faq",
+  "/how-it-works",
+  "/labs",
+  "/learn",
+  "/offline-pdf-tools",
+  "/privacy",
+  "/support",
+  "/terms",
+  "/tools",
+  "/verify",
+  "/verify-claims",
+  "/tools/ai-pdf-assistant",
+]
+
+const TOOL_ROUTE_OVERRIDES = [
+  "/tools/merge-pdf",
+  "/tools/split-pdf",
+  "/tools/compress-pdf",
+  "/tools/reorder-pdf",
+  "/tools/extract-pdf",
+]
+
+const scorePriority = (path: string) => {
+  if (path === "/") return 1
+  if (path.startsWith("/tools/")) return 0.9
+  if (path.startsWith("/blog") || path.startsWith("/learn")) return 0.8
+  if (path.startsWith("/compare") || path.startsWith("/comparisons")) return 0.7
+  if (path === "/tools") return 0.9
+  return 0.5
+}
+
+const scoreFrequency = (path: string): MetadataRoute.Sitemap[number]["changeFrequency"] => {
+  if (path === "/") return "weekly"
+  if (path.startsWith("/tools/")) return "monthly"
+  if (path.startsWith("/blog")) return "weekly"
+  if (path.startsWith("/learn")) return "monthly"
+  return "monthly"
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // High Priority (1.0) - Home page
-  const homePage = {
-    url: BASE_URL,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'weekly' as const,
-    priority: 1.0,
-  }
+  const today = new Date()
 
-  // Primary Priority (0.9) - All tools
-  const tools = [
-    'merge-pdf',
-    'split-pdf',
-    'compress-pdf',
-    'reorder-pdf',
-    'extract-pages',
-    'pdf-to-jpg',
-    'pdf-to-word',
-    'pdf-to-excel',
-    'image-to-pdf',
-    'html-to-pdf',
-    'redact-pdf',
-    'unlock-pdf',
-    'watermark-pdf',
-    'ocr-pdf',
-    'page-numbers',
-    'delete-pages',
-    'ai-chat-pdf',
-    'ai-summary',
-  ].map((tool) => ({
-    url: `${BASE_URL}/tools/${tool}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.9,
+  const availableToolRoutes = TOOL_CATALOGUE.filter((tool) => tool.available).map(
+    (tool) => `/tools/${tool.slug}`
+  )
+
+  const uniqueRoutes = Array.from(
+    new Set([...STATIC_ROUTES, ...TOOL_ROUTE_OVERRIDES, ...availableToolRoutes])
+  )
+
+  return uniqueRoutes.map((path) => ({
+    url: `${BASE_URL}${path}`,
+    lastModified: today,
+    changeFrequency: scoreFrequency(path),
+    priority: scorePriority(path),
   }))
-
-  // Content Priority (0.8) - Learning Centre articles
-  const learningArticles = [
-    'webassembly-explained',
-    'hardware-acceleration',
-    'redaction-guide',
-    'offline-workflows',
-    'ram-optimisation',
-    'privacy-101',
-    'wasm-vs-cloud',
-    'webgpu-acceleration',
-    'permanent-redaction',
-    'large-pdf-management',
-    'no-uploads-explained',
-    'verify-offline-processing',
-    'client-side-processing',
-  ].map((article) => ({
-    url: `${BASE_URL}/learn/${article}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
-
-  // Content Priority (0.8) - Blog posts
-  const blogPosts = [
-    'why-we-built-plain',
-    'wasm-performance-guide',
-    'privacy-first-development',
-    'local-ai-browser',
-    'gdpr-compliance-tools',
-  ].map((post) => ({
-    url: `${BASE_URL}/blog/${post}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
-
-  // Additional Content Pages
-  const contentPages = [
-    { url: `${BASE_URL}/learn`, priority: 0.8 },
-    { url: `${BASE_URL}/blog`, priority: 0.8 },
-    { url: `${BASE_URL}/labs`, priority: 0.7 },
-    { url: `${BASE_URL}/tools`, priority: 0.9 },
-  ].map((page) => ({
-    ...page,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'weekly' as const,
-  }))
-
-  // Utility Priority (0.5) - About, Support, Ethics
-  const utilityPages = [
-    'about',
-    'support',
-    'verify-claims',
-  ].map((page) => ({
-    url: `${BASE_URL}/${page}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.5,
-  }))
-
-  // Low Priority (0.3) - Legal pages
-  const legalPages = [
-    'terms',
-    'privacy',
-  ].map((page) => ({
-    url: `${BASE_URL}/${page}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'yearly' as const,
-    priority: 0.3,
-  }))
-
-  // Comparison pages (0.7)
-  const comparisonPages = [
-    'plain-vs-ilovepdf',
-    'plain-vs-smallpdf',
-    'plain-vs-adobe',
-  ].map((page) => ({
-    url: `${BASE_URL}/compare/${page}`,
-    lastModified: LAST_MODIFIED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }))
-
-  return [
-    homePage,
-    ...tools,
-    ...contentPages,
-    ...learningArticles,
-    ...blogPosts,
-    ...comparisonPages,
-    ...utilityPages,
-    ...legalPages,
-  ]
 }
+

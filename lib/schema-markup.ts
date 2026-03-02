@@ -1,3 +1,5 @@
+import { createElement } from 'react'
+
 /**
  * Schema.org / JSON-LD Structured Data for Plain PDF
  * Optimised for GEO (Generative Engine Optimisation) and traditional SEO
@@ -5,7 +7,7 @@
  * Uses UK English throughout (optimised, initialised, etc.)
  */
 
-const BASE_URL = 'https://plainpdf.com'
+const BASE_URL = 'https://plain.tools'
 const ORGANISATION_NAME = 'Plain'
 const LOGO_URL = `${BASE_URL}/logo.png`
 
@@ -292,11 +294,9 @@ export function generateHowToSchema(options: HowToSchemaOptions) {
 // Helper component to render JSON-LD in pages
 export function JsonLd({ data }: { data: Record<string, unknown> | Record<string, unknown>[] }) {
   const jsonString = JSON.stringify(Array.isArray(data) ? data : data)
-  
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: jsonString }}
-    />
-  )
+
+  return createElement('script', {
+    type: 'application/ld+json',
+    dangerouslySetInnerHTML: { __html: jsonString },
+  })
 }

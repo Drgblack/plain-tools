@@ -70,8 +70,8 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://plainpdf.com/" },
-    { "@type": "ListItem", position: 2, name: "Compare", item: "https://plainpdf.com/compare" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://plain.tools/" },
+    { "@type": "ListItem", position: 2, name: "Compare", item: "https://plain.tools/compare" },
   ],
 }
 
@@ -151,7 +151,7 @@ export default function ComparePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <link rel="canonical" href="https://plainpdf.com/compare" />
+      <link rel="canonical" href="https://plain.tools/compare" />
       
       <Header />
 

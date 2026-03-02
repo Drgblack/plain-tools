@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Why Local-First Wins - Compare Plain PDF",
     description: "Your documents are too sensitive for the cloud. Compare why professionals are switching to Plain for 100% on-device processing.",
-    url: "https://plainpdf.com/compare",
+    url: "https://plain.tools/compare",
     type: "website",
   },
   twitter: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: "Your documents are too sensitive for the cloud. Compare why professionals are switching to Plain.",
   },
   alternates: {
-    canonical: "https://plainpdf.com/compare",
+    canonical: "https://plain.tools/compare",
   },
 }
 

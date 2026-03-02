@@ -14,7 +14,7 @@ interface CanonicalProps {
 export function CanonicalUrl({ path }: CanonicalProps) {
   const pathname = usePathname()
   const canonicalPath = path || pathname
-  const baseUrl = "https://plainpdf.com"
+  const baseUrl = "https://plain.tools"
   const canonicalUrl = `${baseUrl}${canonicalPath}`
   
   return (
@@ -36,7 +36,7 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
-  const baseUrl = "https://plainpdf.com"
+  const baseUrl = "https://plain.tools"
   
   // Generate JSON-LD schema
   const breadcrumbSchema = {

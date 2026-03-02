@@ -235,11 +235,11 @@ export default function SupportPage() {
   }
 
   // Generate mailto links with pre-filled templates
-  const bugMailto = `mailto:support@plainpdf.com?subject=${encodeURIComponent("[Plain-Bug] [Tool Name]")}&body=${encodeURIComponent(`Browser: ${diagnostics.browser}\nDevice RAM: ${diagnostics.ram}\n\nDescription of issue:\n\n`)}`
+  const bugMailto = `mailto:support@plain.tools?subject=${encodeURIComponent("[Plain-Bug] [Tool Name]")}&body=${encodeURIComponent(`Browser: ${diagnostics.browser}\nDevice RAM: ${diagnostics.ram}\n\nDescription of issue:\n\n`)}`
   
-  const featureMailto = `mailto:support@plainpdf.com?subject=${encodeURIComponent("[Plain-Feature]")}&body=${encodeURIComponent("I would like to see...\n\n")}`
+  const featureMailto = `mailto:support@plain.tools?subject=${encodeURIComponent("[Plain-Feature]")}&body=${encodeURIComponent("I would like to see...\n\n")}`
   
-  const kudosMailto = `mailto:support@plainpdf.com?subject=${encodeURIComponent("[Plain-Kudos]")}&body=${encodeURIComponent("Just wanted to say...\n\n")}`
+  const kudosMailto = `mailto:support@plain.tools?subject=${encodeURIComponent("[Plain-Kudos]")}&body=${encodeURIComponent("Just wanted to say...\n\n")}`
 
   return (
     <div className="min-h-screen bg-[#000]">

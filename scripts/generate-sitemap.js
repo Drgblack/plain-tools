@@ -19,7 +19,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 
 // Configuration
-const SITE_URL = process.env.SITE_URL || 'https://plainpdf.com';
+const SITE_URL = process.env.SITE_URL || 'https://plain.tools';
 const CURRENT_DATE = new Date().toISOString().split('T')[0];
 
 // Priority and change frequency mappings
