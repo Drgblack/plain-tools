@@ -12,15 +12,18 @@ import { Card, CardContent } from "@/components/ui/card"
 import { TiltCard } from "@/components/ui/tilt-card"
 
 type ToolCategory = "popular" | "convert" | "security" | "edit" | "ai"
+type ToolCategoryLabel = "Security & Privacy" | "Performance & Edit" | "AI Labs"
+type ToolCategoryValue = ToolCategory | ToolCategoryLabel
 type ToolStatus = "Soon" | "New" | "Beta"
 
 interface Tool {
+  id?: string
   icon: LucideIcon
   title: string
   description: string
   href: string
   available: boolean
-  category: ToolCategory
+  category: ToolCategoryValue
   isAI?: boolean
   aiNote?: string
   status?: ToolStatus
@@ -34,6 +37,19 @@ const categories = [
   { id: "edit" as const, label: "Performance & Edit", icon: Binary },
   { id: "ai" as const, label: "AI Labs", icon: Sparkles },
 ]
+
+const normaliseCategory = (category: ToolCategoryValue): ToolCategory => {
+  switch (category) {
+    case "Security & Privacy":
+      return "security"
+    case "Performance & Edit":
+      return "edit"
+    case "AI Labs":
+      return "ai"
+    default:
+      return category
+  }
+}
 
 const tools: Tool[] = [
   // Popular tools
@@ -138,6 +154,7 @@ const tools: Tool[] = [
   
   // Security & Privacy tools
   {
+    id: "plain-metadata-purge",
     icon: FileSearch,
     title: "Plain Metadata Purge",
     description: "Permanently strip XMP, PDF, and embedded metadata with a local before/after diff view. No uploads.",
@@ -147,6 +164,7 @@ const tools: Tool[] = [
     status: "New",
   },
   {
+    id: "plain-irreversible-redactor",
     icon: ShieldAlert,
     title: "Plain Irreversible Redactor",
     description: "Pixel-precise, burn-in redaction of text and regions with local SHA-256 verification. No uploads.",
@@ -156,6 +174,7 @@ const tools: Tool[] = [
     status: "New",
   },
   {
+    id: "plain-local-cryptographic-signer",
     icon: PenTool,
     title: "Plain Local Cryptographic Signer",
     description: "Apply PAdES/PKCS#7 signatures using keys stored solely in your browser secure enclave. Local-only workflow.",
@@ -165,6 +184,7 @@ const tools: Tool[] = [
     status: "New",
   },
   {
+    id: "plain-password-breaker",
     icon: Unlock,
     title: "Plain Password Breaker",
     description: "Remove owner or user passwords using local-only recovery paths with no telemetry and no uploads.",
@@ -208,6 +228,7 @@ const tools: Tool[] = [
   
   // Performance & Edit tools
   {
+    id: "plain-webgpu-page-organiser",
     icon: LayoutGrid,
     title: "Plain WebGPU Page Organiser",
     description: "Drag-and-drop reordering and rotation with hardware-accelerated local previews. No uploads.",
@@ -218,6 +239,7 @@ const tools: Tool[] = [
     badge: "WebGPU",
   },
   {
+    id: "plain-hardware-accelerated-batch-engine",
     icon: Zap,
     title: "Plain Hardware-Accelerated Batch Engine",
     description: "Simultaneous merge and split of large PDF sets (>2GB) via WebGPU compute shaders. Local-only processing.",
@@ -228,6 +250,7 @@ const tools: Tool[] = [
     badge: "WebGPU",
   },
   {
+    id: "plain-offline-ocr-pipeline",
     icon: ScanText,
     title: "Plain Offline OCR Pipeline",
     description: "WebGPU-optimised text recognition for scanned documents without leaving the device or uploading files.",
@@ -238,6 +261,7 @@ const tools: Tool[] = [
     badge: "WebGPU",
   },
   {
+    id: "plain-real-time-compression-previewer",
     icon: Minimize2,
     title: "Plain Real-Time Compression Previewer",
     description: "Slider-driven recompression with side-by-side visual and size previews in Wasm. Fully local, no uploads.",
@@ -324,11 +348,11 @@ export function ToolsSection() {
   const [batchMode, setBatchMode] = useState(false)
   
   const filteredTools = useMemo(() => {
-    let filtered = tools.filter(tool => tool.category === activeCategory)
+    let filtered = tools.filter((tool) => normaliseCategory(tool.category) === activeCategory)
     
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
-      filtered = tools.filter(tool => 
+      filtered = tools.filter((tool) =>
         tool.title.toLowerCase().includes(query) ||
         tool.description.toLowerCase().includes(query)
       )
@@ -456,7 +480,7 @@ export function ToolsSection() {
             
             return (
               <TiltCard 
-                key={tool.href} 
+                key={tool.id ?? tool.href ?? tool.title} 
                 className="h-full"
                 tiltIntensity={tool.available ? 8 : 3}
                 glowOnHover={tool.available}

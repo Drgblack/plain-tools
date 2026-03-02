@@ -34,6 +34,15 @@ type WorkerSplitSuccessMessage = {
   }>
 }
 
+type WorkerOcrSuccessMessage = {
+  type: "ocrSuccess"
+  requestId: string
+  name: string
+  buffer: ArrayBuffer
+  extractedText: string
+  pageCount: number
+}
+
 type WorkerErrorMessage = {
   type: "error"
   requestId: string
@@ -44,6 +53,7 @@ type WorkerMessage =
   | WorkerProgressMessage
   | WorkerMergeSuccessMessage
   | WorkerSplitSuccessMessage
+  | WorkerOcrSuccessMessage
   | WorkerErrorMessage
 
 type BatchSplitMode = "extract" | "ranges" | "individual"
@@ -60,6 +70,13 @@ export interface BatchSplitOutput {
   bytes: Uint8Array
   pageCount: number
   pageRange: string
+}
+
+export interface OcrOutput {
+  name: string
+  bytes: Uint8Array
+  extractedText: string
+  pageCount: number
 }
 
 type BatchProgress = (progress: number, status: string) => void
@@ -292,4 +309,56 @@ export async function splitFilesWithBatchEngine(
 
   onProgress?.(100, "Complete. Split output generated locally.")
   return outputsPerFile.flat()
+}
+
+export async function performLocalOCR(
+  file: File,
+  onProgress?: BatchProgress
+): Promise<OcrOutput> {
+  const worker = createBatchWorker()
+  const requestId = crypto.randomUUID()
+
+  return new Promise((resolve, reject) => {
+    const handleMessage = (event: MessageEvent<WorkerMessage>) => {
+      const message = event.data
+      if (!message || message.requestId !== requestId) {
+        return
+      }
+
+      if (message.type === "progress") {
+        onProgress?.(message.progress, message.status)
+        return
+      }
+
+      worker.removeEventListener("message", handleMessage)
+      worker.terminate()
+
+      if (message.type === "error") {
+        reject(new Error(message.error))
+        return
+      }
+
+      if (message.type === "ocrSuccess") {
+        resolve({
+          name: message.name,
+          bytes: new Uint8Array(message.buffer),
+          extractedText: message.extractedText,
+          pageCount: message.pageCount,
+        })
+      }
+    }
+
+    worker.addEventListener("message", handleMessage)
+    worker.addEventListener("error", (event) => {
+      worker.removeEventListener("message", handleMessage)
+      worker.terminate()
+      reject(new Error(event.message || "Local OCR worker failed to start."))
+    })
+
+    worker.postMessage({
+      type: "performLocalOCR",
+      requestId,
+      file,
+    })
+  })
 }

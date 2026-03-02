@@ -1,4 +1,6 @@
-import { PDFDocument } from "pdf-lib"
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import { createWorker, OEM } from "tesseract.js"
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"
 
 type MergeFileInput = {
   name: string
@@ -23,7 +25,13 @@ type SplitRequest = {
   ranges?: number[][]
 }
 
-type WorkerRequest = MergeChunkRequest | SplitRequest
+type OcrRequest = {
+  type: "performLocalOCR"
+  requestId: string
+  file: File
+}
+
+type WorkerRequest = MergeChunkRequest | SplitRequest | OcrRequest
 
 type WorkerProgressMessage = {
   type: "progress"
@@ -52,6 +60,15 @@ type SplitSuccessMessage = {
   outputs: SplitOutput[]
 }
 
+type OcrSuccessMessage = {
+  type: "ocrSuccess"
+  requestId: string
+  name: string
+  buffer: ArrayBuffer
+  extractedText: string
+  pageCount: number
+}
+
 type WorkerErrorMessage = {
   type: "error"
   requestId: string
@@ -59,6 +76,24 @@ type WorkerErrorMessage = {
 }
 
 const workerScope = self as DedicatedWorkerGlobalScope
+const OCR_LOCAL_ASSET_BASE = "/tesseract"
+const OCR_WORKER_PATH = `${OCR_LOCAL_ASSET_BASE}/worker.min.js`
+const OCR_CORE_PATH = `${OCR_LOCAL_ASSET_BASE}/tesseract-core-simd-lstm.wasm.js`
+const OCR_LANG_PATH = `${OCR_LOCAL_ASSET_BASE}/lang-data`
+const OCR_DEFAULT_LANG_FILE = "eng.traineddata.gz"
+
+const toDataUrl = async (canvas: OffscreenCanvas, mimeType = "image/jpeg", quality = 0.9) => {
+  const blob = await canvas.convertToBlob({ type: mimeType, quality })
+  const buffer = await blob.arrayBuffer()
+  const bytes = new Uint8Array(buffer)
+
+  let binary = ""
+  const chunkSize = 0x8000
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+  }
+  return `data:${mimeType};base64,${btoa(binary)}`
+}
 
 const sendProgress = (requestId: string, progress: number, status: string) => {
   const message: WorkerProgressMessage = {
@@ -77,6 +112,16 @@ const sendError = (requestId: string, error: string) => {
     error,
   }
   workerScope.postMessage(message)
+}
+
+const ensureLocalOcrLanguageData = async () => {
+  const languageFileUrl = `${OCR_LANG_PATH}/${OCR_DEFAULT_LANG_FILE}`
+  const response = await fetch(languageFileUrl, { method: "HEAD" })
+  if (!response.ok) {
+    throw new Error(
+      `Missing local OCR language file at ${languageFileUrl}. Add ${OCR_DEFAULT_LANG_FILE} to continue.`
+    )
+  }
 }
 
 const mergeChunk = async (request: MergeChunkRequest) => {
@@ -192,6 +237,134 @@ const splitFile = async (request: SplitRequest) => {
   workerScope.postMessage(success, transferables)
 }
 
+const performLocalOCR = async (
+  file: File,
+  requestId: string
+) => {
+  sendProgress(requestId, 2, "Initialising OCR worker locally.")
+  await ensureLocalOcrLanguageData()
+
+  const fileBuffer = await file.arrayBuffer()
+  const sourceBytes = new Uint8Array(fileBuffer)
+  const loadingTask = pdfjsLib.getDocument({
+    data: sourceBytes,
+    disableWorker: true,
+    disableAutoFetch: true,
+    disableRange: true,
+    disableStream: true,
+  })
+  const pdf = await loadingTask.promise
+
+  const ocrWorker = await createWorker("eng", OEM.LSTM_ONLY, {
+    workerPath: OCR_WORKER_PATH,
+    corePath: OCR_CORE_PATH,
+    langPath: OCR_LANG_PATH,
+    workerBlobURL: false,
+    gzip: true,
+    logger: (log) => {
+      if (log.status) {
+        const percentage = Math.round((log.progress ?? 0) * 100)
+        sendProgress(
+          requestId,
+          Math.min(95, Math.max(5, percentage)),
+          `Initialising OCR: ${log.status}.`
+        )
+      }
+    },
+  })
+
+  const outputPdf = await PDFDocument.create()
+  const ocrFont = await outputPdf.embedFont(StandardFonts.Helvetica)
+  const pageTexts: string[] = []
+  const renderScale = 1.6
+
+  try {
+    for (let index = 0; index < pdf.numPages; index++) {
+      const page = await pdf.getPage(index + 1)
+      const renderViewport = page.getViewport({ scale: renderScale })
+      const pointViewport = page.getViewport({ scale: 1 })
+
+      const canvas = new OffscreenCanvas(
+        Math.max(1, Math.ceil(renderViewport.width)),
+        Math.max(1, Math.ceil(renderViewport.height))
+      )
+      const context = canvas.getContext("2d")
+      if (!context) {
+        throw new Error("Could not initialise offscreen canvas for local OCR.")
+      }
+
+      await page.render({
+        canvasContext: context,
+        viewport: renderViewport,
+        annotationMode: pdfjsLib.AnnotationMode.ENABLE,
+      }).promise
+
+      sendProgress(
+        requestId,
+        Math.round(((index + 1) / pdf.numPages) * 60),
+        `Initialising OCR page ${index + 1} of ${pdf.numPages}.`
+      )
+
+      const ocrResult = await ocrWorker.recognize(canvas)
+      pageTexts.push(ocrResult.data.text || "")
+
+      const pageImageDataUrl = await toDataUrl(canvas, "image/jpeg", 0.9)
+      const image = await outputPdf.embedJpg(pageImageDataUrl)
+      const outputPage = outputPdf.addPage([pointViewport.width, pointViewport.height])
+
+      outputPage.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: pointViewport.width,
+        height: pointViewport.height,
+      })
+
+      for (const word of ocrResult.data.words ?? []) {
+        const rawText = (word.text || "").trim()
+        if (!rawText) continue
+
+        const x = word.bbox.x0 / renderScale
+        const y = pointViewport.height - word.bbox.y1 / renderScale
+        const lineHeight = Math.max(6, (word.bbox.y1 - word.bbox.y0) / renderScale)
+
+        outputPage.drawText(rawText, {
+          x,
+          y,
+          size: lineHeight,
+          font: ocrFont,
+          color: rgb(0, 0, 0),
+          opacity: 0,
+        })
+      }
+
+      sendProgress(
+        requestId,
+        Math.round(60 + ((index + 1) / pdf.numPages) * 35),
+        `Optimising OCR layer for page ${index + 1} of ${pdf.numPages}.`
+      )
+    }
+  } finally {
+    await ocrWorker.terminate()
+    await loadingTask.destroy()
+  }
+
+  const outputBytes = await outputPdf.save({ useObjectStreams: true })
+  const success: OcrSuccessMessage = {
+    type: "ocrSuccess",
+    requestId,
+    name: file.name.replace(/\.pdf$/i, "") + "-ocr-searchable.pdf",
+    buffer: outputBytes.buffer.slice(
+      outputBytes.byteOffset,
+      outputBytes.byteOffset + outputBytes.byteLength
+    ),
+    extractedText: pageTexts.join("\n\n"),
+    pageCount: pdf.numPages,
+  }
+
+  sendProgress(requestId, 100, "Complete. OCR finished locally.")
+  workerScope.postMessage(success, [success.buffer])
+}
+
 workerScope.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   const request = event.data
 
@@ -203,6 +376,11 @@ workerScope.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
     if (request.type === "splitFile") {
       await splitFile(request)
+      return
+    }
+
+    if (request.type === "performLocalOCR") {
+      await performLocalOCR(request.file, request.requestId)
       return
     }
   } catch (error) {
