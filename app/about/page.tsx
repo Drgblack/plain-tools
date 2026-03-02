@@ -478,7 +478,6 @@ export default function AboutPage() {
   </div>
   </AutoLinkContent>
   </div>
-  </div>
   </section>
 
         {/* Back to Tools CTA */}
