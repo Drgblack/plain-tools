@@ -17,6 +17,9 @@ const toolComponents: Record<string, ToolComponent> = {
   "privacy-risk-scanner": lazy(() => import("@/components/tools/privacy-scanner-tool")),
   "privacy-scan": lazy(() => import("@/components/tools/privacy-scanner-tool")),
   "offline-ocr": lazy(() => import("@/components/tools/ocr-tool")),
+  "compression-preview": lazy(() => import("@/components/tools/compression-previewer-tool")),
+  "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),
+  "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
   "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
 }
 
