@@ -93,6 +93,9 @@ const resolveIcon = (tool: ToolDefinition) => {
 }
 
 const getSystemBadge = (tool: ToolDefinition) => {
+  if (tool.badge) {
+    return tool.badge
+  }
   if (WEBGPU_TOOL_IDS.has(tool.id)) {
     return "WebGPU"
   }

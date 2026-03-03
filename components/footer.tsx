@@ -121,7 +121,9 @@ export function Footer() {
             <ul className="mt-5 space-y-3">
               {[
                 { label: "Merge PDF", href: "/tools/merge-pdf" },
+                { label: "Convert PDF", href: "/tools/convert-pdf" },
                 { label: "Redact", href: "/tools/redact-pdf" },
+                { label: "Batch Engine", href: "/tools/batch-engine" },
                 { label: "AI Summariser", href: "/tools/summarize-pdf" },
                 { label: "OCR", href: "/tools/offline-ocr" },
                 { label: "All Tools", href: "/tools" },

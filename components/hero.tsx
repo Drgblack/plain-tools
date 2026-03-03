@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Upload, WifiOff, ShieldCheck, BookOpen, GitCompare, BadgeCheck } from "lucide-react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
+import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 const LocalPreview = dynamic(
   () => import("@/components/local-preview").then((mod) => mod.LocalPreview),
@@ -26,6 +27,10 @@ export function Hero() {
   const [showPreview, setShowPreview] = useState(false)
   const dropZoneRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const availableToolCount = useMemo(
+    () => TOOL_CATALOGUE.filter((tool) => tool.available).length,
+    []
+  )
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -156,6 +161,9 @@ export function Hero() {
         <br className="hidden sm:inline" />
         No uploads. No servers. No accounts. Just simple, professional PDF
         utilities powered by your device.
+      </p>
+      <p className="animate-fade-up-delay-2 relative mt-3 text-[12px] uppercase tracking-wide text-muted-foreground/70">
+        {availableToolCount} live tools, zero coming soon.
       </p>
       {/* Drag and Drop Zone */}
       <div className="animate-fade-up-delay-3 relative mt-10 w-full max-w-xl px-2 sm:px-4">

@@ -1,0 +1,45 @@
+import type { Metadata } from "next"
+
+import { Footer } from "@/components/footer"
+import { Header } from "@/components/header"
+import ConvertTool from "@/components/tools/convert-tool"
+
+export const metadata: Metadata = {
+  title: "Convert PDF",
+  description:
+    "Convert PDF to images or extract text locally in your browser. No uploads, no server processing.",
+  alternates: {
+    canonical: "https://plain.tools/tools/convert-pdf",
+  },
+  openGraph: {
+    title: "Convert PDF - Plain",
+    description:
+      "Convert PDF pages to PNG/JPEG or extract text as TXT locally without uploading files.",
+    url: "https://plain.tools/tools/convert-pdf",
+  },
+}
+
+export default function ConvertPdfPage() {
+  return (
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <Header />
+
+      <main className="flex-1 px-4 py-8 sm:py-10">
+        <div className="mx-auto max-w-3xl space-y-6">
+          <section className="space-y-2 text-center sm:space-y-3">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              Convert PDF
+            </h1>
+            <p className="mx-auto max-w-2xl text-sm text-muted-foreground sm:text-base">
+              Convert PDF pages to PNG/JPEG or extract all text into a plain TXT file. Everything runs locally on your device.
+            </p>
+          </section>
+
+          <ConvertTool />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

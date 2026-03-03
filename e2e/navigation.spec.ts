@@ -11,6 +11,12 @@ const headerLinks = [
 
 const footerLinks = [
   "/tools/merge-pdf",
+  "/tools/convert-pdf",
+  "/tools/plain-metadata-purge",
+  "/tools/plain-local-cryptographic-signer",
+  "/tools/plain-password-breaker",
+  "/tools/plain-webgpu-page-organiser",
+  "/tools/plain-hardware-accelerated-batch-engine",
   "/tools/redact-pdf",
   "/tools/summarize-pdf",
   "/tools/offline-ocr",
@@ -21,6 +27,15 @@ const footerLinks = [
   "/privacy",
   "/verify-claims",
   "/support",
+]
+
+const newToolRoutes = [
+  "/tools/convert-pdf",
+  "/tools/plain-metadata-purge",
+  "/tools/plain-local-cryptographic-signer",
+  "/tools/plain-password-breaker",
+  "/tools/plain-webgpu-page-organiser",
+  "/tools/plain-hardware-accelerated-batch-engine",
 ]
 
 const assertLinksResolve = async (
@@ -60,3 +75,7 @@ test("footer links resolve", async ({ request }) => {
   await assertLinksResolve(request, footerLinks)
 })
 
+test("new tool routes resolve", async ({ request }) => {
+  test.setTimeout(240_000)
+  await assertLinksResolve(request, newToolRoutes)
+})

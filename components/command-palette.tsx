@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   Search, Merge, Split, Minimize2, ArrowUpDown, FileOutput, EyeOff, ScanText,
-  MessageSquare, Sparkles, Shield, Cpu, 
+  MessageSquare, Sparkles, Shield, Cpu,
   History, ToggleLeft, Gauge, Command, CornerDownLeft, ArrowUp, ArrowDown,
-  Zap, HardDrive, Lock, X, PencilLine
+  Zap, HardDrive, Lock, X, PencilLine, RefreshCw, FileSearch, PenTool, Unlock, SearchCheck, LayoutGrid, Layers, FileText
 } from "lucide-react"
+import { TOOL_CATALOGUE, type ToolDefinition } from "@/lib/tools-catalogue"
 
 // Types
 interface CommandItem {
@@ -78,22 +79,48 @@ export function CommandPalette() {
   const router = useRouter()
   const closePalette = useCallback(() => setIsOpen(false), [])
 
+  const resolveToolIcon = useCallback((tool: ToolDefinition) => {
+    const iconMap: Record<string, React.ElementType> = {
+      Merge,
+      Split,
+      Minimize2,
+      ArrowUpDown,
+      FileOutput,
+      RefreshCw,
+      FileSearch,
+      ShieldAlert: EyeOff,
+      PenTool,
+      Unlock,
+      SearchCheck,
+      LayoutGrid,
+      Zap,
+      ScanText,
+      Sparkles,
+      MessageSquare,
+      PencilLine,
+      Layers,
+    }
+
+    if (!tool.icon) {
+      return FileText
+    }
+
+    return iconMap[tool.icon] ?? FileText
+  }, [])
+
   // Define all command items
   const allItems: CommandItem[] = useMemo(() => [
-    // Tools
-    { id: "merge-pdf", title: "Merge PDF", description: "Combine multiple PDFs into one", category: "tools", icon: Merge, href: "/tools/merge-pdf" },
-    { id: "split-pdf", title: "Split PDF", description: "Separate a PDF into individual pages", category: "tools", icon: Split, href: "/tools/split-pdf" },
-    { id: "compress-pdf", title: "Compress PDF", description: "Reduce file size whilst maintaining quality", category: "tools", icon: Minimize2, href: "/tools/compress-pdf" },
-    { id: "reorder-pdf", title: "Reorder PDF", description: "Rearrange pages in your PDF", category: "tools", icon: ArrowUpDown, href: "/tools/reorder-pdf" },
-    { id: "extract-pdf", title: "Extract PDF", description: "Pull specific pages from a PDF", category: "tools", icon: FileOutput, href: "/tools/extract-pdf" },
-    { id: "redact-pdf", title: "Redact PDF", description: "Permanently remove sensitive content", category: "tools", icon: EyeOff, href: "/tools/redact-pdf" },
-    { id: "privacy-scan", title: "Privacy Scan", description: "Scan PDF for PII risks", category: "tools", icon: Shield, href: "/tools/privacy-scan" },
-    { id: "offline-ocr", title: "Offline OCR", description: "Make scanned PDFs searchable", category: "tools", icon: ScanText, href: "/tools/offline-ocr" },
-    { id: "compression-preview", title: "Compression Preview", description: "Preview compression before download", category: "tools", icon: Zap, href: "/tools/compression-preview" },
-    { id: "summarize-pdf", title: "Summarize PDF", description: "Generate concise summaries", category: "tools", icon: Sparkles, href: "/tools/summarize-pdf" },
-    { id: "pdf-qa", title: "Q&A on PDF", description: "Ask questions about your document", category: "tools", icon: MessageSquare, href: "/tools/pdf-qa" },
-    { id: "suggest-edits", title: "Suggest Edits", description: "Get rewrite suggestions for PDF text", category: "tools", icon: PencilLine, href: "/tools/suggest-edits" },
-    
+    ...TOOL_CATALOGUE
+      .filter((tool) => tool.available)
+      .map((tool) => ({
+        id: tool.id,
+        title: tool.name,
+        description: tool.description,
+        category: "tools" as const,
+        icon: resolveToolIcon(tool),
+        href: `/tools/${tool.slug}`,
+      })),
+
     // Learning Centre articles
     { id: "learn-wasm", title: "WebAssembly Explained", description: "How your data stays in-browser", category: "learning", icon: Cpu, href: "/learn/wasm-security" },
     { id: "learn-webgpu", title: "Hardware Acceleration", description: "Using WebGPU for local AI", category: "learning", icon: Zap, href: "/learn/webgpu-acceleration" },
@@ -113,7 +140,7 @@ export function CommandPalette() {
       window.dispatchEvent(new CustomEvent("privacyModeToggled"))
     }},
     { id: "action-benchmark", title: "Run Performance Benchmark", description: "Test your device capabilities", category: "actions", icon: Gauge, href: "/labs" },
-  ], [])
+  ], [resolveToolIcon])
 
   // Filter and sort items based on query
   const filteredItems = useMemo(() => {

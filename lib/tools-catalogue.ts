@@ -28,6 +28,7 @@ export interface ToolDefinition {
   slug: string
   category: ToolCategory
   description: string
+  badge?: string
   icon?: string
   available: boolean
   component?: ComponentType
@@ -136,8 +137,9 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "convert-pdf",
     category: "Core",
     description: "Convert PDF pages to images or extract text locally.",
+    badge: "100% Local",
     icon: "RefreshCw",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Convert PDF")
       const targetFormat = (options?.targetFormat ?? "png") as PdfConversionFormat
@@ -151,8 +153,9 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "plain-metadata-purge",
     category: "Security & Privacy",
     description: "Remove XMP, info dictionary, and custom metadata fields locally.",
+    badge: "100% Local",
     icon: "FileSearch",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Metadata Purge")
       const { plainMetadataPurge } = await import("./pdf-security-engines")
@@ -186,9 +189,10 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     name: "Plain Local Cryptographic Signer",
     slug: "plain-local-cryptographic-signer",
     category: "Security & Privacy",
-    description: "Apply local visual plus cryptographic signature data to PDF files.",
+    description: "Apply visual and cryptographic PDF signatures locally with built-in verification workflow.",
+    badge: "Local Crypto",
     icon: "PenTool",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Local Cryptographic Signer")
       const keyMaterial = options?.keyMaterial
@@ -209,8 +213,9 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "plain-password-breaker",
     category: "Security & Privacy",
     description: "Attempt local password unlock with known key and bounded brute-force.",
+    badge: "Local Recovery",
     icon: "Unlock",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Password Breaker")
       const { plainPasswordBreaker } = await import("./pdf-security-engines")
@@ -236,9 +241,10 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     name: "Plain WebGPU Page Organiser",
     slug: "plain-webgpu-page-organiser",
     category: "Performance & Edit",
-    description: "Organise pages with local WebGPU previews and pdf-lib restructuring.",
+    description: "Organise pages with local thumbnail previews, drag reorder, and bulk edit controls.",
+    badge: "WebGPU",
     icon: "LayoutGrid",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain WebGPU Page Organiser")
       const operations = options?.operations
@@ -254,9 +260,10 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     name: "Plain Hardware-Accelerated Batch Engine",
     slug: "plain-hardware-accelerated-batch-engine",
     category: "Performance & Edit",
-    description: "Run merge/split/compress/convert in local worker-driven batch mode.",
+    description: "Run merge, compress, split, and convert workflows in a parallel local worker pool.",
+    badge: "Worker Pool",
     icon: "Zap",
-    available: false,
+    available: true,
     handler: async (files, options) => {
       const { plainHardwareAcceleratedBatch } = await import("./pdf-batch-engine")
       const batchOptions: PlainHardwareAcceleratedBatchOptions =
