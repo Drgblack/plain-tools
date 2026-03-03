@@ -27,9 +27,18 @@ export function Hero() {
   const [showPreview, setShowPreview] = useState(false)
   const dropZoneRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const availableToolCount = useMemo(
-    () => TOOL_CATALOGUE.filter((tool) => tool.available).length,
+  const availableTools = useMemo(
+    () => TOOL_CATALOGUE.filter((tool) => tool.available),
     []
+  )
+  const availableToolCount = availableTools.length
+  const marqueeToolNames = useMemo(() => {
+    const names = availableTools.map((tool) => tool.name)
+    return names.length > 0 ? [...names, ...names] : []
+  }, [availableTools])
+  const toolsForAssistiveTech = useMemo(
+    () => availableTools.map((tool) => tool.name).join(", "),
+    [availableTools]
   )
 
   useEffect(() => {
@@ -157,10 +166,10 @@ export function Hero() {
         <span className="text-accent font-extrabold">Nothing uploaded.</span>
       </h1>
       <p className="animate-fade-up-delay-2 relative mt-5 max-w-lg px-2 text-pretty text-[15px] leading-relaxed text-muted-foreground md:px-0 md:text-base">
-        Offline PDF tools that run entirely in your browser.{" "}
+        Complete offline PDF suite that runs in your browser.{" "}
         <br className="hidden sm:inline" />
-        No uploads. No servers. No accounts. Just simple, professional PDF
-        utilities powered by your device.
+        Merge, split, convert, OCR, redact, sign, and analyse with private
+        client-side processing.
       </p>
       <p className="animate-fade-up-delay-2 relative mt-3 text-[12px] uppercase tracking-wide text-muted-foreground/70">
         {availableToolCount} live tools, zero coming soon.
@@ -261,6 +270,21 @@ export function Hero() {
           <BadgeCheck className="h-3.5 w-3.5 text-muted-foreground/60 transition-colors duration-200 group-hover:text-accent" strokeWidth={2} />
           Verify Claims
         </Link>
+      </div>
+
+      <div className="relative mt-8 w-full max-w-5xl overflow-hidden px-2">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#000] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#000] to-transparent" />
+        <div aria-hidden="true" className="hero-tools-marquee">
+          {marqueeToolNames.map((toolName, index) => (
+            <span key={`${toolName}-${index}`} className="hero-tools-pill">
+              {toolName}
+            </span>
+          ))}
+        </div>
+        <p className="sr-only">
+          Available tools include {toolsForAssistiveTech}.
+        </p>
       </div>
     </section>
     </>

@@ -78,7 +78,7 @@ export async function GET() {
               lineHeight: 1.4,
             }}
           >
-            Nothing uploaded. Ever.
+            Complete local suite: merge, OCR, redact, sign.
           </p>
         </div>
         
@@ -120,4 +120,3 @@ export async function GET() {
     }
   )
 }
-

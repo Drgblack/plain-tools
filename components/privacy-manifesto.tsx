@@ -8,52 +8,48 @@ import { sanitizeInlineHtml } from "@/lib/sanitize"
 const BRAND_TERMS = {
   WebAssembly: '<span translate="no" class="notranslate">WebAssembly</span>',
   Wasm: '<span translate="no" class="notranslate">Wasm</span>',
-  WebGPU: '<span translate="no" class="notranslate">WebGPU</span>',
   Plain: '<span translate="no" class="notranslate">Plain</span>',
 }
 
 const techColumns = [
   {
     icon: Cpu,
-    titleHtml: `${BRAND_TERMS.WebAssembly} Engine`,
+    titleHtml: `${BRAND_TERMS.WebAssembly} Core`,
     description:
-      `We compile professional-grade PDF libraries into ${BRAND_TERMS.Wasm}. This allows your browser to execute complex document manipulation at near-native speeds without an internet connection.`,
-    codeSnippet: `// Wasm initialisation
-const pdfEngine = await WebAssembly
-  .instantiateStreaming(
-    fetch('/pdf-core.wasm'),
-    { env: wasmImports }
-  );
-// Processing happens locally
-engine.processDocument(buffer);`,
+      `${BRAND_TERMS.Plain} runs merge, split, convert, extract, and compression workflows locally using ${BRAND_TERMS.Wasm} and browser-native APIs. Your PDF bytes stay in local memory during processing.`,
+    codeSnippet: `// Local PDF workflow
+const bytes = new Uint8Array(await file.arrayBuffer());
+const merged = await mergePdfs([fileA, fileB]);
+const split = await splitPdf(file, [{ start: 1, end: 3 }]);
+// Output is generated in-browser as Blob/Uint8Array
+downloadBlob(new Blob([merged], { type: 'application/pdf' }));`,
   },
   {
     icon: Sparkles,
-    titleHtml: `On-Device AI (${BRAND_TERMS.WebGPU})`,
+    titleHtml: "Security and Hygiene",
     description:
-      `Our AI summarisation and chat features utilise your device's hardware. By leveraging ${BRAND_TERMS.WebGPU}, large language models run directly in your browser's memory, ensuring your prompts and private data are never sent to a third-party API.`,
-    codeSnippet: `// WebGPU model inference
-const adapter = await navigator.gpu
-  .requestAdapter();
-const device = await adapter
-  .requestDevice();
-// LLM runs in browser memory
-await localLLM.generate(prompt);`,
+      `Metadata purge, irreversible redaction, password recovery, and local signing are implemented in the browser so you can inspect and control exactly what is removed or modified before export.`,
+    codeSnippet: `// Metadata + redaction cleanup
+const metadata = await inspectMetadata(file);
+const cleanedPdf = await plainMetadataPurge(file, {
+  fieldsToRemove: metadata.map((field) => field.key),
+});
+const redacted = await plainIrreversibleRedactor(file, regions);`,
   },
   {
     icon: Trash2,
-    titleHtml: "Zero-Trace Environment",
+    titleHtml: "Optional AI Relay (Text Only)",
     description:
-      `${BRAND_TERMS.Plain} uses a 'volatile' processing method. Once you close the tab, the virtual workspace is wiped. No temporary files, no cache leftovers, and absolutely no tracking cookies.`,
-    codeSnippet: `// Volatile memory handling
-window.addEventListener(
-  'beforeunload',
-  () => {
-    memoryBuffer.fill(0);
-    workspace.destroy();
-    // No trace remains
-  }
-);`,
+      `AI tools require explicit user consent. Only extracted text is sent to the AI endpoint when enabled. Original PDF files remain local and are never uploaded.`,
+    codeSnippet: `// Consent-gated AI request
+if (!allowServerProcessing) {
+  throw new Error('Consent required');
+}
+const text = await extractTextLocally(file);
+const summary = await fetch('/api/ai/summarize', {
+  method: 'POST',
+  body: JSON.stringify({ text, instructions }),
+});`,
   },
 ]
 
@@ -102,13 +98,14 @@ export function PrivacyManifesto() {
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-[15px] leading-relaxed text-muted-foreground md:text-base">
             Traditional PDF utilities require you to &lsquo;trust&rsquo; their server-side
-            encryption. At Plain, we removed the server entirely. Your documents
-            never leave your local machine because our processing engine lives
-            within your browser. This isn&apos;t just a promise; it is a{" "}
+            encryption. At Plain, core PDF processing happens in your browser and
+            your document files never leave your local machine. AI features are
+            explicitly opt-in and send extracted text only. This isn&apos;t just a
+            promise; it is a{" "}
             <span className="font-medium text-foreground/90">
-              technical impossibility
+              verifiable architecture
             </span>{" "}
-            for us to see your data.
+            you can inspect.
           </p>
         </div>
 

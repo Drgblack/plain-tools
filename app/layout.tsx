@@ -23,21 +23,33 @@ const lora = Lora({
   variable: "--font-serif",
 });
 
+const siteTitle = "Plain | Offline PDF Tools for Private Client-Side Processing"
+const siteDescription =
+  "Plain is a complete offline PDF toolkit for merge, split, compress, convert, OCR, redact, sign, and AI-assisted analysis. Private client-side PDF workflows with zero file uploads."
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://plain.tools'),
   title: {
-    default: 'Plain - Offline PDF Tools',
+    default: siteTitle,
     template: '%s - Plain',
   },
-  description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
+  description: siteDescription,
+  keywords: [
+    "offline PDF tools",
+    "client-side PDF tools",
+    "private PDF tools",
+    "PDF merge split compress",
+    "browser PDF editor",
+    "local PDF processing",
+  ],
   generator: 'Plain.tools',
   openGraph: {
     type: 'website',
     locale: 'en_GB',
     url: 'https://plain.tools',
     siteName: 'Plain',
-    title: 'Plain - Offline PDF Tools',
-    description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
+    title: siteTitle,
+    description: siteDescription,
     images: [
       {
         url: '/opengraph-image',
@@ -49,8 +61,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Plain - Offline PDF Tools',
-    description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
+    title: siteTitle,
+    description: siteDescription,
     images: ['/opengraph-image'],
   },
   icons: {
@@ -115,7 +127,7 @@ const jsonLd = {
       "@id": "https://plain.tools/#website",
       "url": "https://plain.tools",
       "name": "Plain PDF",
-      "description": "Professional PDF tools with complete privacy. All processing happens locally in your browser using WebAssembly technology. No file uploads, no server processing, no data collection.",
+      "description": "Complete private PDF tools with local processing for merge, split, convert, OCR, redact, signing, and optional text-only AI assistance.",
       "inLanguage": "en-GB",
       "publisher": {
         "@id": "https://plain.tools/#organization"
@@ -137,7 +149,7 @@ const jsonLd = {
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Browser-based (Chrome, Firefox, Safari, Edge)",
       "browserRequirements": "Requires WebAssembly support",
-      "description": "Suite of privacy-first PDF tools including merge, split, compress, redact, and AI-powered analysis. All processing occurs locally using WebAssembly.",
+      "description": "Complete suite of private PDF tools including merge, split, compress, convert, OCR, redaction, signing, and consent-gated AI text workflows.",
       "offers": {
         "@type": "Offer",
         "price": "0",

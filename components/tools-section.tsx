@@ -108,13 +108,32 @@ const getSystemBadge = (tool: ToolDefinition) => {
 export function ToolsSection() {
   const [activeCategory, setActiveCategory] = useState<"All" | ToolCategory>("All")
   const [searchQuery, setSearchQuery] = useState("")
+  const availableTools = useMemo(
+    () => TOOL_CATALOGUE.filter((tool) => tool.available),
+    []
+  )
+  const categoryCounts = useMemo(() => {
+    const counts: Record<"All" | ToolCategory, number> = {
+      All: availableTools.length,
+      Core: 0,
+      "Security & Privacy": 0,
+      "Performance & Edit": 0,
+      "AI Assistant": 0,
+    }
+
+    for (const tool of availableTools) {
+      counts[tool.category] += 1
+    }
+
+    return counts
+  }, [availableTools])
 
   const showingSearchResults = searchQuery.trim().length > 0
 
   const filteredTools = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
     if (query) {
-      return TOOL_CATALOGUE.filter(
+      return availableTools.filter(
         (tool) =>
           tool.name.toLowerCase().includes(query) ||
           tool.description.toLowerCase().includes(query) ||
@@ -123,11 +142,11 @@ export function ToolsSection() {
     }
 
     if (activeCategory === "All") {
-      return TOOL_CATALOGUE
+      return availableTools
     }
 
-    return TOOL_CATALOGUE.filter((tool) => tool.category === activeCategory)
-  }, [activeCategory, searchQuery])
+    return availableTools.filter((tool) => tool.category === activeCategory)
+  }, [activeCategory, availableTools, searchQuery])
 
   return (
     <section id="tools" className="relative px-4 pt-24 pb-28 md:pt-28 md:pb-36">
@@ -172,7 +191,7 @@ export function ToolsSection() {
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
-                  <span>{category.label}</span>
+                  <span>{`${category.label} (${categoryCounts[category.id] ?? 0})`}</span>
                 </button>
               )
             })}
@@ -202,11 +221,7 @@ export function ToolsSection() {
 
             const card = (
               <Card
-                className={`group relative h-full min-h-[44px] overflow-hidden rounded-xl border transition-all duration-150 outline-none ${
-                  tool.available
-                    ? "border-[#333] bg-[#111] cursor-pointer hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
-                    : "border-[#3d3d3d] bg-[#121212] cursor-not-allowed"
-                }`}
+                className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#333] bg-[#111] transition-all duration-150 outline-none hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -219,45 +234,20 @@ export function ToolsSection() {
 
                 <CardContent className="relative flex items-start gap-4 p-6 pt-10">
                   <div
-                    className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ring-1 transition-all ${
-                      tool.available
-                        ? "bg-accent/12 ring-accent/25 group-hover:bg-accent/20 group-hover:ring-accent/45"
-                        : "bg-accent/6 ring-accent/10"
-                    }`}
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/12 ring-1 ring-accent/25 transition-all group-hover:bg-accent/20 group-hover:ring-accent/45"
                   >
-                    <Icon
-                      className={`h-7 w-7 transition-all ${
-                        tool.available ? "text-accent/80 group-hover:text-accent" : "text-accent/40"
-                      }`}
-                    />
+                    <Icon className="h-7 w-7 text-accent/80 transition-all group-hover:text-accent" />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-start gap-2">
-                      <h3
-                        className={`text-[14px] font-semibold leading-tight ${
-                          tool.available ? "text-foreground/90 group-hover:text-foreground" : "text-foreground/85"
-                        }`}
-                      >
+                      <h3 className="text-[14px] font-semibold leading-tight text-foreground/90 group-hover:text-foreground">
                         {tool.name}
                       </h3>
-
-                      {!tool.available ? (
-                        <span className="shrink-0 rounded-full border border-amber-200/45 bg-amber-400/20 px-2.5 py-1 text-sm font-semibold leading-none text-amber-100">
-                          Coming Soon
-                        </span>
-                      ) : null}
-
-                      {tool.available ? (
-                        <ArrowRight className="h-3.5 w-3.5 text-accent opacity-0 -translate-x-1 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                      ) : null}
+                      <ArrowRight className="h-3.5 w-3.5 -translate-x-1 text-accent opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                     </div>
 
-                    <p
-                      className={`mt-2 text-[13px] leading-relaxed ${
-                        tool.available ? "text-muted-foreground/90 group-hover:text-muted-foreground" : "text-muted-foreground/85"
-                      }`}
-                    >
+                    <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground/90 group-hover:text-muted-foreground">
                       {tool.description}
                     </p>
 
@@ -277,22 +267,16 @@ export function ToolsSection() {
               <TiltCard
                 key={tool.id}
                 className="h-full"
-                tiltIntensity={tool.available ? 8 : 3}
-                glowOnHover={tool.available}
+                tiltIntensity={8}
+                glowOnHover={true}
               >
-                {tool.available ? (
-                  <Link
-                    href={`/tools/${tool.slug}`}
-                    className="block h-full min-h-[44px] rounded-xl focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    aria-label={`Open ${tool.name}. ${tool.description}`}
-                  >
-                    {card}
-                  </Link>
-                ) : (
-                  <div aria-disabled="true" className="block h-full min-h-[44px]">
-                    {card}
-                  </div>
-                )}
+                <Link
+                  href={`/tools/${tool.slug}`}
+                  className="block h-full min-h-[44px] rounded-xl focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  aria-label={`Open ${tool.name}. ${tool.description}`}
+                >
+                  {card}
+                </Link>
               </TiltCard>
             )
           })}

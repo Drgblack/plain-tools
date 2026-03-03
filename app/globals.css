@@ -646,6 +646,42 @@ body::after {
   animation: drag-pulse 1.2s ease-in-out infinite;
 }
 
+@keyframes hero-tools-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.hero-tools-marquee {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.5rem;
+  animation: hero-tools-scroll 36s linear infinite;
+}
+
+.hero-tools-marquee:hover {
+  animation-play-state: paused;
+}
+
+.hero-tools-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem 0.7rem;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+}
+
 /* Glassmorphism card */
 .glass-card {
   background: #111;
@@ -723,5 +759,12 @@ body::after {
   .pill-glow-pulse,
   .pill-dot-pulse {
     animation: none;
+  }
+
+  .hero-tools-marquee {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
