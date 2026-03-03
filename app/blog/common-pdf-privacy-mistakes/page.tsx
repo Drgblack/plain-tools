@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Common PDF Privacy Mistakes",
-  description:
-    "Plain identifies common privacy mistakes when working with PDFs, including hidden metadata and improper redaction.",
+  description: "Plain identifies common privacy mistakes when working with PDFs, including hidden metadata and improper redaction. Learn practical offline PDF privacy.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -239,3 +238,4 @@ export default function CommonPdfPrivacyMistakesPage() {
     </BlogArticle>
   )
 }
+

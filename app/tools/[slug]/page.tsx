@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { getToolSeoEntry } from "@/lib/seo-route-map"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -33,9 +35,57 @@ export async function generateStaticParams() {
   }))
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const tool = getToolBySlug(slug)
+  const seo = getToolSeoEntry(slug)
+
+  if (!tool) {
+    return {
+      title: "Tool Not Found - Plain",
+      description:
+        "The requested Plain tool could not be found. Browse available offline PDF tools and process documents locally without uploads.",
+    }
+  }
+
+  return {
+    title: tool.name,
+    description:
+      seo?.description ??
+      `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+    alternates: {
+      canonical: `https://plain.tools/tools/${slug}`,
+    },
+    openGraph: {
+      title: `${tool.name} - Plain`,
+      description:
+        seo?.description ??
+        `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+      url: `https://plain.tools/tools/${slug}`,
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: `${tool.name} - Plain`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${tool.name} - Plain`,
+      description:
+        seo?.description ??
+        `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+      images: ["/opengraph-image"],
+    },
+  }
+}
+
 export default async function ToolPage({ params }: PageProps) {
   const { slug } = await params
   const tool = getToolBySlug(slug)
+  const seo = getToolSeoEntry(slug)
 
   if (!tool) {
     notFound()
@@ -67,6 +117,18 @@ export default async function ToolPage({ params }: PageProps) {
               <Suspense fallback={<div>Loading tool...</div>}>
                 <ToolComponent />
               </Suspense>
+
+              {seo ? (
+                <div className="mt-6 rounded-lg border border-white/[0.1] bg-muted/20 p-4 text-sm text-muted-foreground">
+                  Learn more:{" "}
+                  <a
+                    href={seo.learnHref}
+                    className="font-medium text-accent hover:underline"
+                  >
+                    {seo.learnLabel}
+                  </a>
+                </div>
+              ) : null}
             </>
           ) : (
             <div className="rounded-xl border border-border bg-card p-6">

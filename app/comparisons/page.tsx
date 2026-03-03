@@ -9,8 +9,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Comparisons",
-  description:
-    "Plain compares offline and online PDF tools with factual, neutral analysis of architecture and privacy differences.",
+  description: "Plain compares offline and online PDF tools with factual, neutral analysis of architecture and privacy differences. Built for private, offline-first PDF.",
   openGraph: {
     title: "Comparisons - Plain",
     description: "Plain compares offline and online PDF tools with factual analysis.",
@@ -87,3 +86,4 @@ export default function ComparisonsPage() {
     </div>
   )
 }
+

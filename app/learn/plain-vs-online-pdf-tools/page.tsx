@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs Online PDF Tools",
-  description:
-    "Understand the structural differences between Plain's client-side approach and traditional upload-based PDF tools. Compare architecture, privacy, performance, and use cases.",
+  description: "Understand the structural differences between Plain's client-side approach and traditional upload-based PDF tools. Compare architecture, privacy, performance.",
   alternates: {
     canonical: "https://plain.tools/learn/plain-vs-online-pdf-tools",
   },
@@ -373,3 +372,4 @@ export default function PlainVsOnlinePdfToolsPage() {
     </div>
   )
 }
+

@@ -7,25 +7,32 @@ import { WelcomeTour } from '@/components/welcome-tour'
 import { CookieFreeBanner } from '@/components/cookie-free-banner'
 import { HydrationLoader } from '@/components/hydration-loader'
 import { CommandPaletteProvider } from '@/components/command-palette-provider'
+import { RouteStructuredData } from "@/components/seo/route-structured-data"
+import { PostDownloadShareBanner } from "@/components/tools/post-download-share-banner"
+import { TOOL_SEO_ENTRIES } from "@/lib/seo-route-map"
 import './globals.css'
 import { serializeJsonLd } from "@/lib/sanitize"
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
-const jetbrainsMono = JetBrains_Mono({ 
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 });
 const lora = Lora({
   subsets: ["latin"],
   variable: "--font-serif",
+  display: "swap",
 });
 
 const siteTitle = "Plain | Offline PDF Tools for Private Client-Side Processing"
 const siteDescription =
-  "Plain is a complete offline PDF toolkit for merge, split, compress, convert, OCR, redact, sign, and AI-assisted analysis. Private client-side PDF workflows with zero file uploads."
+  "Plain is a complete offline PDF toolkit for merge, split, compress, convert, OCR, redaction, signing, and private client-side document processing."
+const homepageToolFeatureList = TOOL_SEO_ENTRIES.map((tool) => tool.name)
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://plain.tools'),
@@ -142,20 +149,21 @@ const jsonLd = {
       }
     },
     {
-      "@type": "WebApplication",
+      "@type": "SoftwareApplication",
       "@id": "https://plain.tools/#application",
       "name": "Plain PDF Tools",
       "url": "https://plain.tools/tools",
       "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Browser-based (Chrome, Firefox, Safari, Edge)",
+      "operatingSystem": "Web Browser",
       "browserRequirements": "Requires WebAssembly support",
       "description": "Complete suite of private PDF tools including merge, split, compress, convert, OCR, redaction, signing, and consent-gated AI text workflows.",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "GBP"
+        "priceCurrency": "USD"
       },
       "featureList": [
+        ...homepageToolFeatureList,
         "100% local browser processing",
         "No file uploads to servers",
         "Works offline after initial load",
@@ -182,10 +190,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        {/* Preconnect to critical origins for Core Web Vitals */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preload" href="/demo/sample.pdf" as="fetch" crossOrigin="anonymous" />
         
         <Script
           id="schema-website"
@@ -196,7 +201,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
         <HydrationLoader />
         <CommandPaletteProvider>
+          <RouteStructuredData />
           {children}
+          <PostDownloadShareBanner />
         </CommandPaletteProvider>
         <SystemStatusBar />
         <WelcomeTour />

@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Why Uploading PDFs Can Be Risky",
-  description:
-    "Understand the privacy, security, and compliance risks of uploading PDF files to online services. Learn about storage, metadata exposure, and when offline tools are safer.",
+  description: "Understand the privacy, security, and compliance risks of uploading PDF files to online services. Learn about storage, metadata exposure, and when offline.",
   alternates: {
     canonical: "https://plain.tools/learn/why-pdf-uploads-are-risky",
   },
@@ -361,3 +360,4 @@ export default function WhyPdfUploadsAreRiskyPage() {
     </div>
   )
 }
+

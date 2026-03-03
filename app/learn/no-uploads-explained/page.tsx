@@ -33,8 +33,7 @@ export const metadata: Metadata = {
 // Technical article schema
 const articleSchema = generateTechArticleSchema({
   title: 'What "No Uploads" Actually Means',
-  description:
-    "A technical explanation of what it means when a tool processes files without uploading them.",
+  description: "A technical explanation of what it means when a tool processes files without uploading them. Built for private, offline-first PDF workflows with clear.",
   slug: "no-uploads-explained",
   datePublished: "2026-02-01",
   dateModified: "2026-02-27",
@@ -437,3 +436,4 @@ export default function NoUploadsExplainedPage() {
     </div>
   )
 }
+

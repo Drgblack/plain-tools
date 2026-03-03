@@ -5,8 +5,7 @@ import { Monitor, WifiOff, Search, ShieldX } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "How Plain Works",
-  description:
-    "Plain explains how PDFs are processed locally in your browser using WebAssembly without uploading files.",
+  description: "Plain explains how PDFs are processed locally in your browser using WebAssembly without uploading files. Built for private, offline-first PDF workflows with.",
   openGraph: {
     title: "How Plain Works - Plain",
     description: "Plain explains how PDFs are processed locally in your browser without uploading files.",
@@ -154,3 +153,4 @@ export default function HowItWorksPage() {
     </div>
   )
 }
+

@@ -5,12 +5,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
 type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
 
@@ -744,8 +746,15 @@ export default function PasswordBreakerTool() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <ProcessedLocallyBadge className="mb-3" />
             <Button asChild className="w-full sm:w-auto">
-              <a href={unlockedUrl} download={unlockedName}>
+              <a
+                href={unlockedUrl}
+                download={unlockedName}
+                onClick={() => {
+                  notifyLocalDownloadSuccess()
+                }}
+              >
                 <Download className="h-4 w-4" />
                 Download Unlocked PDF
               </a>

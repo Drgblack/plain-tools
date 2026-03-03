@@ -7,9 +7,11 @@ import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { ShareButton } from "@/components/share-button"
 import { PrivacyAudit } from "@/components/privacy-audit"
 import { Button } from "@/components/ui/button"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { mergeFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -469,6 +471,7 @@ const mergePDFs = async () => {
             {/* Success State - Privacy Audit Card */}
             {mergedPdfUrl && (
               <div className="space-y-6">
+                <ProcessedLocallyBadge />
                 {/* Privacy Audit Component */}
                 <PrivacyAudit
                   toolName="Merge PDF"
@@ -483,6 +486,7 @@ const mergePDFs = async () => {
                     a.href = mergedPdfUrl
                     a.download = "merged.pdf"
                     a.click()
+                    notifyLocalDownloadSuccess()
                   }}
                 />
                 

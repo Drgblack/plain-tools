@@ -14,6 +14,7 @@ import {
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -27,6 +28,7 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import {
   SERVER_WARNING,
   suggestPdfEdits,
@@ -53,6 +55,7 @@ const triggerPdfDownload = (bytes: Uint8Array, fileName: string) => {
   anchor.href = url
   anchor.download = fileName
   anchor.click()
+  notifyLocalDownloadSuccess()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
@@ -417,6 +420,7 @@ export default function SuggestEditsTool() {
             <CardDescription>Select one to apply into the PDF.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            {updatedPdfBytes ? <ProcessedLocallyBadge /> : null}
             {suggestions.map((suggestion, index) => (
               <div key={suggestion.id} className="rounded-lg border p-3">
                 <div className="mb-2 flex items-center justify-between gap-3">

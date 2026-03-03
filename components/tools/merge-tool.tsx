@@ -5,7 +5,9 @@ import { Download, FileText, Loader2, Trash2, UploadCloud, X } from "lucide-reac
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { mergePdfs } from "@/lib/pdf-batch-engine"
 
 type QueuedPdfFile = {
@@ -142,6 +144,7 @@ export default function MergeTool() {
     anchor.href = resultUrl
     anchor.download = "merged.pdf"
     anchor.click()
+    notifyLocalDownloadSuccess()
   }, [resultUrl])
 
   return (
@@ -293,6 +296,7 @@ export default function MergeTool() {
 
       {resultUrl ? (
         <div className="rounded-xl border border-[#333] bg-card p-4">
+          <ProcessedLocallyBadge />
           <p className="text-sm font-medium text-foreground">
             {hasCompletedMerge ? "Merged PDF is ready." : "Merged output available."}
           </p>

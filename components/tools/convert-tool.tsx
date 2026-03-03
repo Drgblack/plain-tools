@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
@@ -559,7 +560,8 @@ export default function ConvertTool() {
               {output.fileName} • {formatBytes(output.sizeBytes)}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
+            <ProcessedLocallyBadge />
             <Button asChild className="w-full sm:w-auto">
               <a href={output.url} download={output.fileName}>
                 <Download className="h-4 w-4" />

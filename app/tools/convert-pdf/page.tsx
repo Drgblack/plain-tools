@@ -6,15 +6,14 @@ import ConvertTool from "@/components/tools/convert-tool"
 
 export const metadata: Metadata = {
   title: "Convert PDF",
-  description:
-    "Convert PDF to images or extract text locally in your browser. No uploads, no server processing.",
+  description: "Convert PDF files to page images or extracted text locally in your browser with page-level progress and no upload or server processing requirements. Built for.",
   alternates: {
     canonical: "https://plain.tools/tools/convert-pdf",
   },
   openGraph: {
     title: "Convert PDF - Plain",
     description:
-      "Convert PDF pages to PNG/JPEG or extract text as TXT locally without uploading files.",
+      "Convert PDF pages to PNG/JPEG or extract TXT output locally with private browser processing and no file uploads.",
     url: "https://plain.tools/tools/convert-pdf",
   },
 }
@@ -43,3 +42,4 @@ export default function ConvertPdfPage() {
     </div>
   )
 }
+

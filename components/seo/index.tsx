@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { ChevronRight, Home } from "lucide-react"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -163,12 +164,12 @@ export function TechnicalFigure({ src, alt, caption, className = "" }: Technical
   return (
     <figure className={`my-6 ${className}`}>
       <div className="overflow-hidden rounded-lg border border-[#333] bg-[#111]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
+        <Image
           src={src} 
           alt={alt}
-          className="w-full"
-          loading="lazy"
+          width={1200}
+          height={675}
+          className="h-auto w-full"
         />
       </div>
       <figcaption className="mt-3 text-center text-[13px] text-white/50">
@@ -251,19 +252,10 @@ export function PageWrapper({ children, as = "main", className = "" }: PageWrapp
 export function PreloadHints() {
   return (
     <>
-      {/* Preconnect to critical origins */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      
-      {/* DNS Prefetch for third-party resources */}
-      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-      
-      {/* Preload critical Wasm module */}
       <link 
         rel="preload" 
-        href="/wasm/pdf-lib.wasm" 
+        href="/demo/sample.pdf" 
         as="fetch" 
-        type="application/wasm"
         crossOrigin="anonymous"
       />
     </>

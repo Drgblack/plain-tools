@@ -11,8 +11,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Browser PDF Processing Explained",
-  description:
-    "Plain explains how modern browsers handle PDF operations locally using JavaScript, WebAssembly, and the File API.",
+  description: "Plain explains how modern browsers handle PDF operations locally using JavaScript, WebAssembly, and the File API. Learn practical offline PDF privacy.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -177,3 +176,4 @@ export default function BrowserPdfProcessingPage() {
     </BlogArticle>
   )
 }
+

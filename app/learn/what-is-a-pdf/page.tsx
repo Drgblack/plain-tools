@@ -13,15 +13,15 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "What Is a PDF?",
-  description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents.",
+  description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents. Built for private, offline-first PDF.",
   openGraph: {
     title: "What Is a PDF? - Plain",
-    description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents.",
+    description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents. Built for private, offline-first PDF.",
   },
   twitter: {
     card: "summary_large_image",
     title: "What Is a PDF? - Plain",
-    description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents.",
+    description: "Plain explains what PDF files are, how they preserve document layout, and why they are used for sharing documents. Built for private, offline-first PDF.",
   },
   alternates: {
     canonical: "https://plain.tools/learn/what-is-a-pdf",
@@ -328,3 +328,4 @@ export default function WhatIsAPDFPage() {
     </div>
   )
 }
+

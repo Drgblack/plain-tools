@@ -5,6 +5,7 @@ import { Download, FileText, Loader2, ScanText, Trash2, UploadCloud, X } from "l
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { plainOfflineOCR } from "@/lib/pdf-batch-engine"
 
 type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
@@ -113,6 +115,7 @@ const triggerBlobDownload = (blob: Blob, fileName: string) => {
   anchor.href = url
   anchor.download = fileName
   anchor.click()
+  notifyLocalDownloadSuccess()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
@@ -383,6 +386,7 @@ export default function OcrTool() {
             <CardDescription>Download searchable PDFs and optional extracted text.</CardDescription>
           </CardHeader>
           <CardContent>
+            <ProcessedLocallyBadge className="mb-3" />
             <div className="grid gap-3 sm:grid-cols-2">
               {results.map((result) => (
                 <div key={result.id} className="rounded-lg border p-3">
@@ -438,4 +442,3 @@ export default function OcrTool() {
     </div>
   )
 }
-

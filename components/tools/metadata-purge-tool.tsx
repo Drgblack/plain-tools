@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, Loader2, ShieldCheck, Trash2, UploadCloud } from "lucide-react"
+import { Download, Loader2, Share2, ShieldCheck, Trash2, UploadCloud } from "lucide-react"
 import {
   PDFArray,
   PDFDict,
@@ -18,6 +18,9 @@ import { toast, Toaster } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
+import { buildShareCardPng } from "@/lib/share-card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type MetadataGroup = "Info Dictionary" | "XMP Metadata" | "Embedded Properties"
@@ -499,23 +502,33 @@ export default function MetadataPurgeTool() {
   const [downloadName, setDownloadName] = useState("cleaned.pdf")
   const [downloadSize, setDownloadSize] = useState<number | null>(null)
   const [summary, setSummary] = useState<PurgeResultSummary | null>(null)
+  const [shareCardUrl, setShareCardUrl] = useState<string | null>(null)
+  const [shareCardBlob, setShareCardBlob] = useState<Blob | null>(null)
 
   useEffect(() => {
     return () => {
       if (downloadUrl) {
         URL.revokeObjectURL(downloadUrl)
       }
+      if (shareCardUrl) {
+        URL.revokeObjectURL(shareCardUrl)
+      }
     }
-  }, [downloadUrl])
+  }, [downloadUrl, shareCardUrl])
 
   const clearResults = useCallback(() => {
     if (downloadUrl) {
       URL.revokeObjectURL(downloadUrl)
     }
+    if (shareCardUrl) {
+      URL.revokeObjectURL(shareCardUrl)
+    }
     setDownloadUrl(null)
     setDownloadSize(null)
     setSummary(null)
-  }, [downloadUrl])
+    setShareCardUrl(null)
+    setShareCardBlob(null)
+  }, [downloadUrl, shareCardUrl])
 
   const inspectFile = useCallback(
     async (candidate: File) => {
@@ -594,6 +607,12 @@ export default function MetadataPurgeTool() {
       setDownloadName(outputName)
       setDownloadSize(outputBlob.size)
       setSummary(result.summary)
+      const shareCard = await buildShareCardPng(
+        `I just removed ${result.summary.removedCount} metadata fields from a PDF`
+      )
+      const shareCardObjectUrl = URL.createObjectURL(shareCard)
+      setShareCardBlob(shareCard)
+      setShareCardUrl(shareCardObjectUrl)
       setStatus(
         `Removed ${result.summary.removedCount} metadata field(s). Output PDF contains ${result.summary.remainingCount} tracked metadata field(s).`
       )
@@ -807,7 +826,13 @@ export default function MetadataPurgeTool() {
 
           {downloadUrl ? (
             <Button asChild variant="secondary" className="w-full sm:w-auto">
-              <a href={downloadUrl} download={downloadName}>
+              <a
+                href={downloadUrl}
+                download={downloadName}
+                onClick={() => {
+                  notifyLocalDownloadSuccess()
+                }}
+              >
                 <Download className="h-4 w-4" />
                 Download Cleaned PDF
               </a>
@@ -818,14 +843,55 @@ export default function MetadataPurgeTool() {
 
       {downloadSize !== null ? (
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Output</CardTitle>
-            <CardDescription>
+        <CardHeader>
+          <CardTitle className="text-base">Output</CardTitle>
+          <CardDescription>
               {downloadName} • {formatBytes(downloadSize)}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
-            Files are processed locally. Zero uploads.
+          </CardDescription>
+        </CardHeader>
+          <CardContent className="space-y-3">
+            <ProcessedLocallyBadge />
+            <p className="text-xs text-muted-foreground">Files are processed locally. Zero uploads.</p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              {shareCardUrl ? (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <a href={shareCardUrl} download="plain-local-proof.png">
+                    <Download className="h-4 w-4" />
+                    Download Share Card (PNG)
+                  </a>
+                </Button>
+              ) : null}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  const shareText =
+                    "I just removed metadata from a PDF locally with Plain. No upload occurred."
+                  const shareUrl = "https://plain.tools/verify-claims"
+
+                  if (shareCardBlob && navigator.canShare && navigator.share) {
+                    const cardFile = new File([shareCardBlob], "plain-local-proof.png", { type: "image/png" })
+                    if (navigator.canShare({ files: [cardFile] })) {
+                      await navigator.share({
+                        text: shareText,
+                        url: shareUrl,
+                        files: [cardFile],
+                      })
+                      return
+                    }
+                  }
+
+                  const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `${shareText} Verify: ${shareUrl}`
+                  )}`
+                  window.open(intentUrl, "_blank", "noopener,noreferrer")
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                Share on X
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : null}

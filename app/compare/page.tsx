@@ -120,6 +120,11 @@ const comparisonData = [
 
 const competitorComparisons = [
   {
+    name: "Adobe Acrobat",
+    href: "/compare/plain-vs-adobe-acrobat",
+    tagline: "Privacy-first Adobe alternative",
+  },
+  {
     name: "iLovePDF",
     href: "/compare/plain-vs-ilovepdf",
     tagline: "Popular but cloud-dependent",
@@ -133,6 +138,11 @@ const competitorComparisons = [
     name: "Sejda",
     href: "/compare/plain-vs-sejda",
     tagline: "Server-processed workflows",
+  },
+  {
+    name: "DocuSign",
+    href: "/compare/plain-vs-docusign",
+    tagline: "Local signing alternative",
   },
 ]
 
@@ -369,7 +379,7 @@ export default function ComparePage() {
               See how <span translate="no" className="notranslate">Plain</span> compares to specific alternatives
             </p>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {competitorComparisons.map((competitor) => (
                 <TiltCard key={competitor.name} tiltIntensity={6} glowOnHover>
                   <Link

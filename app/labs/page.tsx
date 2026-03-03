@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Labs | Plain - Local PDF Tools",
-  description: "Experimental features and performance benchmarking tools for Plain. Test your hardware's local processing capabilities.",
+  description: "Experimental features and performance benchmarking tools for Plain. Test your hardware's local processing capabilities. Built for private, offline-first PDF.",
 }
 
 export default function LabsPage() {
@@ -76,3 +76,4 @@ export default function LabsPage() {
     </div>
   )
 }
+

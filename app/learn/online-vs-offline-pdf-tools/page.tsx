@@ -15,8 +15,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Online vs Offline PDF Tools: What's the Difference?",
-  description:
-    "Understand the difference between browser-based offline PDF tools and traditional upload-based online tools. Learn about privacy, security, and when each type is appropriate.",
+  description: "Understand the difference between browser-based offline PDF tools and traditional upload-based online tools. Learn about privacy, security, and when each type.",
   openGraph: {
     title: "Online vs Offline PDF Tools - Plain",
     description: "Understand privacy and security differences between PDF tool types.",
@@ -390,3 +389,4 @@ export default function OnlineVsOfflinePdfToolsPage() {
     </div>
   )
 }
+

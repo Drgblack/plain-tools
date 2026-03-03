@@ -7,9 +7,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { generatePagePreviews } from "@/lib/page-organiser-engine"
 
 type PagePreview = {
@@ -613,8 +615,15 @@ export default function WebgpuOrganiserTool() {
             <CardDescription>Download your organised PDF.</CardDescription>
           </CardHeader>
           <CardContent>
+            <ProcessedLocallyBadge className="mb-3" />
             <Button asChild className="w-full sm:w-auto">
-              <a href={outputUrl} download={outputName}>
+              <a
+                href={outputUrl}
+                download={outputName}
+                onClick={() => {
+                  notifyLocalDownloadSuccess()
+                }}
+              >
                 <Download className="h-4 w-4" />
                 Download {outputName}
               </a>

@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Language Support & Localization",
-  description:
-    "Learn about Plain's language support roadmap, including why we launched in English first, when German and French will be added, and our technical approach to multilingual SEO.",
+  description: "Learn about Plain's language support roadmap, including why we launched in English first, when German and French will be added, and our technical approach to.",
   alternates: {
     canonical: "https://plain.tools/learn/language-support",
   },
@@ -389,3 +388,4 @@ export default function LanguageSupportPage() {
     </div>
   )
 }
+

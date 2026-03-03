@@ -11,8 +11,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Can Websites Read Your Files Without Uploading?",
-  description:
-    "Plain explains browser security, file access permissions, and how to verify that websites handle files locally.",
+  description: "Plain explains browser security, file access permissions, and how to verify that websites handle files locally. Learn practical offline PDF privacy strategies.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -210,3 +209,4 @@ export default function CanWebsitesReadFilesPage() {
     </>
   )
 }
+

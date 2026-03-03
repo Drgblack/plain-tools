@@ -13,8 +13,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Is Offline PDF Processing Secure?",
-  description:
-    "Understand the security model of offline PDF tools. Learn what 'offline' means, how browser sandboxing works, and when offline processing is safer than uploading.",
+  description: "Understand the security model of offline PDF tools. Learn what 'offline' means, how browser sandboxing works, and when offline processing is safer than.",
   alternates: {
     canonical: "https://plain.tools/learn/is-offline-pdf-processing-secure",
   },
@@ -359,3 +358,4 @@ export default function IsOfflinePdfProcessingSecurePage() {
     </div>
   )
 }
+

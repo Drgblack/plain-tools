@@ -8,6 +8,26 @@ const BASE_URL = "https://plain.tools"
 const APP_DIR = path.join(process.cwd(), "app")
 
 const EXCLUDED_SEGMENTS = new Set(["api", "og", "_not-found", "_global-error"])
+const MANUAL_COMPARE_ROUTES = [
+  "/compare/offline-vs-online-pdf-tools",
+  "/compare/plain-vs-adobe-acrobat",
+  "/compare/plain-vs-docusign",
+  "/compare/plain-vs-ilovepdf",
+  "/compare/plain-vs-sejda",
+  "/compare/plain-vs-smallpdf",
+]
+const MANUAL_LEARN_ROUTES = [
+  "/learn/why-you-should-never-upload-medical-records-to-pdf-tools",
+  "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+  "/learn/what-is-pdf-metadata-and-why-it-matters",
+  "/learn/adobe-acrobat-ai-privacy-concerns-explained",
+  "/learn/how-pdf-redaction-really-works",
+  "/learn/compress-pdf-without-losing-quality",
+  "/learn/how-to-sign-a-pdf-without-uploading-it",
+  "/learn/gdpr-and-pdf-tools-what-businesses-need-to-know",
+  "/learn/webassembly-pdf-processing-explained",
+  "/learn/ocr-pdf-without-cloud",
+]
 
 const isDynamicSegment = (segment: string) => segment.startsWith("[") && segment.endsWith("]")
 const isGroupSegment = (segment: string) => segment.startsWith("(") && segment.endsWith(")")
@@ -69,7 +89,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (tool) => `/tools/${tool.slug}`
   )
 
-  const routes = Array.from(new Set([...staticRoutes, ...availableToolRoutes])).sort()
+  const routes = Array.from(
+    new Set([
+      ...staticRoutes,
+      ...availableToolRoutes,
+      ...MANUAL_COMPARE_ROUTES,
+      ...MANUAL_LEARN_ROUTES,
+    ])
+  ).sort()
 
   return routes.map((route) => ({
     url: `${BASE_URL}${route}`,

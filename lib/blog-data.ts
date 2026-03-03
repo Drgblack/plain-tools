@@ -177,6 +177,51 @@ export type CategoryId = (typeof categories)[number]["id"]
 
 export const posts = [
   {
+    slug: "the-pdf-tools-that-betrayed-you",
+    title: "The PDF Tools That Betrayed You",
+    description:
+      "A factual timeline of trust breaks in major PDF platforms, with sources and practical verification takeaways.",
+    date: "2026-03-03",
+    readingTime: 8,
+    category: "privacy-security" as CategoryId,
+  },
+  {
+    slug: "why-we-open-sourced-our-privacy-claims",
+    title: "Why We Open-Sourced Our Privacy Claims",
+    description:
+      "Why policy-only privacy promises fail and how verifiable architecture changes trust.",
+    date: "2026-03-03",
+    readingTime: 7,
+    category: "privacy-security" as CategoryId,
+  },
+  {
+    slug: "large-pdf-files-kill-browser-tools-heres-why",
+    title: "Large PDF Files Kill Browser Tools. Here's Why.",
+    description:
+      "Upload bottlenecks, server queues, and main-thread blocking explained with a 500MB benchmark model.",
+    date: "2026-03-03",
+    readingTime: 8,
+    category: "browser-technology" as CategoryId,
+  },
+  {
+    slug: "the-legal-professionals-guide-to-pdf-privacy",
+    title: "The Legal Professional's Guide to PDF Privacy",
+    description:
+      "A practical confidentiality-focused PDF workflow for lawyers and paralegals.",
+    date: "2026-03-03",
+    readingTime: 8,
+    category: "privacy-security" as CategoryId,
+  },
+  {
+    slug: "we-built-a-pdf-tool-that-works-offline-heres-what-we-learned",
+    title: "We Built a PDF Tool That Works Offline. Here's What We Learned.",
+    description:
+      "Engineering lessons from building an offline-first PDF stack with WebAssembly and workers.",
+    date: "2026-03-03",
+    readingTime: 8,
+    category: "offline-computing" as CategoryId,
+  },
+  {
     slug: "how-to-verify-privacy-claims-yourself",
     title: "How to Verify a Website's Privacy Claims Yourself",
     description:

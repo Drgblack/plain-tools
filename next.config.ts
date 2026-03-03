@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import createBundleAnalyzer from "@next/bundle-analyzer"
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -40,11 +41,12 @@ const securityHeaders = [
   },
 ]
 
+const withBundleAnalyzer = createBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+})
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  images: {
-    unoptimized: true,
-  },
   async headers() {
     return [
       // Exclude /api and /api/* since API CORS headers are managed separately.
@@ -56,4 +58,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withBundleAnalyzer(nextConfig)

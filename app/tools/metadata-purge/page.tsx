@@ -6,15 +6,14 @@ import MetadataPurgeTool from "@/components/tools/metadata-purge-tool"
 
 export const metadata: Metadata = {
   title: "Plain Metadata Purge",
-  description:
-    "Inspect and remove PDF metadata locally, including XMP, Info Dictionary fields, and embedded document properties.",
+  description: "Inspect and remove PDF metadata locally, including XMP and Info Dictionary fields, before sharing documents outside your trusted environment. Built for.",
   alternates: {
     canonical: "https://plain.tools/tools/metadata-purge",
   },
   openGraph: {
     title: "Plain Metadata Purge - Plain",
     description:
-      "Inspect and purge PDF metadata fields locally without uploading files.",
+      "Inspect and purge PDF metadata fields locally with no upload requirement and clear before/after visibility.",
     url: "https://plain.tools/tools/metadata-purge",
   },
 }
@@ -43,3 +42,4 @@ export default function MetadataPurgePage() {
     </div>
   )
 }
+

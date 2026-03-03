@@ -4,8 +4,7 @@ import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description:
-    "Plain explains its approach to privacy. Files are processed locally and no user data is collected.",
+  description: "Plain explains its approach to privacy. Files are processed locally and no user data is collected. Built for private, offline-first PDF workflows with clear.",
   openGraph: {
     title: "Privacy - Plain",
     description: "Plain explains its approach to privacy. Files are processed locally and no user data is collected.",
@@ -89,3 +88,4 @@ export default function PrivacyPage() {
     </div>
   )
 }
+

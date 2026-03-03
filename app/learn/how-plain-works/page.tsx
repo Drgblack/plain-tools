@@ -16,8 +16,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "How Plain Works",
-  description:
-    "Learn how Plain processes PDFs entirely in your browser using client-side technology. No servers, no uploads. Understand the technical architecture and verify it yourself.",
+  description: "Learn how Plain processes PDFs entirely in your browser using client-side technology. No servers, no uploads. Understand the technical architecture and verify.",
   openGraph: {
     title: "How Plain Works - Plain",
     description: "Technical explanation of client-side PDF processing with no uploads.",
@@ -390,3 +389,4 @@ export default function HowPlainWorksPage() {
     </div>
   )
 }
+

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="580" viewBox="0 0 960 580" fill="none">
+  <rect width="960" height="580" fill="#0B0E14"/>
+  <rect x="32" y="28" width="896" height="524" rx="16" fill="#121826" stroke="#2A3346"/>
+  <rect x="54" y="56" width="852" height="46" rx="10" fill="#1A2233"/>
+  <rect x="72" y="70" width="124" height="18" rx="6" fill="#2A3A57"/>
+  <rect x="206" y="70" width="124" height="18" rx="6" fill="#2A3A57"/>
+  <rect x="340" y="70" width="124" height="18" rx="6" fill="#2A3A57"/>
+  <rect x="474" y="70" width="124" height="18" rx="6" fill="#2456A6"/>
+  <text x="536" y="83" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#E5EEFF">Fetch/XHR</text>
+  <rect x="54" y="116" width="852" height="404" rx="10" fill="#0F1522" stroke="#25314A"/>
+  <line x1="54" y1="154" x2="906" y2="154" stroke="#25314A"/>
+  <text x="80" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Name</text>
+  <text x="252" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Status</text>
+  <text x="356" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Type</text>
+  <text x="468" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Initiator</text>
+  <text x="640" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Size</text>
+  <text x="754" y="142" font-family="Arial, sans-serif" font-size="12" fill="#8FA3C8">Time</text>
+  <rect x="84" y="206" width="792" height="120" rx="10" fill="#101D33" stroke="#2F4F84"/>
+  <text x="480" y="262" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#ECF4FF">No Fetch/XHR requests with file data</text>
+  <text x="480" y="292" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#AFC0DF">Run a tool and confirm your PDF bytes are never sent.</text>
+  <path d="M770 180C770 180 804 170 838 170C872 170 890 182 890 182" stroke="#44A5FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M886 176L905 180L894 196" stroke="#44A5FF" stroke-width="3" stroke-linecap="round"/>
+  <rect x="676" y="182" width="170" height="42" rx="10" fill="#113566" stroke="#44A5FF"/>
+  <text x="761" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#EAF4FF">Filter set to Fetch/XHR</text>
+  <rect x="72" y="534" width="816" height="1" fill="#25314A"/>
+  <text x="80" y="548" font-family="Arial, sans-serif" font-size="11" fill="#7E90B4">Annotated example for plain.tools/verify-claims</text>
+</svg>

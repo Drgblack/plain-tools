@@ -8,8 +8,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "What Happens When You Upload a PDF",
-  description:
-    "Plain explains what technically occurs when you upload a PDF to a website, including where files go and how long they are retained.",
+  description: "Plain explains what technically occurs when you upload a PDF to a website, including where files go and how long they are retained. Learn practical offline PDF.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -431,3 +430,4 @@ export default function WhatHappensWhenYouUploadPDFPage() {
     </div>
   )
 }
+

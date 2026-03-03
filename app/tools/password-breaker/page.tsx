@@ -6,15 +6,14 @@ import PasswordBreakerTool from "@/components/tools/password-breaker-tool"
 
 export const metadata: Metadata = {
   title: "Plain Password Breaker",
-  description:
-    "Recover access to your own password-protected PDFs locally with known-password or bounded brute-force mode.",
+  description: "Recover access to your own password-protected PDFs locally with known-password and bounded brute-force modes using private browser execution. Built for.",
   alternates: {
     canonical: "https://plain.tools/tools/plain-password-breaker",
   },
   openGraph: {
     title: "Plain Password Breaker - Plain",
     description:
-      "Attempt local PDF password recovery using known password or bounded brute-force. No uploads.",
+      "Attempt local PDF password recovery using known-password or bounded brute-force controls with no file uploads.",
     url: "https://plain.tools/tools/plain-password-breaker",
   },
 }
@@ -44,3 +43,4 @@ export default function PasswordBreakerPage() {
     </div>
   )
 }
+

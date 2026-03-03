@@ -12,11 +12,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
 type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
 
@@ -1706,6 +1708,7 @@ export default function LocalSignerTool() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <ProcessedLocallyBadge />
                 <div className="rounded-lg border bg-muted/30 p-3">
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">SHA-256 Fingerprint</p>
                   <Textarea value={fingerprintHex} readOnly className="mt-2 text-xs" rows={3} />
@@ -1714,7 +1717,13 @@ export default function LocalSignerTool() {
                 <div className="flex flex-col gap-2 sm:flex-row">
                   {signedPdfUrl ? (
                     <Button asChild className="w-full sm:w-auto">
-                      <a href={signedPdfUrl} download={signedPdfName}>
+                      <a
+                        href={signedPdfUrl}
+                        download={signedPdfName}
+                        onClick={() => {
+                          notifyLocalDownloadSuccess()
+                        }}
+                      >
                         <Download className="h-4 w-4" />
                         Download Signed PDF
                       </a>
@@ -1723,7 +1732,13 @@ export default function LocalSignerTool() {
 
                   {publicKeyUrl ? (
                     <Button asChild variant="secondary" className="w-full sm:w-auto">
-                      <a href={publicKeyUrl} download={publicKeyName}>
+                      <a
+                        href={publicKeyUrl}
+                        download={publicKeyName}
+                        onClick={() => {
+                          notifyLocalDownloadSuccess()
+                        }}
+                      >
                         <Download className="h-4 w-4" />
                         Download Public Key (.pem)
                       </a>

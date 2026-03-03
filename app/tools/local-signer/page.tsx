@@ -6,15 +6,14 @@ import LocalSignerTool from "@/components/tools/local-signer-tool"
 
 export const metadata: Metadata = {
   title: "Plain Local Cryptographic Signer",
-  description:
-    "Create locally verifiable cryptographic PDF signatures in your browser with no file uploads.",
+  description: "Create locally verifiable cryptographic PDF signatures in your browser with visual placement controls, verification support, and no upload exposure. Built for.",
   alternates: {
     canonical: "https://plain.tools/tools/plain-local-cryptographic-signer",
   },
   openGraph: {
     title: "Plain Local Cryptographic Signer - Plain",
     description:
-      "Draw, type, or upload a visual signature and apply local cryptographic signing and verification.",
+      "Draw, type, or upload a visual signature and apply cryptographic PDF signing locally with private browser processing.",
     url: "https://plain.tools/tools/plain-local-cryptographic-signer",
   },
 }
@@ -44,3 +43,4 @@ export default function LocalSignerPage() {
     </div>
   )
 }
+

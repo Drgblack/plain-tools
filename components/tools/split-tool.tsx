@@ -5,6 +5,7 @@ import { Download, FileText, Loader2, Scissors, Trash2, UploadCloud } from "luci
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -16,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { splitPdf, type PdfPageRange } from "@/lib/pdf-batch-engine"
 
 type SplitOutput = {
@@ -260,6 +262,7 @@ export default function SplitTool() {
     link.href = output.url
     link.download = output.name
     link.click()
+    notifyLocalDownloadSuccess()
   }, [])
 
   const canSplit = useMemo(
@@ -419,6 +422,7 @@ export default function SplitTool() {
             <CardDescription>Download each split output below.</CardDescription>
           </CardHeader>
           <CardContent>
+            <ProcessedLocallyBadge className="mb-3" />
             <div className="grid gap-3 sm:grid-cols-2">
               {outputs.map((output, index) => (
                 <div
@@ -449,4 +453,3 @@ export default function SplitTool() {
     </div>
   )
 }
-

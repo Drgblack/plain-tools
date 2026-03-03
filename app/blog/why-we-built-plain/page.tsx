@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Why We Built Plain",
-  description:
-    "Plain explains the reasoning behind building offline PDF tools when most services rely on server uploads.",
+  description: "Plain explains the reasoning behind building offline PDF tools when most services rely on server uploads. Learn practical offline PDF privacy strategies and.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -141,3 +140,4 @@ export default function WhyWeBuiltPlainPage() {
     </BlogArticle>
   )
 }
+

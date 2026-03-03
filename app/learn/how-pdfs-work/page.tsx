@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "How PDFs Work Internally",
-  description:
-    "Plain describes how PDF files store text, images, fonts, and layout data to create self-contained documents.",
+  description: "Plain describes how PDF files store text, images, fonts, and layout data to create self-contained documents. Built for private, offline-first PDF workflows.",
   openGraph: {
     title: "How PDFs Work Internally - Plain",
     description: "Plain describes how PDF files store text, images, fonts, and layout data to create self-contained documents.",
@@ -350,3 +349,4 @@ export default function HowPDFsWorkPage() {
     </div>
   )
 }
+

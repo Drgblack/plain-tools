@@ -2,10 +2,11 @@ import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Reorder PDF Pages Offline – Plain",
-  description: "Rearrange PDF pages locally in your browser. Drag and drop to reorder. Files are never uploaded.",
+  description: "Reorder PDF pages locally with drag-and-drop controls, page rotation, and secure no-upload processing for private document organisation workflows. Built for.",
   openGraph: {
     title: "Reorder PDF Pages Offline – Plain",
-    description: "Rearrange PDF pages locally in your browser. Drag and drop to reorder. Files are never uploaded.",
+    description:
+      "Rearrange PDF pages offline in your browser with local processing and no server uploads for confidential file preparation.",
   },
 }
 
@@ -16,3 +17,4 @@ export default function ReorderPDFLayout({
 }) {
   return children
 }
+

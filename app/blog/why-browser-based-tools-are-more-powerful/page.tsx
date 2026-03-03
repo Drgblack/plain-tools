@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Why Browser-Based Tools Are Becoming More Powerful",
-  description:
-    "Plain explores how modern browsers support complex local operations through WebAssembly and offline processing.",
+  description: "Plain explores how modern browsers support complex local operations through WebAssembly and offline processing. Learn practical offline PDF privacy strategies.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -224,3 +223,4 @@ export default function WhyBrowserBasedToolsArePowerfulPage() {
     </BlogArticle>
   )
 }
+

@@ -6,10 +6,11 @@ import { ToolsSection } from "@/components/tools-section"
 export const metadata: Metadata = {
   title: "PDF Tools",
   description:
-    "Plain provides PDF tools that run locally in your browser. Merge, split, compress, and reorder pages without uploading files.",
+    "Browse Plain's full offline PDF suite for merge, split, compress, convert, OCR, redaction, signing, and AI-assisted workflows with no upload requirements.",
   openGraph: {
     title: "PDF Tools - Plain",
-    description: "Plain provides PDF tools that run locally in your browser without uploading files.",
+    description:
+      "Browse Plain's offline PDF suite for merge, split, compress, convert, OCR, redaction, and signing with private client-side processing.",
   },
   alternates: {
     canonical: "https://plain.tools/tools",

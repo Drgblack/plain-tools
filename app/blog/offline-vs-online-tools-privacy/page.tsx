@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Offline vs Online Tools: A Privacy Perspective",
-  description:
-    "Plain compares privacy trade-offs between offline and online tools, explaining what each model protects against.",
+  description: "Plain compares privacy trade-offs between offline and online tools, explaining what each model protects against. Learn practical offline PDF privacy strategies.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -236,3 +235,4 @@ export default function OfflineVsOnlinePrivacyPost() {
     </BlogArticle>
   )
 }
+

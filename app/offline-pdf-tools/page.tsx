@@ -4,8 +4,7 @@ import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Offline PDF Tools Explained",
-  description:
-    "Plain explains how offline PDF tools work and why local processing matters for file privacy.",
+  description: "Plain explains how offline PDF tools work and why local processing matters for file privacy. Built for private, offline-first PDF workflows with clear.",
   openGraph: {
     title: "Offline PDF Tools Explained - Plain",
     description: "Plain explains how offline PDF tools work and why local processing matters.",
@@ -175,3 +174,4 @@ export default function OfflinePdfToolsPage() {
     </div>
   )
 }
+

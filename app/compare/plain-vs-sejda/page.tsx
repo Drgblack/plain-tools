@@ -7,7 +7,8 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs Sejda: Free Limits vs Unlimited Local Processing",
-  description: "A technical comparison of Sejda's free-tier limits and online editing versus Plain's unlimited local PDF processing. Understand daily task limits versus offline execution.",
+  description:
+    "Technical comparison of Sejda's free-tier limits and online editing model versus Plain's local PDF processing approach for private, offline-first workflows.",
   openGraph: {
     title: "Plain vs Sejda: Free Limits vs Unlimited Local Processing",
     description: "A technical comparison of free-tier limits versus unlimited local PDF processing.",

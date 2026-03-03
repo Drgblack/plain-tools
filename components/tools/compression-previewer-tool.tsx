@@ -14,6 +14,7 @@ import Image from "next/image"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -25,6 +26,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Slider } from "@/components/ui/slider"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import {
   plainRealTimeCompressionPreviewer,
   type PlainRealTimeCompressionPreviewResult,
@@ -66,6 +68,7 @@ const triggerPdfDownload = (bytes: Uint8Array, fileName: string) => {
   anchor.href = url
   anchor.download = fileName
   anchor.click()
+  notifyLocalDownloadSuccess()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
@@ -397,6 +400,7 @@ export default function CompressionPreviewerTool() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <ProcessedLocallyBadge />
             <div className="grid gap-3 rounded-lg border p-3 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <p className="text-xs text-muted-foreground">Original size</p>

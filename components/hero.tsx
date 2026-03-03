@@ -122,6 +122,12 @@ export function Hero() {
     }
   }, [])
 
+  const scrollToLiveDemo = useCallback(() => {
+    document
+      .getElementById("homepage-live-demo")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
+
   return (
     <>
     {/* Local Preview Modal */}
@@ -165,6 +171,9 @@ export function Hero() {
         <span className="text-foreground">Plain PDF tools.</span>{" "}
         <span className="text-accent font-extrabold">Nothing uploaded.</span>
       </h1>
+      <p className="animate-fade-up-delay-2 relative mt-4 max-w-3xl text-balance text-[14px] font-medium text-foreground/85 md:text-[15px]">
+        Built for professionals who&apos;ve stopped trusting Adobe, Smallpdf, and DocuSign with their files.
+      </p>
       <p className="animate-fade-up-delay-2 relative mt-5 max-w-lg px-2 text-pretty text-[15px] leading-relaxed text-muted-foreground md:px-0 md:text-base">
         Complete offline PDF suite that runs in your browser.{" "}
         <br className="hidden sm:inline" />
@@ -174,6 +183,13 @@ export function Hero() {
       <p className="animate-fade-up-delay-2 relative mt-3 text-[12px] uppercase tracking-wide text-muted-foreground/70">
         {availableToolCount} live tools, zero coming soon.
       </p>
+      <Link
+        href="/verify-claims"
+        className="animate-fade-up-delay-2 relative mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-accent/35 bg-accent/12 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-accent transition-colors hover:bg-accent/18"
+      >
+        <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2} />
+        Verified: Zero Uploads
+      </Link>
       {/* Drag and Drop Zone */}
       <div className="animate-fade-up-delay-3 relative mt-10 w-full max-w-xl px-2 sm:px-4">
         <input
@@ -185,6 +201,7 @@ export function Hero() {
           onChange={handleFileChange}
         />
         <div
+          id="hero-file-dropzone"
           ref={dropZoneRef}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -231,6 +248,16 @@ export function Hero() {
           >
             Select Files
           </Button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation()
+              scrollToLiveDemo()
+            }}
+            className="mt-3 text-[13px] font-medium text-muted-foreground transition-colors hover:text-accent"
+          >
+            Or try a live demo ↓
+          </button>
         </div>
         
         {/* Trust indicators below drop zone */}
@@ -269,6 +296,27 @@ export function Hero() {
         >
           <BadgeCheck className="h-3.5 w-3.5 text-muted-foreground/60 transition-colors duration-200 group-hover:text-accent" strokeWidth={2} />
           Verify Claims
+        </Link>
+      </div>
+
+      <div className="relative mt-5 flex w-full max-w-3xl flex-wrap items-center justify-center gap-2 text-xs">
+        <Link
+          href="/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files"
+          className="rounded-full border border-white/[0.08] px-3 py-1.5 text-muted-foreground/80 transition-colors hover:border-accent/30 hover:text-foreground"
+        >
+          Verify No Uploads
+        </Link>
+        <Link
+          href="/learn/what-is-pdf-metadata-and-why-it-matters"
+          className="rounded-full border border-white/[0.08] px-3 py-1.5 text-muted-foreground/80 transition-colors hover:border-accent/30 hover:text-foreground"
+        >
+          PDF Metadata Guide
+        </Link>
+        <Link
+          href="/learn/how-pdf-redaction-really-works"
+          className="rounded-full border border-white/[0.08] px-3 py-1.5 text-muted-foreground/80 transition-colors hover:border-accent/30 hover:text-foreground"
+        >
+          Redaction Guide
         </Link>
       </div>
 

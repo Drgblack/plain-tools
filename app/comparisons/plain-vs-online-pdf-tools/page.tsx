@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs Online PDF Tools",
-  description:
-    "Plain compares offline client-side PDF tools with server-based online services. Neutral analysis of architecture differences.",
+  description: "Plain compares offline client-side PDF tools with server-based online services. Neutral analysis of architecture differences. Built for private, offline-first.",
   openGraph: {
     title: "Plain vs Online PDF Tools - Plain",
     description: "Plain compares offline and online PDF processing approaches.",
@@ -252,3 +251,4 @@ export default function PlainVsOnlinePdfToolsPage() {
     </div>
   )
 }
+

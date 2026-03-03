@@ -13,8 +13,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Verify Offline Processing",
-  description:
-    "Plain shows how to verify that files are processed locally using browser DevTools. Inspect network requests, test offline functionality, and confirm no uploads occur.",
+  description: "Plain shows how to verify that files are processed locally using browser DevTools. Inspect network requests, test offline functionality, and confirm no uploads.",
   openGraph: {
     title: "Verify Offline Processing - Plain",
     description: "Plain shows how to verify that files are processed locally using browser DevTools.",
@@ -448,3 +447,4 @@ export default function VerifyPage() {
     </div>
   )
 }
+

@@ -6,6 +6,7 @@ import { toast, Toaster } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -15,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import {
   Table,
   TableBody,
@@ -53,6 +55,7 @@ const downloadBlob = (blob: Blob, fileName: string) => {
   anchor.href = url
   anchor.download = fileName
   anchor.click()
+  notifyLocalDownloadSuccess()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
@@ -299,6 +302,7 @@ export default function PrivacyScannerTool() {
     anchor.href = annotatedUrl
     anchor.download = "privacy-risk-annotated.pdf"
     anchor.click()
+    notifyLocalDownloadSuccess()
   }, [annotatedUrl])
 
   const downloadAutoRedacted = useCallback(() => {
@@ -307,6 +311,7 @@ export default function PrivacyScannerTool() {
     anchor.href = autoRedactedUrl
     anchor.download = autoRedactedName
     anchor.click()
+    notifyLocalDownloadSuccess()
   }, [autoRedactedName, autoRedactedUrl])
 
   const downloadJson = useCallback(() => {
@@ -482,6 +487,7 @@ export default function PrivacyScannerTool() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <ProcessedLocallyBadge />
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">High: {report.summary.bySeverity.high}</Badge>
               <Badge variant="outline">Medium: {report.summary.bySeverity.medium}</Badge>

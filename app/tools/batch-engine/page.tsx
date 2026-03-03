@@ -7,14 +7,14 @@ import BatchEngineTool from "@/components/tools/batch-engine-tool"
 export const metadata: Metadata = {
   title: "Plain Hardware-Accelerated Batch Engine",
   description:
-    "Run local batch merge, compress, split, and convert operations with parallel browser workers.",
+    "Run local batch merge, compress, split, and convert operations in parallel browser workers with queue-level progress, private processing, and no uploads.",
   alternates: {
     canonical: "https://plain.tools/tools/plain-hardware-accelerated-batch-engine",
   },
   openGraph: {
     title: "Plain Hardware-Accelerated Batch Engine - Plain",
     description:
-      "Process multiple PDFs in parallel workers locally. No uploads.",
+      "Process multiple PDFs in parallel local workers with private browser execution and no upload dependency.",
     url: "https://plain.tools/tools/plain-hardware-accelerated-batch-engine",
   },
 }

@@ -5,8 +5,8 @@ import { VerifyClaimsContent } from "@/components/verify-claims-content"
 import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
-  title: "Verify Plain's Claims - No Uploads, Runs Locally",
-  description: "Learn how to verify that Plain processes PDFs locally in your browser - no uploads, no servers, and offline support.",
+  title: "We Dare You to Catch Us Uploading Your Files",
+  description: "Interactive proof page showing exactly how to verify Plain's zero-upload privacy claims in DevTools. Built for private, offline-first PDF workflows with clear.",
 }
 
 // JSON-LD Schema
@@ -17,8 +17,8 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": "https://plain.tools/verify-claims",
       "url": "https://plain.tools/verify-claims",
-      "name": "Verify Plain's Claims - No Uploads, Runs Locally",
-      "description": "Learn how to verify that Plain processes PDFs locally in your browser - no uploads, no servers, and offline support.",
+      "name": "We Dare You to Catch Us Uploading Your Files",
+      "description": "Interactive proof page showing exactly how to verify Plain's zero-upload privacy claims in DevTools.",
       "isPartOf": {
         "@type": "WebSite",
         "name": "Plain",
@@ -66,11 +66,10 @@ export default function VerifyClaimsPage() {
       />
       <Header />
       <main className="overflow-x-hidden">
-        <div className="[&_table]:block [&_table]:w-full [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:whitespace-nowrap sm:[&_table]:table">
-          <VerifyClaimsContent />
-        </div>
+        <VerifyClaimsContent />
       </main>
       <Footer />
     </>
   )
 }
+

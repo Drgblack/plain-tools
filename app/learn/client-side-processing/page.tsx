@@ -14,8 +14,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Client-Side PDF Processing Explained",
-  description:
-    "Plain explains how browsers process PDF files locally using JavaScript and WebAssembly, without uploading to servers.",
+  description: "Plain explains how browsers process PDF files locally using JavaScript and WebAssembly, without uploading to servers. Built for private, offline-first PDF.",
   openGraph: {
     title: "Client-Side PDF Processing Explained - Plain",
     description: "Plain explains how browsers process PDF files locally using JavaScript and WebAssembly.",
@@ -397,3 +396,4 @@ export default function ClientSideProcessingPage() {
     </div>
   )
 }
+

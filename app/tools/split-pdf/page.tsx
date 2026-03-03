@@ -7,8 +7,10 @@ import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { ShareButton } from "@/components/share-button"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { splitFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -579,6 +581,7 @@ export default function SplitPDFPage() {
               <div className="rounded-2xl bg-[oklch(0.14_0.005_250)] p-10 ring-1 ring-white/[0.06]">
                 {/* Success header */}
                 <div className="text-center mb-8">
+                  <ProcessedLocallyBadge className="mb-4" />
                   <div className="relative mx-auto mb-6 w-fit">
                     <div className="absolute -inset-4 rounded-2xl bg-green-500/[0.06] blur-xl" />
                     <div className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-green-500/10 ring-1 ring-green-500/25">
@@ -615,6 +618,9 @@ export default function SplitPDFPage() {
                       <a
                         href={result.url}
                         download={result.name}
+                        onClick={() => {
+                          notifyLocalDownloadSuccess()
+                        }}
                         className="flex items-center gap-2 rounded-md bg-[oklch(0.18_0.006_250)] px-4 py-2 text-[13px] font-medium text-foreground border border-white/[0.10] transition-colors hover:border-accent/30 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                       >
                         <Download className="h-4 w-4" strokeWidth={1.75} />

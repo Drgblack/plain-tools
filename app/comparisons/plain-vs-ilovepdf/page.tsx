@@ -6,8 +6,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs iLovePDF",
-  description:
-    "Plain compares its offline architecture with iLovePDF's server-based approach. Factual differences in privacy and processing.",
+  description: "Plain compares its offline architecture with iLovePDF's server-based approach. Factual differences in privacy and processing. Built for private, offline-first.",
   openGraph: {
     title: "Plain vs iLovePDF - Plain",
     description: "Plain compares offline and server-based PDF processing approaches.",
@@ -224,3 +223,4 @@ export default function PlainVsILovePDFPage() {
     </div>
   )
 }
+

@@ -2,7 +2,7 @@ import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Plain writes about PDFs, local file processing, and browser-based document tools.",
+  description: "Read Plain blog posts on offline PDF tools, local browser processing, privacy architecture, tool comparisons, and practical guides for secure document.",
   openGraph: {
     title: "Blog - Plain",
     description: "Plain writes about PDFs, local file processing, and browser-based document tools.",
@@ -24,3 +24,4 @@ export default function BlogLayout({
 }) {
   return children
 }
+

@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Why PDFs Look the Same Everywhere",
-  description:
-    "Plain explains how PDFs achieve consistent visual appearance across devices through font embedding and absolute positioning.",
+  description: "Plain explains how PDFs achieve consistent visual appearance across devices through font embedding and absolute positioning. Learn practical offline PDF.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -238,3 +237,4 @@ export default function WhyPdfsLookSameEverywherePost() {
     </BlogArticle>
   )
 }
+

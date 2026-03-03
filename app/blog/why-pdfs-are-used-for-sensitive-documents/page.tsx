@@ -8,8 +8,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Why PDFs Are Used for Sensitive Documents",
-  description:
-    "Plain explains why PDF remains the preferred format for contracts, legal filings, and medical records.",
+  description: "Plain explains why PDF remains the preferred format for contracts, legal filings, and medical records. Learn practical offline PDF privacy strategies and.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -173,3 +172,4 @@ export default function WhyPDFsForSensitiveDocumentsPage() {
     </BlogArticle>
   )
 }
+

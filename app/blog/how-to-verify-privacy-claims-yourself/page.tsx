@@ -11,8 +11,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "How to Verify Privacy Claims Yourself",
-  description:
-    "Plain shows how to verify whether websites handle files privately using DevTools and network monitoring.",
+  description: "Plain shows how to verify whether websites handle files privately using DevTools and network monitoring. Learn practical offline PDF privacy strategies and.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -224,3 +223,4 @@ export default function HowToVerifyPrivacyClaimsPage() {
     </>
   )
 }
+

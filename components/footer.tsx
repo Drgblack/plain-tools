@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { GoogleTranslateWidget } from "@/components/google-translate-widget"
+import { ContextualResourceLinks } from "@/components/seo/contextual-resource-links"
 
 // Status indicator component
 function StatusIndicator({ 
@@ -85,6 +86,8 @@ export function Footer() {
       
       {/* Main Footer Content */}
       <div className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <ContextualResourceLinks />
+
         <div className="mb-10">
           <div className="flex items-baseline gap-1.5">
               <span className="text-[26px] font-bold tracking-tight text-white">Plain</span>
@@ -151,6 +154,7 @@ export function Footer() {
             <ul className="mt-5 space-y-3">
               {[
                 { label: "Learning Centre", href: "/learn" },
+                { label: "Compare Alternatives", href: "/compare" },
                 { label: "Privacy Manifesto", href: "/about#manifesto" },
                 { label: "Blog", href: "/blog" },
                 { label: "Labs", href: "/labs" },
@@ -177,10 +181,10 @@ export function Footer() {
             </h4>
             <ul className="mt-5 space-y-3">
               {[
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "No-Cookie Guarantee", href: "/privacy#cookies" },
   { label: "Verify Claims", href: "/verify-claims" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "No-Cookie Guarantee", href: "/privacy#cookies" },
   { label: "Support", href: "/support" },
               ].map((link) => (
                 <li key={link.href}>

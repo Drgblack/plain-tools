@@ -1,11 +1,12 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Download, FileText, Loader2, Plus, ShieldAlert, Trash2, UploadCloud } from "lucide-react"
+import { Download, FileText, Loader2, Plus, Share2, ShieldAlert, Trash2, UploadCloud } from "lucide-react"
 import Image from "next/image"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
   Card,
   CardContent,
@@ -22,6 +23,8 @@ import {
   type PlainRedactionRegion,
   type ProcessingStage,
 } from "@/lib/pdf-security-engines"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
+import { buildShareCardPng } from "@/lib/share-card"
 
 type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
 
@@ -295,14 +298,19 @@ export default function RedactTool() {
   const [resultUrl, setResultUrl] = useState<string | null>(null)
   const [resultSize, setResultSize] = useState<number | null>(null)
   const [sha256, setSha256] = useState<string | null>(null)
+  const [shareCardUrl, setShareCardUrl] = useState<string | null>(null)
+  const [shareCardBlob, setShareCardBlob] = useState<Blob | null>(null)
 
   useEffect(() => {
     return () => {
       if (resultUrl) {
         URL.revokeObjectURL(resultUrl)
       }
+      if (shareCardUrl) {
+        URL.revokeObjectURL(shareCardUrl)
+      }
     }
-  }, [resultUrl])
+  }, [resultUrl, shareCardUrl])
 
   useEffect(() => {
     return () => {
@@ -314,10 +322,15 @@ export default function RedactTool() {
     if (resultUrl) {
       URL.revokeObjectURL(resultUrl)
     }
+    if (shareCardUrl) {
+      URL.revokeObjectURL(shareCardUrl)
+    }
     setResultUrl(null)
     setResultSize(null)
     setSha256(null)
-  }, [resultUrl])
+    setShareCardUrl(null)
+    setShareCardBlob(null)
+  }, [resultUrl, shareCardUrl])
 
   const loadFile = useCallback(
     async (nextFile: File) => {
@@ -486,6 +499,12 @@ export default function RedactTool() {
       setResultUrl(nextUrl)
       setResultSize(blob.size)
       setSha256(hash)
+      const shareCard = await buildShareCardPng(
+        `I just irreversibly redacted ${regionPayload.length} region${regionPayload.length === 1 ? "" : "s"} in a PDF`
+      )
+      const shareCardObjectUrl = URL.createObjectURL(shareCard)
+      setShareCardBlob(shareCard)
+      setShareCardUrl(shareCardObjectUrl)
       setProgress(100)
       setStatus("Redaction complete. Ready for secure download.")
       toast.success("Irreversible redaction complete.")
@@ -505,6 +524,7 @@ export default function RedactTool() {
     anchor.href = resultUrl
     anchor.download = "redacted.pdf"
     anchor.click()
+    notifyLocalDownloadSuccess()
   }, [resultUrl])
 
   const canRedact = useMemo(
@@ -793,6 +813,7 @@ export default function RedactTool() {
             <CardDescription>Download your final file and verify its SHA-256 hash.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            <ProcessedLocallyBadge />
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               <span className="rounded-full border px-2 py-0.5">redacted.pdf</span>
               {resultSize !== null ? <span>{formatBytes(resultSize)}</span> : null}
@@ -805,6 +826,47 @@ export default function RedactTool() {
                 <p className="break-all font-mono text-xs text-foreground">{sha256}</p>
               </div>
             ) : null}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              {shareCardUrl ? (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <a href={shareCardUrl} download="plain-local-proof.png">
+                    <Download className="h-4 w-4" />
+                    Download Share Card (PNG)
+                  </a>
+                </Button>
+              ) : null}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  const shareText = "I just irreversibly redacted a PDF locally with Plain. No upload occurred."
+                  const shareUrl = "https://plain.tools/verify-claims"
+
+                  if (shareCardBlob && navigator.canShare && navigator.share) {
+                    const cardFile = new File([shareCardBlob], "plain-local-proof.png", {
+                      type: "image/png",
+                    })
+                    if (navigator.canShare({ files: [cardFile] })) {
+                      await navigator.share({
+                        text: shareText,
+                        url: shareUrl,
+                        files: [cardFile],
+                      })
+                      return
+                    }
+                  }
+
+                  const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `${shareText} Verify: ${shareUrl}`
+                  )}`
+                  window.open(intentUrl, "_blank", "noopener,noreferrer")
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                Share on X
+              </Button>
+            </div>
           </CardContent>
           <CardFooter>
             <Button type="button" className="w-full sm:w-auto" onClick={handleDownload}>
@@ -871,4 +933,3 @@ export default function RedactTool() {
     </div>
   )
 }
-

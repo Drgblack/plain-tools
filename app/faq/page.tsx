@@ -7,8 +7,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description:
-    "Plain answers common questions about offline PDF processing, file privacy, and how browser-based tools work.",
+  description: "Plain answers common questions about offline PDF processing, file privacy, and how browser-based tools work. Built for private, offline-first PDF workflows.",
   openGraph: {
     title: "FAQ - Plain",
     description: "Plain answers common questions about offline PDF processing and file privacy.",
@@ -133,3 +132,4 @@ export default function FAQPage() {
     </div>
   )
 }
+

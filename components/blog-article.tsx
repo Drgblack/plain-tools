@@ -306,6 +306,32 @@ export interface BlogArticleProps {
   children: React.ReactNode
   }
 
+const FALLBACK_LEARN_LINKS: Record<
+  NonNullable<BlogArticleProps["category"]>,
+  RelatedLink
+> = {
+  "technical-architecture": {
+    href: "/learn/webassembly-pdf-processing-explained",
+    title: "WebAssembly PDF Processing Explained",
+    description: "Understand why local browser architecture is now viable for serious PDF workloads.",
+  },
+  "privacy-ethics": {
+    href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+    title: "How to Verify a PDF Tool Does not Upload Your Files",
+    description: "Use DevTools to verify privacy claims instead of trusting marketing copy.",
+  },
+  "industry-use-cases": {
+    href: "/learn/why-you-should-never-upload-medical-records-to-pdf-tools",
+    title: "Why You Should Never Upload Medical Records to PDF Tools",
+    description: "See how local processing reduces risk for sensitive regulated documents.",
+  },
+  "comparative-insights": {
+    href: "/learn/online-vs-offline-pdf-tools",
+    title: "Online vs Offline PDF Tools",
+    description: "Compare cloud upload workflows with local, no-transfer processing models.",
+  },
+}
+
 export function BlogArticle({
   title,
   description,
@@ -327,6 +353,10 @@ export function BlogArticle({
 }: BlogArticleProps) {
   const canonicalUrl = providedCanonicalUrl || (slug ? `https://plain.tools/blog/${slug}` : "https://plain.tools/blog")
   const simpleTermsContent = simpleTerms || inSimpleTerms
+  const hasLearnLink = relatedReading.some((item) => item.href.startsWith("/learn/"))
+  const fallbackLearnLink = category ? FALLBACK_LEARN_LINKS[category] : undefined
+  const resolvedRelatedReading =
+    !hasLearnLink && fallbackLearnLink ? [...relatedReading, fallbackLearnLink] : relatedReading
 
   const [activeSection, setActiveSection] = useState<string>("")
   
@@ -414,6 +444,27 @@ export function BlogArticle({
     },
   }
 
+  const blogPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description,
+    datePublished,
+    dateModified: datePublished,
+    author: {
+      "@type": "Organization",
+      name: "Plain Editorial",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Plain",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+  }
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -450,6 +501,11 @@ export function BlogArticle({
     id="breadcrumb-jsonld"
     type="application/ld+json"
     dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+  />
+  <Script
+    id="blogposting-jsonld"
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogPostingJsonLd) }}
   />
   
   {/* GEO-Optimised TechArticle, FAQPage, and SoftwareApplication schemas */}
@@ -524,13 +580,13 @@ export function BlogArticle({
               <EndOfPostShare title={title} url={canonicalUrl} />
 
               {/* Related Reading */}
-              {relatedReading.length > 0 && (
+              {resolvedRelatedReading.length > 0 && (
                 <section className="mt-12 border-t border-white/[0.06] pt-10">
                   <h2 className="mb-5 text-[11px] font-semibold uppercase tracking-wider text-white/40">
                     Related Reading
                   </h2>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {relatedReading.map((link) => (
+                    {resolvedRelatedReading.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}

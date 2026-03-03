@@ -9,7 +9,7 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Why Offline PDF Compression Has Limits – Plain",
-  description: "Understanding the technical limitations of browser-based PDF compression compared to server-based tools. What affects compression results and when to expect savings.",
+  description: "Understanding the technical limitations of browser-based PDF compression compared to server-based tools. What affects compression results and when to expect.",
   openGraph: {
     title: "Why Offline PDF Compression Has Limits – Plain",
     description: "Understanding the technical limitations of browser-based PDF compression.",
@@ -290,3 +290,4 @@ export default function WhyOfflineCompressionHasLimitsPage() {
     </div>
   )
 }
+

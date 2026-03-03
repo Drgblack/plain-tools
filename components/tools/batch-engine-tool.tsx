@@ -7,10 +7,12 @@ import { toast, Toaster } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
 type BatchOperation = "merge" | "compress" | "split" | "convert"
 type QueueStatus = "queued" | "processing" | "done" | "error"
@@ -788,6 +790,7 @@ export default function BatchEngineTool() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          {allOutputs.length > 0 ? <ProcessedLocallyBadge className="w-fit" /> : null}
           <Button type="button" className="w-full sm:w-auto" disabled={!canStart} onClick={() => void startBatch()}>
             {isProcessing ? (
               <>
@@ -829,7 +832,13 @@ export default function BatchEngineTool() {
 
           {allZipUrl ? (
             <Button asChild className="w-full sm:w-auto">
-              <a href={allZipUrl} download={allZipName}>
+              <a
+                href={allZipUrl}
+                download={allZipName}
+                onClick={() => {
+                  notifyLocalDownloadSuccess()
+                }}
+              >
                 <Download className="h-4 w-4" />
                 Download All Results
               </a>
@@ -888,7 +897,13 @@ export default function BatchEngineTool() {
                       <td className="py-3">
                         {item.downloadUrl && item.downloadName ? (
                           <Button asChild size="sm" className="w-full sm:w-auto">
-                            <a href={item.downloadUrl} download={item.downloadName}>
+                            <a
+                              href={item.downloadUrl}
+                              download={item.downloadName}
+                              onClick={() => {
+                                notifyLocalDownloadSuccess()
+                              }}
+                            >
                               <Download className="h-4 w-4" />
                               Download
                             </a>

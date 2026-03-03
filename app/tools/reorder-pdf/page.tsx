@@ -7,7 +7,9 @@ import Image from "next/image"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { generatePagePreviews, reorderPages } from "@/lib/page-organiser-engine"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -465,6 +467,7 @@ export default function ReorderPDFPage() {
               <div className="mt-10 rounded-2xl bg-[oklch(0.14_0.005_250)] p-8 ring-1 ring-white/[0.08]">
                 {/* Success header */}
                 <div className="text-center">
+                  <ProcessedLocallyBadge className="mb-4" />
                   <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-green-500/10 ring-1 ring-green-500/20">
                     <CheckCircle2 className="h-7 w-7 text-green-500" strokeWidth={1.75} />
                   </div>
@@ -487,6 +490,9 @@ export default function ReorderPDFPage() {
                   <a
                     href={result.url}
                     download={result.name}
+                    onClick={() => {
+                      notifyLocalDownloadSuccess()
+                    }}
                     className="flex items-center justify-center gap-3 w-full h-14 rounded-xl bg-accent text-accent-foreground text-[15px] font-semibold transition-all hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     <Download className="h-5 w-5" strokeWidth={2} />

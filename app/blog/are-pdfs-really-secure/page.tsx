@@ -10,8 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Are PDFs Really Secure?",
-  description:
-    "Plain examines PDF security features, their limitations, and what encryption and passwords actually protect against.",
+  description: "Plain examines PDF security features, their limitations, and what encryption and passwords actually protect against. Learn practical offline PDF privacy.",
   authors: [{ name: "Plain Editorial" }],
   openGraph: {
     type: "article",
@@ -225,3 +224,4 @@ export default function ArePdfsSecurePage() {
     </BlogArticle>
   )
 }
+
