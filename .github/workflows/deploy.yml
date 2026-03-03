@@ -109,7 +109,7 @@ jobs:
           NODE_ENV: production
 
       - name: Generate fresh sitemap
-        run: node scripts/generate-sitemap.js
+        run: node scripts/generate-sitemap.mjs
 
       - name: Upload build artefacts
         uses: actions/upload-artifact@v4
