@@ -32,6 +32,7 @@ export default function OfflineVsOnlinePrivacyPost() {
   return (
     <BlogArticle
       title="Offline vs Online Tools: A Privacy Perspective"
+      description="A practical comparison of online and offline processing models, including privacy risks, benefits, and limitations."
       datePublished="2026-02-26"
       readingTime={8}
       intro="Privacy is often cited as a reason to prefer offline tools over online alternatives. But what does this actually mean in practice? This article examines the specific privacy trade-offs of each model, what offline processing protects against, and—equally important—what it does not."

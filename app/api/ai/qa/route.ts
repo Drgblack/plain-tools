@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { answerPdfQuestionWithClaude } from "@/lib/anthropic-client"
 import { buildCorsHeaders, isOriginAllowed } from "@/lib/api-cors"
+import { enforceRateLimit, RATE_LIMIT_ERROR_MESSAGE } from "@/lib/rate-limit"
 
 export const runtime = "nodejs"
 
@@ -30,6 +31,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: "Origin not allowed.", warning: WARNING_TEXT },
       { status: 403, headers: corsHeaders }
+    )
+  }
+
+  const rateLimit = await enforceRateLimit(request, "api:ai:qa")
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: RATE_LIMIT_ERROR_MESSAGE },
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          "Retry-After": String(rateLimit.retryAfter),
+        },
+      }
     )
   }
 

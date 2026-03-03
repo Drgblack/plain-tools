@@ -56,7 +56,6 @@ const REQUIRED_CHECKS = {
 let errors = [];
 let warnings = [];
 let validatedFiles = 0;
-let skippedFiles = 0;
 
 /**
  * Log message with timestamp
@@ -146,43 +145,6 @@ function validatePage(file) {
 }
 
 /**
- * Check for duplicate meta titles and descriptions
- */
-function checkForDuplicates(allMeta) {
-  const titles = new Map();
-  const descriptions = new Map();
-  const duplicateErrors = [];
-  
-  for (const meta of allMeta) {
-    if (meta.title) {
-      if (titles.has(meta.title)) {
-        duplicateErrors.push({
-          file: meta.file,
-          name: meta.name,
-          message: `has a duplicate Meta Title (also used by "${titles.get(meta.title)}")`,
-        });
-      } else {
-        titles.set(meta.title, meta.name);
-      }
-    }
-    
-    if (meta.description) {
-      if (descriptions.has(meta.description)) {
-        duplicateErrors.push({
-          file: meta.file,
-          name: meta.name,
-          message: `has a duplicate Meta Description (also used by "${descriptions.get(meta.description)}")`,
-        });
-      } else {
-        descriptions.set(meta.description, meta.name);
-      }
-    }
-  }
-  
-  return duplicateErrors;
-}
-
-/**
  * Main validation function
  */
 async function main() {
@@ -207,8 +169,6 @@ async function main() {
   console.log('');
   
   // Validate each file
-  const allMeta = [];
-  
   for (const file of allFiles) {
     const pageErrors = validatePage(file);
     

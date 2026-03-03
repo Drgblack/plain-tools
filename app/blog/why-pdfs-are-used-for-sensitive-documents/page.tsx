@@ -30,12 +30,13 @@ export default function WhyPDFsForSensitiveDocumentsPage() {
   return (
     <BlogArticle
       title="Why PDFs Are Still the Default for Sensitive Documents"
+      description="Why PDF remains the trusted format for legal, medical, and regulated documents where fidelity and integrity matter."
       slug="why-pdfs-are-used-for-sensitive-documents"
       datePublished="2026-02-20"
-      readingTime="6 min read"
+      readingTime={6}
       intro="Despite the rise of cloud documents and collaborative editing tools, PDF remains the dominant format for contracts, legal filings, medical records, financial statements, and other sensitive documents. This is not an accident—it reflects specific properties of the format that make it uniquely suited to high-stakes contexts."
       inSimpleTerms="PDFs are used for important documents because they look exactly the same on every device, cannot accidentally change, and create a reliable record that courts and regulators accept. When the exact appearance and integrity of a document matters, PDF is the standard choice."
-      relatedLinks={[
+      relatedReading={[
         {
           href: "/learn/how-pdfs-work",
           title: "How PDFs Work",

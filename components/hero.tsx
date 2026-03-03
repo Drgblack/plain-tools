@@ -21,6 +21,7 @@ export function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [previewFiles, setPreviewFiles] = useState<File[]>([])
   const [showPreview, setShowPreview] = useState(false)
   const dropZoneRef = useRef<HTMLDivElement>(null)
@@ -36,6 +37,25 @@ export function Hero() {
     }, 4000)
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mediaQuery = window.matchMedia("(hover: none), (pointer: coarse)")
+    const syncTouchState = () => {
+      setIsTouchDevice(mediaQuery.matches || navigator.maxTouchPoints > 0)
+    }
+
+    syncTouchState()
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncTouchState)
+      return () => mediaQuery.removeEventListener("change", syncTouchState)
+    }
+
+    mediaQuery.addListener(syncTouchState)
+    return () => mediaQuery.removeListener(syncTouchState)
   }, [])
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -127,7 +147,7 @@ export function Hero() {
         </div>
       </div>
       
-      <h1 data-tour="hero-heading" className="animate-fade-up-delay-1 relative max-w-3xl text-balance text-4xl font-bold tracking-[-0.025em] leading-[1.05] md:text-5xl lg:text-[3.5rem] xl:text-6xl">
+      <h1 data-tour="hero-heading" className="animate-fade-up-delay-1 relative max-w-3xl text-balance text-3xl font-bold leading-[1.05] tracking-[-0.025em] sm:text-4xl lg:text-6xl">
         <span className="text-foreground">Plain PDF tools.</span>{" "}
         <span className="text-accent font-extrabold">Nothing uploaded.</span>
       </h1>
@@ -138,7 +158,7 @@ export function Hero() {
         utilities powered by your device.
       </p>
       {/* Drag and Drop Zone */}
-      <div className="animate-fade-up-delay-3 relative mt-10 w-full max-w-xl px-4">
+      <div className="animate-fade-up-delay-3 relative mt-10 w-full max-w-xl px-2 sm:px-4">
         <input
           ref={fileInputRef}
           type="file"
@@ -152,7 +172,16 @@ export function Hero() {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 transition-all duration-300 md:p-10 ${
+          onClick={handleFileSelect}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault()
+              handleFileSelect()
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          className={`relative flex min-h-[180px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 transition-all duration-300 md:p-10 ${
             isDragOver
               ? "drag-zone-pulse border-accent bg-accent/[0.08]"
               : "border-[#333] bg-[#111]/50 hover:border-[#0070f3] hover:bg-[#111]/80 hover:shadow-[0_0_10px_rgba(0,112,243,0.2)]"
@@ -166,13 +195,20 @@ export function Hero() {
             }`} strokeWidth={1.5} />
           </div>
           <p className="mb-2 text-center text-[15px] font-medium text-foreground">
-            {isDragOver ? "Drop your PDFs here" : "Drag and drop your PDFs"}
+            {isDragOver
+              ? "Drop your PDFs here"
+              : isTouchDevice
+                ? "Tap to select files"
+                : "Drag and drop your PDFs"}
           </p>
           <p className="mb-6 text-center text-[13px] text-muted-foreground">
-            or select files to get started
+            {isTouchDevice ? "or browse files to get started" : "or select files to get started"}
           </p>
           <Button
-            onClick={handleFileSelect}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleFileSelect()
+            }}
             size="lg"
             className="btn-premium h-11 px-8 text-[14px] font-semibold text-white"
           >
@@ -181,12 +217,12 @@ export function Hero() {
         </div>
         
         {/* Trust indicators below drop zone */}
-        <div className="mt-6 flex items-center justify-center gap-6 text-[11px] font-medium tracking-wide text-muted-foreground/60">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium tracking-wide text-muted-foreground/60">
           <span className="flex items-center gap-1.5">
             <WifiOff className="h-3 w-3 text-accent/60" strokeWidth={2} />
             <span>Works offline</span>
           </span>
-          <span className="h-3 w-px bg-white/[0.06]" />
+          <span className="hidden h-3 w-px bg-white/[0.06] sm:block" />
           <span className="flex items-center gap-1.5">
             <ShieldCheck className="h-3 w-3 text-accent/60" strokeWidth={2} />
             <span>Files stay on device</span>
@@ -195,24 +231,24 @@ export function Hero() {
       </div>
 
       {/* Secondary CTAs */}
-      <div className="animate-fade-up-delay-3 relative mt-12 flex flex-wrap items-center justify-center gap-3">
+      <div className="animate-fade-up-delay-3 relative mt-12 flex w-full max-w-xl flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
         <Link
           href="/learn"
-          className="group flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground"
+          className="group flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground sm:w-auto"
         >
           <BookOpen className="h-3.5 w-3.5 text-muted-foreground/60 transition-colors duration-200 group-hover:text-accent" strokeWidth={2} />
           Learn Center
         </Link>
         <Link
           href="/compare/plain-vs-ilovepdf"
-          className="group flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground"
+          className="group flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground sm:w-auto"
         >
           <GitCompare className="h-3.5 w-3.5 text-muted-foreground/60 transition-colors duration-200 group-hover:text-accent" strokeWidth={2} />
           Comparisons
         </Link>
         <Link
           href="/verify-claims"
-          className="group flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground"
+          className="group flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-[13px] font-medium text-muted-foreground/80 transition-all duration-200 hover:border-accent/25 hover:bg-accent/[0.06] hover:text-foreground sm:w-auto"
         >
           <BadgeCheck className="h-3.5 w-3.5 text-muted-foreground/60 transition-colors duration-200 group-hover:text-accent" strokeWidth={2} />
           Verify Claims

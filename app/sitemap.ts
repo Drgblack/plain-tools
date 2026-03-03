@@ -1,71 +1,80 @@
+import fs from "node:fs"
+import path from "node:path"
 import type { MetadataRoute } from "next"
 
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 const BASE_URL = "https://plain.tools"
+const APP_DIR = path.join(process.cwd(), "app")
 
-const STATIC_ROUTES = [
-  "/",
-  "/about",
-  "/blog",
-  "/compare",
-  "/comparisons",
-  "/extension",
-  "/faq",
-  "/how-it-works",
-  "/labs",
-  "/learn",
-  "/offline-pdf-tools",
-  "/privacy",
-  "/support",
-  "/terms",
-  "/tools",
-  "/verify",
-  "/verify-claims",
-  "/tools/ai-pdf-assistant",
-]
+const EXCLUDED_SEGMENTS = new Set(["api", "og", "_not-found", "_global-error"])
 
-const TOOL_ROUTE_OVERRIDES = [
-  "/tools/merge-pdf",
-  "/tools/split-pdf",
-  "/tools/compress-pdf",
-  "/tools/reorder-pdf",
-  "/tools/extract-pdf",
-]
+const isDynamicSegment = (segment: string) => segment.startsWith("[") && segment.endsWith("]")
+const isGroupSegment = (segment: string) => segment.startsWith("(") && segment.endsWith(")")
 
-const scorePriority = (path: string) => {
-  if (path === "/") return 1
-  if (path.startsWith("/tools/")) return 0.9
-  if (path.startsWith("/blog") || path.startsWith("/learn")) return 0.8
-  if (path.startsWith("/compare") || path.startsWith("/comparisons")) return 0.7
-  if (path === "/tools") return 0.9
+const pageExists = (directory: string) =>
+  fs.existsSync(path.join(directory, "page.tsx")) || fs.existsSync(path.join(directory, "page.ts"))
+
+const getStaticRoutes = (directory: string, segments: string[] = []): string[] => {
+  const routes: string[] = []
+
+  if (pageExists(directory)) {
+    const route = `/${segments.join("/")}`.replace(/\/+/g, "/")
+    routes.push(route === "/" ? "/" : route.replace(/\/$/, ""))
+  }
+
+  const entries = fs.readdirSync(directory, { withFileTypes: true })
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+
+    const segment = entry.name
+    const shouldSkip =
+      EXCLUDED_SEGMENTS.has(segment) ||
+      segment.startsWith("_") ||
+      segment.startsWith("@") ||
+      isDynamicSegment(segment)
+
+    if (shouldSkip) continue
+
+    const nextSegments = isGroupSegment(segment) ? segments : [...segments, segment]
+    routes.push(...getStaticRoutes(path.join(directory, segment), nextSegments))
+  }
+
+  return routes
+}
+
+const scorePriority = (route: string) => {
+  if (route === "/") return 1
+  if (route.startsWith("/tools/")) return 0.9
+  if (route.startsWith("/blog") || route.startsWith("/learn")) return 0.8
+  if (route.startsWith("/compare") || route.startsWith("/comparisons")) return 0.7
+  if (route === "/tools") return 0.9
   return 0.5
 }
 
-const scoreFrequency = (path: string): MetadataRoute.Sitemap[number]["changeFrequency"] => {
-  if (path === "/") return "weekly"
-  if (path.startsWith("/tools/")) return "monthly"
-  if (path.startsWith("/blog")) return "weekly"
-  if (path.startsWith("/learn")) return "monthly"
+const scoreFrequency = (route: string): MetadataRoute.Sitemap[number]["changeFrequency"] => {
+  if (route === "/") return "weekly"
+  if (route.startsWith("/tools/")) return "monthly"
+  if (route.startsWith("/blog")) return "weekly"
+  if (route.startsWith("/learn")) return "monthly"
   return "monthly"
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const today = new Date()
+  const now = new Date()
 
+  const staticRoutes = getStaticRoutes(APP_DIR)
   const availableToolRoutes = TOOL_CATALOGUE.filter((tool) => tool.available).map(
     (tool) => `/tools/${tool.slug}`
   )
 
-  const uniqueRoutes = Array.from(
-    new Set([...STATIC_ROUTES, ...TOOL_ROUTE_OVERRIDES, ...availableToolRoutes])
-  )
+  const routes = Array.from(new Set([...staticRoutes, ...availableToolRoutes])).sort()
 
-  return uniqueRoutes.map((path) => ({
-    url: `${BASE_URL}${path}`,
-    lastModified: today,
-    changeFrequency: scoreFrequency(path),
-    priority: scorePriority(path),
+  return routes.map((route) => ({
+    url: `${BASE_URL}${route}`,
+    lastModified: now,
+    changeFrequency: scoreFrequency(route),
+    priority: scorePriority(route),
   }))
 }
-

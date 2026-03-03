@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * MIDDLEWARE FOR i18n ROUTING
+ * PROXY FOR i18n ROUTING
  * ============================================================================
  * 
  * STATUS: Active but i18n is disabled (I18N_ENABLED = false)
@@ -74,7 +74,7 @@ function getPreferredLocale(request: NextRequest): Locale {
 }
 
 /**
- * i18n Middleware Handler
+ * i18n Proxy Handler
  */
 function i18nMiddleware(request: NextRequest): NextResponse {
   const pathname = request.nextUrl.pathname
@@ -125,11 +125,11 @@ function i18nMiddleware(request: NextRequest): NextResponse {
 }
 
 /**
- * Middleware Export
+ * Proxy Export
  * 
  * Currently disabled. Uncomment to enable i18n routing.
  */
-export function middleware(request: NextRequest): NextResponse {
+export function proxy(request: NextRequest): NextResponse {
   // i18n is disabled - pass through all requests
   if (!I18N_ENABLED) {
     return NextResponse.next()

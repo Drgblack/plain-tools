@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Environment Variables
+
+Copy the example env file and fill in real values:
+
+```bash
+cp .env.example .env
+```
+
+Set required keys (for example `ANTHROPIC_API_KEY`, `BREVO_API_KEY`, and Upstash Redis values if rate limiting is enabled).
+
 First, run the development server:
 
 ```bash

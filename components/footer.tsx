@@ -16,8 +16,8 @@ function StatusIndicator({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11px] uppercase tracking-wider text-white/40">{label}:</span>
-      <span className="flex items-center gap-1.5 font-mono text-[11px] text-white/70">
+      <span className="text-xs uppercase tracking-wider text-white/40 sm:text-[11px]">{label}:</span>
+      <span className="flex items-center gap-1.5 font-mono text-xs text-white/70 sm:text-[11px]">
         {value}
         <span 
           className={`h-1.5 w-1.5 rounded-full ${
@@ -85,38 +85,37 @@ export function Footer() {
       
       {/* Main Footer Content */}
       <div className="mx-auto max-w-6xl px-4 py-16 md:py-20">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          
-          {/* Column 1: Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-[22px] font-bold tracking-tight text-white">Plain</span>
+        <div className="mb-10">
+          <div className="flex items-baseline gap-1.5">
+              <span className="text-[26px] font-bold tracking-tight text-white">Plain</span>
               <span className="h-2 w-2 rounded-full bg-[#0070f3]" />
-            </div>
-            <p className="mt-4 max-w-[280px] text-[14px] leading-relaxed text-[#888]">
-              Private-by-design PDF utilities, processed 100% locally.
-            </p>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#333] bg-[#111] px-3 py-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-4 w-4 text-[#0070f3]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-                />
-              </svg>
-              <span className="text-[12px] font-medium text-white/70">Zero-Upload Architecture</span>
-            </div>
           </div>
+          <p className="mt-4 max-w-[480px] text-base leading-relaxed text-[#888]">
+            Private-by-design PDF utilities, processed 100% locally.
+          </p>
+          <div className="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-[#333] bg-[#111] px-3 py-2">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-4 w-4 text-[#0070f3]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            <span className="text-base font-medium text-white/70">Zero-Upload Architecture</span>
+          </div>
+        </div>
 
-          {/* Column 2: Tools */}
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+          {/* Column 1: Tools */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-wider text-white/50">
+            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
               Tools
             </h4>
             <ul className="mt-5 space-y-3">
@@ -130,7 +129,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-[13px] text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
+                    className="group inline-flex min-h-[44px] items-center text-base text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
                   >
                     <span className="relative">
                       {link.label}
@@ -142,9 +141,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Resources */}
+          {/* Column 2: Resources */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-wider text-white/50">
+            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
               Resources
             </h4>
             <ul className="mt-5 space-y-3">
@@ -157,7 +156,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-[13px] text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
+                    className="group inline-flex min-h-[44px] items-center text-base text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
                   >
                     <span className="relative">
                       {link.label}
@@ -169,9 +168,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Legal */}
+          {/* Column 3: Legal */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-wider text-white/50">
+            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
               Legal
             </h4>
             <ul className="mt-5 space-y-3">
@@ -185,7 +184,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-[13px] text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
+                    className="group inline-flex min-h-[44px] items-center text-base text-[#888] transition-colors duration-150 hover:text-[#0070f3]"
                   >
                     <span className="relative">
                       {link.label}
@@ -196,10 +195,16 @@ export function Footer() {
               ))}
             </ul>
           </div>
-        </div>
 
-        <div className="mt-8">
-          <GoogleTranslateWidget />
+          {/* Column 4: Translate */}
+          <div>
+            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
+              Translate
+            </h4>
+            <div className="mt-5 w-full">
+              <GoogleTranslateWidget />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -208,11 +213,11 @@ export function Footer() {
         {/* Faint grid pattern */}
         <div className="pointer-events-none absolute inset-0 hero-grid-pattern opacity-20" />
         
-        <div className="relative mx-auto max-w-6xl px-4 py-4">
+        <div className="relative mx-auto max-w-6xl overflow-x-hidden px-4 py-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             
             {/* Left: Status Indicators */}
-            <div className="flex flex-wrap items-center gap-4 md:gap-6">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-6">
               <StatusIndicator 
                 label="Engine" 
                 value="Wasm/Active" 
@@ -230,9 +235,21 @@ export function Footer() {
                 value="AES-256 Local" 
                 status="active" 
               />
+              <div className="hidden h-3 w-px bg-[#333] md:block" />
+              <StatusIndicator 
+                label="Build" 
+                value="v1.2.0" 
+                status="active" 
+              />
+              <div className="hidden h-3 w-px bg-[#333] md:block" />
+              <StatusIndicator 
+                label="RAM" 
+                value="Browser Managed" 
+                status="active" 
+              />
             </div>
 
-            {/* Right: Social Icons & Build Version */}
+            {/* Right: Social Icons */}
             <div className="flex items-center gap-4">
               {/* Social Icons */}
               <div className="flex items-center gap-3">
@@ -240,29 +257,21 @@ export function Footer() {
                   href="https://x.com/plainpdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#111] text-[#888] transition-all duration-150 hover:border-[#0070f3]/50 hover:text-[#0070f3]"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#333] bg-[#111] text-[#888] transition-all duration-150 hover:border-[#0070f3]/50 hover:text-[#0070f3]"
                   aria-label="Follow on X"
                 >
-                  <XIcon className="h-3.5 w-3.5" />
+                  <XIcon className="h-4 w-4" />
                 </a>
                 <a
                   href="https://linkedin.com/company/plainpdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#111] text-[#888] transition-all duration-150 hover:border-[#0070f3]/50 hover:text-[#0070f3]"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#333] bg-[#111] text-[#888] transition-all duration-150 hover:border-[#0070f3]/50 hover:text-[#0070f3]"
                   aria-label="Follow on LinkedIn"
                 >
-                  <LinkedInIcon className="h-3.5 w-3.5" />
+                  <LinkedInIcon className="h-4 w-4" />
                 </a>
               </div>
-
-              {/* Separator */}
-              <div className="h-4 w-px bg-[#333]" />
-
-              {/* Build Version */}
-              <span className="font-mono text-[10px] tracking-wider text-white/30">
-                Build v1.2.0
-              </span>
             </div>
           </div>
         </div>
@@ -271,7 +280,7 @@ export function Footer() {
       {/* Copyright Bar */}
       <div className="border-t border-[#222] bg-[#080808]">
         <div className="mx-auto max-w-6xl px-4 py-3">
-          <p className="text-center text-[11px] text-white/30">
+          <p className="text-center text-base text-white/30">
             Plain PDF runs entirely in your browser. Files are never uploaded to external servers.
           </p>
         </div>

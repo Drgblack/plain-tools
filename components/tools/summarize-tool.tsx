@@ -118,7 +118,7 @@ export default function SummarizeTool() {
   }, [summary])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -183,7 +183,7 @@ export default function SummarizeTool() {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Summarize PDF</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {file ? (
@@ -197,7 +197,7 @@ export default function SummarizeTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   setSummary("")
@@ -233,7 +233,7 @@ export default function SummarizeTool() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-md border p-3">
+          <div className="flex flex-col items-start gap-3 rounded-md border p-3 sm:flex-row sm:items-center">
             <Switch
               id="allow-server-processing"
               checked={allowServerProcessing}
@@ -247,15 +247,15 @@ export default function SummarizeTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Summarizing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Summarizing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
           )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2 sm:flex-row">
           <Button
             type="button"
             className="w-full sm:w-auto"
@@ -286,8 +286,8 @@ export default function SummarizeTool() {
           <CardContent className="space-y-3">
             <Textarea value={summary} readOnly className="min-h-[220px]" />
           </CardContent>
-          <CardFooter>
-            <Button type="button" variant="secondary" onClick={copySummary}>
+          <CardFooter className="flex flex-col gap-2 sm:flex-row">
+            <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={copySummary}>
               <Copy className="h-4 w-4" />
               Copy Summary
             </Button>

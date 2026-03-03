@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw, Zap } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -381,12 +382,17 @@ export default function ReorderPDFPage() {
                                 
                                 {/* Thumbnail */}
                                 <div className="aspect-[3/4] overflow-hidden rounded-lg p-1.5">
-                                  <img
-                                    src={page.dataUrl}
-                                    alt={`Page ${page.originalIndex + 1}`}
-                                    className="h-full w-full object-contain rounded"
-                                    draggable={false}
-                                  />
+                                  <div className="relative h-full w-full">
+                                    <Image
+                                      src={page.dataUrl}
+                                      alt={`Page ${page.originalIndex + 1}`}
+                                      fill
+                                      unoptimized
+                                      sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 20vw"
+                                      className="rounded object-contain"
+                                      draggable={false}
+                                    />
+                                  </div>
                                 </div>
                                 
                                 {/* Original page indicator */}

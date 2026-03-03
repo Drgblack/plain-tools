@@ -205,7 +205,7 @@ export default function CompressionPreviewerTool() {
     }
 
     let bytes = preview?.compressedBytes
-    if (!bytes || preview.level !== compressionLevel) {
+    if (!bytes || preview?.level !== compressionLevel) {
       const result = await generatePreview()
       if (!result) return
       bytes = result.compressedBytes
@@ -224,7 +224,7 @@ export default function CompressionPreviewerTool() {
   }, [preview])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -284,7 +284,7 @@ export default function CompressionPreviewerTool() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Real-Time Compression Previewer</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           {file ? (
@@ -298,7 +298,7 @@ export default function CompressionPreviewerTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   clearPreview()
@@ -337,8 +337,8 @@ export default function CompressionPreviewerTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Processing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Processing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -429,7 +429,7 @@ export default function CompressionPreviewerTool() {
               {preview.pairs.map((pair) => (
                 <div key={pair.pageIndex} className="rounded-lg border p-3">
                   <p className="mb-3 text-sm font-medium text-foreground">Page {pair.pageIndex + 1}</p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div className="space-y-1">
                       <p className="text-[11px] text-muted-foreground">Before</p>
                       <div className="overflow-hidden rounded-md border bg-muted/20">
@@ -463,8 +463,12 @@ export default function CompressionPreviewerTool() {
               ))}
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="button" onClick={() => triggerPdfDownload(preview.compressedBytes, "compressed.pdf")}>
+          <CardFooter className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              className="w-full sm:w-auto"
+              onClick={() => triggerPdfDownload(preview.compressedBytes, "compressed.pdf")}
+            >
               <Download className="h-4 w-4" />
               Download compressed.pdf
             </Button>

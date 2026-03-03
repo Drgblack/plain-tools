@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Children, isValidElement, cloneElement, ReactElement } from "react"
+import { useState, useEffect, Children, isValidElement } from "react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
@@ -333,9 +333,9 @@ export function BlogArticle({
   const generatedToc = tableOfContents.length > 0 ? tableOfContents : (() => {
     const toc: TocItem[] = []
     Children.forEach(children, (child) => {
-      if (isValidElement(child) && child.type === ArticleSection) {
-        const sectionTitle = child.props.title as string
-        const id = (child.props.id as string) || slugifyTitle(sectionTitle)
+      if (isValidElement<{ title: string; id?: string }>(child) && child.type === ArticleSection) {
+        const sectionTitle = child.props.title
+        const id = child.props.id || slugifyTitle(sectionTitle)
         toc.push({ id, title: sectionTitle, level: 2 })
       }
     })
@@ -348,7 +348,7 @@ export function BlogArticle({
     const result: React.ReactNode[] = []
     let sectionCount = 0
 
-    childArray.forEach((child, index) => {
+    childArray.forEach((child) => {
       result.push(child)
       
       if (isValidElement(child) && child.type === ArticleSection) {
@@ -689,11 +689,9 @@ export function ArticleNote({ children }: { children: React.ReactNode }) {
 }
 
 export function ArticleCode({ 
-  children,
-  language = "text" 
+  children
 }: { 
   children: string
-  language?: string 
 }) {
   return (
     <pre className="overflow-x-auto rounded-xl bg-[#0a0a0a] p-5 text-[13px] leading-relaxed ring-1 ring-white/[0.06]">

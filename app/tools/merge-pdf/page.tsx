@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { PDFDocument } from "pdf-lib"
-import { GripVertical, X, FileText, Download, Plus, ShieldCheck, CheckCircle2, Zap } from "lucide-react"
+import { GripVertical, X, FileText, Plus, ShieldCheck, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
@@ -52,7 +52,24 @@ export default function MergePDFPage() {
   const [mergedPdfUrl, setMergedPdfUrl] = useState<string | null>(null)
   const [processingTime, setProcessingTime] = useState(0)
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [isTouchPointer, setIsTouchPointer] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mediaQuery = window.matchMedia("(hover: none), (pointer: coarse)")
+    const updateTouchMode = () => setIsTouchPointer(mediaQuery.matches)
+
+    updateTouchMode()
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateTouchMode)
+      return () => mediaQuery.removeEventListener("change", updateTouchMode)
+    }
+
+    mediaQuery.addListener(updateTouchMode)
+    return () => mediaQuery.removeListener(updateTouchMode)
+  }, [])
 
   const getPageCount = async (file: File): Promise<number | null> => {
     try {
@@ -126,6 +143,19 @@ export default function MergePDFPage() {
   const handleReorderDragEnd = () => {
     setDraggedIndex(null)
   }
+
+  const moveFile = useCallback((index: number, direction: "up" | "down") => {
+    setFiles((previous) => {
+      const targetIndex = direction === "up" ? index - 1 : index + 1
+      if (targetIndex < 0 || targetIndex >= previous.length) return previous
+
+      const reordered = [...previous]
+      const [moved] = reordered.splice(index, 1)
+      reordered.splice(targetIndex, 0, moved)
+      return reordered
+    })
+    setMergedPdfUrl(null)
+  }, [])
 
 const mergePDFs = async () => {
   if (files.length < 2) return
@@ -285,58 +315,85 @@ const mergePDFs = async () => {
                         {files.length} {files.length === 1 ? "file" : "files"} selected
                       </span>
                       <span className="text-[11px] text-muted-foreground/70">
-                        Drag to reorder
+                        {isTouchPointer ? "Use Move Up/Down to reorder" : "Drag to reorder"}
                       </span>
                     </div>
-                    
-                    {files.map((file, index) => (
-                      <div
-                        key={file.id}
-                        draggable
-                        onDragStart={() => handleReorderDragStart(index)}
-                        onDragOver={(e) => handleReorderDragOver(e, index)}
-                        onDragEnd={handleReorderDragEnd}
-                        className={`group flex items-center gap-4 rounded-xl bg-[oklch(0.165_0.006_250)] p-4 ring-1 ring-white/[0.06] transition-all duration-150 ${
-                          draggedIndex === index 
-                            ? "opacity-50 scale-[0.98]" 
-                            : "opacity-100 hover:ring-accent/25 hover:bg-[oklch(0.17_0.007_250)]"
-                        }`}
-                      >
-                        {/* Drag handle */}
-                        <button
-                          type="button"
-                          className="cursor-grab rounded-lg p-2 text-muted-foreground/60 transition-colors hover:bg-white/[0.06] hover:text-muted-foreground active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                          aria-label="Drag to reorder"
-                        >
-                          <GripVertical className="h-4.5 w-4.5" />
-                        </button>
-                        
-                        {/* File icon */}
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/12 ring-1 ring-accent/20">
-                          <FileText className="h-5 w-5 text-accent" strokeWidth={1.75} />
-                        </div>
-                        
-                        {/* File info */}
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-[14px] font-medium text-foreground">{file.name}</p>
-                          {file.pageCount !== null && (
-                            <p className="mt-0.5 text-[12px] text-muted-foreground">
-                              {file.pageCount} {file.pageCount === 1 ? "page" : "pages"}
-                            </p>
-                          )}
-                        </div>
-                        
-                        {/* Remove button */}
-                        <button
-                          type="button"
-                          onClick={() => removeFile(file.id)}
-                          className="rounded-lg p-2 text-muted-foreground/50 transition-colors hover:bg-white/[0.06] hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                          aria-label="Remove file"
-                        >
-                          <X className="h-4.5 w-4.5" />
-                        </button>
+
+                    <div className="overflow-x-auto">
+                      <div className="space-y-3">
+                        {files.map((file, index) => (
+                          <div
+                            key={file.id}
+                            draggable={!isTouchPointer}
+                            onDragStart={() => handleReorderDragStart(index)}
+                            onDragOver={(e) => handleReorderDragOver(e, index)}
+                            onDragEnd={handleReorderDragEnd}
+                            className={`group rounded-xl bg-[oklch(0.165_0.006_250)] p-4 ring-1 ring-white/[0.06] transition-all duration-150 ${
+                              draggedIndex === index
+                                ? "scale-[0.98] opacity-50"
+                                : "opacity-100 hover:bg-[oklch(0.17_0.007_250)] hover:ring-accent/25"
+                            }`}
+                          >
+                            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                              {!isTouchPointer ? (
+                                <button
+                                  type="button"
+                                  className="cursor-grab rounded-lg p-2 text-muted-foreground/60 transition-colors hover:bg-white/[0.06] hover:text-muted-foreground active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                                  aria-label="Drag to reorder"
+                                >
+                                  <GripVertical className="h-4.5 w-4.5" />
+                                </button>
+                              ) : null}
+
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/12 ring-1 ring-accent/20">
+                                <FileText className="h-5 w-5 text-accent" strokeWidth={1.75} />
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[14px] font-medium text-foreground">{file.name}</p>
+                                {file.pageCount !== null && (
+                                  <p className="mt-0.5 text-[12px] text-muted-foreground">
+                                    {file.pageCount} {file.pageCount === 1 ? "page" : "pages"}
+                                  </p>
+                                )}
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => removeFile(file.id)}
+                                className="rounded-lg p-2 text-muted-foreground/50 transition-colors hover:bg-white/[0.06] hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                                aria-label="Remove file"
+                              >
+                                <X className="h-4.5 w-4.5" />
+                              </button>
+                            </div>
+
+                            {isTouchPointer ? (
+                              <div className="mt-3 flex gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="h-10 w-full"
+                                  onClick={() => moveFile(index, "up")}
+                                  disabled={index === 0}
+                                >
+                                  Move Up
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="h-10 w-full"
+                                  onClick={() => moveFile(index, "down")}
+                                  disabled={index === files.length - 1}
+                                >
+                                  Move Down
+                                </Button>
+                              </div>
+                            ) : null}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
 
                     {/* Add more files button */}
                     <button

@@ -145,7 +145,7 @@ export default function MergeTool() {
   }, [resultUrl])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -211,10 +211,7 @@ export default function MergeTool() {
         ) : (
           <ul className="divide-y divide-border">
             {files.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-center justify-between gap-3 px-4 py-3"
-              >
+              <li key={item.id} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 shrink-0 text-primary" />
@@ -275,9 +272,9 @@ export default function MergeTool() {
 
       {isLoading ? (
         <div className="rounded-xl border border-[#333] bg-card p-4">
-          <div className="mb-2 flex items-center gap-2 text-sm text-foreground">
+          <div className="mb-2 flex min-w-0 items-center gap-2 text-sm text-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span>{status}</span>
+            <span className="min-w-0 break-words">{status}</span>
           </div>
           {isLargeMerge ? (
             <>
@@ -299,7 +296,7 @@ export default function MergeTool() {
           <p className="text-sm font-medium text-foreground">
             {hasCompletedMerge ? "Merged PDF is ready." : "Merged output available."}
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">{status}</p>
+          <p className="mt-1 break-words text-xs text-muted-foreground">{status}</p>
           <Button className="mt-4 w-full sm:w-auto" onClick={handleDownload}>
             <Download className="h-4 w-4" />
             Download merged.pdf

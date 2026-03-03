@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { createWorker, OEM } from "tesseract.js"
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"
@@ -82,6 +84,9 @@ const OCR_CORE_PATH = `${OCR_LOCAL_ASSET_BASE}/tesseract-core-simd-lstm.wasm.js`
 const OCR_LANG_PATH = `${OCR_LOCAL_ASSET_BASE}/lang-data`
 const OCR_DEFAULT_LANG_FILE = "eng.traineddata.gz"
 
+const toArrayBuffer = (bytes: Uint8Array): ArrayBuffer =>
+  bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
+
 const toDataUrl = async (canvas: OffscreenCanvas, mimeType = "image/jpeg", quality = 0.9) => {
   const blob = await canvas.convertToBlob({ type: mimeType, quality })
   const buffer = await blob.arrayBuffer()
@@ -146,10 +151,7 @@ const mergeChunk = async (request: MergeChunkRequest) => {
   const success: MergeChunkSuccessMessage = {
     type: "mergeChunkSuccess",
     requestId: request.requestId,
-    mergedBuffer: mergedBytes.buffer.slice(
-      mergedBytes.byteOffset,
-      mergedBytes.byteOffset + mergedBytes.byteLength
-    ),
+    mergedBuffer: toArrayBuffer(mergedBytes),
     pageCount: processedPages,
   }
 
@@ -168,12 +170,12 @@ const splitFile = async (request: SplitRequest) => {
     copied.forEach((page) => output.addPage(page))
 
     const bytes = await output.save({ useObjectStreams: true })
-    outputs.push({
-      name: `${baseName}_pages_${selectedPages.join("-")}.pdf`,
-      buffer: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
-      pageCount: selectedPages.length,
-      pageRange:
-        selectedPages.length === 1
+      outputs.push({
+        name: `${baseName}_pages_${selectedPages.join("-")}.pdf`,
+        buffer: toArrayBuffer(bytes),
+        pageCount: selectedPages.length,
+        pageRange:
+          selectedPages.length === 1
           ? `Page ${selectedPages[0]}`
           : `Pages ${selectedPages[0]}-${selectedPages[selectedPages.length - 1]}`,
     })
@@ -191,7 +193,7 @@ const splitFile = async (request: SplitRequest) => {
           range.length === 1
             ? `${baseName}_page_${range[0]}.pdf`
             : `${baseName}_pages_${range[0]}-${range[range.length - 1]}.pdf`,
-        buffer: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+        buffer: toArrayBuffer(bytes),
         pageCount: range.length,
         pageRange:
           range.length === 1
@@ -214,7 +216,7 @@ const splitFile = async (request: SplitRequest) => {
 
       outputs.push({
         name: `${baseName}_page_${i + 1}.pdf`,
-        buffer: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+        buffer: toArrayBuffer(bytes),
         pageCount: 1,
         pageRange: `Page ${i + 1}`,
       })
@@ -248,7 +250,6 @@ const performLocalOCR = async (
   const sourceBytes = new Uint8Array(fileBuffer)
   const loadingTask = pdfjsLib.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -294,7 +295,8 @@ const performLocalOCR = async (
       }
 
       await page.render({
-        canvasContext: context,
+        canvas: canvas as unknown as HTMLCanvasElement,
+        canvasContext: context as unknown as CanvasRenderingContext2D,
         viewport: renderViewport,
         annotationMode: pdfjsLib.AnnotationMode.ENABLE,
       }).promise
@@ -353,10 +355,7 @@ const performLocalOCR = async (
     type: "ocrSuccess",
     requestId,
     name: file.name.replace(/\.pdf$/i, "") + "-ocr-searchable.pdf",
-    buffer: outputBytes.buffer.slice(
-      outputBytes.byteOffset,
-      outputBytes.byteOffset + outputBytes.byteLength
-    ),
+    buffer: toArrayBuffer(outputBytes),
     extractedText: pageTexts.join("\n\n"),
     pageCount: pdf.numPages,
   }
@@ -391,3 +390,4 @@ workerScope.onmessage = async (event: MessageEvent<WorkerRequest>) => {
     sendError(request.requestId, errorMessage)
   }
 }
+

@@ -131,26 +131,26 @@ export function GoogleTranslateWidget() {
   }, [isOpen, scriptLoaded])
 
   return (
-    <div className="rounded-xl border border-[#333] bg-[#0f0f0f] p-4">
+    <div className="w-full rounded-xl border border-[#333] bg-[#0f0f0f] p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-[#0070f3]" />
-          <p className="text-[13px] text-white/75">Translate this page</p>
+          <p className="text-base text-white/75">Translate this page</p>
         </div>
         <button
           type="button"
           onClick={() => setIsOpen((current) => !current)}
-          className="inline-flex items-center justify-center rounded-md border border-[#333] bg-[#111] px-3 py-1.5 text-[12px] font-medium text-white/75 transition-colors hover:border-[#0070f3]/60 hover:text-white"
+          className="inline-flex min-h-[44px] w-full items-center justify-center rounded-md border border-[#333] bg-[#111] px-3 py-2 text-base font-medium text-white/75 transition-colors hover:border-[#0070f3]/60 hover:text-white sm:w-auto"
         >
           {isOpen ? "Hide Translator" : "Show Translator"}
         </button>
       </div>
 
       <div className={isOpen ? "mt-3 block" : "hidden"}>
-        <p className="mb-2 text-[11px] text-white/45">
+        <p className="mb-2 w-full text-base text-white/45">
           Google Translate may send page text to Google services.
         </p>
-        <div id="google_translate_element" />
+        <div id="google_translate_element" className="w-full overflow-x-auto" />
       </div>
 
       {isOpen ? (

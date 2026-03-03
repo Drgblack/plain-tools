@@ -61,11 +61,15 @@ body {
   border: 1px solid #333 !important;
   border-radius: 6px !important;
   padding: 5px 8px !important;
-  outline: none !important;
 }
 
 #google_translate_element .goog-te-combo:hover {
   border-color: rgba(0, 112, 243, 0.8) !important;
+}
+
+#google_translate_element .goog-te-combo:focus-visible {
+  outline: 2px solid rgba(0, 112, 243, 0.85) !important;
+  outline-offset: 2px !important;
 }
 
 /* Prevent translation of brand terms */
@@ -87,7 +91,7 @@ body {
   --secondary: oklch(0.22 0.01 250);
   --secondary-foreground: oklch(0.95 0 0);
   --muted: oklch(0.22 0.01 250);
-  --muted-foreground: oklch(0.65 0.01 250);
+  --muted-foreground: oklch(0.74 0.01 250);
   --accent: oklch(0.62 0.21 250);
   --accent-hover: oklch(0.55 0.21 250);
   --accent-foreground: oklch(0.98 0 0);
@@ -124,7 +128,7 @@ body {
   --secondary: oklch(0.22 0.01 250);
   --secondary-foreground: oklch(0.95 0 0);
   --muted: oklch(0.22 0.01 250);
-  --muted-foreground: oklch(0.65 0.01 250);
+  --muted-foreground: oklch(0.74 0.01 250);
   --accent: oklch(0.62 0.21 250);
   --accent-hover: oklch(0.55 0.21 250);
   --accent-foreground: oklch(0.98 0 0);
@@ -197,6 +201,50 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /*
+   * Ensure keyboard users always see a visible focus indicator on
+   * interactive controls, even when individual components reset outlines.
+   */
+  :where(
+      a[href],
+      button,
+      input:not([type="hidden"]),
+      select,
+      textarea,
+      summary,
+      [role="button"],
+      [role="link"],
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid oklch(0.74 0.2 250) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Faster tap response on mobile interactive controls. */
+  a,
+  button,
+  [role="button"],
+  summary,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    touch-action: manipulation;
+  }
+
+  /*
+   * Ensure copy/paste remains available for tool outputs and editable content
+   * even if other UI elements use select-none.
+   */
+  textarea,
+  input,
+  pre,
+  code,
+  [contenteditable="true"],
+  [data-copyable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
   }
 }
 

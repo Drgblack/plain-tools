@@ -41,12 +41,12 @@ export default async function ToolPage({ params }: PageProps) {
     notFound()
   }
 
-  const ToolComponent = tool.available
+  const ToolComponent: ToolComponent = tool.available
     ? toolComponents[tool.slug] ?? FallbackToolComponent
-    : null
+    : FallbackToolComponent
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
       <Header />
 
       <main className="flex-1">

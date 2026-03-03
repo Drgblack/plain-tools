@@ -3,9 +3,8 @@ import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { WifiOff, Activity, Code, CheckCircle2, Monitor, XCircle, ArrowRight, Eye, AlertTriangle } from "lucide-react"
+import { WifiOff, Activity, CheckCircle2, XCircle, Eye, AlertTriangle } from "lucide-react"
 import {
-  generateTechArticleSchema,
   generateHowToSchema,
   generateFAQSchema,
   combineSchemas,

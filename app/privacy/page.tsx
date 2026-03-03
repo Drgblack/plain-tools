@@ -20,9 +20,9 @@ export default function PrivacyPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
 
-      <main className="flex-1 px-4 py-16">
-        <div className="mx-auto max-w-2xl">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+      <main className="flex-1 px-4 py-16 [&_p]:text-base [&_li]:text-base">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Privacy
           </h1>
 
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
           </p>
 
           <section className="mt-12">
-            <h2 className="text-lg font-medium text-foreground">
+            <h2 className="text-xl font-medium text-foreground sm:text-2xl">
               What We Do Not Collect
             </h2>
             <ul className="mt-4 space-y-2 text-muted-foreground">
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mt-12">
-            <h2 className="text-lg font-medium text-foreground">
+            <h2 className="text-xl font-medium text-foreground sm:text-2xl">
               How Files Are Handled
             </h2>
             <p className="mt-4 text-muted-foreground leading-relaxed">
@@ -70,14 +70,14 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mt-12">
-            <h2 className="text-lg font-medium text-foreground">Cookies</h2>
+            <h2 className="text-xl font-medium text-foreground sm:text-2xl">Cookies</h2>
             <p className="mt-4 text-muted-foreground">
               Plain does not require cookies to function.
             </p>
           </section>
 
           <section className="mt-12">
-            <h2 className="text-lg font-medium text-foreground">Changes</h2>
+            <h2 className="text-xl font-medium text-foreground sm:text-2xl">Changes</h2>
             <p className="mt-4 text-muted-foreground">
               If this changes, it will be clearly stated on this page.
             </p>

@@ -5,8 +5,8 @@ import Script from "next/script"
 import { ChevronRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { categories, posts, getCategoryBySlug, type CategoryId } from "@/lib/blog-data"
-import { generateFAQSchema, generateBreadcrumbSchema, combineSchemas } from "@/lib/schema"
+import { categories, posts, getCategoryBySlug } from "@/lib/blog-data"
+import { generateFAQSchema, combineSchemas } from "@/lib/schema"
 
 interface PageProps {
   params: Promise<{ slug: string }>

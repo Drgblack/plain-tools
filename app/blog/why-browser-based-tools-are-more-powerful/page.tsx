@@ -63,6 +63,7 @@ export default function WhyBrowserBasedToolsArePowerfulPage() {
   return (
     <BlogArticle
       title="Why Browser-Based Tools Are Becoming More Powerful"
+      description="How modern browsers run complex local workloads with WebAssembly, file APIs, and offline-first architecture."
       intro="For years, complex document processing required dedicated software or server-side services. That assumption is changing. Modern browsers have evolved into capable runtime environments that can handle operations previously reserved for native applications or remote servers."
       simpleTerms="Your web browser is no longer just for viewing websites. It can now run complex programs, process files locally, and work offline—all without sending your data anywhere. This shift makes it possible to build privacy-respecting tools that perform serious work entirely on your device."
       datePublished="2026-02-27"

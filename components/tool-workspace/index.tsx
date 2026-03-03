@@ -18,7 +18,6 @@ export function ToolWorkspace({
   title,
   fileName,
   children,
-  onClose,
   showPrivacyBanner = true,
   privacyBannerText = "100% Local Processing"
 }: ToolWorkspaceProps) {

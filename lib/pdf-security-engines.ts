@@ -106,7 +106,7 @@ const METADATA_KEYS = [
   "Trapped",
 ] as const
 
-const STANDARD_INFO_KEYS = new Set(METADATA_KEYS)
+const STANDARD_INFO_KEYS = new Set<string>(METADATA_KEYS)
 
 const name = (value: string) => PDFName.of(value)
 
@@ -252,6 +252,7 @@ const createRedactionCanvas = (width: number, height: number) => {
     }
 
     return {
+      canvas,
       context,
       width,
       height,
@@ -278,6 +279,7 @@ const createRedactionCanvas = (width: number, height: number) => {
   }
 
   return {
+    canvas,
     context,
     width,
     height,
@@ -621,7 +623,9 @@ const toBase64 = (bytes: Uint8Array) => {
 const toByteArray = (value: ArrayBuffer | Uint8Array) =>
   value instanceof Uint8Array ? value : new Uint8Array(value)
 
-const resolveSigningAlgorithm = (key: CryptoKey): AlgorithmIdentifier => {
+type LocalSigningAlgorithm = AlgorithmIdentifier | RsaPssParams | EcdsaParams
+
+const resolveSigningAlgorithm = (key: CryptoKey): LocalSigningAlgorithm => {
   const algorithm = key.algorithm
   if (!algorithm || typeof algorithm !== "object" || !("name" in algorithm)) {
     return { name: "HMAC" }
@@ -629,11 +633,11 @@ const resolveSigningAlgorithm = (key: CryptoKey): AlgorithmIdentifier => {
 
   const algorithmName = algorithm.name
   if (algorithmName === "RSA-PSS") {
-    return { name: "RSA-PSS", saltLength: 32 }
+    return { name: "RSA-PSS", saltLength: 32 } as RsaPssParams
   }
 
   if (algorithmName === "ECDSA") {
-    return { name: "ECDSA", hash: "SHA-256" }
+    return { name: "ECDSA", hash: "SHA-256" } as EcdsaParams
   }
 
   if (algorithmName === "RSASSA-PKCS1-v1_5") {
@@ -781,6 +785,7 @@ const saveUnprotectedFromOpenedPdf = async (
       }
 
       await page.render({
+        canvas,
         canvasContext: context,
         viewport,
         annotationMode: pdfjs.AnnotationMode.ENABLE,
@@ -810,7 +815,6 @@ const attemptPasswordUnlock = async (
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
     password,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -944,7 +948,6 @@ export async function plainIrreversibleRedactor(
   const pdfjs = await getPdfJs()
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -965,7 +968,8 @@ export async function plainIrreversibleRedactor(
       const renderSurface = createRedactionCanvas(canvasWidth, canvasHeight)
 
       await page.render({
-        canvasContext: renderSurface.context,
+        canvas: renderSurface.canvas as unknown as HTMLCanvasElement,
+        canvasContext: renderSurface.context as unknown as CanvasRenderingContext2D,
         viewport: renderViewport,
         annotationMode: pdfjs.AnnotationMode.ENABLE,
       }).promise
@@ -1082,7 +1086,6 @@ export async function applyBurnInRedaction(
   const pdfjs = await getPdfJs()
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -1108,6 +1111,7 @@ export async function applyBurnInRedaction(
       }
 
       await page.render({
+        canvas,
         canvasContext: context,
         viewport: renderViewport,
         annotationMode: pdfjs.AnnotationMode.ENABLE,
@@ -1549,3 +1553,4 @@ export async function plainPasswordBreaker(
     "Password recovery was unsuccessful within the local brute-force limit."
   )
 }
+

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react"
 import { PDFDocument } from "pdf-lib"
-import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown, Zap } from "lucide-react"
+import { FileText, Download, ShieldCheck, CheckCircle2, X, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
@@ -55,7 +55,6 @@ export default function SplitPDFPage() {
   const [selectedPages, setSelectedPages] = useState<number[]>([])
   const [pageRanges, setPageRanges] = useState("")
   const [results, setResults] = useState<SplitResult[]>([])
-  const [showAdvanced, setShowAdvanced] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const getPageCount = async (file: File): Promise<number | null> => {
@@ -420,7 +419,7 @@ export default function SplitPDFPage() {
 
                         <button
                           type="button"
-                          onClick={() => { setSplitMode("ranges"); setShowAdvanced(true); }}
+                          onClick={() => { setSplitMode("ranges") }}
                           className={`flex items-start gap-3 rounded-lg p-4 text-left transition-all ${
                             splitMode === "ranges"
                               ? "bg-accent/10 ring-1 ring-accent/30"
@@ -440,7 +439,7 @@ export default function SplitPDFPage() {
 
                         <button
                           type="button"
-                          onClick={() => { setSplitMode("individual"); setShowAdvanced(true); }}
+                          onClick={() => { setSplitMode("individual") }}
                           className={`flex items-start gap-3 rounded-lg p-4 text-left transition-all ${
                             splitMode === "individual"
                               ? "bg-accent/10 ring-1 ring-accent/30"

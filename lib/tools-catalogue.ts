@@ -1,4 +1,10 @@
 import type { ComponentType } from "react"
+import type {
+  PdfConversionFormat,
+  PdfPageRange,
+  PlainHardwareAcceleratedBatchOptions,
+} from "./pdf-batch-engine"
+import type { LocalSigningKeyInput, ProcessingStage } from "./pdf-security-engines"
 
 export type ToolCategory =
   | "Core"
@@ -8,10 +14,13 @@ export type ToolCategory =
 
 export type ToolHandlerResult =
   | Uint8Array
+  | Uint8Array[]
   | Blob[]
   | { report: unknown; annotatedBytes: Uint8Array }
 
 type ToolOptions = Record<string, unknown>
+type StageReporter = (stage: ProcessingStage, message: string) => void
+type BatchProgress = (progress: number, status: string) => void
 
 export interface ToolDefinition {
   id: string
@@ -65,7 +74,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
         throw new Error("Split PDF requires pageRanges in options.")
       }
       const { splitPdf } = await import("./pdf-batch-engine")
-      return await splitPdf(file, pageRanges)
+      return await splitPdf(file, pageRanges as PdfPageRange[])
     },
   },
   {
@@ -131,7 +140,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: false,
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Convert PDF")
-      const targetFormat = options?.targetFormat ?? "png"
+      const targetFormat = (options?.targetFormat ?? "png") as PdfConversionFormat
       const { convertPdf } = await import("./pdf-batch-engine")
       return await convertPdf(file, targetFormat)
     },
@@ -165,7 +174,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
         throw new Error("Plain Irreversible Redactor requires redactionRegions in options.")
       }
       const { plainIrreversibleRedactor } = await import("./pdf-security-engines")
-      return await plainIrreversibleRedactor(file, regions, options?.onStageChange)
+      return await plainIrreversibleRedactor(
+        file,
+        regions,
+        options?.onStageChange as StageReporter | undefined
+      )
     },
   },
   {
@@ -183,7 +196,11 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
         throw new Error("Plain Local Cryptographic Signer requires keyMaterial in options.")
       }
       const { plainLocalCryptographicSigner } = await import("./pdf-security-engines")
-      return await plainLocalCryptographicSigner(file, keyMaterial, options)
+      return await plainLocalCryptographicSigner(
+        file,
+        keyMaterial as LocalSigningKeyInput,
+        options
+      )
     },
   },
   {
@@ -242,7 +259,9 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: false,
     handler: async (files, options) => {
       const { plainHardwareAcceleratedBatch } = await import("./pdf-batch-engine")
-      const results = await plainHardwareAcceleratedBatch(files, options)
+      const batchOptions: PlainHardwareAcceleratedBatchOptions =
+        (options as PlainHardwareAcceleratedBatchOptions | undefined) ?? { mode: "merge" }
+      const results = await plainHardwareAcceleratedBatch(files, batchOptions)
       const first = results[0]
       if (!first) {
         throw new Error("Batch engine returned no results.")
@@ -269,7 +288,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     handler: async (files, options) => {
       const file = requireSingleFile(files, "Plain Offline OCR Pipeline")
       const { plainOfflineOCR } = await import("./pdf-batch-engine")
-      return await plainOfflineOCR(file, options?.onProgress)
+      return await plainOfflineOCR(file, options?.onProgress as BatchProgress | undefined)
     },
   },
   {

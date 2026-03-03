@@ -137,7 +137,7 @@ export function generateBreadcrumbSchema(
  * Important: Only use for genuine FAQs, not fabricated questions
  */
 export function generateFAQSchema(
-  faqs: { question: string; answer: string }[]
+  faqs: readonly { question: string; answer: string }[]
 ) {
   if (faqs.length === 0) return null
   
@@ -233,8 +233,9 @@ export function combineSchemas(schemas: (object | null)[]) {
     "@context": "https://schema.org",
     "@graph": validSchemas.map((schema) => {
       // Remove duplicate @context from nested schemas
-      const { "@context": _, ...rest } = schema as { "@context"?: string }
-      return rest
+      const schemaWithoutContext = { ...(schema as Record<string, unknown>) }
+      delete schemaWithoutContext["@context"]
+      return schemaWithoutContext
     }),
   }
 }

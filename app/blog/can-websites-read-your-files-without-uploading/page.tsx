@@ -53,6 +53,7 @@ export default function CanWebsitesReadFilesPage() {
       />
       <BlogArticle
         title="Can Websites Read Your Files Without Uploading Them?"
+        description="Browser security model explained: when websites can access files, what they can read, and how to verify upload behavior."
         datePublished="2026-02-28"
         readingTime={6}
         intro="A common concern when using web-based tools is whether websites can access files on your computer without your knowledge. This article explains how browser security works, what permissions websites actually have, and how you can verify file handling behavior yourself."

@@ -8,7 +8,7 @@ import { Logo } from "@/components/logo"
 import { PrivacyShield } from "@/components/privacy-shield"
 import { LocalHistorySidebar, HistoryIcon } from "@/components/local-history"
 import { AirGapToggle } from "@/components/air-gap-toggle"
-import { Command } from "lucide-react"
+import { Command, Menu, Search, X } from "lucide-react"
 import {
   GOOGLE_TRANSLATE_INCLUDED_LANGUAGES,
   GOOGLE_TRANSLATE_LANGUAGES,
@@ -54,12 +54,17 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname()
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState("en")
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
     return pathname.startsWith(href)
   }
+
+  const openCommandPalette = useCallback(() => {
+    window.dispatchEvent(new CustomEvent("plain:open-command-palette"))
+  }, [])
 
   const applyLanguageToGoogleCombo = useCallback((languageCode: string) => {
     const combo = document.querySelector<HTMLSelectElement>(
@@ -179,82 +184,181 @@ export function Header() {
     }
   }, [])
 
+  useEffect(() => {
+    setIsMobileNavOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    document.body.classList.toggle("overflow-hidden", isMobileNavOpen)
+    return () => {
+      document.body.classList.remove("overflow-hidden")
+    }
+  }, [isMobileNavOpen])
+
   return (
     <>
-    <LocalHistorySidebar isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
-    <header className="sticky top-0 z-50 w-full bg-[oklch(0.115_0.008_250)] shadow-[0_4px_16px_-4px_rgba(0,0,0,0.5),0_2px_6px_-2px_rgba(0,0,0,0.4)] backdrop-blur-[16px] backdrop-saturate-[1.15]">
-      {/* Bottom divider - gradient edge for clear separation */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-white/[0.06]" />
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Logo />
-        <nav className="flex items-center gap-0.5 md:gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`group relative rounded-md px-3 py-2 text-[14px] outline-none transition-all duration-150 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background md:px-3.5 ${
-                isActive(link.href)
-                  ? "font-semibold text-accent"
-                  : "font-medium text-foreground/60 hover:text-foreground hover:bg-white/[0.06]"
-              }`}
-            >
-              {link.label}
-              {/* Active indicator - solid bar */}
-              <span 
-                className={`absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-accent transition-opacity duration-150 md:left-3.5 md:right-3.5 ${
-                  isActive(link.href) ? "opacity-100" : "opacity-0"
-                }`} 
-              />
-              {/* Hover indicator - subtle bar that grows in */}
-              {!isActive(link.href) && (
-                <span 
-                  className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-accent/50 opacity-0 scale-x-0 transition-all duration-150 origin-center group-hover:opacity-100 group-hover:scale-x-100 md:left-3.5 md:right-3.5"
-                />
-              )}
-            </Link>
-          ))}
-          {/* Air-Gap Mode Toggle */}
-          <div className="ms-2 hidden sm:block">
-            <AirGapToggle />
+      <LocalHistorySidebar isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
+      <header className="sticky top-0 z-50 w-full bg-[oklch(0.115_0.008_250)] shadow-[0_4px_16px_-4px_rgba(0,0,0,0.5),0_2px_6px_-2px_rgba(0,0,0,0.4)] backdrop-blur-[16px] backdrop-saturate-[1.15]">
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-white/[0.06]" />
+
+        <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4">
+          <div className="shrink-0">
+            <Logo />
           </div>
-          
-          {/* Command Palette Trigger */}
+
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 md:flex lg:gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`group relative rounded-md px-3 py-2 text-[14px] outline-none transition-all duration-150 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background md:px-3.5 ${
+                  isActive(link.href)
+                    ? "font-semibold text-accent"
+                    : "font-medium text-foreground/60 hover:bg-white/[0.06] hover:text-foreground"
+                }`}
+              >
+                {link.label}
+                <span
+                  className={`absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-accent transition-opacity duration-150 md:left-3.5 md:right-3.5 ${
+                    isActive(link.href) ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+                {!isActive(link.href) && (
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] origin-center scale-x-0 rounded-full bg-accent/50 opacity-0 transition-all duration-150 group-hover:scale-x-100 group-hover:opacity-100 md:left-3.5 md:right-3.5" />
+                )}
+              </Link>
+            ))}
+            <div className="ms-2 hidden sm:block">
+              <AirGapToggle />
+            </div>
+            <button
+              onClick={openCommandPalette}
+              className="ms-2 hidden min-w-max items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 py-1.5 text-[11px] text-foreground/50 transition-all duration-150 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-foreground/70 md:flex"
+              title="Open Command Palette (Cmd+K)"
+            >
+              <Command className="h-3 w-3" />
+              <span className="font-mono">K</span>
+            </button>
+          </nav>
+
+          <div className="ms-auto flex items-center">
+            <button
+              onClick={() => setIsHistoryOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground/60 outline-none transition-all duration-150 hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              title="Local History"
+            >
+              <HistoryIcon className="h-5 w-5" />
+            </button>
+
+            <div className="ms-1 border-s border-white/[0.10] ps-2 md:ms-2 md:ps-3">
+              <ShareButton variant="icon" />
+            </div>
+
+            <div className="ms-3 hidden lg:block">
+              <PrivacyShield />
+            </div>
+
+            <div className="ms-3 hidden md:block">
+              <label htmlFor="header-language-select" className="sr-only">
+                Translate language
+              </label>
+              <select
+                id="header-language-select"
+                value={selectedLanguage}
+                onChange={(event) => void handleHeaderLanguageChange(event.target.value)}
+                className="h-9 w-40 rounded-lg border border-[#333] bg-[#111] px-2.5 text-[12px] text-white/80 outline-none transition-all duration-150 hover:border-[#0070f3]/70 focus-visible:ring-2 focus-visible:ring-[#0070f3]/35"
+              >
+                {GOOGLE_TRANSLATE_LANGUAGES.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={openCommandPalette}
+              className="ms-2 inline-flex h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition-all duration-150 hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
+              aria-label="Open command palette"
+              title="Search and commands"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+
+            <button
+              onClick={() => setIsMobileNavOpen((previous) => !previous)}
+              className="ms-2 inline-flex h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition-all duration-150 hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
+              aria-label="Open navigation menu"
+              aria-expanded={isMobileNavOpen}
+              aria-controls="mobile-navigation-drawer"
+            >
+              {isMobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div
+        className={`fixed inset-x-0 bottom-0 top-14 z-40 md:hidden ${
+          isMobileNavOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <button
+          onClick={() => setIsMobileNavOpen(false)}
+          className={`absolute inset-0 bg-black/60 transition-opacity duration-200 focus-visible:ring-2 focus-visible:ring-accent/60 ${
+            isMobileNavOpen ? "opacity-100" : "opacity-0"
+          }`}
+          aria-label="Close mobile navigation"
+        />
+
+        <div
+          id="mobile-navigation-drawer"
+          className={`absolute inset-x-0 top-0 border-b border-white/[0.12] bg-[oklch(0.13_0.008_250)] p-4 shadow-xl transition-all duration-200 ${
+            isMobileNavOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+          }`}
+        >
           <button
+            type="button"
             onClick={() => {
-              window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))
+              setIsMobileNavOpen(false)
+              openCommandPalette()
             }}
-            className="ms-2 hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[11px] text-foreground/50 hover:bg-white/[0.06] hover:text-foreground/70 hover:border-white/[0.12] transition-all duration-150 min-w-max"
-            title="Open Command Palette (Cmd+K)"
+            className="mb-3 flex h-10 w-full items-center gap-2 rounded-md border border-white/[0.10] bg-white/[0.03] px-3 text-sm font-medium text-foreground/80 transition-colors hover:bg-white/[0.06] hover:text-foreground"
           >
-            <Command className="h-3 w-3" />
-            <span className="font-mono">K</span>
+            <Search className="h-4 w-4" />
+            Search and commands
           </button>
 
-          {/* History Button */}
-          <button
-            onClick={() => setIsHistoryOpen(true)}
-            className="ms-1.5 flex h-9 w-9 items-center justify-center rounded-lg text-foreground/60 transition-all duration-150 hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background outline-none"
-            title="Local History"
-          >
-            <HistoryIcon className="h-5 w-5" />
-          </button>
-          <div className="ms-1 ps-2 border-s border-white/[0.10] md:ms-2 md:ps-3">
-            <ShareButton variant="icon" />
-          </div>
-          <div className="ms-3 hidden lg:block">
-            <PrivacyShield />
-          </div>
-          {/* Language Selector */}
-          <div className="ms-3 hidden md:block">
-            <label htmlFor="header-language-select" className="sr-only">
+          <nav className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileNavOpen(false)}
+                className={`rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? "bg-accent/10 text-accent"
+                    : "text-foreground/85 hover:bg-white/[0.06] hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="mt-4 border-t border-white/[0.10] pt-4">
+            <label
+              htmlFor="header-language-select-mobile"
+              className="mb-2 block text-xs font-medium uppercase tracking-wide text-foreground/60"
+            >
               Translate language
             </label>
             <select
-              id="header-language-select"
+              id="header-language-select-mobile"
               value={selectedLanguage}
               onChange={(event) => void handleHeaderLanguageChange(event.target.value)}
-              className="h-9 max-w-[160px] rounded-lg border border-[#333] bg-[#111] px-2.5 text-[12px] text-white/80 outline-none transition-all duration-150 hover:border-[#0070f3]/70 focus-visible:ring-2 focus-visible:ring-[#0070f3]/35"
+              className="h-10 w-full rounded-lg border border-[#333] bg-[#111] px-3 text-sm text-white/85 outline-none transition-all duration-150 hover:border-[#0070f3]/70 focus-visible:ring-2 focus-visible:ring-[#0070f3]/35"
             >
               {GOOGLE_TRANSLATE_LANGUAGES.map((language) => (
                 <option key={language.code} value={language.code}>
@@ -263,9 +367,8 @@ export function Header() {
               ))}
             </select>
           </div>
-        </nav>
+        </div>
       </div>
-    </header>
     </>
   )
 }

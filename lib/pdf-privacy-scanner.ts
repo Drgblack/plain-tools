@@ -300,7 +300,6 @@ export async function plainPrivacyRiskScanner(
   const pdfjs = await getPdfJs()
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -490,3 +489,4 @@ export async function plainPrivacyRiskScanner(
     await loadingTask.destroy()
   }
 }
+

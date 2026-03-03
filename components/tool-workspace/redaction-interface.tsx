@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback } from "react"
 import { Search, Trash2, Eye, EyeOff, Download, Undo, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ToolWorkspace } from "./index"

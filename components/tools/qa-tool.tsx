@@ -126,7 +126,7 @@ export default function QaTool() {
   }, [answer])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -191,7 +191,7 @@ export default function QaTool() {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Q&A on PDF</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {file ? (
@@ -205,7 +205,7 @@ export default function QaTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   setQuestion("")
@@ -240,7 +240,7 @@ export default function QaTool() {
             <p className="mt-1 text-xs text-amber-100/90">{SERVER_WARNING} Only extracted text is sent.</p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-md border p-3">
+          <div className="flex flex-col items-start gap-3 rounded-md border p-3 sm:flex-row sm:items-center">
             <Switch
               id="allow-server-processing-qa"
               checked={allowServerProcessing}
@@ -254,15 +254,15 @@ export default function QaTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Answering" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Answering" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
           )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2 sm:flex-row">
           <Button type="button" className="w-full sm:w-auto" onClick={runQa} disabled={!canAsk}>
             {isLoading ? (
               <>
@@ -288,8 +288,8 @@ export default function QaTool() {
           <CardContent>
             <Textarea value={answer} readOnly className="min-h-[220px]" />
           </CardContent>
-          <CardFooter>
-            <Button type="button" variant="secondary" onClick={copyAnswer}>
+          <CardFooter className="flex flex-col gap-2 sm:flex-row">
+            <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={copyAnswer}>
               <Copy className="h-4 w-4" />
               Copy Answer
             </Button>

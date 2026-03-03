@@ -188,8 +188,13 @@ const getPdfJsModule = async () => {
   return pdfJsModulePromise
 }
 
-const bytesToTransferableBuffer = (bytes: Uint8Array) =>
-  bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)
+const bytesToTransferableBuffer = (bytes: Uint8Array): ArrayBuffer =>
+  bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
+
+const toArrayBuffer = (buffer: ArrayBufferLike): ArrayBuffer => {
+  const bytes = new Uint8Array(buffer)
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
+}
 
 const runMergeChunkInWorker = (
   files: MergeSource[],
@@ -381,6 +386,7 @@ const createRenderSurface = (width: number, height: number) => {
     }
 
     return {
+      canvas,
       context,
       toBlob: (mimeType: string, quality?: number) =>
         canvas.convertToBlob({ type: mimeType, quality }),
@@ -403,6 +409,7 @@ const createRenderSurface = (width: number, height: number) => {
   }
 
   return {
+    canvas,
     context,
     toBlob: (mimeType: string, quality?: number) =>
       new Promise<Blob>((resolve, reject) => {
@@ -426,11 +433,15 @@ const createRenderSurface = (width: number, height: number) => {
 }
 
 const extractTextFromPage = async (page: {
-  getTextContent: () => Promise<{ items: Array<{ str?: string }> }>
+  getTextContent: () => Promise<{ items: Array<unknown> }>
 }) => {
   const textContent = await page.getTextContent()
   return textContent.items
-    .map((item) => (typeof item.str === "string" ? item.str : ""))
+    .map((item) =>
+      typeof item === "object" && item !== null && "str" in item && typeof item.str === "string"
+        ? item.str
+        : ""
+    )
     .join(" ")
     .replace(/\s+/g, " ")
     .trim()
@@ -449,7 +460,6 @@ export async function convertPdf(
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -504,7 +514,8 @@ export async function convertPdf(
 
       try {
         await page.render({
-          canvasContext: renderSurface.context,
+          canvas: renderSurface.canvas as unknown as HTMLCanvasElement,
+          canvasContext: renderSurface.context as unknown as CanvasRenderingContext2D,
           viewport,
           annotationMode: pdfjs.AnnotationMode.ENABLE,
         }).promise
@@ -561,14 +572,12 @@ export async function plainRealTimeCompressionPreviewer(
   const pdfjs = await getPdfJsModule()
   const originalTask = pdfjs.getDocument({
     data: originalBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
   })
   const compressedTask = pdfjs.getDocument({
     data: compressedBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -613,12 +622,14 @@ export async function plainRealTimeCompressionPreviewer(
       try {
         await Promise.all([
           originalPage.render({
-            canvasContext: originalSurface.context,
+            canvas: originalSurface.canvas as unknown as HTMLCanvasElement,
+            canvasContext: originalSurface.context as unknown as CanvasRenderingContext2D,
             viewport: originalViewport,
             annotationMode: pdfjs.AnnotationMode.ENABLE,
           }).promise,
           compressedPage.render({
-            canvasContext: compressedSurface.context,
+            canvas: compressedSurface.canvas as unknown as HTMLCanvasElement,
+            canvasContext: compressedSurface.context as unknown as CanvasRenderingContext2D,
             viewport: compressedViewport,
             annotationMode: pdfjs.AnnotationMode.ENABLE,
           }).promise,
@@ -800,7 +811,7 @@ export async function mergeFilesWithBatchEngine(
   const sources = await Promise.all(
     files.map(async (file) => ({
       name: file.name,
-      buffer: await file.arrayBuffer(),
+      buffer: toArrayBuffer(await file.arrayBuffer()),
     }))
   )
 
@@ -1244,3 +1255,4 @@ export async function plainOfflineOCRBatch(
   options.onProgress?.(100, "Complete. Batch OCR finished locally with no uploads.")
   return results
 }
+

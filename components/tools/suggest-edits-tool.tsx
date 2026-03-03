@@ -214,7 +214,7 @@ export default function SuggestEditsTool() {
   }, [])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -279,7 +279,7 @@ export default function SuggestEditsTool() {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Suggest Edits</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {file ? (
@@ -293,7 +293,7 @@ export default function SuggestEditsTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   setRewriteInstruction("")
@@ -360,7 +360,7 @@ export default function SuggestEditsTool() {
             <p className="mt-1 text-xs text-amber-100/90">{SERVER_WARNING} Only extracted text is sent.</p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-md border p-3">
+          <div className="flex flex-col items-start gap-3 rounded-md border p-3 sm:flex-row sm:items-center">
             <Switch
               id="allow-server-processing-edits"
               checked={allowServerProcessing}
@@ -374,8 +374,8 @@ export default function SuggestEditsTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Processing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Processing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -383,7 +383,7 @@ export default function SuggestEditsTool() {
           )}
         </CardContent>
         <CardFooter className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Button type="button" onClick={runSuggest} disabled={!canSuggest}>
+          <Button type="button" className="w-full sm:w-auto" onClick={runSuggest} disabled={!canSuggest}>
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -400,6 +400,7 @@ export default function SuggestEditsTool() {
             <Button
               type="button"
               variant="secondary"
+              className="w-full sm:w-auto"
               onClick={() => triggerPdfDownload(updatedPdfBytes, "suggested-edits.pdf")}
             >
               <Download className="h-4 w-4" />
@@ -440,6 +441,7 @@ export default function SuggestEditsTool() {
                     type="button"
                     variant="secondary"
                     size="sm"
+                    className="w-full sm:w-auto"
                     onClick={() => copySuggestion(suggestion.suggestedText)}
                     disabled={isLoading}
                   >
@@ -449,6 +451,7 @@ export default function SuggestEditsTool() {
                   <Button
                     type="button"
                     size="sm"
+                    className="w-full sm:w-auto"
                     onClick={() => void applySuggestion(index)}
                     disabled={isLoading}
                   >

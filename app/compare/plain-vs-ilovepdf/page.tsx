@@ -3,7 +3,6 @@ import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Plain vs iLovePDF: Offline vs Online PDF Processing",

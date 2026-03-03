@@ -1,3 +1,6 @@
+/// <reference lib="webworker" />
+/// <reference types="@webgpu/types" />
+
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"
 
 type GenerateThumbnailsRequest = {
@@ -174,7 +177,7 @@ const resizeWithWebGpu = async (
   }
 
   const outputCanvas = new OffscreenCanvas(targetWidth, targetHeight)
-  const context = outputCanvas.getContext("webgpu")
+  const context = outputCanvas.getContext("webgpu") as GPUCanvasContext | null
   if (!context) {
     return null
   }
@@ -256,7 +259,6 @@ const generateThumbnails = async ({
 }: GenerateThumbnailsRequest) => {
   const loadingTask = pdfjsLib.getDocument({
     data: pdfBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -284,7 +286,8 @@ const generateThumbnails = async ({
       }
 
       await page.render({
-        canvasContext: renderContext,
+        canvas: renderCanvas as unknown as HTMLCanvasElement,
+        canvasContext: renderContext as unknown as CanvasRenderingContext2D,
         viewport,
         annotationMode: pdfjsLib.AnnotationMode.ENABLE,
       }).promise
@@ -345,3 +348,4 @@ workerScope.onmessage = async (event: MessageEvent<GenerateThumbnailsRequest>) =
     sendError(payload.requestId, message)
   }
 }
+

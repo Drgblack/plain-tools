@@ -245,7 +245,7 @@ export function generateLocalizedPath(
   locale: Locale = defaultLocale,
   params?: Record<string, string>
 ): string {
-  let path = routePatterns[route]
+  let path: string = routePatterns[route]
   
   // Replace dynamic segments with actual values
   if (params) {

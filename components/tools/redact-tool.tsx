@@ -119,7 +119,6 @@ const renderPreviews = async (file: File) => {
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -145,6 +144,7 @@ const renderPreviews = async (file: File) => {
       }
 
       await page.render({
+        canvas: canvas as unknown as HTMLCanvasElement,
         canvasContext: context,
         viewport: previewViewport,
         annotationMode: pdfjs.AnnotationMode.ENABLE,
@@ -513,7 +513,7 @@ export default function RedactTool() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -579,7 +579,7 @@ export default function RedactTool() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Irreversible Redactor</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-5">
@@ -599,7 +599,7 @@ export default function RedactTool() {
                 type="button"
                 size="sm"
                 variant="ghost"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={clearFile}
               >
                 <Trash2 className="h-4 w-4" />
@@ -685,7 +685,7 @@ export default function RedactTool() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Switch
                   checked={extraBleedFill}
                   onCheckedChange={setExtraBleedFill}
@@ -700,6 +700,7 @@ export default function RedactTool() {
               <Button
                 type="button"
                 variant="secondary"
+                className="w-full sm:w-auto"
                 disabled={!file || isPreparingPreviews || isProcessing}
                 onClick={addRegion}
               >
@@ -710,11 +711,11 @@ export default function RedactTool() {
           </div>
 
           <div className="rounded-lg border">
-            <div className="flex items-center justify-between border-b px-4 py-3">
+            <div className="flex flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-medium text-foreground">
                 Regions ({regions.length})
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="break-words text-xs text-muted-foreground">
                 Coordinates in PDF points (origin: bottom-left)
               </p>
             </div>
@@ -739,6 +740,7 @@ export default function RedactTool() {
                       type="button"
                       variant="ghost"
                       size="sm"
+                      className="w-full sm:w-auto"
                       onClick={() => removeRegion(region.id)}
                       disabled={isProcessing}
                     >
@@ -753,8 +755,8 @@ export default function RedactTool() {
 
           {(isProcessing || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isProcessing ? "Processing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isProcessing ? "Processing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -869,3 +871,4 @@ export default function RedactTool() {
     </div>
   )
 }
+

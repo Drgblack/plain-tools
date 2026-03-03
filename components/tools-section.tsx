@@ -150,28 +150,30 @@ export function ToolsSection() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-2 rounded-lg bg-white/[0.03] p-1 ring-1 ring-white/[0.06]">
-          {CATEGORY_CONFIG.map((category) => {
-            const Icon = category.icon
-            const isActive = !showingSearchResults && activeCategory === category.id
-            return (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setActiveCategory(category.id)
-                  setSearchQuery("")
-                }}
-                className={`flex items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium transition ${
-                  isActive
-                    ? "bg-accent/15 text-accent"
-                    : "text-muted-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                <span>{category.label}</span>
-              </button>
-            )
-          })}
+        <div className="mt-8 overflow-x-auto pb-1">
+          <div className="inline-flex min-w-full items-center gap-2 whitespace-nowrap rounded-lg bg-white/[0.03] p-1 ring-1 ring-white/[0.06]">
+            {CATEGORY_CONFIG.map((category) => {
+              const Icon = category.icon
+              const isActive = !showingSearchResults && activeCategory === category.id
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setActiveCategory(category.id)
+                    setSearchQuery("")
+                  }}
+                  className={`flex min-h-[44px] shrink-0 items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium transition ${
+                    isActive
+                      ? "bg-accent/15 text-accent"
+                      : "text-muted-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  <span>{category.label}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {showingSearchResults ? (
@@ -188,7 +190,7 @@ export function ToolsSection() {
           </div>
         ) : null}
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTools.map((tool) => {
             const Icon = resolveIcon(tool)
             const systemBadge = getSystemBadge(tool)
@@ -197,17 +199,17 @@ export function ToolsSection() {
 
             const card = (
               <Card
-                className={`group relative h-full overflow-hidden rounded-xl border transition-all duration-150 outline-none ${
+                className={`group relative h-full min-h-[44px] overflow-hidden rounded-xl border transition-all duration-150 outline-none ${
                   tool.available
                     ? "border-[#333] bg-[#111] cursor-pointer hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
-                    : "border-[#333] bg-[#111] cursor-not-allowed opacity-80"
+                    : "border-[#3d3d3d] bg-[#121212] cursor-not-allowed"
                 }`}
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                 <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/[0.04] px-2 py-1 ring-1 ring-white/[0.06]">
                   <Lock className={`h-2.5 w-2.5 ${isAiTool ? "text-amber-300/80" : "text-emerald-400/80"}`} />
-                  <span className="text-[9px] font-medium text-muted-foreground/70">
+                  <span className="text-[10px] font-medium text-foreground/90">
                     {privacyBadge}
                   </span>
                 </div>
@@ -228,17 +230,17 @@ export function ToolsSection() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-start gap-2">
                       <h3
-                        className={`truncate text-[14px] font-semibold ${
-                          tool.available ? "text-foreground/85 group-hover:text-foreground" : "text-foreground/50"
+                        className={`text-[14px] font-semibold leading-tight ${
+                          tool.available ? "text-foreground/90 group-hover:text-foreground" : "text-foreground/85"
                         }`}
                       >
                         {tool.name}
                       </h3>
 
                       {!tool.available ? (
-                        <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-muted-foreground/70">
+                        <span className="shrink-0 rounded-full border border-amber-200/45 bg-amber-400/20 px-2.5 py-1 text-sm font-semibold leading-none text-amber-100">
                           Coming Soon
                         </span>
                       ) : null}
@@ -250,7 +252,7 @@ export function ToolsSection() {
 
                     <p
                       className={`mt-2 text-[13px] leading-relaxed ${
-                        tool.available ? "text-muted-foreground/70 group-hover:text-muted-foreground" : "text-muted-foreground/40"
+                        tool.available ? "text-muted-foreground/90 group-hover:text-muted-foreground" : "text-muted-foreground/85"
                       }`}
                     >
                       {tool.description}
@@ -276,9 +278,17 @@ export function ToolsSection() {
                 glowOnHover={tool.available}
               >
                 {tool.available ? (
-                  <Link href={`/tools/${tool.slug}`}>{card}</Link>
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="block h-full min-h-[44px] rounded-xl focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-label={`Open ${tool.name}. ${tool.description}`}
+                  >
+                    {card}
+                  </Link>
                 ) : (
-                  <div aria-disabled="true">{card}</div>
+                  <div aria-disabled="true" className="block h-full min-h-[44px]">
+                    {card}
+                  </div>
                 )}
               </TiltCard>
             )

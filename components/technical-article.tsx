@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, ReactNode } from "react"
+import { useState, ReactNode } from "react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"

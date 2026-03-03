@@ -110,7 +110,6 @@ const extractEditableSections = async (
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -297,7 +296,6 @@ const extractPdfText = async (
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -591,3 +589,4 @@ export async function suggestPdfEdits(
 
   throw new Error("PDF edit suggestion request exceeded retry limits.")
 }
+

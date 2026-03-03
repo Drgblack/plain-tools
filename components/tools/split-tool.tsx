@@ -106,7 +106,6 @@ const countPdfPages = async (file: File): Promise<number> => {
   const bytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: bytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -269,7 +268,7 @@ export default function SplitTool() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -329,7 +328,7 @@ export default function SplitTool() {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Split Settings</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-5">
@@ -349,7 +348,7 @@ export default function SplitTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   setPageCount(null)
@@ -382,8 +381,8 @@ export default function SplitTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Processing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Processing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -450,3 +449,4 @@ export default function SplitTool() {
     </div>
   )
 }
+

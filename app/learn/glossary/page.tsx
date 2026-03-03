@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"

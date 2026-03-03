@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { BrevoClient } from "@getbrevo/brevo"
+import { enforceRateLimit, RATE_LIMIT_ERROR_MESSAGE } from "@/lib/rate-limit"
 
 export const runtime = "nodejs"
 
@@ -10,6 +11,19 @@ const isValidEmail = (value: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 export async function POST(request: NextRequest) {
+  const rateLimit = await enforceRateLimit(request, "api:support")
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: RATE_LIMIT_ERROR_MESSAGE },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfter),
+        },
+      }
+    )
+  }
+
   try {
     const body = (await request.json().catch(() => null)) as
       | { name?: string; email?: string; message?: string }

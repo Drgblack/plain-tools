@@ -79,7 +79,6 @@ export async function generateCompressionPreview(
   const pdfjs = await getPdfJs()
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -110,7 +109,8 @@ export async function generateCompressionPreview(
       }
 
       await page.render({
-        canvasContext: context,
+        canvas: canvas as unknown as HTMLCanvasElement,
+        canvasContext: context as unknown as CanvasRenderingContext2D,
         viewport: renderViewport,
         annotationMode: pdfjs.AnnotationMode.ENABLE,
       }).promise
@@ -145,3 +145,4 @@ export async function generateCompressionPreview(
     scale: targetScale,
   }
 }
+

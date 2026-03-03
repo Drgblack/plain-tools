@@ -92,7 +92,7 @@ export function VerifyClaimsContent() {
   }, [])
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden [&_p]:text-base [&_li]:text-base">
       {/* Hero Section */}
       <section className="relative px-4 py-24 md:py-32 bg-[oklch(0.12_0.004_250)]">
         {/* Background glow */}
@@ -107,7 +107,7 @@ export function VerifyClaimsContent() {
             <span className="text-[12px] font-medium text-accent">Verifiable by anyone</span>
           </div>
 
-          <h1 className="animate-fade-up-delay-1 text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
+          <h1 className="animate-fade-up-delay-1 text-2xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Verify Plain{"'"}s Claims
           </h1>
           <p className="animate-fade-up-delay-2 mt-5 text-[15px] leading-relaxed text-muted-foreground md:text-base">

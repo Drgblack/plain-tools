@@ -68,7 +68,6 @@ const extractTextFromPdfBytes = async (bytes: Uint8Array) => {
   const pdfjs = await getPdfJs()
   const loadingTask = pdfjs.getDocument({
     data: bytes,
-    disableWorker: true,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
@@ -236,7 +235,7 @@ export default function OcrTool() {
   const canProcess = files.length > 0 && !isLoading
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -302,7 +301,7 @@ export default function OcrTool() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Offline OCR Pipeline</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border">
@@ -318,7 +317,7 @@ export default function OcrTool() {
             ) : (
               <ul className="divide-y">
                 {files.map((item) => (
-                  <li key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                  <li key={item.id} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 shrink-0 text-primary" />
@@ -348,8 +347,8 @@ export default function OcrTool() {
 
           {(isLoading || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isLoading ? "Processing" : "Complete"}</span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">{isLoading ? "Processing" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -397,6 +396,7 @@ export default function OcrTool() {
                     <Button
                       type="button"
                       variant="secondary"
+                      className="w-full sm:w-auto"
                       onClick={() =>
                         triggerBlobDownload(
                           new Blob([result.bytes], { type: "application/pdf" }),
@@ -410,6 +410,7 @@ export default function OcrTool() {
                     <Button
                       type="button"
                       variant="outline"
+                      className="w-full sm:w-auto"
                       onClick={() => {
                         if (!result.extractedText.trim()) {
                           toast.error(`No text detected in ${result.sourceName}`)
@@ -437,3 +438,4 @@ export default function OcrTool() {
     </div>
   )
 }
+

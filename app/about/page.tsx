@@ -3,7 +3,7 @@ import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { SummaryBox, KeyTerm, Breadcrumbs } from "@/components/seo"
+import { SummaryBox, KeyTerm } from "@/components/seo"
 import { AutoLinkContent } from "@/components/auto-link-content"
 import { 
   Shield, 
@@ -110,7 +110,7 @@ export default function AboutPage() {
       />
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 [&_p]:text-base">
         {/* Hero Section - The Mission */}
         <section className="relative border-b border-[#333] px-4 py-24 md:py-32">
           {/* Technical grid pattern background */}
@@ -131,7 +131,7 @@ export default function AboutPage() {
               <span className="text-white/60">About</span>
             </nav>
             
-            <h1 className="text-4xl font-bold tracking-[-0.03em] text-white md:text-5xl lg:text-6xl">
+            <h1 className="text-2xl font-bold tracking-[-0.03em] text-white sm:text-4xl lg:text-6xl">
               A Plain Approach to
               <br />
               <span className="text-[#0070f3]">Private Documents</span>
@@ -155,7 +155,7 @@ export default function AboutPage() {
         <section className="border-b border-[#333] px-4 py-20 md:py-28">
           <div className="mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
                 The Architecture of Trust
               </h2>
               <p className="mt-3 text-[15px] text-white/50">
@@ -235,7 +235,7 @@ export default function AboutPage() {
               <span className="mb-4 inline-block rounded-full bg-[#0070f3]/10 px-4 py-1.5 text-[12px] font-semibold uppercase tracking-wider text-[#0070f3] ring-1 ring-[#0070f3]/30">
                 Our Principles
               </span>
-              <h2 className="mt-4 text-3xl font-bold tracking-[-0.03em] text-white md:text-4xl">
+              <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-white sm:text-3xl md:text-4xl">
                 A Moral Compass for the Modern Web
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/50">
@@ -323,7 +323,7 @@ export default function AboutPage() {
         <section className="border-b border-[#333] px-4 py-20 md:py-28">
           <div className="mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
                 Our Three Pillars
               </h2>
             </div>
@@ -377,7 +377,7 @@ export default function AboutPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0070f3]/10 ring-1 ring-[#0070f3]/30">
                   <Globe className="h-5 w-5 text-[#0070f3]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-bold text-white">Building in Public</h2>
+                <h2 className="text-2xl font-bold text-white sm:text-3xl">Building in Public</h2>
               </div>
               
               <div className="space-y-4 text-[15px] leading-relaxed text-white/60">
@@ -414,7 +414,7 @@ export default function AboutPage() {
         <section className="border-b border-[#333] bg-[#0a0a0a] px-4 py-20 md:py-28">
           <div className="mx-auto max-w-3xl">
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
                 Technical FAQ
               </h2>
               <p className="mt-3 text-[15px] text-white/50">

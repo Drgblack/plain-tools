@@ -35,12 +35,29 @@ const getRetryDelayMs = (attempt: number, error: unknown) => {
 
 const extractTextFromResponse = (
   response: Awaited<ReturnType<Anthropic["messages"]["create"]>>
-) =>
-  response.content
-    .filter((block): block is Extract<typeof block, { type: "text" }> => block.type === "text")
-    .map((block) => block.text)
+) => {
+  if (!("content" in response) || !Array.isArray(response.content)) {
+    return ""
+  }
+
+  return response.content
+    .map((block) => {
+      if (
+        typeof block === "object" &&
+        block !== null &&
+        "type" in block &&
+        block.type === "text" &&
+        "text" in block &&
+        typeof block.text === "string"
+      ) {
+        return block.text
+      }
+      return ""
+    })
+    .filter((text) => text.length > 0)
     .join("\n")
     .trim()
+}
 
 const parseJsonArrayFromText = (raw: string) => {
   const trimmed = raw.trim()
@@ -214,7 +231,7 @@ export async function suggestEditsWithClaude(
 
       const fallback = raw
         .split(/\n+/)
-        .map((line) => line.replace(/^[-*\d.)\s]+/, "").trim())
+        .map((line: string) => line.replace(/^[-*\d.)\s]+/, "").trim())
         .filter(Boolean)
         .slice(0, 3)
 

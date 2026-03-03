@@ -13,7 +13,6 @@ import {
   Check, 
   X, 
   Shield, 
-  Cpu, 
   Wifi, 
   WifiOff,
   Brain,

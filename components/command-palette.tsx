@@ -76,6 +76,7 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const closePalette = useCallback(() => setIsOpen(false), [])
 
   // Define all command items
   const allItems: CommandItem[] = useMemo(() => [
@@ -174,14 +175,41 @@ export function CommandPalette() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [isOpen])
 
+  // Programmatic trigger for mobile and custom UI buttons
+  useEffect(() => {
+    const handleOpenEvent = () => setIsOpen(true)
+    window.addEventListener("plain:open-command-palette", handleOpenEvent)
+    return () => window.removeEventListener("plain:open-command-palette", handleOpenEvent)
+  }, [])
+
   // Focus input when opened
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50)
-      setQuery("")
-      setSelectedIndex(0)
+    if (!isOpen) return
+
+    setQuery("")
+    setSelectedIndex(0)
+
+    const focusInput = () => {
+      inputRef.current?.focus({ preventScroll: true })
+    }
+
+    const rafId = requestAnimationFrame(focusInput)
+    const timeoutId = window.setTimeout(focusInput, 120)
+    return () => {
+      cancelAnimationFrame(rafId)
+      window.clearTimeout(timeoutId)
     }
   }, [isOpen])
+
+  // Execute selected item
+  const executeItem = useCallback((item: CommandItem) => {
+    closePalette()
+    if (item.action) {
+      item.action()
+    } else if (item.href) {
+      router.push(item.href)
+    }
+  }, [closePalette, router])
 
   // Keyboard navigation within palette
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -201,23 +229,13 @@ export function CommandPalette() {
         }
         break
     }
-  }, [flatItems, selectedIndex])
+  }, [executeItem, flatItems, selectedIndex])
 
   // Scroll selected item into view
   useEffect(() => {
     const selectedEl = listRef.current?.querySelector(`[data-index="${selectedIndex}"]`)
     selectedEl?.scrollIntoView({ block: "nearest", behavior: "smooth" })
   }, [selectedIndex])
-
-  // Execute selected item
-  const executeItem = useCallback((item: CommandItem) => {
-    setIsOpen(false)
-    if (item.action) {
-      item.action()
-    } else if (item.href) {
-      router.push(item.href)
-    }
-  }, [router])
 
   // Reset selected index when query changes
   useEffect(() => {
@@ -255,7 +273,7 @@ export function CommandPalette() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
               className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
+              onClick={closePalette}
             />
 
             {/* Palette Modal */}
@@ -264,14 +282,24 @@ export function CommandPalette() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-              className="fixed left-1/2 top-[15%] z-[101] w-full max-w-[600px] -translate-x-1/2"
+              className="fixed inset-0 z-[101] flex items-start justify-center p-0 sm:p-4 sm:pt-20"
             >
               <div 
-                className="overflow-hidden rounded-xl border border-[#333] bg-[#0f0f0f] shadow-[0_0_0_1px_rgba(0,112,243,0.1),0_25px_50px_-12px_rgba(0,0,0,0.6),0_0_40px_rgba(0,112,243,0.15)]"
+                className="flex h-[100dvh] w-full flex-col overflow-hidden rounded-none border border-[#333] bg-[#0f0f0f] shadow-[0_0_0_1px_rgba(0,112,243,0.1),0_25px_50px_-12px_rgba(0,0,0,0.6),0_0_40px_rgba(0,112,243,0.15)] sm:h-auto sm:max-h-[80vh] sm:w-full sm:max-w-lg sm:rounded-xl"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Command Palette"
               >
+                <div className="flex items-center justify-between border-b border-[#333] px-4 py-3 sm:hidden">
+                  <p className="text-sm font-semibold text-white/80">Command Palette</p>
+                  <button
+                    onClick={closePalette}
+                    className="inline-flex h-8 items-center justify-center rounded-md border border-white/[0.10] px-3 text-xs font-medium text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white"
+                  >
+                    Close
+                  </button>
+                </div>
+
                 {/* Search Input */}
                 <div className="relative border-b border-[#333]">
                   <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
@@ -283,13 +311,14 @@ export function CommandPalette() {
                     onKeyDown={handleKeyDown}
                     placeholder="Search tools, articles, actions..."
                     className="w-full bg-transparent py-4 pl-12 pr-4 text-[16px] text-white placeholder:text-white/40 outline-none"
+                    autoFocus
                     autoComplete="off"
                     autoCorrect="off"
                     spellCheck="false"
                   />
                   <button
-                    onClick={() => setIsOpen(false)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-white/40 hover:text-white/60 hover:bg-white/[0.06] transition-colors"
+                    onClick={closePalette}
+                    className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white/60 sm:inline-flex"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -298,7 +327,7 @@ export function CommandPalette() {
                 {/* Results */}
                 <div 
                   ref={listRef}
-                  className="max-h-[400px] overflow-y-auto overscroll-contain"
+                  className="flex-1 overflow-y-auto overscroll-contain sm:max-h-[400px]"
                 >
                   {groupedItems.length === 0 ? (
                     <div className="px-4 py-8 text-center">
@@ -377,9 +406,9 @@ export function CommandPalette() {
 
                 {/* Footer */}
                 <div className="border-t border-[#333] px-4 py-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     {/* Navigation hints */}
-                    <div className="flex items-center gap-4 text-[11px] text-white/30">
+                    <div className="flex flex-wrap items-center gap-4 text-[11px] text-white/30">
                       <span className="flex items-center gap-1.5">
                         <span className="flex items-center gap-0.5">
                           <kbd className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px]">
@@ -402,7 +431,7 @@ export function CommandPalette() {
                     </div>
 
                     {/* Brand footer */}
-                    <p className="text-[10px] font-mono text-white/20">
+                    <p className="text-[10px] font-mono text-white/20 sm:text-right">
                       Plain Command Palette — Your data remains local.
                     </p>
                   </div>

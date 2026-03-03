@@ -178,11 +178,6 @@ const sections = [
   },
 ]
 
-// Flatten all articles for search
-const allArticles = sections.flatMap(section => 
-  section.articles.map(article => ({ ...article, sectionId: section.id, sectionTitle: section.title }))
-)
-
 function getCategoryStyles(category: string) {
   switch (category.toLowerCase()) {
     case "hardware":
@@ -226,7 +221,7 @@ export default function LearnPage() {
       />
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 [&_p]:text-base">
         {/* Hero Section - Compact */}
         <section className="relative px-4 py-14 md:py-18 border-b border-[#333]">
           {/* Geometric grid background */}
@@ -239,10 +234,10 @@ export default function LearnPage() {
                 Knowledge Base
               </span>
             </div>
-            <h1 className="text-[28px] font-bold tracking-tight text-white md:text-[36px]">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
               Learning Centre
             </h1>
-            <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-white/60">
+            <p className="mt-3 max-w-2xl leading-relaxed text-white/60">
               Comprehensive guides on WebAssembly, hardware acceleration, document security, 
               and privacy-first PDF processing.
             </p>
@@ -278,16 +273,16 @@ export default function LearnPage() {
               <section key={section.id} id={section.id} aria-labelledby={`${section.id}-heading`}>
                 {/* Section header */}
                 <div className="mb-6 border-b border-[#333] pb-4">
-                  <h2 id={`${section.id}-heading`} className="text-[20px] font-bold tracking-tight text-white">
+                  <h2 id={`${section.id}-heading`} className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                     {section.title}
                   </h2>
-                  <p className="mt-1 text-[13px] text-white/50">
+                  <p className="mt-1 text-white/50">
                     {section.description}
                   </p>
                 </div>
                 
                 {/* Article cards - High density grid */}
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
   {section.articles.map((article) => (
   <TiltCard key={article.title} className="h-full" tiltIntensity={8} glowOnHover>
   <Link
@@ -358,7 +353,7 @@ export default function LearnPage() {
     <div className="mx-auto max-w-5xl">
       <Link
         href="/learn/glossary"
-        className="group flex items-center gap-5 rounded-xl border border-[#333] bg-[#111] p-6 transition-all duration-300 hover:border-[#0070f3]/50 hover:shadow-[0_0_30px_rgba(0,112,243,0.1)]"
+        className="group flex flex-col items-start gap-5 rounded-xl border border-[#333] bg-[#111] p-6 transition-all duration-300 hover:border-[#0070f3]/50 hover:shadow-[0_0_30px_rgba(0,112,243,0.1)] sm:flex-row sm:items-center"
       >
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#0070f3]/10 ring-1 ring-[#0070f3]/25 transition-all group-hover:bg-[#0070f3]/15">
           <BookOpen className="h-7 w-7 text-[#0070f3]" strokeWidth={1.5} />
@@ -367,7 +362,7 @@ export default function LearnPage() {
           <h3 className="text-[16px] font-semibold text-white group-hover:text-[#0070f3] transition-colors">
             Technical Glossary
           </h3>
-          <p className="mt-1 text-[13px] text-white/50">
+          <p className="mt-1 text-white/50">
             A-Z reference of privacy-first terminology: WebAssembly, WebGPU, browser sandboxing, and more.
           </p>
         </div>

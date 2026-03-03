@@ -311,33 +311,6 @@ function LinkedTerm({
   )
 }
 
-// Check if a node is inside a code block or existing link
-function isInsideCodeOrLink(node: Node): boolean {
-  let current: Node | null = node
-  while (current) {
-    if (current.nodeType === Node.ELEMENT_NODE) {
-      const element = current as Element
-      const tagName = element.tagName.toLowerCase()
-      
-      // Skip if inside code, pre, a, or elements with translate="no"
-      if (
-        tagName === 'code' ||
-        tagName === 'pre' ||
-        tagName === 'a' ||
-        tagName === 'script' ||
-        tagName === 'style' ||
-        element.getAttribute('translate') === 'no' ||
-        element.classList.contains('notranslate') ||
-        element.hasAttribute('data-no-link')
-      ) {
-        return true
-      }
-    }
-    current = current.parentNode
-  }
-  return false
-}
-
 // Process text and return React nodes with linked terms
 export function processTextWithLinks(
   text: string,
@@ -427,8 +400,11 @@ export function SemanticLinker({
       
       // Process children recursively
       if (props.children) {
-        const processedChildren = React.Children.map(props.children, processNode)
-        return React.cloneElement(element, {}, processedChildren)
+        const processedChildren = React.Children.map(
+          props.children as React.ReactNode,
+          processNode
+        )
+        return React.cloneElement(element, undefined, processedChildren)
       }
     }
     

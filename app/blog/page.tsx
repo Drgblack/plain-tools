@@ -610,7 +610,7 @@ export default function BlogPage() {
         title={sharePost?.title || ""}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 [&_p]:text-base">
         {/* Hero Section */}
         <section className="relative border-b border-[#222] px-4 py-16 md:py-20">
           {/* Technical grid pattern */}
@@ -624,10 +624,10 @@ export default function BlogPage() {
               <span className="text-foreground">Knowledge Base</span>
             </nav>
             
-            <h1 className="text-3xl font-bold tracking-[-0.03em] text-foreground md:text-4xl lg:text-5xl">
+            <h1 className="text-2xl font-bold tracking-[-0.03em] text-foreground sm:text-4xl lg:text-5xl">
               Plain Knowledge Base
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-muted-foreground">
               Technical documentation, privacy guides, and industry insights for 
               browser-based document processing.
             </p>
@@ -711,7 +711,7 @@ export default function BlogPage() {
           <div className="relative mx-auto max-w-6xl">
             {showRoadmap ? (
               // Roadmap View - Four Pillar Clusters
-              <div className="grid gap-8 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 {contentPillars.map((pillar) => {
                   const pillarArticles = articlesByPillar[pillar.id]
                   
@@ -848,7 +848,7 @@ export default function BlogPage() {
               <>
                 {filteredArticles.length === 0 ? (
                   <div className="rounded-xl border border-[#333] bg-[#111] p-12 text-center">
-                    <p className="text-[14px] text-muted-foreground">
+                    <p className="text-muted-foreground">
                       No articles found matching your search.
                     </p>
                     <button
@@ -862,7 +862,7 @@ export default function BlogPage() {
                     </button>
                   </div>
 ) : (
-  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
   {filteredArticles.map((article) => (
   <TiltCard key={article.slug} className="h-full" tiltIntensity={8} glowOnHover>
   <article className={`group relative h-full rounded-xl border bg-[#111] p-5 transition-all duration-200 ${
@@ -955,10 +955,10 @@ export default function BlogPage() {
         {/* Interlinking Section */}
         <section className="border-t border-[#222] px-4 py-12">
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl">
               Explore Plain Tools
             </h2>
-            <p className="mt-2 text-[14px] text-muted-foreground">
+            <p className="mt-2 text-muted-foreground">
               The articles above explain the technology behind these tools.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">

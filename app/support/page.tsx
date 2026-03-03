@@ -90,7 +90,9 @@ function SystemDiagnostic() {
     const checkWebGPU = async () => {
       if ("gpu" in navigator) {
         try {
-          const adapter = await (navigator as Navigator & { gpu: GPU }).gpu.requestAdapter()
+          const adapter = await (
+            navigator as Navigator & { gpu: { requestAdapter: () => Promise<unknown> } }
+          ).gpu.requestAdapter()
           if (adapter) {
             setDiagnostics(prev => ({ 
               ...prev, 

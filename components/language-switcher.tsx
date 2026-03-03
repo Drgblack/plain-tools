@@ -24,7 +24,6 @@ import {
   localeFlags,
   defaultLocale,
   getActiveLocales,
-  getLocalizedUrl,
   stripLocalePrefix,
   type Locale,
 } from "@/lib/i18n"

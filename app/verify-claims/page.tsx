@@ -64,8 +64,10 @@ export default function VerifyClaimsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
-      <main>
-        <VerifyClaimsContent />
+      <main className="overflow-x-hidden">
+        <div className="[&_table]:block [&_table]:w-full [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:whitespace-nowrap sm:[&_table]:table">
+          <VerifyClaimsContent />
+        </div>
       </main>
       <Footer />
     </>

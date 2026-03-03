@@ -4,7 +4,6 @@ import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ArticleShareRow } from "@/components/share-button"
-import { ArrowLeft, ArrowRight } from "lucide-react"
 import {
   generateTechArticleSchema,
   generateBreadcrumbSchema,

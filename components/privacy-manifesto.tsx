@@ -67,24 +67,24 @@ export function PrivacyManifesto() {
 
       <div className="mx-auto max-w-5xl">
         {/* Verified Local Badge - top right */}
-        <div className="flex justify-end mb-8">
+        <div className="mb-8 flex justify-end">
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`flex items-center gap-2 rounded-full px-4 py-2 ring-1 transition-all duration-300 cursor-default ${
+            className={`flex cursor-default items-center gap-2 rounded-full px-3 py-1.5 ring-1 transition-all duration-300 sm:px-4 sm:py-2 ${
               isHovered
                 ? "bg-accent/12 ring-accent/40 shadow-[0_0_20px_4px_oklch(0.62_0.21_250/0.15)]"
                 : "bg-accent/6 ring-accent/20"
             }`}
           >
             <ShieldCheck
-              className={`h-4 w-4 transition-colors duration-300 ${
+              className={`h-3.5 w-3.5 transition-colors duration-300 sm:h-4 sm:w-4 ${
                 isHovered ? "text-accent" : "text-accent/70"
               }`}
               strokeWidth={2}
             />
             <span
-              className={`text-[11px] font-semibold tracking-wider transition-colors duration-300 ${
+              className={`text-[10px] font-semibold tracking-wider transition-colors duration-300 sm:text-[11px] ${
                 isHovered ? "text-accent" : "text-accent/70"
               }`}
             >
@@ -95,7 +95,7 @@ export function PrivacyManifesto() {
 
         {/* Privacy Manifesto Hero */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             Privacy by Architecture,{" "}
             <span className="text-accent">Not Just Policy</span>.
           </h2>
@@ -112,7 +112,7 @@ export function PrivacyManifesto() {
         </div>
 
         {/* Technical Breakdown - Three Columns */}
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {techColumns.map((column, idx) => (
             <div
               key={idx}
@@ -139,8 +139,8 @@ export function PrivacyManifesto() {
               />
 
               {/* Code Block */}
-              <div className="mt-5 rounded-lg bg-[oklch(0.10_0.004_250)] p-4 ring-1 ring-white/[0.04] font-mono">
-                <pre className="overflow-x-auto text-[11px] leading-relaxed text-muted-foreground/80">
+              <div className="mt-5 overflow-x-auto rounded-lg bg-[oklch(0.10_0.004_250)] p-4 font-mono ring-1 ring-white/[0.04]">
+                <pre className="min-w-full whitespace-pre text-[11px] leading-relaxed text-muted-foreground/80">
                   <code>{column.codeSnippet}</code>
                 </pre>
               </div>

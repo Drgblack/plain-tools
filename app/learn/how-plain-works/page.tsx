@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { ArrowLeft, ArrowRight, CheckCircle2, Shield, Terminal } from "lucide-react"
+import { ArrowLeft, ArrowRight, Shield, Terminal } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ArticleShareRow } from "@/components/share-button"

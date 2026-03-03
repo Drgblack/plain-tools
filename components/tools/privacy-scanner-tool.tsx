@@ -338,7 +338,7 @@ export default function PrivacyScannerTool() {
   }, [report])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
       <input
@@ -403,7 +403,7 @@ export default function PrivacyScannerTool() {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Plain Privacy Risk Scanner</CardTitle>
-          <CardDescription>{status}</CardDescription>
+          <CardDescription className="break-words">{status}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {file ? (
@@ -417,7 +417,7 @@ export default function PrivacyScannerTool() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="ml-auto"
+                className="ml-auto w-full sm:w-auto"
                 onClick={() => {
                   setFile(null)
                   clearScannerResults()
@@ -436,8 +436,8 @@ export default function PrivacyScannerTool() {
 
           {(isProcessing || progress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>
+              <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="min-w-0 flex-1 truncate">
                   {processingMode === "scan"
                     ? "Scanning"
                     : processingMode === "redact-all" || processingMode === "redact-high"
@@ -489,7 +489,7 @@ export default function PrivacyScannerTool() {
               <Badge variant="outline">Suggestions: {report.suggestedRedactions.length}</Badge>
             </div>
 
-            <div className="overflow-hidden rounded-lg border">
+            <div className="overflow-x-auto rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -536,6 +536,7 @@ export default function PrivacyScannerTool() {
               <Button
                 type="button"
                 variant="secondary"
+                className="w-full sm:w-auto"
                 onClick={() =>
                   void runAutoRedact("all", suggestedAllRegions, "auto-redacted-all.pdf")
                 }
@@ -556,6 +557,7 @@ export default function PrivacyScannerTool() {
               <Button
                 type="button"
                 variant="secondary"
+                className="w-full sm:w-auto"
                 onClick={() =>
                   void runAutoRedact("high", suggestedHighRiskRegions, "auto-redacted-high.pdf")
                 }
@@ -576,21 +578,22 @@ export default function PrivacyScannerTool() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Button type="button" variant="outline" onClick={downloadJson}>
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={downloadJson}>
                 <Download className="h-4 w-4" />
                 Report JSON
               </Button>
-              <Button type="button" variant="outline" onClick={downloadCsv}>
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={downloadCsv}>
                 <Download className="h-4 w-4" />
                 Report CSV
               </Button>
-              <Button type="button" variant="outline" onClick={downloadAnnotated} disabled={!annotatedUrl}>
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={downloadAnnotated} disabled={!annotatedUrl}>
                 <Download className="h-4 w-4" />
                 Annotated PDF
               </Button>
               <Button
                 type="button"
                 variant="outline"
+                className="w-full sm:w-auto"
                 onClick={downloadAutoRedacted}
                 disabled={!autoRedactedUrl}
               >
@@ -599,7 +602,7 @@ export default function PrivacyScannerTool() {
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 break-words text-xs text-muted-foreground">
               {annotatedSize !== null ? (
                 <span>Annotated size: {formatBytes(annotatedSize)}</span>
               ) : null}

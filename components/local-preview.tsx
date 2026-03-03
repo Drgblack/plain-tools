@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import * as pdfjsLib from "pdfjs-dist"
 import { motion, Reorder, useDragControls } from "framer-motion"
+import Image from "next/image"
 import { 
   FileText, 
   FileImage, 
@@ -14,12 +15,9 @@ import {
   Shield,
   ZoomIn,
   ZoomOut,
-  RotateCw,
-  Download,
   ChevronLeft,
   ChevronRight
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 // Initialise PDF.js worker
@@ -166,12 +164,17 @@ function DraggableThumbnail({
         {/* First page thumbnail */}
         <div className="aspect-[3/4] p-2">
           {pdfFile.thumbnails[0] ? (
-            <img
-              src={pdfFile.thumbnails[0]}
-              alt={pdfFile.name}
-              className="h-full w-full object-contain rounded"
-              draggable={false}
-            />
+            <div className="relative h-full w-full">
+              <Image
+                src={pdfFile.thumbnails[0]}
+                alt={pdfFile.name}
+                fill
+                unoptimized
+                sizes="160px"
+                className="rounded object-contain"
+                draggable={false}
+              />
+            </div>
           ) : (
             <div className="flex h-full w-full items-center justify-center rounded bg-[#0a0a0a]">
               <FileText className="h-8 w-8 text-white/20" />
@@ -229,6 +232,7 @@ export function LocalPreview({ files, onClose, onFilesReorder, mode = "single" }
             canvas.width = viewport.width
 
             await page.render({
+              canvas: canvas as unknown as HTMLCanvasElement,
               canvasContext: context,
               viewport: viewport,
             }).promise
@@ -463,12 +467,17 @@ export function LocalPreview({ files, onClose, onFilesReorder, mode = "single" }
                         whileTap={{ scale: zoom * 0.98 }}
                       >
                         <div className="aspect-[3/4] w-32 overflow-hidden rounded-md bg-[#111]">
-                          <img
-                            src={thumbnail}
-                            alt={`Page ${index + 1}`}
-                            className="h-full w-full object-contain"
-                            draggable={false}
-                          />
+                          <div className="relative h-full w-full">
+                            <Image
+                              src={thumbnail}
+                              alt={`Page ${index + 1}`}
+                              fill
+                              unoptimized
+                              sizes="128px"
+                              className="object-contain"
+                              draggable={false}
+                            />
+                          </div>
                         </div>
                         {/* Page number */}
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/80 px-2 py-0.5 text-[10px] font-mono text-white">

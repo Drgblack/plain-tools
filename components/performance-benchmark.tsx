@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useCallback } from "react"
 import { Play, Download, Cpu, Activity, HardDrive, CheckCircle2, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -155,15 +155,6 @@ export function PerformanceBenchmark() {
   const [graphData, setGraphData] = useState<number[]>(Array(20).fill(0))
   const [runInBackground, setRunInBackground] = useState(false)
   const [statusText, setStatusText] = useState("Ready to benchmark")
-  const animationRef = useRef<number | null>(null)
-
-  const stageLabels: Record<BenchmarkStage, string> = {
-    idle: "Ready to benchmark",
-    wasm: "Analysing Wasm Core...",
-    webgpu: "Measuring WebGPU Threads...",
-    io: "Testing I/O Speed...",
-    complete: "Benchmark Complete"
-  }
 
   // Simulate benchmark with realistic-looking data
   const runBenchmark = useCallback(async () => {
@@ -297,14 +288,6 @@ This report was generated locally. No data was sent to external servers.
     a.click()
     URL.revokeObjectURL(url)
   }, [results])
-
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
-    }
-  }, [])
 
   const isRunning = stage !== "idle" && stage !== "complete"
 
