@@ -3,12 +3,22 @@
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs"
 import { ShareButton } from "@/components/share-button"
 import { Logo } from "@/components/logo"
 import { PrivacyShield } from "@/components/privacy-shield"
 import { LocalHistorySidebar, HistoryIcon } from "@/components/local-history"
 import { AirGapToggle } from "@/components/air-gap-toggle"
-import { Command, Menu, Search, X } from "lucide-react"
+import { Command, Menu, Search, UserCircle2, X } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 import {
   GOOGLE_TRANSLATE_INCLUDED_LANGUAGES,
   GOOGLE_TRANSLATE_LANGUAGES,
@@ -52,10 +62,12 @@ const navLinks = [
 ]
 
 export function Header() {
+  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
   const pathname = usePathname()
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState("en")
+  const [isPortalLoading, setIsPortalLoading] = useState(false)
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
@@ -64,6 +76,29 @@ export function Header() {
 
   const openCommandPalette = useCallback(() => {
     window.dispatchEvent(new CustomEvent("plain:open-command-palette"))
+  }, [])
+
+  const openBillingPortal = useCallback(async () => {
+    setIsPortalLoading(true)
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+      })
+      const payload = (await response.json().catch(() => null)) as
+        | { url?: string; error?: string }
+        | null
+
+      if (!response.ok || !payload?.url) {
+        throw new Error(payload?.error || "Could not open billing portal.")
+      }
+
+      window.location.href = payload.url
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(error)
+      }
+      setIsPortalLoading(false)
+    }
   }, [])
 
   const applyLanguageToGoogleCombo = useCallback((languageCode: string) => {
@@ -257,6 +292,50 @@ export function Header() {
               <ShareButton variant="icon" />
             </div>
 
+            {clerkEnabled ? (
+              <>
+                <SignedIn>
+                  <div className="ms-2 hidden md:block">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 rounded-lg text-foreground/70 hover:bg-white/[0.06] hover:text-foreground"
+                          aria-label="Open account menu"
+                        >
+                          <UserCircle2 className="h-5 w-5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-52">
+                        <DropdownMenuLabel>Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => void openBillingPortal()}
+                          disabled={isPortalLoading}
+                        >
+                          {isPortalLoading ? "Opening..." : "Manage Subscription"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/pricing">View Plans</Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </SignedIn>
+
+                <SignedOut>
+                  <div className="ms-2 hidden md:block">
+                    <SignInButton mode="modal">
+                      <Button variant="outline" size="sm" className="h-9">
+                        Sign in
+                      </Button>
+                    </SignInButton>
+                  </div>
+                </SignedOut>
+              </>
+            ) : null}
+
             <div className="ms-3 hidden lg:block">
               <PrivacyShield />
             </div>
@@ -348,6 +427,32 @@ export function Header() {
               </Link>
             ))}
           </nav>
+
+          {clerkEnabled ? (
+            <>
+              <SignedIn>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileNavOpen(false)
+                    void openBillingPortal()
+                  }}
+                  className="mt-3 flex h-10 w-full items-center rounded-md border border-white/[0.10] bg-white/[0.03] px-3 text-sm font-medium text-foreground/85 transition-colors hover:bg-white/[0.06]"
+                  disabled={isPortalLoading}
+                >
+                  {isPortalLoading ? "Opening..." : "Manage Subscription"}
+                </button>
+              </SignedIn>
+
+              <SignedOut>
+                <div className="mt-3">
+                  <SignInButton mode="modal">
+                    <Button className="h-10 w-full">Sign in</Button>
+                  </SignInButton>
+                </div>
+              </SignedOut>
+            </>
+          ) : null}
 
           <div className="mt-4 border-t border-white/[0.10] pt-4">
             <label

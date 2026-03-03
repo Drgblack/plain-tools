@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useMemo, useRef, useState } from "react"
+import Link from "next/link"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Copy, FileText, Loader2, Sparkles, Trash2, UploadCloud } from "lucide-react"
 import { toast, Toaster } from "sonner"
 
@@ -17,7 +18,18 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { SERVER_WARNING, summarizePdf } from "@/lib/pdf-ai-engine"
+import {
+  consumeAiUsage,
+  exhaustAiUsage,
+  fetchAiUsageSnapshot,
+  type AiUsageSnapshot,
+} from "@/lib/ai-usage-client"
+import {
+  isMonthlyAiLimitReachedError,
+  SERVER_WARNING,
+  summarizePdf,
+} from "@/lib/pdf-ai-engine"
+import { trackEvent } from "@/lib/analytics"
 
 const isPdfFile = (file: File) =>
   file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
@@ -45,11 +57,32 @@ export default function SummarizeTool() {
   const [status, setStatus] = useState("Upload a PDF and opt in to server processing to continue.")
 
   const [summary, setSummary] = useState("")
+  const [monthlyLimitResetDate, setMonthlyLimitResetDate] = useState<string | null>(null)
+  const [aiUsage, setAiUsage] = useState<AiUsageSnapshot | null>(null)
+
+  useEffect(() => {
+    void fetchAiUsageSnapshot().then((snapshot) => {
+      if (snapshot) {
+        setAiUsage(snapshot)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (monthlyLimitResetDate) {
+      trackEvent("AI Limit Reached", { tool: "summarize-pdf" })
+    }
+  }, [monthlyLimitResetDate])
 
   const canSummarize = useMemo(
     () => Boolean(file && allowServerProcessing && !isLoading),
     [allowServerProcessing, file, isLoading]
   )
+  const remainingAiRequests = useMemo(() => {
+    if (!aiUsage) return null
+    return Math.max(0, aiUsage.limit - aiUsage.used)
+  }, [aiUsage])
+  const showRemainingAiRequests = remainingAiRequests !== null && remainingAiRequests <= 2
 
   const loadFile = useCallback((nextFile: File) => {
     if (!isPdfFile(nextFile)) {
@@ -76,6 +109,7 @@ export default function SummarizeTool() {
 
     setIsLoading(true)
     setSummary("")
+    setMonthlyLimitResetDate(null)
     setProgress(2)
     setStatus("Initialising local summarization pipeline...")
 
@@ -90,10 +124,19 @@ export default function SummarizeTool() {
       })
 
       setSummary(result)
+      setMonthlyLimitResetDate(null)
+      setAiUsage((current) => consumeAiUsage(current))
       setProgress(100)
       setStatus("Summary ready.")
       toast.success("Summary generated.")
     } catch (error) {
+      if (isMonthlyAiLimitReachedError(error)) {
+        setMonthlyLimitResetDate(error.resetDate || null)
+        setAiUsage((current) => exhaustAiUsage(current))
+        setStatus(error.message)
+        return
+      }
+
       setStatus("Summarization failed.")
       const message =
         error instanceof Error ? error.message : "Could not summarize this PDF."
@@ -231,6 +274,11 @@ export default function SummarizeTool() {
             <p className="mt-1 text-xs text-amber-100/90">
               {SERVER_WARNING} Only extracted text is sent to Anthropic.
             </p>
+            {showRemainingAiRequests ? (
+              <p className="mt-2 text-xs text-amber-100/90">
+                {remainingAiRequests} free AI request{remainingAiRequests === 1 ? "" : "s"} remaining this month
+              </p>
+            ) : null}
           </div>
 
           <div className="flex flex-col items-start gap-3 rounded-md border p-3 sm:flex-row sm:items-center">
@@ -276,6 +324,29 @@ export default function SummarizeTool() {
           </Button>
         </CardFooter>
       </Card>
+
+      {monthlyLimitResetDate ? (
+        <Card className="border-amber-500/40 bg-amber-500/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base text-amber-100">
+              You&apos;ve used your 5 free AI requests this month.
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-amber-100/90">
+              Plain Pro gives you unlimited AI access for €7/month.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button asChild className="w-full sm:w-auto">
+                <Link href="/pricing">See Plain Pro →</Link>
+              </Button>
+            </div>
+            <p className="text-xs text-amber-100/90">
+              Resets on {monthlyLimitResetDate}. Come back then to continue for free.
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {summary ? (
         <Card>

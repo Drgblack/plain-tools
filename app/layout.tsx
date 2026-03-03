@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Lora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ClerkProvider } from "@clerk/nextjs"
 import Script from 'next/script'
 import { CommandPaletteProvider } from '@/components/command-palette-provider'
 import { DeferredSiteChrome } from "@/components/deferred-site-chrome"
+import { NecessaryCookiesBanner } from "@/components/necessary-cookies-banner"
 import { RouteStructuredData } from "@/components/seo/route-structured-data"
 import { PostDownloadShareBanner } from "@/components/tools/post-download-share-banner"
 import { TOOL_SEO_ENTRIES } from "@/lib/seo-route-map"
@@ -107,7 +109,7 @@ const jsonLd = {
         "@type": "ImageObject",
         "url": "https://plain.tools/logo.png"
       },
-      "description": "Privacy-first PDF tools that run entirely in your browser using WebAssembly. No uploads, no servers, no tracking. Optimised for complete data isolation.",
+      "description": "Privacy-first PDF tools that run entirely in your browser using WebAssembly. No uploads, no servers, no ad tracking. Optimised for complete data isolation.",
       "foundingDate": "2024",
       "foundingLocation": {
         "@type": "Place",
@@ -169,7 +171,7 @@ const jsonLd = {
         "Works offline after initial load",
         "WebAssembly-powered performance",
         "No account or registration required",
-        "No tracking cookies or analytics",
+        "No ad-tech tracking or cookies",
         "GDPR and UK GDPR compliant by design"
       ],
       "provider": {
@@ -184,12 +186,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  const appShell = (
+    <>
+      <CommandPaletteProvider>
+        <RouteStructuredData />
+        {children}
+        <PostDownloadShareBanner />
+        <NecessaryCookiesBanner />
+      </CommandPaletteProvider>
+      <DeferredSiteChrome />
+      <Analytics />
+    </>
+  )
+
   return (
     <html lang="en-GB" dir="ltr">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6207224775263883"
+          crossOrigin="anonymous"
+        />
         
         <Script
           id="schema-website"
@@ -197,15 +218,20 @@ export default function RootLayout({
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
+        <Script
+          id="plausible-analytics"
+          defer
+          data-domain="plain.tools"
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
-        <CommandPaletteProvider>
-          <RouteStructuredData />
-          {children}
-          <PostDownloadShareBanner />
-        </CommandPaletteProvider>
-        <DeferredSiteChrome />
-        <Analytics />
+        {clerkPublishableKey ? (
+          <ClerkProvider publishableKey={clerkPublishableKey}>{appShell}</ClerkProvider>
+        ) : (
+          appShell
+        )}
       </body>
     </html>
   )

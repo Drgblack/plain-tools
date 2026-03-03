@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -30,6 +30,7 @@ import {
 
 import { Card, CardContent } from "@/components/ui/card"
 import { TiltCard } from "@/components/ui/tilt-card"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOL_CATALOGUE, type ToolCategory, type ToolDefinition } from "@/lib/tools-catalogue"
 
 type CategoryConfig = {
@@ -108,6 +109,7 @@ const getSystemBadge = (tool: ToolDefinition) => {
 export function ToolsSection() {
   const [activeCategory, setActiveCategory] = useState<"All" | ToolCategory>("All")
   const [searchQuery, setSearchQuery] = useState("")
+  const [isProUser, setIsProUser] = useState(false)
   const availableTools = useMemo(
     () => TOOL_CATALOGUE.filter((tool) => tool.available),
     []
@@ -129,6 +131,34 @@ export function ToolsSection() {
   }, [availableTools])
 
   const showingSearchResults = searchQuery.trim().length > 0
+
+  useEffect(() => {
+    let cancelled = false
+
+    const loadSubscriptionStatus = async () => {
+      try {
+        const response = await fetch("/api/subscription/status", {
+          method: "GET",
+          cache: "no-store",
+        })
+        if (!response.ok) {
+          return
+        }
+
+        const payload = (await response.json().catch(() => null)) as { isPro?: boolean } | null
+        if (!cancelled && payload?.isPro === true) {
+          setIsProUser(true)
+        }
+      } catch {
+        // Keep default false when status check is unavailable.
+      }
+    }
+
+    void loadSubscriptionStatus()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const filteredTools = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
@@ -218,12 +248,31 @@ export function ToolsSection() {
             const systemBadge = getSystemBadge(tool)
             const isAiTool = tool.category === "AI Assistant"
             const privacyBadge = isAiTool ? "Text sent to server (opt-in)" : "100% Local"
+            const showProBadge = Boolean(tool.pro && !isProUser)
 
             const card = (
               <Card
                 className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#333] bg-[#111] transition-all duration-150 outline-none hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                {showProBadge ? (
+                  <div className="absolute top-3 left-3 z-10">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span
+                          className="inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300"
+                          tabIndex={0}
+                        >
+                          PRO
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" sideOffset={6}>
+                        Available with Plain Pro.
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                ) : null}
 
                 <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/[0.04] px-2 py-1 ring-1 ring-white/[0.06]">
                   <Lock className={`h-2.5 w-2.5 ${isAiTool ? "text-amber-300/80" : "text-emerald-400/80"}`} />

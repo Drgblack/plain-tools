@@ -29,6 +29,7 @@ export interface ToolDefinition {
   category: ToolCategory
   description: string
   badge?: string
+  pro?: boolean
   icon?: string
   available: boolean
   component?: ComponentType
@@ -146,6 +147,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
       const { convertPdf } = await import("./pdf-batch-engine")
       return await convertPdf(file, targetFormat)
     },
+  },
+  {
+    id: "fill-pdf",
+    name: "Fill PDF Forms",
+    slug: "fill-pdf",
+    category: "Core",
+    description: "Fill AcroForm fields locally, then export flattened or editable output.",
+    badge: "PRO",
+    pro: true,
+    icon: "FileText",
+    available: true,
   },
   {
     id: "plain-metadata-purge",

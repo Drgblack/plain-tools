@@ -5,6 +5,7 @@ import { CheckCircle2, Share2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { trackEvent } from "@/lib/analytics"
 import { LOCAL_DOWNLOAD_SUCCESS_EVENT } from "@/lib/local-download-events"
 
 const SESSION_KEY = "plain-share-banner-shown"
@@ -114,6 +115,7 @@ export function PostDownloadShareBanner() {
             size="sm"
             className="w-full sm:w-auto"
             onClick={async () => {
+              trackEvent("Share Click", { location: "post-download" })
               try {
                 await navigator.clipboard.writeText(SHARE_TEXT)
                 setCopied(true)
@@ -134,4 +136,3 @@ export function PostDownloadShareBanner() {
     </div>
   )
 }
-

@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useMemo, useRef, useState } from "react"
+import Link from "next/link"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   Copy,
   Download,
@@ -28,12 +29,20 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  consumeAiUsage,
+  exhaustAiUsage,
+  fetchAiUsageSnapshot,
+  type AiUsageSnapshot,
+} from "@/lib/ai-usage-client"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import {
+  isMonthlyAiLimitReachedError,
   SERVER_WARNING,
   suggestPdfEdits,
   type PdfEditSuggestion,
 } from "@/lib/pdf-ai-engine"
+import { trackEvent } from "@/lib/analytics"
 
 const isPdfFile = (file: File) =>
   file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
@@ -77,6 +86,22 @@ export default function SuggestEditsTool() {
 
   const [suggestions, setSuggestions] = useState<PdfEditSuggestion[]>([])
   const [updatedPdfBytes, setUpdatedPdfBytes] = useState<Uint8Array | null>(null)
+  const [monthlyLimitResetDate, setMonthlyLimitResetDate] = useState<string | null>(null)
+  const [aiUsage, setAiUsage] = useState<AiUsageSnapshot | null>(null)
+
+  useEffect(() => {
+    void fetchAiUsageSnapshot().then((snapshot) => {
+      if (snapshot) {
+        setAiUsage(snapshot)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (monthlyLimitResetDate) {
+      trackEvent("AI Limit Reached", { tool: "suggest-edits" })
+    }
+  }, [monthlyLimitResetDate])
 
   const canSuggest = useMemo(
     () =>
@@ -93,6 +118,11 @@ export default function SuggestEditsTool() {
     const value = Number(pageNumberInput)
     return Number.isInteger(value) && value > 0 ? value : undefined
   }, [pageNumberInput])
+  const remainingAiRequests = useMemo(() => {
+    if (!aiUsage) return null
+    return Math.max(0, aiUsage.limit - aiUsage.used)
+  }, [aiUsage])
+  const showRemainingAiRequests = remainingAiRequests !== null && remainingAiRequests <= 2
 
   const loadFile = useCallback((nextFile: File) => {
     if (!isPdfFile(nextFile)) {
@@ -125,6 +155,7 @@ export default function SuggestEditsTool() {
     setIsLoading(true)
     setSuggestions([])
     setUpdatedPdfBytes(null)
+    setMonthlyLimitResetDate(null)
     setProgress(2)
     setStatus("Initialising PDF edit suggestion pipeline...")
 
@@ -141,10 +172,19 @@ export default function SuggestEditsTool() {
       })
 
       setSuggestions(result.suggestions)
+      setMonthlyLimitResetDate(null)
+      setAiUsage((current) => consumeAiUsage(current))
       setProgress(100)
       setStatus(`Suggestions ready. ${result.suggestions.length} option(s) generated.`)
       toast.success("Suggestions generated.")
     } catch (error) {
+      if (isMonthlyAiLimitReachedError(error)) {
+        setMonthlyLimitResetDate(error.resetDate || null)
+        setAiUsage((current) => exhaustAiUsage(current))
+        setStatus(error.message)
+        return
+      }
+
       setStatus("Suggestion generation failed.")
       const message =
         error instanceof Error ? error.message : "Could not generate edit suggestions."
@@ -170,6 +210,7 @@ export default function SuggestEditsTool() {
       }
 
       setIsLoading(true)
+      setMonthlyLimitResetDate(null)
       setProgress(5)
       setStatus("Applying selected suggestion...")
 
@@ -187,6 +228,7 @@ export default function SuggestEditsTool() {
         })
 
         setSuggestions(result.suggestions)
+        setAiUsage((current) => consumeAiUsage(current))
         if (result.updatedPdfBytes) {
           setUpdatedPdfBytes(result.updatedPdfBytes)
           setStatus("Suggestion applied. Download updated PDF.")
@@ -196,6 +238,13 @@ export default function SuggestEditsTool() {
           toast.error("Updated PDF was not returned.")
         }
       } catch (error) {
+        if (isMonthlyAiLimitReachedError(error)) {
+          setMonthlyLimitResetDate(error.resetDate || null)
+          setAiUsage((current) => exhaustAiUsage(current))
+          setStatus(error.message)
+          return
+        }
+
         setStatus("Failed to apply suggestion.")
         const message =
           error instanceof Error ? error.message : "Could not apply selected suggestion."
@@ -361,6 +410,11 @@ export default function SuggestEditsTool() {
           <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3">
             <p className="text-xs font-medium text-amber-200">Server processing warning</p>
             <p className="mt-1 text-xs text-amber-100/90">{SERVER_WARNING} Only extracted text is sent.</p>
+            {showRemainingAiRequests ? (
+              <p className="mt-2 text-xs text-amber-100/90">
+                {remainingAiRequests} free AI request{remainingAiRequests === 1 ? "" : "s"} remaining this month
+              </p>
+            ) : null}
           </div>
 
           <div className="flex flex-col items-start gap-3 rounded-md border p-3 sm:flex-row sm:items-center">
@@ -412,6 +466,29 @@ export default function SuggestEditsTool() {
           ) : null}
         </CardFooter>
       </Card>
+
+      {monthlyLimitResetDate ? (
+        <Card className="border-amber-500/40 bg-amber-500/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base text-amber-100">
+              You&apos;ve used your 5 free AI requests this month.
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-amber-100/90">
+              Plain Pro gives you unlimited AI access for €7/month.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button asChild className="w-full sm:w-auto">
+                <Link href="/pricing">See Plain Pro →</Link>
+              </Button>
+            </div>
+            <p className="text-xs text-amber-100/90">
+              Resets on {monthlyLimitResetDate}. Come back then to continue for free.
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {suggestions.length > 0 ? (
         <Card>

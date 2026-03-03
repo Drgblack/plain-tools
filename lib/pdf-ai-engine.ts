@@ -16,6 +16,32 @@ export interface SummarizePdfOptions {
 }
 
 export const SERVER_WARNING = "This sends text to server."
+export const MONTHLY_AI_LIMIT_ERROR = "monthly_ai_limit_reached"
+
+type MonthlyAiLimitPayload = {
+  error?: string
+  message?: string
+  reset_date?: string
+  upgrade_url?: string
+}
+
+export class MonthlyAiLimitReachedError extends Error {
+  code: typeof MONTHLY_AI_LIMIT_ERROR = MONTHLY_AI_LIMIT_ERROR
+  resetDate: string
+  upgradeUrl: string
+
+  constructor(message: string, resetDate: string, upgradeUrl: string) {
+    super(message)
+    this.name = "MonthlyAiLimitReachedError"
+    this.resetDate = resetDate
+    this.upgradeUrl = upgradeUrl
+  }
+}
+
+export const isMonthlyAiLimitReachedError = (
+  error: unknown
+): error is MonthlyAiLimitReachedError =>
+  error instanceof MonthlyAiLimitReachedError
 
 export interface PdfQaOptions {
   maxChars?: number
@@ -95,6 +121,21 @@ const getRetryAfterMs = (response: Response, attempt: number) => {
   }
 
   return Math.min(10_000, 1000 * 2 ** attempt)
+}
+
+const parseJsonPayload = async <T>(response: Response) =>
+  (await response.json().catch(() => null)) as T | null
+
+const throwIfMonthlyLimitReached = (payload: MonthlyAiLimitPayload | null) => {
+  if (payload?.error !== MONTHLY_AI_LIMIT_ERROR) {
+    return
+  }
+
+  throw new MonthlyAiLimitReachedError(
+    payload.message || "You've used your 5 free AI requests this month.",
+    payload.reset_date || "",
+    payload.upgrade_url || "https://plain.tools/pricing"
+  )
 }
 
 const normaliseWhitespace = (value: string) =>
@@ -374,26 +415,32 @@ export async function summarizePdf(
       }),
     })
 
-    if (response.status === 429 && attempt < retries) {
-      const retryMs = getRetryAfterMs(response, attempt)
-      options.onProgress?.(
-        70,
-        `Rate limited by summarisation service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
-      )
-      await sleep(retryMs)
-      attempt += 1
-      continue
-    }
+    const payload = await parseJsonPayload<
+      { summary?: string; warning?: string; error?: string; details?: APIError } & MonthlyAiLimitPayload
+    >(response)
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as
-        | { error?: string; warning?: string; details?: APIError }
-        | null
+    if (response.status === 429) {
+      throwIfMonthlyLimitReached(payload)
+
+      if (attempt < retries) {
+        const retryMs = getRetryAfterMs(response, attempt)
+        options.onProgress?.(
+          70,
+          `Rate limited by summarisation service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
+        )
+        await sleep(retryMs)
+        attempt += 1
+        continue
+      }
+
       throw new Error(payload?.error || "PDF summarisation request failed.")
     }
 
-    const payload = (await response.json()) as { summary?: string; warning?: string }
-    const summary = payload.summary?.trim()
+    if (!response.ok) {
+      throw new Error(payload?.error || "PDF summarisation request failed.")
+    }
+
+    const summary = payload?.summary?.trim()
     if (!summary) {
       throw new Error("Server returned an empty summary.")
     }
@@ -448,26 +495,32 @@ export async function pdfQA(
       }),
     })
 
-    if (response.status === 429 && attempt < retries) {
-      const retryMs = getRetryAfterMs(response, attempt)
-      options.onProgress?.(
-        70,
-        `Rate limited by QA service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
-      )
-      await sleep(retryMs)
-      attempt += 1
-      continue
-    }
+    const payload = await parseJsonPayload<
+      { answer?: string; warning?: string; error?: string; details?: APIError } & MonthlyAiLimitPayload
+    >(response)
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as
-        | { error?: string; warning?: string; details?: APIError }
-        | null
+    if (response.status === 429) {
+      throwIfMonthlyLimitReached(payload)
+
+      if (attempt < retries) {
+        const retryMs = getRetryAfterMs(response, attempt)
+        options.onProgress?.(
+          70,
+          `Rate limited by QA service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
+        )
+        await sleep(retryMs)
+        attempt += 1
+        continue
+      }
+
       throw new Error(payload?.error || "PDF QA request failed.")
     }
 
-    const payload = (await response.json()) as { answer?: string; warning?: string }
-    const answer = payload.answer?.trim()
+    if (!response.ok) {
+      throw new Error(payload?.error || "PDF QA request failed.")
+    }
+
+    const answer = payload?.answer?.trim()
     if (!answer) {
       throw new Error("Server returned an empty answer.")
     }
@@ -527,29 +580,32 @@ export async function suggestPdfEdits(
       }),
     })
 
-    if (response.status === 429 && attempt < retries) {
-      const retryMs = getRetryAfterMs(response, attempt)
-      options.onProgress?.(
-        65,
-        `Rate limited by edit suggestion service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
-      )
-      await sleep(retryMs)
-      attempt += 1
-      continue
-    }
+    const payload = await parseJsonPayload<
+      { suggestions?: string[]; warning?: string; error?: string; details?: APIError } & MonthlyAiLimitPayload
+    >(response)
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as
-        | { error?: string; warning?: string; details?: APIError }
-        | null
+    if (response.status === 429) {
+      throwIfMonthlyLimitReached(payload)
+
+      if (attempt < retries) {
+        const retryMs = getRetryAfterMs(response, attempt)
+        options.onProgress?.(
+          65,
+          `Rate limited by edit suggestion service. Retrying in ${Math.ceil(retryMs / 1000)} seconds.`
+        )
+        await sleep(retryMs)
+        attempt += 1
+        continue
+      }
+
       throw new Error(payload?.error || "PDF edit suggestion request failed.")
     }
 
-    const payload = (await response.json()) as {
-      suggestions?: string[]
-      warning?: string
+    if (!response.ok) {
+      throw new Error(payload?.error || "PDF edit suggestion request failed.")
     }
-    const rawSuggestions = (payload.suggestions || [])
+
+    const rawSuggestions = (payload?.suggestions || [])
       .map((value) => normaliseWhitespace(value))
       .filter(Boolean)
 
@@ -589,4 +645,3 @@ export async function suggestPdfEdits(
 
   throw new Error("PDF edit suggestion request exceeded retry limits.")
 }
-

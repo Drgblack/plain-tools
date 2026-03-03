@@ -1,10 +1,16 @@
 import { APIError, RateLimitError } from "@anthropic-ai/sdk"
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
 
 import { answerPdfQuestionWithClaude } from "@/lib/anthropic-client"
 import { buildCorsHeaders, isOriginAllowed } from "@/lib/api-cors"
 import { logger } from "@/lib/logger"
-import { enforceRateLimit, RATE_LIMIT_ERROR_MESSAGE } from "@/lib/rate-limit"
+import {
+  AI_MONTHLY_LIMIT_ERROR,
+  enforceAiMonthlyLimit,
+  enforceRateLimit,
+  RATE_LIMIT_ERROR_MESSAGE,
+} from "@/lib/rate-limit"
 
 export const runtime = "nodejs"
 
@@ -34,6 +40,8 @@ export async function POST(request: NextRequest) {
       { status: 403, headers: corsHeaders }
     )
   }
+
+  const { userId } = await auth()
 
   const rateLimit = await enforceRateLimit(request, "api:ai:qa")
   if (!rateLimit.success) {
@@ -65,6 +73,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "No question provided for PDF QA." },
         { status: 400, headers: corsHeaders }
+      )
+    }
+
+    const aiMonthlyLimit = await enforceAiMonthlyLimit(request, "api:ai:qa", userId)
+    if (!aiMonthlyLimit.success) {
+      return NextResponse.json(
+        {
+          error: AI_MONTHLY_LIMIT_ERROR,
+          message: aiMonthlyLimit.message,
+          reset_date: aiMonthlyLimit.resetDate,
+          upgrade_url: aiMonthlyLimit.upgradeUrl,
+        },
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Retry-After": String(aiMonthlyLimit.retryAfter),
+          },
+        }
       )
     }
 

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
 type ConvertMode = "images" | "text"
 type ImageFormat = "png" | "jpeg"
@@ -549,7 +550,11 @@ export default function ConvertTool() {
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
             <Button asChild className="w-full sm:w-auto">
-              <a href={output.url} download={output.fileName}>
+              <a
+                href={output.url}
+                download={output.fileName}
+                onClick={() => notifyLocalDownloadSuccess()}
+              >
                 <Download className="h-4 w-4" />
                 Download {output.fileName.endsWith(".zip") ? "ZIP" : output.fileName.endsWith(".txt") ? "Text" : "Image"}
               </a>

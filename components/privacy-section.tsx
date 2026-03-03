@@ -3,7 +3,7 @@ import { Check, Lock } from "lucide-react"
 const privacyPoints = [
   "No file uploads",
   "No user accounts",
-  "No analytics trackers",
+  "No ad-tech trackers",
   "No cookies required",
   "No server-side processing",
 ]

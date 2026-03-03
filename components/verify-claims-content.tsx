@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import { trackEvent } from "@/lib/analytics"
 
 type VerificationStep = {
   id: string
@@ -48,16 +49,17 @@ const claimsRegistry = [
     verification: "Open DevTools > Network and inspect requests while running a tool.",
   },
   {
-    claim: "No analytics trackers",
-    verification: "Open DevTools > Sources and Application. Check for tracking scripts/cookies.",
+    claim: "No ad-tech trackers",
+    verification:
+      "Open DevTools > Sources and Network. You should only see the Plausible privacy-first analytics script, not ad/retargeting trackers.",
   },
   {
     claim: "Works offline after load",
     verification: "Load the app, enable Airplane mode, then run a tool.",
   },
   {
-    claim: "No accounts required",
-    verification: "Use every tool flow without registration or login.",
+    claim: "No accounts required for free local tools",
+    verification: "Use core tools (merge/split/compress/redact) without registration or login.",
   },
   {
     claim: "No cookies required",
@@ -188,7 +190,12 @@ export function VerifyClaimsContent() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto rounded-lg border border-border/70">
+            <div
+              className="overflow-x-auto rounded-lg border border-border/70"
+              tabIndex={0}
+              role="region"
+              aria-label="Verification claims table"
+            >
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="border-b border-border/70 bg-muted/30 text-left text-xs uppercase tracking-wide text-muted-foreground">
@@ -239,13 +246,23 @@ export function VerifyClaimsContent() {
             <CardContent className="space-y-3">
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button asChild className="w-full sm:w-auto">
-                  <a href={xShareUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={xShareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent("Share Click", { location: "verify-claims" })}
+                  >
                     <X className="h-4 w-4" />
                     Share on X
                   </a>
                 </Button>
                 <Button asChild variant="outline" className="w-full sm:w-auto">
-                  <a href={linkedInShareUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={linkedInShareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent("Share Click", { location: "verify-claims" })}
+                  >
                     <Linkedin className="h-4 w-4" />
                     Share on LinkedIn
                   </a>

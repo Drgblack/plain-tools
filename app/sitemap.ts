@@ -28,6 +28,7 @@ const MANUAL_LEARN_ROUTES = [
   "/learn/webassembly-pdf-processing-explained",
   "/learn/ocr-pdf-without-cloud",
 ]
+const MANUAL_AUTH_ROUTES = ["/pricing", "/sign-in", "/sign-up", "/pro/success"]
 
 const isDynamicSegment = (segment: string) => segment.startsWith("[") && segment.endsWith("]")
 const isGroupSegment = (segment: string) => segment.startsWith("(") && segment.endsWith(")")
@@ -95,6 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ...availableToolRoutes,
       ...MANUAL_COMPARE_ROUTES,
       ...MANUAL_LEARN_ROUTES,
+      ...MANUAL_AUTH_ROUTES,
     ])
   ).sort()
 

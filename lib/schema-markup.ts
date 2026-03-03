@@ -20,7 +20,7 @@ export function generateOrganisationSchema() {
     name: ORGANISATION_NAME,
     url: BASE_URL,
     logo: LOGO_URL,
-    description: 'Privacy-first PDF tools that run entirely in your browser. No uploads, no servers, no tracking.',
+    description: 'Privacy-first PDF tools that run entirely in your browser. No uploads, no servers, no ad tracking.',
     foundingDate: '2024',
     foundingLocation: {
       '@type': 'Place',
@@ -96,7 +96,7 @@ export function generateToolSchema(options: ToolSchemaOptions) {
       'Works offline after initial load',
       'WebAssembly-powered performance',
       'No account required',
-      'No tracking or cookies',
+      'No ad tracking or cookies',
     ],
   }
 

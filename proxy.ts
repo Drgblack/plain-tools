@@ -35,7 +35,8 @@
  */
 
 import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import type { NextFetchEvent, NextRequest } from "next/server"
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import {
   I18N_ENABLED,
   defaultLocale,
@@ -124,18 +125,31 @@ function i18nMiddleware(request: NextRequest): NextResponse {
   return response
 }
 
+const isProtectedStripeRoute = createRouteMatcher([
+  "/api/stripe/checkout(.*)",
+  "/api/stripe/portal(.*)",
+])
+
 /**
  * Proxy Export
  * 
  * Currently disabled. Uncomment to enable i18n routing.
  */
-export function proxy(request: NextRequest): NextResponse {
+const clerkProxy = clerkMiddleware(async (auth, request) => {
+  if (isProtectedStripeRoute(request)) {
+    await auth.protect()
+  }
+
   // i18n is disabled - pass through all requests
   if (!I18N_ENABLED) {
     return NextResponse.next()
   }
 
   return i18nMiddleware(request)
+})
+
+export function proxy(request: NextRequest, event: NextFetchEvent) {
+  return clerkProxy(request, event)
 }
 
 export const config = {
