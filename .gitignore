@@ -12,3 +12,8 @@ node_modules/
 .env*.local
 .DS_Store
 *.tsbuildinfo
+
+# Playwright artifacts
+test-results/
+playwright-report/
+blob-report/
