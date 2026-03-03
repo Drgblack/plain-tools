@@ -8,6 +8,7 @@ const BASE_URL = "https://plain.tools"
 const APP_DIR = path.join(process.cwd(), "app")
 
 const EXCLUDED_SEGMENTS = new Set(["api", "og", "_not-found", "_global-error"])
+const EXCLUDED_ROUTES = new Set(["/pro/success", "/sign-in", "/sign-up"])
 const MANUAL_COMPARE_ROUTES = [
   "/compare/offline-vs-online-pdf-tools",
   "/compare/plain-vs-adobe-acrobat",
@@ -28,7 +29,7 @@ const MANUAL_LEARN_ROUTES = [
   "/learn/webassembly-pdf-processing-explained",
   "/learn/ocr-pdf-without-cloud",
 ]
-const MANUAL_AUTH_ROUTES = ["/pricing", "/sign-in", "/sign-up", "/pro/success"]
+const MANUAL_REQUIRED_ROUTES = ["/pricing", "/verify-claims", "/about", "/privacy", "/terms", "/support"]
 
 const isDynamicSegment = (segment: string) => segment.startsWith("[") && segment.endsWith("]")
 const isGroupSegment = (segment: string) => segment.startsWith("(") && segment.endsWith(")")
@@ -68,8 +69,9 @@ const getStaticRoutes = (directory: string, segments: string[] = []): string[] =
 const scorePriority = (route: string) => {
   if (route === "/") return 1
   if (route.startsWith("/tools/")) return 0.9
-  if (route.startsWith("/blog") || route.startsWith("/learn")) return 0.8
-  if (route.startsWith("/compare") || route.startsWith("/comparisons")) return 0.7
+  if (route.startsWith("/learn")) return 0.8
+  if (route.startsWith("/compare") || route.startsWith("/comparisons")) return 0.8
+  if (route.startsWith("/blog")) return 0.7
   if (route === "/tools") return 0.9
   return 0.5
 }
@@ -85,7 +87,9 @@ const scoreFrequency = (route: string): MetadataRoute.Sitemap[number]["changeFre
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
 
-  const staticRoutes = getStaticRoutes(APP_DIR)
+  const staticRoutes = getStaticRoutes(APP_DIR).filter(
+    (route) => !route.startsWith("/tools/") || route === "/tools"
+  )
   const availableToolRoutes = TOOL_CATALOGUE.filter((tool) => tool.available).map(
     (tool) => `/tools/${tool.slug}`
   )
@@ -96,9 +100,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ...availableToolRoutes,
       ...MANUAL_COMPARE_ROUTES,
       ...MANUAL_LEARN_ROUTES,
-      ...MANUAL_AUTH_ROUTES,
+      ...MANUAL_REQUIRED_ROUTES,
     ])
-  ).sort()
+  )
+    .filter((route) => !EXCLUDED_ROUTES.has(route))
+    .sort()
 
   return routes.map((route) => ({
     url: `${BASE_URL}${route}`,

@@ -5,64 +5,58 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: [
-      // Allow all major search engine crawlers
-      {
-        userAgent: 'Googlebot',
-        allow: ['/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: ['/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'DuckDuckBot',
-        allow: ['/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'Yandex',
-        allow: ['/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      // Explicitly allow AI crawlers for GEO (Generative Engine Optimisation)
-      // These bots index content for AI citation and knowledge retrieval
+      // Explicitly allow AI crawlers for GEO.
       {
         userAgent: 'GPTBot',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'Google-Extended',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'Claude-Web',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'anthropic-ai',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
-      },
-      {
-        userAgent: 'CCBot',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
+        allow: '/',
       },
       {
         userAgent: 'PerplexityBot',
-        allow: ['/learn/', '/blog/', '/about', '/tools/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
+        allow: '/',
       },
-      // Default rule for all other crawlers
+      {
+        userAgent: 'ClaudeBot',
+        allow: '/',
+      },
+      {
+        userAgent: 'GoogleOther',
+        allow: '/',
+      },
+      {
+        userAgent: 'Amazonbot',
+        allow: '/',
+      },
+      {
+        userAgent: 'Applebot',
+        allow: '/',
+      },
+
+      // Keep ad crawlers explicitly permitted.
+      {
+        userAgent: 'AdsBot-Google',
+        allow: ['/', '/api/health'],
+        disallow: ['/api/', '/api/stripe/', '/api/waitlist', '/history/', '/_next/'],
+      },
+      {
+        userAgent: 'Mediapartners-Google',
+        allow: ['/', '/api/health'],
+        disallow: ['/api/', '/api/stripe/', '/api/waitlist', '/history/', '/_next/'],
+      },
+
+      // Default crawl policy.
       {
         userAgent: '*',
         allow: ['/', '/api/health'],
-        disallow: ['/api/', '/history/', '/_next/'],
+        disallow: [
+          '/api/',
+          '/api/stripe/',
+          '/api/waitlist',
+          '/history/',
+          '/_next/',
+          '/sign-in',
+          '/sign-up',
+          '/pro/success',
+        ],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
