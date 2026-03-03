@@ -37,21 +37,37 @@ const slugFromPath = (pathname: string) => {
   return pathname.replace(/^\/+/, "").replace(/\//g, "-")
 }
 
-test.beforeAll(() => {
-  fs.mkdirSync(screenshotDir, { recursive: true })
-})
-
 for (const pathname of pagesToCapture) {
-  test(`mobile screenshot and overflow check: ${pathname}`, async ({ page }) => {
+  test(`mobile screenshot and overflow check: ${pathname}`, async ({ page }, testInfo) => {
+    const projectScreenshotDir = path.join(screenshotDir, testInfo.project.name)
+    fs.mkdirSync(projectScreenshotDir, { recursive: true })
+
     await page.setViewportSize(MOBILE_VIEWPORT)
     await page.goto(pathname, { waitUntil: "domcontentloaded" })
     await page.waitForTimeout(600)
 
     const shotName = `${slugFromPath(pathname)}.png`
-    await page.screenshot({
-      path: path.join(screenshotDir, shotName),
-      fullPage: true,
-    })
+    try {
+      await page.screenshot({
+        path: path.join(projectScreenshotDir, shotName),
+        fullPage: true,
+      })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      const isWebKitFullPageLimit =
+        (testInfo.project.name.includes("webkit") || testInfo.project.name === "mobile-safari") &&
+        message.includes("Cannot take screenshot larger than 32767 pixels")
+
+      if (!isWebKitFullPageLimit) {
+        throw error
+      }
+
+      // WebKit hard-limits screenshot dimensions; take viewport capture as fallback.
+      await page.screenshot({
+        path: path.join(projectScreenshotDir, shotName),
+        fullPage: false,
+      })
+    }
 
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
     expect(

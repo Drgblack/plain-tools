@@ -1,15 +1,16 @@
 {
   "name": "my-project",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next build && tsc --noEmit --skipLibCheck",
     "test:e2e": "playwright test",
-    "test:screenshots": "playwright test e2e/mobile-screenshots.spec.ts"
+    "test:screenshots": "playwright test e2e/mobile-screenshots.spec.ts",
+    "test:a11y": "playwright test e2e/accessibility.spec.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -56,6 +57,7 @@
     "input-otp": "1.4.2",
     "lucide-react": "^0.564.0",
     "next": "16.1.6",
+    "next-axiom": "^1.10.0",
     "next-themes": "^0.4.6",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.624",
@@ -72,6 +74,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@next/bundle-analyzer": "^16.1.6",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.0",

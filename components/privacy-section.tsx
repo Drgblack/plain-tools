@@ -25,8 +25,8 @@ export function PrivacySection() {
             </h2>
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-accent/8 px-3 py-1.5 ring-1 ring-accent/15">
-            <Lock className="h-3 w-3 text-accent/70" strokeWidth={2} />
-            <span className="text-[10px] font-medium text-accent/70 tracking-wide">VERIFIABLE</span>
+            <Lock className="h-3 w-3 text-[#9dd2ff]" strokeWidth={2} />
+            <span className="text-[10px] font-medium tracking-wide text-[#9dd2ff]">VERIFIABLE</span>
           </div>
         </div>
         {/* Dark card container for premium feel */}

@@ -157,7 +157,7 @@ export function GoogleTranslateWidget() {
         <Script
           id="google-translate-script"
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           onLoad={() => setScriptLoaded(true)}
         />
       ) : null}

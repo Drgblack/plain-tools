@@ -269,15 +269,15 @@ const sections = [
 function getCategoryStyles(category: string) {
   switch (category.toLowerCase()) {
     case "hardware":
-      return "bg-[#0070f3]/10 text-[#0070f3] border-[#0070f3]/30"
+      return "bg-[#0070f3]/12 text-[#7bc3ff] border-[#0070f3]/45"
     case "security":
-      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+      return "bg-emerald-500/12 text-emerald-300 border-emerald-500/40"
     case "tutorial":
-      return "bg-amber-500/10 text-amber-400 border-amber-500/30"
+      return "bg-amber-500/12 text-amber-300 border-amber-500/40"
     case "comparison":
-      return "bg-violet-500/10 text-violet-400 border-violet-500/30"
+      return "bg-violet-500/12 text-violet-300 border-violet-500/40"
     default:
-      return "bg-white/5 text-white/70 border-white/20"
+      return "bg-white/5 text-white/85 border-white/25"
   }
 }
 
@@ -346,7 +346,7 @@ export default function LearnPage() {
       className="w-full"
     />
     {searchQuery && (
-      <p className="mt-2 text-[12px] text-white/40">
+      <p className="mt-2 text-[12px] text-white/70">
         {totalResults} result{totalResults !== 1 ? 's' : ''}
       </p>
     )}
@@ -383,7 +383,7 @@ export default function LearnPage() {
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider border ${getCategoryStyles(article.category)}`}>
                             {article.category}
                           </span>
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-white/40">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-white/70">
                             <Clock className="h-3 w-3" strokeWidth={2} />
                             {article.readTime}
                           </span>
@@ -406,11 +406,11 @@ export default function LearnPage() {
                         
                         {/* Learn More link */}
                         <div className="mt-4 flex items-center gap-1">
-                          <span className="relative text-[12px] font-medium text-[#0070f3]/70 transition-colors duration-200 group-hover:text-[#0070f3]">
+                          <span className="relative text-[12px] font-medium text-[#7bc3ff] transition-colors duration-200 group-hover:text-[#9dd2ff]">
                             Learn more
                             <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#0070f3] transition-all duration-300 group-hover:w-full" />
                           </span>
-                          <ArrowRight className="h-3 w-3 text-[#0070f3]/50 transition-all duration-200 group-hover:text-[#0070f3] group-hover:translate-x-0.5" strokeWidth={2} />
+                          <ArrowRight className="h-3 w-3 text-[#7bc3ff]/80 transition-all duration-200 group-hover:text-[#9dd2ff] group-hover:translate-x-0.5" strokeWidth={2} />
                         </div>
   </article>
   </Link>
@@ -454,7 +454,7 @@ export default function LearnPage() {
             A-Z reference of privacy-first terminology: WebAssembly, WebGPU, browser sandboxing, and more.
           </p>
         </div>
-        <ArrowRight className="h-5 w-5 text-white/30 transition-all group-hover:text-[#0070f3] group-hover:translate-x-1" strokeWidth={1.5} />
+        <ArrowRight className="h-5 w-5 text-white/60 transition-all group-hover:text-[#0070f3] group-hover:translate-x-1" strokeWidth={1.5} />
       </Link>
     </div>
   </section>
@@ -463,7 +463,7 @@ export default function LearnPage() {
   <nav aria-label="Related pages" className="border-t border-[#333] bg-[#0a0a0a] px-4 py-10">
   <div className="mx-auto max-w-5xl">
   <div className="flex flex-wrap items-center justify-center gap-3">
-  <span className="text-[11px] font-semibold uppercase tracking-wider text-white/30 mr-3">
+  <span className="mr-3 text-[11px] font-semibold uppercase tracking-wider text-white/60">
   Quick Links
               </span>
               {[

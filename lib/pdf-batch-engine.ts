@@ -1,7 +1,7 @@
 "use client"
 
-import { PDFDocument } from "pdf-lib"
 import { generateCompressionPreview } from "./compression-engine"
+import { getPdfLib } from "./pdf-lib-loader"
 
 const LARGE_FILE_THRESHOLD_BYTES = 500 * 1024 * 1024
 
@@ -328,6 +328,7 @@ const mapWithConcurrency = async <T, R>(
 }
 
 const mergeFilesSequentially = async (files: File[], onProgress?: BatchProgress) => {
+  const { PDFDocument } = await getPdfLib()
   const mergedPdf = await PDFDocument.create()
 
   for (let index = 0; index < files.length; index++) {
@@ -348,6 +349,7 @@ const mergeFilesSequentially = async (files: File[], onProgress?: BatchProgress)
 }
 
 const mergeOnMainThread = async (sources: MergeSource[]) => {
+  const { PDFDocument } = await getPdfLib()
   const mergedPdf = await PDFDocument.create()
   for (const source of sources) {
     const pdf = await PDFDocument.load(source.buffer, { ignoreEncryption: true })
@@ -683,6 +685,7 @@ export async function mergePdfs(files: File[]): Promise<Uint8Array> {
     throw new Error("No PDF files were provided for merging.")
   }
 
+  const { PDFDocument } = await getPdfLib()
   const loadedSources = await Promise.all(
     files.map(async (file) => {
       const bytes = new Uint8Array(await file.arrayBuffer())
@@ -741,8 +744,9 @@ export async function splitPdf(
     throw new Error("No page ranges were provided for splitting.")
   }
 
+  const { PDFDocument } = await getPdfLib()
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
-  let sourcePdf: PDFDocument
+  let sourcePdf: import("pdf-lib").PDFDocument
   try {
     sourcePdf = await PDFDocument.load(sourceBytes, { ignoreEncryption: true })
   } catch {
@@ -1255,4 +1259,3 @@ export async function plainOfflineOCRBatch(
   options.onProgress?.(100, "Complete. Batch OCR finished locally with no uploads.")
   return results
 }
-

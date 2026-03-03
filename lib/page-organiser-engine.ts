@@ -1,6 +1,6 @@
 "use client"
 
-import { PDFDocument, degrees } from "pdf-lib"
+import { getPdfLib } from "./pdf-lib-loader"
 
 export interface PageThumbnail {
   originalIndex: number
@@ -178,6 +178,7 @@ export async function plainWebGPUPageOrganiser(
   operations: PlainWebGPUPageOrganiserOperations,
   options: PlainWebGPUPageOrganiserOptions = {}
 ): Promise<Uint8Array> {
+  const { PDFDocument, degrees } = await getPdfLib()
   const sourceBuffer = await file.arrayBuffer()
   const sourcePdf = await PDFDocument.load(sourceBuffer, { ignoreEncryption: true })
   const totalPages = sourcePdf.getPageCount()

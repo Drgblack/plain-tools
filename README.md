@@ -37,6 +37,28 @@ This project sets strict browser security headers at the framework level via `ne
 
 API routes also emit structured JSON error and warning logs (`lib/logger.ts`) suitable for production ingestion. On Vercel, these logs are captured automatically and can be forwarded through log drains. For production monitoring, connect a drain provider such as Axiom, Logtail, or Papertrail.
 
+## Monitoring
+
+### Axiom Log Drain
+
+The app is configured with `withAxiom(...)` in `next.config.ts` and uses `next-axiom` in `lib/logger.ts` for production log ingestion.
+
+1. Create an Axiom dataset.
+2. Create an Axiom token with ingest permissions.
+3. Set these Vercel environment variables:
+   - `NEXT_PUBLIC_AXIOM_DATASET`
+   - `AXIOM_TOKEN`
+4. In Vercel, enable log drain forwarding to Axiom (or use Axiom ingestion directly via env vars above).
+
+### Health Check Endpoint
+
+Public health endpoint:
+
+- `GET /api/health`
+- Response: `{ "status": "ok", "version": "1.0.0", "timestamp": "<ISO-8601>" }`
+
+This endpoint is intentionally crawl-allowed in `robots.txt` for uptime tooling compatibility.
+
 ## Launch Checklist
 
 ### Pre-launch

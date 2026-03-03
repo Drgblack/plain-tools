@@ -1,5 +1,6 @@
 import type { NextConfig } from "next"
 import createBundleAnalyzer from "@next/bundle-analyzer"
+import { withAxiom } from "next-axiom"
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -58,4 +59,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withBundleAnalyzer(nextConfig)
+export default withAxiom(withBundleAnalyzer(nextConfig))

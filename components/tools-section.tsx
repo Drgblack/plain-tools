@@ -253,7 +253,7 @@ export function ToolsSection() {
 
                     {systemBadge ? (
                       <div className="mt-3 inline-flex items-center rounded-full border border-[#0070f3]/30 bg-[#0070f3]/10 px-2.5 py-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#0070f3]">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#76bcff]">
                           {systemBadge}
                         </span>
                       </div>

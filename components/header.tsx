@@ -159,7 +159,9 @@ export function Header() {
           await wait(120)
         }
       } catch (error) {
-        console.error(error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error(error)
+        }
       }
     },
     [applyLanguageToGoogleCombo, ensureGoogleTranslateReady]
@@ -198,7 +200,7 @@ export function Header() {
   return (
     <>
       <LocalHistorySidebar isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
-      <header className="sticky top-0 z-50 w-full bg-[oklch(0.115_0.008_250)] shadow-[0_4px_16px_-4px_rgba(0,0,0,0.5),0_2px_6px_-2px_rgba(0,0,0,0.4)] backdrop-blur-[16px] backdrop-saturate-[1.15]">
+      <header className="sticky top-0 z-50 w-full bg-[oklch(0.115_0.008_250/0.96)] shadow-[0_4px_16px_-4px_rgba(0,0,0,0.45),0_2px_6px_-2px_rgba(0,0,0,0.35)]">
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-white/[0.06]" />
 

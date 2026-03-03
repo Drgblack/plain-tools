@@ -1,13 +1,6 @@
 "use client"
 
 import { Download, FileSignature, Loader2, ShieldCheck, Trash2, UploadCloud } from "lucide-react"
-import {
-  PDFDocument,
-  PDFHexString,
-  PDFName,
-  PDFString,
-  PDFWidgetAnnotation,
-} from "pdf-lib"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
@@ -19,8 +12,8 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
-
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
+import { getPdfJs } from "@/lib/pdfjs-loader"
+import { getPdfLib } from "@/lib/pdf-lib-loader"
 
 type SignatureMode = "draw" | "type" | "upload"
 type CryptoMode = "webcrypto" | "webauthn"
@@ -74,20 +67,6 @@ const BYTE_RANGE_PLACEHOLDER = "9999999999"
 const SIGNATURE_PREFIX = "PLAINSIG1:"
 const DRAW_CANVAS_WIDTH = 640
 const DRAW_CANVAS_HEIGHT = 220
-
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
-
-const getPdfJs = async () => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-  return pdfJsModulePromise
-}
 
 const isPdfFile = (file: File) =>
   file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
@@ -1129,6 +1108,9 @@ export default function LocalSignerTool() {
     }
 
     const signer = signerName.trim() || typedSignature.trim() || "Plain Local Signer"
+
+    const { PDFDocument, PDFHexString, PDFName, PDFString, PDFWidgetAnnotation } =
+      await getPdfLib()
 
     const pdfDoc = await PDFDocument.load(fileBytes, {
       ignoreEncryption: true,

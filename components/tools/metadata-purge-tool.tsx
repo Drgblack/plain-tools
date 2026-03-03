@@ -1,17 +1,6 @@
 "use client"
 
 import { Download, Loader2, Share2, ShieldCheck, Trash2, UploadCloud } from "lucide-react"
-import {
-  PDFArray,
-  PDFDict,
-  PDFDocument,
-  PDFHexString,
-  PDFName,
-  PDFNumber,
-  PDFRef,
-  PDFStream,
-  PDFString,
-} from "pdf-lib"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
@@ -22,6 +11,9 @@ import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badg
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { buildShareCardPng } from "@/lib/share-card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { getPdfLib } from "@/lib/pdf-lib-loader"
+
+type PdfLibModule = typeof import("pdf-lib")
 
 type MetadataGroup = "Info Dictionary" | "XMP Metadata" | "Embedded Properties"
 
@@ -75,7 +67,12 @@ const formatBytes = (bytes: number) => {
 
 const extractBaseName = (fileName: string) => fileName.replace(/\.pdf$/i, "")
 
-const decodePdfValue = (pdfDoc: PDFDocument, value: unknown): string => {
+const decodePdfValue = (
+  pdfLib: PdfLibModule,
+  pdfDoc: import("pdf-lib").PDFDocument,
+  value: unknown
+): string => {
+  const { PDFArray, PDFDict, PDFHexString, PDFName, PDFNumber, PDFStream, PDFString } = pdfLib
   const resolved =
     value && typeof value === "object"
       ? pdfDoc.context.lookup(value as never) ?? value
@@ -96,7 +93,7 @@ const decodePdfValue = (pdfDoc: PDFDocument, value: unknown): string => {
   if (resolved instanceof PDFArray) {
     return resolved
       .asArray()
-      .map((item) => decodePdfValue(pdfDoc, item))
+      .map((item) => decodePdfValue(pdfLib, pdfDoc, item))
       .join(", ")
   }
 
@@ -250,7 +247,11 @@ const parseXmpFields = (xmpPacket: string | null): Array<{ field: string; value:
   return fields
 }
 
-const getEmbeddedNamesArray = (pdfDoc: PDFDocument): PDFArray | null => {
+const getEmbeddedNamesArray = (
+  pdfLib: PdfLibModule,
+  pdfDoc: import("pdf-lib").PDFDocument
+): import("pdf-lib").PDFArray | null => {
+  const { PDFArray, PDFDict, PDFName } = pdfLib
   const namesDict = pdfDoc.catalog.lookupMaybe(PDFName.of("Names"), PDFDict)
   if (!namesDict) return null
 
@@ -261,6 +262,8 @@ const getEmbeddedNamesArray = (pdfDoc: PDFDocument): PDFArray | null => {
 }
 
 const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspection> => {
+  const pdfLib = await getPdfLib()
+  const { PDFDict, PDFDocument, PDFName, PDFStream } = pdfLib
   const pdfDoc = await PDFDocument.load(bytes, {
     ignoreEncryption: true,
     updateMetadata: false,
@@ -278,7 +281,7 @@ const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspe
         id: `info:${keyName}`,
         group: "Info Dictionary",
         field: keyName,
-        value: decodePdfValue(pdfDoc, value),
+        value: decodePdfValue(pdfLib, pdfDoc, value),
         action: { kind: "info", key: keyName },
       })
     }
@@ -296,11 +299,11 @@ const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspe
     })
   }
 
-  const embeddedNames = getEmbeddedNamesArray(pdfDoc)
+  const embeddedNames = getEmbeddedNamesArray(pdfLib, pdfDoc)
   if (embeddedNames) {
     for (let arrayIndex = 0; arrayIndex + 1 < embeddedNames.size(); arrayIndex += 2) {
       const attachmentIndex = arrayIndex / 2
-      const attachmentName = decodePdfValue(pdfDoc, embeddedNames.get(arrayIndex))
+      const attachmentName = decodePdfValue(pdfLib, pdfDoc, embeddedNames.get(arrayIndex))
       const fileSpec = embeddedNames.lookupMaybe(arrayIndex + 1, PDFDict)
       if (!fileSpec) continue
 
@@ -312,7 +315,7 @@ const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspe
           id: `embedded:${attachmentIndex}:spec:${keyName}`,
           group: "Embedded Properties",
           field: `${attachmentName || `Attachment ${attachmentIndex + 1}`} - ${keyName}`,
-          value: decodePdfValue(pdfDoc, value),
+          value: decodePdfValue(pdfLib, pdfDoc, value),
           action: {
             kind: "embedded-spec",
             attachmentIndex,
@@ -338,7 +341,7 @@ const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspe
             id: `embedded:${attachmentIndex}:param:${streamKey}:${paramName}`,
             group: "Embedded Properties",
             field: `${attachmentName || `Attachment ${attachmentIndex + 1}`} - ${streamKey}.Params.${paramName}`,
-            value: decodePdfValue(pdfDoc, paramValue),
+            value: decodePdfValue(pdfLib, pdfDoc, paramValue),
             action: {
               kind: "embedded-param",
               attachmentIndex,
@@ -363,7 +366,12 @@ const buildMetadataInspection = async (bytes: Uint8Array): Promise<MetadataInspe
   }
 }
 
-const removeInfoField = (pdfDoc: PDFDocument, key: string) => {
+const removeInfoField = (
+  pdfLib: PdfLibModule,
+  pdfDoc: import("pdf-lib").PDFDocument,
+  key: string
+) => {
+  const { PDFDict, PDFName } = pdfLib
   const infoEntry = pdfDoc.context.trailerInfo.Info
   if (!infoEntry) return
 
@@ -376,8 +384,14 @@ const removeInfoField = (pdfDoc: PDFDocument, key: string) => {
   }
 }
 
-const removeEmbeddedSpecField = (pdfDoc: PDFDocument, attachmentIndex: number, key: string) => {
-  const namesArray = getEmbeddedNamesArray(pdfDoc)
+const removeEmbeddedSpecField = (
+  pdfLib: PdfLibModule,
+  pdfDoc: import("pdf-lib").PDFDocument,
+  attachmentIndex: number,
+  key: string
+) => {
+  const { PDFDict, PDFName } = pdfLib
+  const namesArray = getEmbeddedNamesArray(pdfLib, pdfDoc)
   if (!namesArray) return
 
   const specIndex = attachmentIndex * 2 + 1
@@ -388,12 +402,14 @@ const removeEmbeddedSpecField = (pdfDoc: PDFDocument, attachmentIndex: number, k
 }
 
 const removeEmbeddedParamField = (
-  pdfDoc: PDFDocument,
+  pdfLib: PdfLibModule,
+  pdfDoc: import("pdf-lib").PDFDocument,
   attachmentIndex: number,
   streamKey: string,
   key: string
 ) => {
-  const namesArray = getEmbeddedNamesArray(pdfDoc)
+  const { PDFDict, PDFName, PDFStream } = pdfLib
+  const namesArray = getEmbeddedNamesArray(pdfLib, pdfDoc)
   if (!namesArray) return
 
   const specIndex = attachmentIndex * 2 + 1
@@ -415,7 +431,8 @@ const removeEmbeddedParamField = (
   }
 }
 
-const stripXmpStream = (pdfDoc: PDFDocument) => {
+const stripXmpStream = (pdfLib: PdfLibModule, pdfDoc: import("pdf-lib").PDFDocument) => {
+  const { PDFName, PDFRef, PDFStream } = pdfLib
   const metadataName = PDFName.of("Metadata")
   const metadataRef = pdfDoc.catalog.get(metadataName)
 
@@ -439,6 +456,8 @@ const purgeSelectedMetadata = async (
   file: File,
   selectedFields: MetadataField[]
 ): Promise<{ bytes: Uint8Array; summary: PurgeResultSummary }> => {
+  const pdfLib = await getPdfLib()
+  const { PDFDocument } = pdfLib
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const beforeInspection = await buildMetadataInspection(sourceBytes)
 
@@ -453,17 +472,17 @@ const purgeSelectedMetadata = async (
     const action = field.action
 
     if (action.kind === "info") {
-      removeInfoField(pdfDoc, action.key)
+      removeInfoField(pdfLib, pdfDoc, action.key)
       continue
     }
 
     if (action.kind === "embedded-spec") {
-      removeEmbeddedSpecField(pdfDoc, action.attachmentIndex, action.key)
+      removeEmbeddedSpecField(pdfLib, pdfDoc, action.attachmentIndex, action.key)
       continue
     }
 
     if (action.kind === "embedded-param") {
-      removeEmbeddedParamField(pdfDoc, action.attachmentIndex, action.streamKey, action.key)
+      removeEmbeddedParamField(pdfLib, pdfDoc, action.attachmentIndex, action.streamKey, action.key)
       continue
     }
 
@@ -473,7 +492,7 @@ const purgeSelectedMetadata = async (
   }
 
   if (shouldStripXmp) {
-    stripXmpStream(pdfDoc)
+    stripXmpStream(pdfLib, pdfDoc)
   }
 
   const cleanedBytes = await pdfDoc.save({ useObjectStreams: true })

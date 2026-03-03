@@ -17,7 +17,7 @@ function StatusIndicator({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs uppercase tracking-wider text-white/40 sm:text-[11px]">{label}:</span>
+      <span className="text-xs uppercase tracking-wider text-white/60 sm:text-[11px]">{label}:</span>
       <span className="flex items-center gap-1.5 font-mono text-xs text-white/70 sm:text-[11px]">
         {value}
         <span 
@@ -118,9 +118,9 @@ export function Footer() {
 
           {/* Column 1: Tools */}
           <div>
-            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
+            <h2 className="text-base font-semibold uppercase tracking-wider text-white/60">
               Tools
-            </h4>
+            </h2>
             <ul className="mt-5 space-y-3">
               {[
                 { label: "Merge PDF", href: "/tools/merge-pdf" },
@@ -148,9 +148,9 @@ export function Footer() {
 
           {/* Column 2: Resources */}
           <div>
-            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
+            <h2 className="text-base font-semibold uppercase tracking-wider text-white/60">
               Resources
-            </h4>
+            </h2>
             <ul className="mt-5 space-y-3">
               {[
                 { label: "Learning Centre", href: "/learn" },
@@ -176,9 +176,9 @@ export function Footer() {
 
           {/* Column 3: Legal */}
           <div>
-            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
+            <h2 className="text-base font-semibold uppercase tracking-wider text-white/60">
               Legal
-            </h4>
+            </h2>
             <ul className="mt-5 space-y-3">
               {[
   { label: "Verify Claims", href: "/verify-claims" },
@@ -204,9 +204,9 @@ export function Footer() {
 
           {/* Column 4: Translate */}
           <div>
-            <h4 className="text-base font-semibold uppercase tracking-wider text-white/50">
+            <h2 className="text-base font-semibold uppercase tracking-wider text-white/60">
               Translate
-            </h4>
+            </h2>
             <div className="mt-5 w-full">
               <GoogleTranslateWidget />
             </div>
@@ -244,7 +244,7 @@ export function Footer() {
               <div className="hidden h-3 w-px bg-[#333] md:block" />
               <StatusIndicator 
                 label="Build" 
-                value="v1.2.0" 
+                value="v1.0.0" 
                 status="active" 
               />
               <div className="hidden h-3 w-px bg-[#333] md:block" />
@@ -286,7 +286,7 @@ export function Footer() {
       {/* Copyright Bar */}
       <div className="border-t border-[#222] bg-[#080808]">
         <div className="mx-auto max-w-6xl px-4 py-3">
-          <p className="text-center text-base text-white/30">
+          <p className="text-center text-base text-white/60">
             Plain PDF runs entirely in your browser. Files are never uploaded to external servers.
           </p>
         </div>

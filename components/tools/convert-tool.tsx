@@ -8,12 +8,11 @@ import { toast, Toaster } from "sonner"
 import { Button } from "@/components/ui/button"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { getPdfJs } from "@/lib/pdfjs-loader"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
 
 type ConvertMode = "images" | "text"
 type ImageFormat = "png" | "jpeg"
@@ -35,20 +34,7 @@ type PdfPageLike = {
   getTextContent: () => Promise<{ items: Array<unknown> }>
 }
 
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
-
-const getPdfJs = async () => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-
-  return pdfJsModulePromise
-}
+type PdfJsModule = Awaited<ReturnType<typeof getPdfJs>>
 
 const isPdfFile = (file: File) =>
   file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")

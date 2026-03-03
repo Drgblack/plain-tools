@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 
+import { ErrorBoundary } from "@/components/error-boundary"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
@@ -115,7 +116,9 @@ export default async function ToolPage({ params }: PageProps) {
               )}
 
               <Suspense fallback={<div>Loading tool...</div>}>
-                <ToolComponent />
+                <ErrorBoundary context={`tool:${tool.slug}`}>
+                  <ToolComponent />
+                </ErrorBoundary>
               </Suspense>
 
               {seo ? (

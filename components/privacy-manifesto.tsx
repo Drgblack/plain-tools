@@ -76,13 +76,13 @@ export function PrivacyManifesto() {
           >
             <ShieldCheck
               className={`h-3.5 w-3.5 transition-colors duration-300 sm:h-4 sm:w-4 ${
-                isHovered ? "text-accent" : "text-accent/70"
+                isHovered ? "text-accent" : "text-accent/90"
               }`}
               strokeWidth={2}
             />
             <span
               className={`text-[10px] font-semibold tracking-wider transition-colors duration-300 sm:text-[11px] ${
-                isHovered ? "text-accent" : "text-accent/70"
+                isHovered ? "text-accent" : "text-accent/90"
               }`}
             >
               VERIFIED LOCAL
@@ -137,7 +137,12 @@ export function PrivacyManifesto() {
               />
 
               {/* Code Block */}
-              <div className="mt-5 overflow-x-auto rounded-lg bg-[oklch(0.10_0.004_250)] p-4 font-mono ring-1 ring-white/[0.04]">
+              <div
+                className="mt-5 overflow-x-auto rounded-lg bg-[oklch(0.10_0.004_250)] p-4 font-mono ring-1 ring-white/[0.04]"
+                tabIndex={0}
+                role="region"
+                aria-label={`${column.titleHtml.replace(/<[^>]*>/g, "")} code example`}
+              >
                 <pre className="min-w-full whitespace-pre text-[11px] leading-relaxed text-muted-foreground/80">
                   <code>{column.codeSnippet}</code>
                 </pre>
@@ -149,7 +154,7 @@ export function PrivacyManifesto() {
         {/* Bottom trust statement */}
         <div className="mt-14 flex items-center justify-center gap-3 text-center">
           <div className="h-px w-12 bg-gradient-to-r from-transparent to-accent/30" />
-          <p className="text-[12px] font-medium tracking-wide text-muted-foreground/60">
+          <p className="text-[12px] font-medium tracking-wide text-muted-foreground/80">
             COMPLIANCE-READY FOR GDPR, UK GDPR & ENTERPRISE ENVIRONMENTS
           </p>
           <div className="h-px w-12 bg-gradient-to-l from-transparent to-accent/30" />

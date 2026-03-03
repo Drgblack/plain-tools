@@ -130,7 +130,7 @@ export function TechnicalFaq() {
 
         {/* Tech Stack Badge Grid */}
         <div className="mt-16 border-t border-[#333]/50 pt-10">
-          <p className="mb-6 text-center text-[11px] font-medium uppercase tracking-wider text-muted-foreground/50">
+          <p className="mb-6 text-center text-[11px] font-medium uppercase tracking-wider text-muted-foreground/80">
             Technology Stack
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -156,7 +156,7 @@ export function TechnicalFaq() {
         </div>
 
         {/* Bottom note */}
-        <p className="mt-10 text-center text-[11px] text-muted-foreground/40">
+        <p className="mt-10 text-center text-[11px] text-muted-foreground/70">
           All processing occurs within your browser environment. No data is transmitted externally.
         </p>
       </div>

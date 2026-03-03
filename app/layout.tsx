@@ -2,11 +2,8 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Lora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
-import { SystemStatusBar } from '@/components/system-status-bar'
-import { WelcomeTour } from '@/components/welcome-tour'
-import { CookieFreeBanner } from '@/components/cookie-free-banner'
-import { HydrationLoader } from '@/components/hydration-loader'
 import { CommandPaletteProvider } from '@/components/command-palette-provider'
+import { DeferredSiteChrome } from "@/components/deferred-site-chrome"
 import { RouteStructuredData } from "@/components/seo/route-structured-data"
 import { PostDownloadShareBanner } from "@/components/tools/post-download-share-banner"
 import { TOOL_SEO_ENTRIES } from "@/lib/seo-route-map"
@@ -17,22 +14,25 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  preload: true,
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
+  preload: false,
 });
 const lora = Lora({
   subsets: ["latin"],
   variable: "--font-serif",
   display: "swap",
+  preload: false,
 });
 
 const siteTitle = "Plain | Offline PDF Tools for Private Client-Side Processing"
 const siteDescription =
   "Plain is a complete offline PDF toolkit for merge, split, compress, convert, OCR, redaction, signing, and private client-side document processing."
-const homepageToolFeatureList = TOOL_SEO_ENTRIES.map((tool) => tool.name)
+const homepageToolFeatureList = TOOL_SEO_ENTRIES.slice(0, 12).map((tool) => tool.name)
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://plain.tools'),
@@ -190,24 +190,21 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="preload" href="/demo/sample.pdf" as="fetch" crossOrigin="anonymous" />
         
         <Script
           id="schema-website"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
-        <HydrationLoader />
         <CommandPaletteProvider>
           <RouteStructuredData />
           {children}
           <PostDownloadShareBanner />
         </CommandPaletteProvider>
-        <SystemStatusBar />
-        <WelcomeTour />
-        <CookieFreeBanner />
+        <DeferredSiteChrome />
         <Analytics />
       </body>
     </html>

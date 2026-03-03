@@ -1,6 +1,5 @@
 "use client"
 
-import { PDFDocument, degrees } from "pdf-lib"
 import { Copy, Download, GripVertical, Loader2, RotateCw, Trash2, UploadCloud, Zap } from "lucide-react"
 import Image from "next/image"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -13,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { generatePagePreviews } from "@/lib/page-organiser-engine"
+import { getPdfLib } from "@/lib/pdf-lib-loader"
 
 type PagePreview = {
   originalIndex: number
@@ -256,6 +256,7 @@ export default function WebgpuOrganiserTool() {
     clearOutput()
 
     try {
+      const { PDFDocument, degrees } = await getPdfLib()
       const sourcePdf = await PDFDocument.load(await file.arrayBuffer(), {
         ignoreEncryption: true,
       })

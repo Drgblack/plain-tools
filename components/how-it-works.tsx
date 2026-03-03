@@ -196,9 +196,9 @@ export function HowItWorks() {
               {/* Step circle */}
               <div
                 className="relative z-10 mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-accent/16 text-base font-bold text-accent ring-2 ring-accent/40 transition-all duration-200 group-hover:bg-accent/22 group-hover:ring-accent/50 sm:h-14 sm:w-14 sm:text-[17px]"
-                aria-label={`Step ${step.number}`}
               >
                 <span aria-hidden="true">{step.number}</span>
+                <span className="sr-only">{`Step ${step.number}`}</span>
               </div>
 
               {/* Connector hidden on mobile when steps are stacked */}

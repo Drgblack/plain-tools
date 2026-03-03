@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback, useRef, useEffect } from "react"
-import { PDFDocument } from "pdf-lib"
 import { GripVertical, X, FileText, Plus, ShieldCheck, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
@@ -13,6 +12,7 @@ import { PrivacyAudit } from "@/components/privacy-audit"
 import { Button } from "@/components/ui/button"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { mergeFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
+import { getPdfLib } from "@/lib/pdf-lib-loader"
 import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
@@ -76,6 +76,7 @@ export default function MergePDFPage() {
 
   const getPageCount = async (file: File): Promise<number | null> => {
     try {
+      const { PDFDocument } = await getPdfLib()
       const arrayBuffer = await file.arrayBuffer()
       const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
       return pdf.getPageCount()
@@ -184,6 +185,7 @@ const mergePDFs = async () => {
             setProcessingStatus(status)
           })
         : await (async () => {
+            const { PDFDocument } = await getPdfLib()
             const mergedPdf = await PDFDocument.create()
             for (let i = 0; i < sourceFiles.length; i++) {
               const arrayBuffer = await sourceFiles[i].arrayBuffer()
@@ -504,14 +506,14 @@ const mergePDFs = async () => {
                   <div className="flex flex-wrap justify-center gap-3 border-t border-white/[0.04] pt-4">
                     <Link
                       href="/learn/what-is-a-pdf"
-                      className="text-[12px] text-muted-foreground/60 underline underline-offset-2 transition-colors hover:text-foreground"
+                      className="text-[12px] text-muted-foreground/80 underline underline-offset-2 transition-colors hover:text-foreground"
                     >
                       How PDFs work
                     </Link>
                     <span className="text-muted-foreground/30">|</span>
                     <Link
                       href="/compare/offline-vs-online-pdf-tools"
-                      className="text-[12px] text-muted-foreground/60 underline underline-offset-2 transition-colors hover:text-foreground"
+                      className="text-[12px] text-muted-foreground/80 underline underline-offset-2 transition-colors hover:text-foreground"
                     >
                       Offline processing benefits
                     </Link>
@@ -589,7 +591,7 @@ const mergePDFs = async () => {
         {/* Other Tools */}
         <section className="px-4 py-12">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-[12px] text-muted-foreground/60 mb-4">Other tools</p>
+            <p className="mb-4 text-[12px] text-muted-foreground/80">Other tools</p>
             <div className="flex flex-wrap justify-center gap-2">
               <Link
                 href="/tools/split-pdf"

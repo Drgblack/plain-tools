@@ -1,4 +1,5 @@
 import "server-only"
+import { Logger as AxiomLogger } from "next-axiom"
 
 type LoggerMetadata = Record<string, unknown>
 
@@ -15,6 +16,12 @@ type LogEntry = {
 }
 
 const isProduction = process.env.NODE_ENV === "production"
+const axiomLogger = isProduction
+  ? new AxiomLogger({
+      source: "plain-server",
+      autoFlush: true,
+    })
+  : null
 
 const toErrorMessage = (error: unknown): string => {
   if (error instanceof Error) return error.message
@@ -27,11 +34,22 @@ const toErrorMessage = (error: unknown): string => {
 }
 
 const emitLog = (entry: LogEntry) => {
-  const serialized = JSON.stringify(entry)
+  if (isProduction && axiomLogger) {
+    const message = entry.errorMessage ?? entry.message ?? entry.context
+    const fields = {
+      timestamp: entry.timestamp,
+      context: entry.context,
+      metadata: entry.metadata,
+      ...(entry.stack ? { stack: entry.stack } : {}),
+    }
 
-  // Production logs should go to stdout for Vercel log drains.
-  if (isProduction) {
-    process.stdout.write(`${serialized}\n`)
+    if (entry.level === "error") {
+      axiomLogger.error(message, fields)
+    } else {
+      axiomLogger.warn(message, fields)
+    }
+
+    void axiomLogger.flush()
     return
   }
 
