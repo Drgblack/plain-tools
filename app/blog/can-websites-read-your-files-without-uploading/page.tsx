@@ -7,6 +7,7 @@ import {
   ArticleList,
   ArticleNote,
 } from "@/components/blog-article"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Can Websites Read Your Files Without Uploading?",
@@ -49,7 +50,7 @@ export default function CanWebsitesReadFilesPage() {
       <Script
         id="faq-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <BlogArticle
         title="Can Websites Read Your Files Without Uploading Them?"

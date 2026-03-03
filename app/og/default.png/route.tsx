@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 
 // Static default OG image - cached and reused
 export async function GET() {
@@ -120,3 +120,4 @@ export async function GET() {
     }
   )
 }
+

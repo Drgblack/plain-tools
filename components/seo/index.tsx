@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { ChevronRight, Home } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 // ============================================
 // Canonical URL Component
@@ -63,7 +64,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
       {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
       
       {/* Visual Breadcrumb Navigation */}

@@ -7,6 +7,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { categories, posts, getCategoryBySlug } from "@/lib/blog-data"
 import { generateFAQSchema, combineSchemas } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -101,7 +102,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

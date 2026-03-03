@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs iLovePDF",
@@ -32,7 +33,7 @@ export default function PlainVsILovePDFPage() {
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
       <main className="flex-1">

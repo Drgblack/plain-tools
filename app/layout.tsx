@@ -8,6 +8,7 @@ import { CookieFreeBanner } from '@/components/cookie-free-banner'
 import { HydrationLoader } from '@/components/hydration-loader'
 import { CommandPaletteProvider } from '@/components/command-palette-provider'
 import './globals.css'
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -174,16 +175,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* Preload critical Wasm module for faster LCP */}
-        <link 
-          rel="modulepreload" 
-          href="/_next/static/chunks/pages/_app.js"
-        />
-        
         <Script
           id="schema-website"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>

@@ -121,7 +121,60 @@ jobs:
           retention-days: 7
 
   # ============================================
-  # Job 4: Core Web Vitals (Lighthouse CI)
+  # Job 4: E2E Tests (Playwright)
+  # ============================================
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+        run: |
+          pnpm run dev > /tmp/plain-dev.log 2>&1 &
+          DEV_PID=$!
+          trap 'kill $DEV_PID || true' EXIT
+
+          for i in {1..90}; do
+            if curl -fsS "$PLAYWRIGHT_BASE_URL" > /dev/null; then
+              echo "Dev server is ready."
+              break
+            fi
+            sleep 2
+          done
+
+          if ! curl -fsS "$PLAYWRIGHT_BASE_URL" > /dev/null; then
+            echo "Dev server failed to start in time."
+            cat /tmp/plain-dev.log || true
+            exit 1
+          fi
+
+          pnpm run test:e2e
+
+  # ============================================
+  # Job 5: Core Web Vitals (Lighthouse CI)
   # ============================================
   lighthouse:
     name: Core Web Vitals Check
@@ -161,7 +214,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
   # ============================================
-  # Job 5: Ping Search Engines (IndexNow)
+  # Job 6: Ping Search Engines (IndexNow)
   # ============================================
   ping-search-engines:
     name: Ping Search Engines
@@ -196,12 +249,12 @@ jobs:
           echo "Sitemap submitted to Bing Webmaster Tools."
 
   # ============================================
-  # Job 6: Deploy Summary
+  # Job 7: Deploy Summary
   # ============================================
   summary:
     name: Deployment Summary
     runs-on: ubuntu-latest
-    needs: [validate-seo, quality, build, lighthouse, ping-search-engines]
+    needs: [validate-seo, quality, build, e2e, lighthouse, ping-search-engines]
     if: always()
     steps:
       - name: Generate deployment summary
@@ -218,6 +271,7 @@ jobs:
           echo "  - SEO Validation: ${{ needs.validate-seo.result }}"
           echo "  - Quality Gates: ${{ needs.quality.result }}"
           echo "  - Build: ${{ needs.build.result }}"
+          echo "  - E2E Tests: ${{ needs.e2e.result }}"
           echo "  - Lighthouse: ${{ needs.lighthouse.result }}"
           echo "  - Search Engine Ping: ${{ needs.ping-search-engines.result }}"
           echo "============================================"

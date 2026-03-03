@@ -4,6 +4,7 @@ import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ArrowRight } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Offline vs Online PDF Tools - Plain",
@@ -98,17 +99,17 @@ export default function OfflineVsOnlinePage() {
       <Script
         id="article-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
       />
       <Script
         id="breadcrumb-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Script
         id="faq-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <Header />
       <main className="min-h-screen bg-background">

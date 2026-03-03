@@ -11,6 +11,7 @@ import { ShareButton } from "@/components/share-button"
 import { PrivacyAudit } from "@/components/privacy-audit"
 import { Button } from "@/components/ui/button"
 import { mergeFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -225,12 +226,12 @@ const mergePDFs = async () => {
       <Script
         id="software-app-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareAppJsonLd) }}
       />
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
 
@@ -258,6 +259,7 @@ const mergePDFs = async () => {
               type="file"
               accept="application/pdf"
               multiple
+              aria-label="Upload PDF files to merge"
               className="hidden"
               onChange={(e) => e.target.files && addFiles(e.target.files)}
             />

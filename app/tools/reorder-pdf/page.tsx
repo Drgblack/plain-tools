@@ -9,6 +9,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { generatePagePreviews, reorderPages } from "@/lib/page-organiser-engine"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -208,16 +209,16 @@ export default function ReorderPDFPage() {
   }, [result])
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground antialiased">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground antialiased">
       <Script
         id="software-app-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareAppJsonLd) }}
       />
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
 
@@ -279,7 +280,7 @@ export default function ReorderPDFPage() {
                     </p>
                     <Button
                       variant="outline"
-                      className="mt-8 h-12 px-10 text-[14px] font-medium border-white/[0.12] bg-[oklch(0.16_0.006_250)] hover:bg-[oklch(0.18_0.007_250)] hover:border-white/[0.18] focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="mt-8 h-12 w-full px-10 text-[14px] font-medium border-white/[0.12] bg-[oklch(0.16_0.006_250)] hover:bg-[oklch(0.18_0.007_250)] hover:border-white/[0.18] focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto"
                       onClick={(e) => {
                         e.stopPropagation()
                         fileInputRef.current?.click()
@@ -336,7 +337,7 @@ export default function ReorderPDFPage() {
                     {/* Page thumbnails grid */}
                     {!isLoadingThumbnails && pages.length > 0 && (
                       <div>
-                        <div className="mb-4 flex items-center justify-between">
+                        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <p className="text-[12px] font-medium text-muted-foreground">
                             Drag pages to reorder
                           </p>
@@ -499,7 +500,7 @@ export default function ReorderPDFPage() {
                     <Button
                       variant="outline"
                       onClick={reset}
-                      className="h-11 px-6 text-[13px] font-medium border-white/[0.10] bg-transparent hover:bg-[oklch(0.16_0.006_250)] hover:border-white/[0.16]"
+                      className="h-11 w-full px-6 text-[13px] font-medium border-white/[0.10] bg-transparent hover:bg-[oklch(0.16_0.006_250)] hover:border-white/[0.16] sm:w-auto"
                     >
                       Reorder another PDF
                     </Button>

@@ -25,6 +25,7 @@ import {
   BookOpen,
   Search,
 } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 // Structured data for the Learning Centre collection
 const collectionSchema = {
@@ -217,7 +218,7 @@ export default function LearnPage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

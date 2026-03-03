@@ -1,6 +1,11 @@
+import "server-only"
+
+import { createHash } from "node:crypto"
 import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
 import { NextRequest } from "next/server"
+
+import { logger } from "@/lib/logger"
 
 const REQUEST_LIMIT = 10
 const WINDOW_MS = 60_000
@@ -32,6 +37,8 @@ const getClientIp = (request: NextRequest) => {
 
   return "unknown"
 }
+
+const hashIp = (ip: string) => createHash("sha256").update(ip).digest("hex").slice(0, 16)
 
 const getUpstashLimiter = () => {
   if (cachedLimiter !== undefined) {
@@ -65,7 +72,11 @@ const cleanupMemoryBuckets = (now: number) => {
   }
 }
 
-const checkInMemoryLimit = (key: string): RateLimitResult => {
+const checkInMemoryLimit = (
+  key: string,
+  routeKey: string,
+  ipHash: string
+): RateLimitResult => {
   const now = Date.now()
   cleanupMemoryBuckets(now)
 
@@ -80,6 +91,12 @@ const checkInMemoryLimit = (key: string): RateLimitResult => {
 
   if (bucket.count >= REQUEST_LIMIT) {
     const retryAfter = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000))
+    logger.warn("rate_limit.exceeded", "Rate limit exceeded", {
+      routeKey,
+      ipHash,
+      provider: "memory",
+      retryAfter,
+    })
     return { success: false, retryAfter }
   }
 
@@ -91,11 +108,13 @@ export async function enforceRateLimit(
   request: NextRequest,
   routeKey: string
 ): Promise<RateLimitResult> {
-  const key = `${routeKey}:${getClientIp(request)}`
+  const clientIp = getClientIp(request)
+  const ipHash = hashIp(clientIp)
+  const key = `${routeKey}:${clientIp}`
   const limiter = getUpstashLimiter()
 
   if (!limiter) {
-    return checkInMemoryLimit(key)
+    return checkInMemoryLimit(key, routeKey, ipHash)
   }
 
   try {
@@ -105,8 +124,14 @@ export async function enforceRateLimit(
     }
 
     const retryAfter = Math.max(1, Math.ceil((result.reset - Date.now()) / 1000))
+    logger.warn("rate_limit.exceeded", "Rate limit exceeded", {
+      routeKey,
+      ipHash,
+      provider: "upstash",
+      retryAfter,
+    })
     return { success: false, retryAfter }
   } catch {
-    return checkInMemoryLimit(key)
+    return checkInMemoryLimit(key, routeKey, ipHash)
   }
 }

@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
 import Script from "next/script"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Comparisons",
@@ -47,7 +48,7 @@ export default function ComparisonsPage() {
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
       <main className="flex-1">

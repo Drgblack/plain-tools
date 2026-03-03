@@ -13,12 +13,14 @@ type FormState = {
   name: string
   email: string
   message: string
+  website: string
 }
 
 const INITIAL_STATE: FormState = {
   name: "",
   email: "",
   message: "",
+  website: "",
 }
 
 export function SupportForm() {
@@ -51,6 +53,7 @@ export function SupportForm() {
             name: form.name,
             email: form.email,
             message: form.message,
+            website: form.website,
           }),
         })
 
@@ -72,7 +75,7 @@ export function SupportForm() {
         setIsSubmitting(false)
       }
     },
-    [canSubmit, form.email, form.message, form.name]
+    [canSubmit, form.email, form.message, form.name, form.website]
   )
 
   return (
@@ -133,6 +136,24 @@ export function SupportForm() {
             rows={7}
             className="resize-y border-[#333] bg-[#0a0a0a] text-white placeholder:text-white/40"
             disabled={isSubmitting}
+          />
+        </div>
+
+        <div
+          aria-hidden="true"
+          style={{ display: "none" }}
+        >
+          <Label htmlFor="support-website">Website</Label>
+          <Input
+            id="support-website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={(event) =>
+              setForm((current) => ({ ...current, website: event.target.value }))
+            }
           />
         </div>
 

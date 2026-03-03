@@ -1,4 +1,5 @@
 import { createElement } from 'react'
+import { serializeJsonLd } from "@/lib/sanitize"
 
 /**
  * Schema.org / JSON-LD Structured Data for Plain PDF
@@ -293,7 +294,7 @@ export function generateHowToSchema(options: HowToSchemaOptions) {
 
 // Helper component to render JSON-LD in pages
 export function JsonLd({ data }: { data: Record<string, unknown> | Record<string, unknown>[] }) {
-  const jsonString = JSON.stringify(Array.isArray(data) ? data : data)
+  const jsonString = serializeJsonLd(Array.isArray(data) ? data : data)
 
   return createElement('script', {
     type: 'application/ld+json',

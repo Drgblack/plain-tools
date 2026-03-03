@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
+import { sanitizeInlineHtml } from "@/lib/sanitize"
 
 const faqs = [
   {
@@ -114,7 +115,9 @@ export function TechnicalFaq() {
                       <p
                         className="text-[13px] leading-relaxed text-muted-foreground"
                         dangerouslySetInnerHTML={{
-                          __html: highlightTechnical(faq.answer, faq.technical)
+                          __html: sanitizeInlineHtml(highlightTechnical(faq.answer, faq.technical), {
+                            allowCodeTags: true,
+                          })
                         }}
                       />
                     </div>

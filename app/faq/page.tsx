@@ -3,6 +3,7 @@ import Script from "next/script"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -82,7 +83,7 @@ export default function FAQPage() {
       <Script
         id="faq-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <Header />
       <main className="flex-1 px-4 py-16">

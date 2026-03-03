@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 
 export async function GET() {
   return new ImageResponse(
@@ -183,3 +183,4 @@ export async function GET() {
     }
   )
 }
+

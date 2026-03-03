@@ -10,6 +10,7 @@ import {
   generateFAQSchema,
   combineSchemas,
 } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Plain vs Online PDF Tools",
@@ -69,7 +70,7 @@ export default function PlainVsOnlinePdfToolsPage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

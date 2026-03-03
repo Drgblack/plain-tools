@@ -4,6 +4,10 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { createWorker, OEM } from "tesseract.js"
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"
 
+if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
+}
+
 type MergeFileInput = {
   name: string
   buffer: ArrayBuffer

@@ -7,6 +7,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { SummaryBox, KeyTerm } from "@/components/seo"
+import { sanitizeInlineHtml } from "@/lib/sanitize"
 
 // Technical density levels for articles
 type TechnicalDensity = "Foundation" | "Intermediate" | "Advanced" | "Case Study"
@@ -814,7 +815,7 @@ export default function BlogPage() {
                                 </h3>
                                 <p 
                                   className="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-muted-foreground/70"
-                                  dangerouslySetInnerHTML={{ __html: article.summary }}
+                                  dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(article.summary) }}
                                 />
                               </Link>
                               
@@ -915,7 +916,7 @@ export default function BlogPage() {
                             </h3>
                             <p 
                               className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-muted-foreground"
-                              dangerouslySetInnerHTML={{ __html: article.summary }}
+                              dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(article.summary) }}
                             />
                           </Link>
                           

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Cpu, Sparkles, Trash2, ShieldCheck } from "lucide-react"
+import { sanitizeInlineHtml } from "@/lib/sanitize"
 
 // Brand terms that should not be translated
 const BRAND_TERMS = {
@@ -126,16 +127,16 @@ export function PrivacyManifesto() {
                 />
               </div>
 
-              {/* Title - uses dangerouslySetInnerHTML for brand term protection */}
+              {/* Title preserves notranslate spans for brand terms */}
               <h3 
                 className="text-[15px] font-semibold text-accent"
-                dangerouslySetInnerHTML={{ __html: column.titleHtml }}
+                dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(column.titleHtml) }}
               />
 
-              {/* Description - uses dangerouslySetInnerHTML for brand term protection */}
+              {/* Description preserves notranslate spans for brand terms */}
               <p 
                 className="mt-3 text-[13px] leading-relaxed text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: column.description }}
+                dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(column.description) }}
               />
 
               {/* Code Block */}

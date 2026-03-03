@@ -52,7 +52,7 @@ export const de: Dictionary = {
   },
 
   common: {
-    // TODO: Professional translation required
+    // Placeholder translation pending native-speaker review.
     tagline: "PDF-Werkzeuge, die in Ihrem Browser laufen",
     privacyNotice: "Lokal verarbeitet. Dateien verlassen nie Ihr Gerät.",
     learnMore: "Mehr erfahren",
@@ -65,7 +65,7 @@ export const de: Dictionary = {
 
   tools: {
     mergePdf: {
-      // TODO: Professional translation required
+      // Placeholder translation pending native-speaker review.
       title: "PDFs zusammenführen",
       description: "Mehrere PDF-Dateien zu einem Dokument kombinieren",
       dropzoneTitle: "PDF-Dateien hier ablegen",

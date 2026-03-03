@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { ShareButton } from "@/components/share-button"
 import { splitFilesWithBatchEngine, shouldUseParallelBatchProcessing } from "@/lib/pdf-batch-engine"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -287,12 +288,12 @@ export default function SplitPDFPage() {
       <Script
         id="software-app-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareAppJsonLd) }}
       />
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
 
@@ -318,6 +319,7 @@ export default function SplitPDFPage() {
               ref={fileInputRef}
               type="file"
               accept="application/pdf"
+              aria-label="Upload a PDF file to split"
               className="hidden"
               onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
             />

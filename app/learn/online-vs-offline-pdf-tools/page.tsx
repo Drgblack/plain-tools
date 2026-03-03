@@ -11,6 +11,7 @@ import {
   generateFAQSchema,
   combineSchemas,
 } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Online vs Offline PDF Tools: What's the Difference?",
@@ -74,7 +75,7 @@ export default function OnlineVsOfflinePdfToolsPage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

@@ -9,6 +9,7 @@ import {
   generateFAQSchema,
   combineSchemas,
 } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Is Offline PDF Processing Secure?",
@@ -68,7 +69,7 @@ export default function IsOfflinePdfProcessingSecurePage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

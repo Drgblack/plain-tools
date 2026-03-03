@@ -1,3 +1,4 @@
+import { serializeJsonLd } from "@/lib/sanitize"
 /**
  * BlogSchema Component - Dynamic JSON-LD Schema Injection
  * 
@@ -310,7 +311,7 @@ export function BlogSchema(props: BlogSchemaProps) {
     <Script
       id={`blog-schema-${slug}`}
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
     />
   )
 }

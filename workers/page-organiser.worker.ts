@@ -3,6 +3,10 @@
 
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"
 
+if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
+}
+
 type GenerateThumbnailsRequest = {
   type: "generateThumbnails"
   requestId: string

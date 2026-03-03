@@ -10,6 +10,7 @@ import {
   generateFAQSchema,
   combineSchemas,
 } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "How PDFs Work Internally",
@@ -73,7 +74,7 @@ export default function HowPDFsWorkPage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

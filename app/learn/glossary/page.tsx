@@ -6,6 +6,7 @@ import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Search, ArrowLeft, BookOpen, ExternalLink } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 // Glossary terms data with GEO-optimised definitions
 const glossaryTerms = [
@@ -288,7 +289,7 @@ export default function GlossaryPage() {
       <Script
         id="glossary-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdSchema) }}
       />
       <Header />
       
@@ -374,7 +375,6 @@ export default function GlossaryPage() {
           </div>
         </nav>
         
-        {/* Glossary Content */}
         <section className="px-4 py-12 md:py-16">
           <div className="mx-auto max-w-4xl">
             {Object.keys(groupedTerms).length === 0 ? (
@@ -468,4 +468,3 @@ export default function GlossaryPage() {
     </div>
   )
 }
-

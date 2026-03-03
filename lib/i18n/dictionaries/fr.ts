@@ -53,7 +53,7 @@ export const fr: Dictionary = {
   },
 
   common: {
-    // TODO: Professional translation required
+    // Placeholder translation pending native-speaker review.
     tagline: "Outils PDF qui fonctionnent dans votre navigateur",
     privacyNotice: "Traité localement. Les fichiers ne quittent jamais votre appareil.",
     learnMore: "En savoir plus",
@@ -66,7 +66,7 @@ export const fr: Dictionary = {
 
   tools: {
     mergePdf: {
-      // TODO: Professional translation required
+      // Placeholder translation pending native-speaker review.
       title: "Fusionner des PDF",
       description: "Combiner plusieurs fichiers PDF en un seul document",
       dropzoneTitle: "Déposez les fichiers PDF ici",

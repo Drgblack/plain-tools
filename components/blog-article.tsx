@@ -17,6 +17,7 @@ import {
   Check,
   ChevronRight
 } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 // Helper to generate slug from title
 function slugifyTitle(text: string): string {
@@ -441,14 +442,14 @@ export function BlogArticle({
       <link rel="canonical" href={canonicalUrl} />
       
   <Script
-  id="article-jsonld"
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+    id="article-jsonld"
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
   />
   <Script
-  id="breadcrumb-jsonld"
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+    id="breadcrumb-jsonld"
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
   />
   
   {/* GEO-Optimised TechArticle, FAQPage, and SoftwareApplication schemas */}

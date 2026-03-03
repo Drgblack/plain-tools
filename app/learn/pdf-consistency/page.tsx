@@ -10,6 +10,7 @@ import {
   generateFAQSchema,
   combineSchemas,
 } from "@/lib/schema"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
   title: "Why PDFs Preserve Layout",
@@ -78,7 +79,7 @@ export default function PDFConsistencyPage() {
       <Script
         id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
       <Header />
 

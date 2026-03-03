@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { BrevoClient } from "@getbrevo/brevo"
 import { enforceRateLimit, RATE_LIMIT_ERROR_MESSAGE } from "@/lib/rate-limit"
+import { logger } from "@/lib/logger"
 
 export const runtime = "nodejs"
 
@@ -11,23 +12,31 @@ const isValidEmail = (value: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 export async function POST(request: NextRequest) {
-  const rateLimit = await enforceRateLimit(request, "api:support")
-  if (!rateLimit.success) {
-    return NextResponse.json(
-      { error: RATE_LIMIT_ERROR_MESSAGE },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": String(rateLimit.retryAfter),
-        },
-      }
-    )
-  }
-
   try {
     const body = (await request.json().catch(() => null)) as
-      | { name?: string; email?: string; message?: string }
+      | { name?: string; email?: string; message?: string; website?: string }
       | null
+
+    const honeypot = typeof body?.website === "string" ? body.website.trim() : ""
+    if (honeypot) {
+      logger.warn("api.support.honeypot_triggered", "Support honeypot triggered", {
+        route: "/api/support",
+      })
+      return NextResponse.json({ ok: true }, { status: 200 })
+    }
+
+    const rateLimit = await enforceRateLimit(request, "api:support")
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: RATE_LIMIT_ERROR_MESSAGE },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfter),
+          },
+        }
+      )
+    }
 
     const name = typeof body?.name === "string" ? body.name.trim().slice(0, 120) : ""
     const email = typeof body?.email === "string" ? body.email.trim().slice(0, 160) : ""
@@ -78,6 +87,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true }, { status: 200 })
   } catch (error) {
+    logger.error("api.support.send_failed", error, {
+      route: "/api/support",
+    })
     const message =
       error instanceof Error ? error.message : "Could not send support email."
     return NextResponse.json({ error: message }, { status: 500 })

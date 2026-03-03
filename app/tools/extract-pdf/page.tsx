@@ -8,6 +8,7 @@ import Script from "next/script"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -221,16 +222,16 @@ export default function ExtractPDFPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
       <Script
         id="software-app-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareAppJsonLd) }}
       />
       <Script
         id="breadcrumb-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <Header />
 
@@ -292,7 +293,7 @@ export default function ExtractPDFPage() {
                     </p>
                     <Button
                       variant="outline"
-                      className="mt-8 h-12 px-10 text-[14px] font-medium border-white/[0.12] bg-[oklch(0.16_0.006_250)] hover:bg-[oklch(0.18_0.007_250)] hover:border-white/[0.18] focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="mt-8 h-12 w-full px-10 text-[14px] font-medium border-white/[0.12] bg-[oklch(0.16_0.006_250)] hover:bg-[oklch(0.18_0.007_250)] hover:border-white/[0.18] focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto"
                       onClick={(e) => {
                         e.stopPropagation()
                         fileInputRef.current?.click()
@@ -457,12 +458,12 @@ export default function ExtractPDFPage() {
                 </div>
 
                 {/* Page count summary */}
-                <div className="mt-8 flex items-center justify-center gap-6 text-center">
+                <div className="mt-8 flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:gap-6">
                   <div>
                     <p className="text-[24px] font-semibold text-foreground">{pageCount}</p>
                     <p className="text-[12px] text-muted-foreground/70">Original pages</p>
                   </div>
-                  <div className="h-8 w-px bg-white/[0.08]" />
+                  <div className="hidden h-8 w-px bg-white/[0.08] sm:block" />
                   <div>
                     <p className="text-[24px] font-semibold text-accent">
                       {results.reduce((sum, r) => sum + r.pageCount, 0)}
@@ -516,7 +517,7 @@ export default function ExtractPDFPage() {
                     <Button
                       variant="outline"
                       onClick={reset}
-                      className="h-11 px-6 text-[13px] font-medium border-white/[0.10] bg-transparent hover:bg-[oklch(0.16_0.006_250)] hover:border-white/[0.16]"
+                      className="h-11 w-full px-6 text-[13px] font-medium border-white/[0.10] bg-transparent hover:bg-[oklch(0.16_0.006_250)] hover:border-white/[0.16] sm:w-auto"
                     >
                       Extract another PDF
                     </Button>

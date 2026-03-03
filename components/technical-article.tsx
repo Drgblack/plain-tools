@@ -21,6 +21,7 @@ import {
   FileText,
   LucideIcon
 } from "lucide-react"
+import { serializeJsonLd, sanitizeCodeHtml } from "@/lib/sanitize"
 
 // ============================================================================
 // TECHNICAL SUMMARY BOX
@@ -99,7 +100,12 @@ export function CodeBlock({
 
   // Simple syntax highlighting for common patterns
   const highlightCode = (code: string) => {
-    return code
+    const escapedCode = code
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+
+    return escapedCode
       // Keywords in blue
       .replace(/\b(const|let|var|function|async|await|return|import|export|from|if|else|try|catch|new|class|extends)\b/g, '<span class="text-[#0070f3]">$1</span>')
       // Strings in green
@@ -146,7 +152,7 @@ export function CodeBlock({
                 )}
                 <span 
                   className="text-white/80"
-                  dangerouslySetInnerHTML={{ __html: highlightCode(line) || '&nbsp;' }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeCodeHtml(highlightCode(line) || '&nbsp;') }}
                 />
               </div>
             ))}
@@ -418,7 +424,7 @@ export function TechnicalArticle({
         <Script
           id="article-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       )}
       

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { answerPdfQuestionWithClaude } from "@/lib/anthropic-client"
 import { buildCorsHeaders, isOriginAllowed } from "@/lib/api-cors"
+import { logger } from "@/lib/logger"
 import { enforceRateLimit, RATE_LIMIT_ERROR_MESSAGE } from "@/lib/rate-limit"
 
 export const runtime = "nodejs"
@@ -84,6 +85,10 @@ export async function POST(request: NextRequest) {
       { status: 200, headers: corsHeaders }
     )
   } catch (error) {
+    logger.error("api.ai.qa.failed", error, {
+      route: "/api/ai/qa",
+    })
+
     if (error instanceof RateLimitError) {
       return NextResponse.json(
         {

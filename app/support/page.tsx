@@ -16,6 +16,7 @@ import {
   Shield,
   ExternalLink
 } from "lucide-react"
+import { sanitizeInlineHtml } from "@/lib/sanitize"
 
 // Common Solutions FAQs
 const commonSolutions = [
@@ -318,7 +319,9 @@ export default function SupportPage() {
                           <p 
                             className="text-[13px] leading-relaxed text-white/60"
                             dangerouslySetInnerHTML={{ 
-                              __html: highlightTechnical(faq.answer, faq.technical) 
+                              __html: sanitizeInlineHtml(highlightTechnical(faq.answer, faq.technical), {
+                                allowCodeTags: true,
+                              })
                             }}
                           />
                         </div>

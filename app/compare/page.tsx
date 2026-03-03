@@ -22,6 +22,7 @@ import {
   Lock,
   ChevronRight
 } from "lucide-react"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 const comparisonJsonLd = {
   "@context": "https://schema.org",
@@ -143,12 +144,12 @@ export default function ComparePage() {
       <Script
         id="comparison-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(comparisonJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(comparisonJsonLd) }}
       />
       <Script
         id="breadcrumb-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <link rel="canonical" href="https://plain.tools/compare" />
       
