@@ -17,6 +17,12 @@ const pagesToCapture = [
   "/tools/summarize-pdf",
   "/tools/pdf-qa",
   "/tools/suggest-edits",
+  "/tools/convert-pdf",
+  "/tools/metadata-purge",
+  "/tools/local-signer",
+  "/tools/password-breaker",
+  "/tools/webgpu-organiser",
+  "/tools/batch-engine",
   "/learn",
   "/blog",
   "/about",
@@ -54,4 +60,3 @@ for (const pathname of pagesToCapture) {
     ).toBeLessThanOrEqual(MOBILE_VIEWPORT.width)
   })
 }
-

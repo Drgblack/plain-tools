@@ -8,7 +8,8 @@ export default defineConfig({
   expect: {
     timeout: 10_000,
   },
-  fullyParallel: true,
+  fullyParallel: false,
+  workers: 2,
   use: {
     baseURL,
     trace: "on-first-retry",
@@ -28,4 +29,3 @@ export default defineConfig({
     timeout: 120_000,
   },
 })
-

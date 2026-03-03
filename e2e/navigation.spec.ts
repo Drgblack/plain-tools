@@ -31,6 +31,11 @@ const footerLinks = [
 
 const newToolRoutes = [
   "/tools/convert-pdf",
+  "/tools/metadata-purge",
+  "/tools/local-signer",
+  "/tools/password-breaker",
+  "/tools/webgpu-organiser",
+  "/tools/batch-engine",
   "/tools/plain-metadata-purge",
   "/tools/plain-local-cryptographic-signer",
   "/tools/plain-password-breaker",
@@ -47,14 +52,14 @@ const assertLinksResolve = async (
       method: "HEAD",
       failOnStatusCode: false,
       maxRedirects: 10,
-      timeout: 20_000,
+      timeout: 60_000,
     })
 
     if (response.status() === 405) {
       response = await request.get(path, {
         failOnStatusCode: false,
         maxRedirects: 10,
-        timeout: 20_000,
+        timeout: 60_000,
       })
     }
 

@@ -732,11 +732,15 @@ export default function LocalSignerTool() {
   const [verifyMessage, setVerifyMessage] = useState("Upload a signed PDF and a PEM public key to verify.")
   const [verifyFingerprint, setVerifyFingerprint] = useState("")
   const [isVerifying, setIsVerifying] = useState(false)
+  const [webAuthnAvailable, setWebAuthnAvailable] = useState(false)
 
-  const webAuthnAvailable =
-    typeof window !== "undefined" &&
-    typeof window.PublicKeyCredential !== "undefined" &&
-    !!navigator.credentials
+  useEffect(() => {
+    setWebAuthnAvailable(
+      typeof window !== "undefined" &&
+        typeof window.PublicKeyCredential !== "undefined" &&
+        !!navigator.credentials
+    )
+  }, [])
 
   useEffect(() => {
     if (!drawCanvasRef.current) return
