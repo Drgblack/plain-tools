@@ -129,6 +129,9 @@ const isProtectedStripeRoute = createRouteMatcher([
   "/api/stripe/checkout(.*)",
   "/api/stripe/portal(.*)",
 ])
+const clerkConfigured = Boolean(
+  process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+)
 
 /**
  * Proxy Export
@@ -149,6 +152,13 @@ const clerkProxy = clerkMiddleware(async (auth, request) => {
 })
 
 export function proxy(request: NextRequest, event: NextFetchEvent) {
+  if (!clerkConfigured) {
+    if (!I18N_ENABLED) {
+      return NextResponse.next()
+    }
+    return i18nMiddleware(request)
+  }
+
   return clerkProxy(request, event)
 }
 

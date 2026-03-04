@@ -14,20 +14,31 @@ Set required keys (for example `ANTHROPIC_API_KEY`, `BREVO_API_KEY`, `SUPPORT_EM
 
 ## SEO Setup (One-Time)
 
-1. Go to Google Search Console -> Add Property -> URL prefix -> https://plain.tools
-2. Choose HTML file verification
-3. Replace `public/google-site-verification.html` content with the actual file content from Google
-4. Deploy, then click Verify in Search Console
-5. Submit https://plain.tools/sitemap.xml under Sitemaps
-6. Done. Check quarterly.
+### Google Search Console
 
-Run once after deployment:
+Preferred method: DNS TXT verification. Alternative: HTML file verification (do not use the AdSense meta tag).
+
+1. Go to Google Search Console -> Add Property -> URL prefix -> https://plain.tools
+2. Choose HTML file verification method
+3. Download the verification file and replace `public/google-search-console-verify.html` with the actual file content from Google
+4. Deploy, then click Verify in Search Console
+5. Once verified, submit https://plain.tools/sitemap.xml under Sitemaps
+
+### Bing Webmaster Tools
+
+1. Go to https://www.bing.com/webmasters and add `https://plain.tools`
+2. Copy your `msvalidate.01` verification code
+3. Replace the placeholder in `app/layout.tsx`:
+   - `<!-- <meta name="msvalidate.01" content="[YOUR_BING_CODE]" /> -->`
+4. Deploy and click Verify in Bing Webmaster Tools
+
+### IndexNow
+
+Run after each significant content update to notify Bing, Yandex, and other IndexNow participants immediately:
 
 ```bash
 pnpm run ping-indexnow
 ```
-
-Re-run only when significant new content is added.
 
 ## Analytics
 
