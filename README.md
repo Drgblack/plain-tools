@@ -12,6 +12,23 @@ cp .env.example .env
 
 Set required keys (for example `ANTHROPIC_API_KEY`, `BREVO_API_KEY`, `SUPPORT_EMAIL`/`WAITLIST_EMAIL`, and Upstash Redis values if rate limiting is enabled).
 
+## SEO Setup (One-Time)
+
+1. Go to Google Search Console -> Add Property -> URL prefix -> https://plain.tools
+2. Choose HTML file verification
+3. Replace `public/google-site-verification.html` content with the actual file content from Google
+4. Deploy, then click Verify in Search Console
+5. Submit https://plain.tools/sitemap.xml under Sitemaps
+6. Done. Check quarterly.
+
+Run once after deployment:
+
+```bash
+pnpm run ping-indexnow
+```
+
+Re-run only when significant new content is added.
+
 ## Analytics
 
 ### Plausible (Privacy-Respecting)

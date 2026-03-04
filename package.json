@@ -10,7 +10,8 @@
     "typecheck": "next build && tsc --noEmit --skipLibCheck",
     "test:e2e": "playwright test",
     "test:screenshots": "playwright test e2e/mobile-screenshots.spec.ts",
-    "test:a11y": "playwright test e2e/accessibility.spec.ts"
+    "test:a11y": "playwright test e2e/accessibility.spec.ts",
+    "ping-indexnow": "node scripts/ping-indexnow.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
