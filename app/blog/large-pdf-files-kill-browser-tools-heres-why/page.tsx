@@ -50,7 +50,7 @@ export default function LargePdfFilesKillBrowserToolsPage() {
       relatedTool={{
         title: "Plain Hardware-Accelerated Batch Engine",
         description: "Parallel worker-pool processing for large and multi-file PDF jobs.",
-        href: "/tools/plain-hardware-accelerated-batch-engine",
+        href: "/tools/batch-engine",
         icon: "compress",
       }}
       relatedReading={[
@@ -70,7 +70,7 @@ export default function LargePdfFilesKillBrowserToolsPage() {
           description: "Run compression locally and download immediately.",
         },
         {
-          href: "/tools/plain-hardware-accelerated-batch-engine",
+          href: "/tools/batch-engine",
           title: "Batch Engine",
           description: "Run parallel local operations across multiple PDFs.",
         },
@@ -189,7 +189,7 @@ At 20 Mbps upload: 4000 / 20 = 200s`}</ArticleCode>
           </Link>
           {" "}or the{" "}
           <Link
-            href="/tools/plain-hardware-accelerated-batch-engine"
+            href="/tools/batch-engine"
             className="text-accent underline underline-offset-4 hover:text-accent/80"
           >
             Batch Engine

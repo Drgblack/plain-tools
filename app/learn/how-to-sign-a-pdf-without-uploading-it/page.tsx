@@ -130,7 +130,7 @@ const article: LearnArticleData = {
   ],
   cta: {
     label: "Sign Documents Locally with Cryptographic Proof",
-    href: "/tools/plain-local-cryptographic-signer",
+    href: "/tools/local-signer",
     text: "Use the Plain Local Cryptographic Signer to place visual signatures and generate verifiable integrity evidence on-device.",
   },
 }

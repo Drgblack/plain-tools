@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Plain WebGPU Page Organiser",
   description: "Reorder, delete, rotate, duplicate, and bulk-edit PDF pages locally with visual thumbnails and private in-browser reconstruction workflows. Built for private.",
   alternates: {
-    canonical: "https://plain.tools/tools/plain-webgpu-page-organiser",
+    canonical: "https://plain.tools/tools/webgpu-organiser",
   },
   openGraph: {
     title: "Plain WebGPU Page Organiser - Plain",
     description:
       "Organise PDF pages in a visual thumbnail grid locally with no upload dependency and responsive touch-friendly controls.",
-    url: "https://plain.tools/tools/plain-webgpu-page-organiser",
+    url: "https://plain.tools/tools/webgpu-organiser",
   },
 }
 

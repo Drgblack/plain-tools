@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Plain Password Breaker",
   description: "Recover access to your own password-protected PDFs locally with known-password and bounded brute-force modes using private browser execution. Built for.",
   alternates: {
-    canonical: "https://plain.tools/tools/plain-password-breaker",
+    canonical: "https://plain.tools/tools/password-breaker",
   },
   openGraph: {
     title: "Plain Password Breaker - Plain",
     description:
       "Attempt local PDF password recovery using known-password or bounded brute-force controls with no file uploads.",
-    url: "https://plain.tools/tools/plain-password-breaker",
+    url: "https://plain.tools/tools/password-breaker",
   },
 }
 

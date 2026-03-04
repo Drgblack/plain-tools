@@ -51,7 +51,7 @@ export default function WeBuiltAnOfflinePdfToolPage() {
       relatedTool={{
         title: "Plain Hardware-Accelerated Batch Engine",
         description: "Parallel local processing with worker pools and progress-aware queues.",
-        href: "/tools/plain-hardware-accelerated-batch-engine",
+        href: "/tools/batch-engine",
         icon: "compress",
       }}
       relatedReading={[
@@ -66,7 +66,7 @@ export default function WeBuiltAnOfflinePdfToolPage() {
           description: "Why offline OCR architecture matters for sensitive docs.",
         },
         {
-          href: "/tools/plain-hardware-accelerated-batch-engine",
+          href: "/tools/batch-engine",
           title: "Batch Engine Tool",
           description: "Worker-pool implementation available in production.",
         },
@@ -195,7 +195,7 @@ export default function WeBuiltAnOfflinePdfToolPage() {
         <ArticleParagraph>
           The fastest way to evaluate these lessons is to run the tools directly:{" "}
           <Link
-            href="/tools/plain-hardware-accelerated-batch-engine"
+            href="/tools/batch-engine"
             className="text-accent underline underline-offset-4 hover:text-accent/80"
           >
             Batch Engine

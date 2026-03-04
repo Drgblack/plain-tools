@@ -130,7 +130,7 @@ const article: LearnArticleData = {
   ],
   cta: {
     label: "Try Local Batch Processing",
-    href: "/tools/plain-hardware-accelerated-batch-engine",
+    href: "/tools/batch-engine",
     text: "Use Plain's local worker-pool batch engine to process multiple PDFs in-browser without uploading source files.",
   },
 }

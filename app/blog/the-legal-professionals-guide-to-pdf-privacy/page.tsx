@@ -230,7 +230,7 @@ export default function LegalProfessionalsGuideToPdfPrivacyPage() {
           </Link>
           , and{" "}
           <Link
-            href="/tools/plain-metadata-purge"
+            href="/tools/metadata-purge"
             className="text-accent underline underline-offset-4 hover:text-accent/80"
           >
             Metadata Purge

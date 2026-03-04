@@ -52,28 +52,28 @@ const nextConfig: NextConfig = {
     return [
       // Canonical tool slugs.
       {
-        source: "/tools/local-signer",
-        destination: "/tools/plain-local-cryptographic-signer",
+        source: "/tools/plain-local-cryptographic-signer",
+        destination: "/tools/local-signer",
         permanent: true,
       },
       {
-        source: "/tools/metadata-purge",
-        destination: "/tools/plain-metadata-purge",
+        source: "/tools/plain-metadata-purge",
+        destination: "/tools/metadata-purge",
         permanent: true,
       },
       {
-        source: "/tools/password-breaker",
-        destination: "/tools/plain-password-breaker",
+        source: "/tools/plain-password-breaker",
+        destination: "/tools/password-breaker",
         permanent: true,
       },
       {
-        source: "/tools/webgpu-organiser",
-        destination: "/tools/plain-webgpu-page-organiser",
+        source: "/tools/plain-webgpu-page-organiser",
+        destination: "/tools/webgpu-organiser",
         permanent: true,
       },
       {
-        source: "/tools/batch-engine",
-        destination: "/tools/plain-hardware-accelerated-batch-engine",
+        source: "/tools/plain-hardware-accelerated-batch-engine",
+        destination: "/tools/batch-engine",
         permanent: true,
       },
 
@@ -91,6 +91,11 @@ const nextConfig: NextConfig = {
       {
         source: "/comparisons/plain-vs-online-pdf-tools",
         destination: "/compare/offline-vs-online-pdf-tools",
+        permanent: true,
+      },
+      {
+        source: "/comparisons/:path*",
+        destination: "/compare/:path*",
         permanent: true,
       },
     ]

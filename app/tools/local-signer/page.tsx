@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Plain Local Cryptographic Signer",
   description: "Create locally verifiable cryptographic PDF signatures in your browser with visual placement controls, verification support, and no upload exposure. Built for.",
   alternates: {
-    canonical: "https://plain.tools/tools/plain-local-cryptographic-signer",
+    canonical: "https://plain.tools/tools/local-signer",
   },
   openGraph: {
     title: "Plain Local Cryptographic Signer - Plain",
     description:
       "Draw, type, or upload a visual signature and apply cryptographic PDF signing locally with private browser processing.",
-    url: "https://plain.tools/tools/plain-local-cryptographic-signer",
+    url: "https://plain.tools/tools/local-signer",
   },
 }
 

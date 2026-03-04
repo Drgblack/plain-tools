@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description:
     "Run local batch merge, compress, split, and convert operations in parallel browser workers with queue-level progress, private processing, and no uploads.",
   alternates: {
-    canonical: "https://plain.tools/tools/plain-hardware-accelerated-batch-engine",
+    canonical: "https://plain.tools/tools/batch-engine",
   },
   openGraph: {
     title: "Plain Hardware-Accelerated Batch Engine - Plain",
     description:
       "Process multiple PDFs in parallel local workers with private browser execution and no upload dependency.",
-    url: "https://plain.tools/tools/plain-hardware-accelerated-batch-engine",
+    url: "https://plain.tools/tools/batch-engine",
   },
 }
 

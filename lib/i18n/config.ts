@@ -231,7 +231,7 @@ export const routePatterns = {
   toolDetail: "/tools/[slug]",
   blogPost: "/blog/[slug]",
   learnArticle: "/learn/[slug]",
-  comparison: "/comparisons/[slug]",
+  comparison: "/compare/[slug]",
 } as const
 
 export type RouteKey = keyof typeof routePatterns

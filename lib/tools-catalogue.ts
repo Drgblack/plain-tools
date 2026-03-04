@@ -162,7 +162,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-metadata-purge",
     name: "Plain Metadata Purge",
-    slug: "plain-metadata-purge",
+    slug: "metadata-purge",
     category: "Security & Privacy",
     description: "Remove XMP, info dictionary, and custom metadata fields locally.",
     badge: "100% Local",
@@ -199,7 +199,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-local-cryptographic-signer",
     name: "Plain Local Cryptographic Signer",
-    slug: "plain-local-cryptographic-signer",
+    slug: "local-signer",
     category: "Security & Privacy",
     description: "Apply visual and cryptographic PDF signatures locally with built-in verification workflow.",
     badge: "Local Crypto",
@@ -222,7 +222,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-password-breaker",
     name: "Plain Password Breaker",
-    slug: "plain-password-breaker",
+    slug: "password-breaker",
     category: "Security & Privacy",
     description: "Attempt local password unlock with known key and bounded brute-force.",
     badge: "Local Recovery",
@@ -251,7 +251,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-webgpu-page-organiser",
     name: "Plain WebGPU Page Organiser",
-    slug: "plain-webgpu-page-organiser",
+    slug: "webgpu-organiser",
     category: "Performance & Edit",
     description: "Organise pages with local thumbnail previews, drag reorder, and bulk edit controls.",
     badge: "WebGPU",
@@ -270,7 +270,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "plain-hardware-accelerated-batch-engine",
     name: "Plain Hardware-Accelerated Batch Engine",
-    slug: "plain-hardware-accelerated-batch-engine",
+    slug: "batch-engine",
     category: "Performance & Edit",
     description: "Run merge, compress, split, and convert workflows in a parallel local worker pool.",
     badge: "Worker Pool",

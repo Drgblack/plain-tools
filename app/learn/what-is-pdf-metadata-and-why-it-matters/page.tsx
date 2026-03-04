@@ -148,7 +148,7 @@ const article: LearnArticleData = {
   ],
   cta: {
     label: "Purge Hidden Metadata in Seconds",
-    href: "/tools/plain-metadata-purge",
+    href: "/tools/metadata-purge",
     text: "Run Plain Metadata Purge locally to inspect and remove hidden fields before you share any PDF.",
   },
 }

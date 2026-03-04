@@ -99,35 +99,35 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
     learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
   },
   {
-    slug: "plain-metadata-purge",
+    slug: "metadata-purge",
     name: "Plain Metadata Purge",
     description: "Inspect and remove PDF metadata fields including XMP and Info Dictionary properties locally to reduce hidden-data exposure before sharing with private.",
     learnHref: "/learn/what-is-pdf-metadata-and-why-it-matters",
     learnLabel: "What Is PDF Metadata and Why It Matters",
   },
   {
-    slug: "plain-local-cryptographic-signer",
+    slug: "local-signer",
     name: "Plain Local Cryptographic Signer",
     description: "Sign PDFs locally with cryptographic integrity proof, visual placement controls, and downloadable verification material without cloud upload with private.",
     learnHref: "/learn/how-to-sign-a-pdf-without-uploading-it",
     learnLabel: "How to Sign a PDF Without Uploading It",
   },
   {
-    slug: "plain-password-breaker",
+    slug: "password-breaker",
     name: "Plain Password Breaker",
     description: "Recover access to your own protected PDFs using known-password or bounded brute-force modes in a private local browser workflow with private no-upload.",
     learnHref: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
     learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
   },
   {
-    slug: "plain-webgpu-page-organiser",
+    slug: "webgpu-organiser",
     name: "Plain WebGPU Page Organiser",
     description: "Organise PDF pages with visual thumbnail grids, touch-friendly reordering, and local reconstruction workflows that keep data on-device with private no-upload.",
     learnHref: "/learn/webassembly-pdf-processing-explained",
     learnLabel: "WebAssembly PDF Processing Explained",
   },
   {
-    slug: "plain-hardware-accelerated-batch-engine",
+    slug: "batch-engine",
     name: "Plain Hardware-Accelerated Batch Engine",
     description: "Run batch merge, split, compress, and convert jobs in parallel browser workers with per-file progress and private local execution with private no-upload.",
     learnHref: "/learn/webassembly-pdf-processing-explained",
@@ -136,11 +136,11 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
 ]
 
 const TOOL_ALIASES: Record<string, string> = {
-  "batch-engine": "plain-hardware-accelerated-batch-engine",
-  "local-signer": "plain-local-cryptographic-signer",
-  "metadata-purge": "plain-metadata-purge",
-  "password-breaker": "plain-password-breaker",
-  "webgpu-organiser": "plain-webgpu-page-organiser",
+  "plain-hardware-accelerated-batch-engine": "batch-engine",
+  "plain-local-cryptographic-signer": "local-signer",
+  "plain-metadata-purge": "metadata-purge",
+  "plain-password-breaker": "password-breaker",
+  "plain-webgpu-page-organiser": "webgpu-organiser",
   "ai-pdf-assistant": "summarize-pdf",
   "irreversible-redactor": "redact-pdf",
   "privacy-risk-scanner": "privacy-scan",
@@ -176,7 +176,7 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Try Compression Preview",
   },
   "gdpr-and-pdf-tools-what-businesses-need-to-know": {
-    href: "/tools/plain-metadata-purge",
+    href: "/tools/metadata-purge",
     label: "Try Metadata Purge",
   },
   "how-pdf-redaction-really-works": {
@@ -192,7 +192,7 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Try Plain Tools",
   },
   "how-to-sign-a-pdf-without-uploading-it": {
-    href: "/tools/plain-local-cryptographic-signer",
+    href: "/tools/local-signer",
     label: "Try Local Cryptographic Signer",
   },
   "how-to-verify-a-pdf-tool-doesnt-upload-your-files": {
@@ -232,7 +232,7 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Run Verification Steps",
   },
   "webassembly-pdf-processing-explained": {
-    href: "/tools/plain-hardware-accelerated-batch-engine",
+    href: "/tools/batch-engine",
     label: "Try Batch Engine",
   },
   "what-is-a-pdf": {
@@ -240,7 +240,7 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Try Merge PDF",
   },
   "what-is-pdf-metadata-and-why-it-matters": {
-    href: "/tools/plain-metadata-purge",
+    href: "/tools/metadata-purge",
     label: "Try Metadata Purge",
   },
   "why-offline-compression-has-limits": {

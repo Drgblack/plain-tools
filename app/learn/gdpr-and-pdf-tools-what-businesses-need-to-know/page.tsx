@@ -130,7 +130,7 @@ const article: LearnArticleData = {
   ],
   cta: {
     label: "Adopt a Local-First Privacy Workflow",
-    href: "/tools/plain-metadata-purge",
+    href: "/tools/metadata-purge",
     text: "Start with metadata purge and local document cleanup to reduce transfer risk in your GDPR-sensitive PDF workflows.",
   },
 }
