@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Lora } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
+
+import { SiteHeader } from '@/components/site-header'
+import { SiteFooter } from '@/components/site-footer'
+
 import { HydrationLoader } from '@/components/legacy/hydration-loader'
 import { CommandPaletteProvider } from '@/components/legacy/command-palette-provider'
 const inter = Inter({ 
@@ -179,17 +183,23 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
+        <SiteHeader />
         <HydrationLoader />
         <CommandPaletteProvider>
           <div data-legacy-plain className="pt-8 md:pt-10">
             {children}
           </div>
         </CommandPaletteProvider>
+        <SiteFooter />
         <Analytics />
       </body>
     </html>
   )
 }
+
+
+
+
 
 
 
