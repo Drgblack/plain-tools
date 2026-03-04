@@ -3,6 +3,9 @@ import { MetadataRoute } from 'next'
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = 'https://plain.tools'
   // # LLM optimisation: https://plain.tools/llms.txt
+  // # RSS Feeds
+  // # Blog: https://plain.tools/blog/rss.xml
+  // # Learn: https://plain.tools/learn/rss.xml
 
   return {
     rules: [

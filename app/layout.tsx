@@ -209,6 +209,18 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="en" href="https://plain.tools" />
         <link rel="alternate" hrefLang="de" href="https://plain.tools" />
         <link rel="alternate" hrefLang="x-default" href="https://plain.tools" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Plain PDF Tools Blog"
+          href="https://plain.tools/blog/rss.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Plain PDF Tools Learn Centre"
+          href="https://plain.tools/learn/rss.xml"
+        />
         {/* Replace with actual Bing verification code from Bing Webmaster Tools */}
         {/* <meta name="msvalidate.01" content="[YOUR_BING_CODE]" /> */}
         <script
