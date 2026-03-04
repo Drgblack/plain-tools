@@ -6,16 +6,20 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const subnavItems = [
-  { label: "Plain.tools", href: "/" },
-  { label: "Tools", href: "/pdf-tools" },
+  { label: "Home", href: "/" },
+  { label: "Tools", href: "/pdf-tools/tools", matches: ["/pdf-tools", "/pdf-tools/tools"] },
   { label: "Learn", href: "/pdf-tools/learn" },
   { label: "Blog", href: "/pdf-tools/blog" },
-  { label: "Verify", href: "/pdf-tools/verify-claims" },
+  { label: "Verify claims", href: "/pdf-tools/verify-claims" },
 ]
 
-function isActive(pathname: string, href: string) {
-  if (href === "/") {
+function isActive(pathname: string, href: string, matches?: string[]) {
+  if (href === "/" && !matches) {
     return pathname === "/"
+  }
+
+  if (matches?.length) {
+    return matches.some((match) => pathname === match || pathname.startsWith(`${match}/`))
   }
 
   return pathname === href || pathname.startsWith(`${href}/`)
@@ -34,7 +38,7 @@ export function PdfToolsSubnav() {
             className={cn(
               "rounded-md px-2.5 py-1.5 text-sm transition-colors",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              isActive(pathname, item.href)
+              isActive(pathname, item.href, item.matches)
                 ? "bg-secondary font-semibold text-foreground"
                 : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
             )}

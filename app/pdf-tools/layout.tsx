@@ -183,7 +183,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9 legacy-pdf-tools`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
         <SiteHeader />
         <PdfToolsSubnav />
         <HydrationLoader />
@@ -198,7 +198,6 @@ export default function RootLayout({
     </html>
   )
 }
-
 
 
 

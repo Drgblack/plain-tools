@@ -3,8 +3,6 @@
 import { useState, useEffect, Children, isValidElement, cloneElement, ReactElement } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { TechnicalFigure } from "@/components/seo"
 import { AutoLinkContent } from "@/components/auto-link-content"
 import { BlogSchema, isQuestionTitle } from "@/components/blog-schema"
@@ -467,8 +465,6 @@ export function BlogArticle({
     proficiencyLevel="Professional"
   />
   
-  <Header />
-
       <main className="flex-1 hero-grid-pattern">
         <article className="px-4 py-16 md:py-24">
           <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[1fr_240px] lg:gap-12 xl:gap-16">
@@ -610,7 +606,6 @@ export function BlogArticle({
         </article>
       </main>
 
-      <Footer />
     </div>
   )
 }
