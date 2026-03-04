@@ -2,11 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Lora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
-import { SystemStatusBar } from '@/components/legacy/system-status-bar'
-import { WelcomeTour } from '@/components/legacy/welcome-tour'
-import { CookieFreeBanner } from '@/components/legacy/cookie-free-banner'
 import { HydrationLoader } from '@/components/legacy/hydration-loader'
 import { CommandPaletteProvider } from '@/components/legacy/command-palette-provider'
 const inter = Inter({ 
@@ -25,8 +20,8 @@ const lora = Lora({
 export const metadata: Metadata = {
   metadataBase: new URL('https://plain.tools'),
   title: {
-    default: 'Plain - Offline PDF Tools',
-    template: '%s - Plain',
+    default: 'Plain Tools - PDF Tools',
+    template: '%s | Plain Tools PDF Tools',
   },
   description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
   generator: 'Plain.tools',
@@ -34,8 +29,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     url: 'https://plain.tools',
-    siteName: 'Plain',
-    title: 'Plain - Offline PDF Tools',
+    siteName: 'Plain Tools',
+    title: 'Plain Tools - PDF Tools',
     description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
     images: [
       {
@@ -48,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Plain - Offline PDF Tools',
+    title: 'Plain Tools - PDF Tools',
     description: 'Plain processes PDF files locally in your browser. Files are never uploaded to a server.',
     images: ['/opengraph-image'],
   },
@@ -184,20 +179,21 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
-        <SiteHeader />
         <HydrationLoader />
         <CommandPaletteProvider>
-          {children}
+          <div data-legacy-plain className="pt-8 md:pt-10">
+            {children}
+          </div>
         </CommandPaletteProvider>
-        <SystemStatusBar />
-        <WelcomeTour />
-        <CookieFreeBanner />
-        <SiteFooter />
         <Analytics />
       </body>
     </html>
   )
 }
+
+
+
+
 
 
 
