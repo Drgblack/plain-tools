@@ -48,6 +48,11 @@ export const buildLearnArticleMetadata = (article: LearnArticleData): Metadata =
   keywords: article.keywords,
   alternates: {
     canonical: `https://plain.tools/learn/${article.slug}`,
+    languages: {
+      en: `https://plain.tools/learn/${article.slug}`,
+      de: `https://plain.tools/learn/${article.slug}`,
+      "x-default": `https://plain.tools/learn/${article.slug}`,
+    },
   },
   openGraph: {
     title: `${article.title} - Plain`,

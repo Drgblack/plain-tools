@@ -114,6 +114,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
     alternates: {
       canonical: `https://plain.tools/tools/${slug}`,
+      languages: {
+        en: `https://plain.tools/tools/${slug}`,
+        de: `https://plain.tools/tools/${slug}`,
+        "x-default": `https://plain.tools/tools/${slug}`,
+      },
     },
     openGraph: {
       title: `${tool.name} - Plain`,

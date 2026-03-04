@@ -5,10 +5,20 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { serializeJsonLd } from "@/lib/sanitize"
 
+const PAGE_URL = "https://plain.tools/compare/plain-vs-sejda"
+
 export const metadata: Metadata = {
   title: "Plain vs Sejda: Free Limits vs Unlimited Local Processing",
   description:
     "Technical comparison of Sejda's free-tier limits and online editing model versus Plain's local PDF processing approach for private, offline-first workflows.",
+  alternates: {
+    canonical: PAGE_URL,
+    languages: {
+      en: PAGE_URL,
+      de: PAGE_URL,
+      "x-default": PAGE_URL,
+    },
+  },
   openGraph: {
     title: "Plain vs Sejda: Free Limits vs Unlimited Local Processing",
     description: "A technical comparison of free-tier limits versus unlimited local PDF processing.",

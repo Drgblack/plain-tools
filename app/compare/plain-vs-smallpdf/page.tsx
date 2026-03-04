@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: PAGE_URL,
+    languages: {
+      en: PAGE_URL,
+      de: PAGE_URL,
+      "x-default": PAGE_URL,
+    },
   },
 }
 

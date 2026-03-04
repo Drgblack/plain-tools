@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   description: "Compare Plain with major PDF platforms on privacy, upload requirements, offline support, speed, compliance posture, and real workflow trade-offs. Built for.",
   alternates: {
     canonical: "https://plain.tools/compare",
+    languages: {
+      en: "https://plain.tools/compare",
+      de: "https://plain.tools/compare",
+      "x-default": "https://plain.tools/compare",
+    },
   },
 }
 
