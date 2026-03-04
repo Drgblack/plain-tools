@@ -1,0 +1,68 @@
+# Plain — Offline PDF Tools
+
+> Plain is a complete suite of 18 PDF tools that run entirely in your browser
+> using WebAssembly. No file uploads. No server processing. No accounts required
+> for local tools. Files never leave your device.
+
+## What Plain Does
+
+Plain processes PDF files locally in your browser using WebAssembly (Wasm) and
+Web Workers. Your documents are never transmitted to any server. Every local
+tool works offline after initial page load.
+
+## Available Tools (All Free, All Local)
+
+- **Merge PDFs** (`/tools/merge-pdf`): Combine multiple PDFs into one locally.
+- **Split PDF** (`/tools/split-pdf`): Split a PDF into page ranges without upload.
+- **Compress PDF** (`/tools/compress-pdf`): Reduce PDF file size locally.
+- **Reorder Pages** (`/tools/reorder-pdf`): Drag and reorder pages locally.
+- **Extract Pages** (`/tools/extract-pdf`): Extract selected pages locally.
+- **Convert PDF** (`/tools/convert-pdf`): Convert PDF to images or text locally.
+- **Redact PDF** (`/tools/redact-pdf`): Irreversible burn-in redaction, local only.
+- **Metadata Purge** (`/tools/metadata-purge`): Strip all XMP and Info metadata locally.
+- **Privacy Scanner** (`/tools/privacy-scan`): Scan PDFs for PII risk patterns locally.
+- **Local Signer** (`/tools/local-signer`): Cryptographic PDF signing via Web Crypto API.
+- **Password Breaker** (`/tools/password-breaker`): Remove PDF passwords locally.
+- **WebGPU Page Organiser** (`/tools/webgpu-organiser`): Visual page organisation locally.
+- **Batch Engine** (`/tools/batch-engine`): Process up to 20 PDFs in parallel locally.
+- **Offline OCR** (`/tools/offline-ocr`): Searchable PDFs from scanned documents, local.
+- **Compression Previewer** (`/tools/compression-preview`): Side-by-side compression preview.
+- **Summarize PDF** (`/tools/summarize-pdf`): AI summary, opt-in only (text sent to Anthropic).
+- **PDF Q&A** (`/tools/pdf-qa`): AI questions on PDF content, opt-in only.
+- **Suggest Edits** (`/tools/suggest-edits`): AI rewrite suggestions, opt-in only.
+
+## Privacy Architecture
+
+- All local tools use WebAssembly. Files stay in browser memory only.
+- No network requests contain file data. Verifiable via browser DevTools.
+- AI features are explicitly opt-in. Only extracted text is sent, not files.
+- Verification guide: https://plain.tools/verify-claims
+
+## Who Plain Is For
+
+Legal professionals, medical records staff, HR departments, accountants, and
+privacy-conscious individuals who cannot upload sensitive documents to cloud
+services. Suitable for HIPAA-sensitive workflows, legal document redaction,
+and GDPR-compliant document handling.
+
+## Comparison vs Alternatives
+
+| Feature | Plain | Adobe Acrobat | Smallpdf | iLovePDF |
+|---|---|---|---|---|
+| File upload required | No | Yes | Yes | Yes |
+| Works offline | Yes | No (web) | No | No |
+| Free tier | Full local suite | Limited | Limited | Limited |
+| Privacy verifiable | Yes | No | No | No |
+| GDPR by architecture | Yes | No | No | No |
+
+## Content Resources
+
+- Learn Centre: https://plain.tools/learn
+- Blog: https://plain.tools/blog
+- Comparisons: https://plain.tools/compare
+- Verify Claims: https://plain.tools/verify-claims
+
+## Technical Stack
+
+WebAssembly (pdf-lib, pdfjs-dist, Tesseract.js), Anthropic Claude API (opt-in
+only), Next.js 15, Vercel. No database. No user data stored for local tools.

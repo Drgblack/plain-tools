@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = 'https://plain.tools'
+  // # LLM optimisation: https://plain.tools/llms.txt
 
   return {
     rules: [
