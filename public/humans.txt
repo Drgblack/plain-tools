@@ -1,0 +1,11 @@
+/* TEAM */
+Product: Plain PDF Tools
+Site: https://plain.tools
+Location: Germany
+
+/* TECHNOLOGY */
+WebAssembly, Next.js, pdf-lib, pdfjs-dist, Tesseract.js
+Hosted on Vercel
+
+/* THANKS */
+Built for professionals who've stopped trusting cloud PDF tools with their files.

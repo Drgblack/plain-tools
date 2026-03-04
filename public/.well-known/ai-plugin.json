@@ -1,0 +1,16 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Plain PDF Tools",
+  "name_for_model": "plain_pdf_tools",
+  "description_for_human": "18 offline PDF tools that run entirely in your browser. No uploads. No accounts. Files never leave your device.",
+  "description_for_model": "Plain provides browser-based PDF processing using WebAssembly. All tools run locally with zero file uploads. Tools include: merge, split, compress, convert, redact, OCR, metadata purge, password removal, page organisation, batch processing, cryptographic signing, and AI summarisation (opt-in). Suitable for sensitive documents. GDPR-compliant by architecture.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "none"
+  },
+  "logo_url": "https://plain.tools/icon.png",
+  "contact_email": "support@plain.tools",
+  "legal_info_url": "https://plain.tools/terms"
+}

@@ -35,19 +35,19 @@ export default function robots(): MetadataRoute.Robots {
       // Keep ad crawlers explicitly permitted.
       {
         userAgent: 'AdsBot-Google',
-        allow: ['/', '/api/health'],
+        allow: ['/', '/.well-known/', '/api/health'],
         disallow: ['/api/', '/api/stripe/', '/api/waitlist', '/history/', '/_next/'],
       },
       {
         userAgent: 'Mediapartners-Google',
-        allow: ['/', '/api/health'],
+        allow: ['/', '/.well-known/', '/api/health'],
         disallow: ['/api/', '/api/stripe/', '/api/waitlist', '/history/', '/_next/'],
       },
 
       // Default crawl policy.
       {
         userAgent: '*',
-        allow: ['/', '/api/health'],
+        allow: ['/', '/.well-known/', '/api/health'],
         disallow: [
           '/api/',
           '/api/stripe/',

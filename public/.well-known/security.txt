@@ -1,0 +1,4 @@
+Contact: https://plain.tools/support
+Preferred-Languages: en, de
+Canonical: https://plain.tools/.well-known/security.txt
+Policy: https://plain.tools/privacy
