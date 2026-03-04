@@ -134,7 +134,7 @@ const getRouteLastModified = (route: string): Date => {
     const relativePath = path.relative(process.cwd(), routeFile)
     const gitLastModified = execFileSync(
       "git",
-      ["log", "-1", "--format=%cI", "--", relativePath],
+      ["log", "-1", "--format=%aI", "--", relativePath],
       { cwd: process.cwd(), encoding: "utf8" }
     ).trim()
 

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node -e \"const { spawnSync } = require('node:child_process'); spawnSync('git', ['fetch', '--unshallow'], { stdio: 'inherit' });\" && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "next build && tsc --noEmit --skipLibCheck",
