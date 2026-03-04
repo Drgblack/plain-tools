@@ -6,6 +6,7 @@ import { HowItWorks } from "@/components/legacy/how-it-works"
 import { PrivacySection } from "@/components/legacy/privacy-section"
 import { SeoContent } from "@/components/legacy/seo-content"
 import { TechnicalFaq } from "@/components/legacy/technical-faq"
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
@@ -22,5 +23,3 @@ export default function Home() {
     </div>
   )
 }
-
-
