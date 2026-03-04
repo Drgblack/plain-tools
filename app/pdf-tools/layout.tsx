@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Lora } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
+import Link from 'next/link'
 
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
@@ -182,8 +183,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9 legacy-pdf-tools`}>
         <SiteHeader />
+        <div className="w-full border-b border-neutral-200 bg-neutral-50 text-sm">
+          <div className="mx-auto max-w-6xl px-4 py-2">
+            <Link href="/" className="text-blue-600 hover:underline">
+              ← Plain.tools Home
+            </Link>
+          </div>
+        </div>
         <HydrationLoader />
         <CommandPaletteProvider>
           <div data-legacy-plain className="pt-8 md:pt-10">
@@ -196,7 +204,6 @@ export default function RootLayout({
     </html>
   )
 }
-
 
 
 

@@ -162,3 +162,9 @@
 .category-accent-ring {
   --tw-ring-color: var(--category-accent, var(--accent));
 }
+/* Restore legacy PDF tools colour palette */
+
+.legacy-pdf-tools {
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+}
