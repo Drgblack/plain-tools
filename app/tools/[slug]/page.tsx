@@ -65,6 +65,29 @@ function buildToolFaqSchema(toolName: string) {
   }
 }
 
+function buildToolWebApplicationSchema(toolName: string, slug: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["SoftwareApplication", "WebApplication"],
+    name: toolName,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any — runs in web browser",
+    browserRequirements:
+      "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+)",
+    permissions: "No permissions required",
+    storageRequirements: "No installation or storage required",
+    isAccessibleForFree: true,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+    },
+    featureList:
+      "Offline processing, Zero uploads, No account required, GDPR compliant, Works without internet",
+    url: `https://plain.tools/tools/${slug}`,
+  }
+}
+
 export async function generateStaticParams() {
   return TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     slug: tool.slug,
@@ -131,9 +154,15 @@ export default async function ToolPage({ params }: PageProps) {
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
   const faqSchema = buildToolFaqSchema(tool.name)
+  const webApplicationSchema = buildToolWebApplicationSchema(tool.name, slug)
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <Script
+        id={`tool-webapp-schema-${tool.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(webApplicationSchema) }}
+      />
       <Script
         id={`tool-faq-schema-${tool.slug}`}
         type="application/ld+json"

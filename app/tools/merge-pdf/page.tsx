@@ -17,15 +17,21 @@ import { serializeJsonLd } from "@/lib/sanitize"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Plain - Merge PDF",
+  "@type": ["SoftwareApplication", "WebApplication"],
+  "name": "Merge PDFs",
   "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Web",
-  "url": "https://plain.tools/tools/merge-pdf",
-  "description": "Merge PDF files offline in your browser. Files are processed locally and are never uploaded to a server.",
-  "publisher": {
-    "@id": "https://plain.tools/#organization"
-  }
+  "operatingSystem": "Any — runs in web browser",
+  "browserRequirements": "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+)",
+  "permissions": "No permissions required",
+  "storageRequirements": "No installation or storage required",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
+  "featureList": "Offline processing, Zero uploads, No account required, GDPR compliant, Works without internet",
+  "url": "https://plain.tools/tools/merge-pdf"
 }
 
 const breadcrumbJsonLd = {
