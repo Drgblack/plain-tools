@@ -48,6 +48,53 @@ const withBundleAnalyzer = createBundleAnalyzer({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // Canonical tool slugs.
+      {
+        source: "/tools/local-signer",
+        destination: "/tools/plain-local-cryptographic-signer",
+        permanent: true,
+      },
+      {
+        source: "/tools/metadata-purge",
+        destination: "/tools/plain-metadata-purge",
+        permanent: true,
+      },
+      {
+        source: "/tools/password-breaker",
+        destination: "/tools/plain-password-breaker",
+        permanent: true,
+      },
+      {
+        source: "/tools/webgpu-organiser",
+        destination: "/tools/plain-webgpu-page-organiser",
+        permanent: true,
+      },
+      {
+        source: "/tools/batch-engine",
+        destination: "/tools/plain-hardware-accelerated-batch-engine",
+        permanent: true,
+      },
+
+      // Consolidate legacy comparison routes.
+      {
+        source: "/comparisons",
+        destination: "/compare",
+        permanent: true,
+      },
+      {
+        source: "/comparisons/plain-vs-ilovepdf",
+        destination: "/compare/plain-vs-ilovepdf",
+        permanent: true,
+      },
+      {
+        source: "/comparisons/plain-vs-online-pdf-tools",
+        destination: "/compare/offline-vs-online-pdf-tools",
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       // Exclude /api and /api/* since API CORS headers are managed separately.

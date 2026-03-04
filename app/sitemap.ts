@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import { execFileSync } from "node:child_process"
 import type { MetadataRoute } from "next"
 
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
@@ -30,12 +31,22 @@ const MANUAL_LEARN_ROUTES = [
   "/learn/ocr-pdf-without-cloud",
 ]
 const MANUAL_REQUIRED_ROUTES = ["/pricing", "/verify-claims", "/about", "/privacy", "/terms", "/support"]
+const PAGE_FILE_NAMES = ["page.tsx", "page.ts"] as const
 
 const isDynamicSegment = (segment: string) => segment.startsWith("[") && segment.endsWith("]")
 const isGroupSegment = (segment: string) => segment.startsWith("(") && segment.endsWith(")")
 
 const pageExists = (directory: string) =>
   fs.existsSync(path.join(directory, "page.tsx")) || fs.existsSync(path.join(directory, "page.ts"))
+
+const findPageFile = (directory: string): string | null => {
+  for (const fileName of PAGE_FILE_NAMES) {
+    const fullPath = path.join(directory, fileName)
+    if (fs.existsSync(fullPath)) return fullPath
+  }
+
+  return null
+}
 
 const getStaticRoutes = (directory: string, segments: string[] = []): string[] => {
   const routes: string[] = []
@@ -70,7 +81,7 @@ const scorePriority = (route: string) => {
   if (route === "/") return 1
   if (route.startsWith("/tools/")) return 0.9
   if (route.startsWith("/learn")) return 0.8
-  if (route.startsWith("/compare") || route.startsWith("/comparisons")) return 0.8
+  if (route.startsWith("/compare")) return 0.8
   if (route.startsWith("/blog")) return 0.7
   if (route === "/tools") return 0.9
   return 0.5
@@ -84,9 +95,63 @@ const scoreFrequency = (route: string): MetadataRoute.Sitemap[number]["changeFre
   return "monthly"
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date()
+const lastModifiedCache = new Map<string, Date>()
 
+const resolveRouteSourceFile = (route: string): string | null => {
+  if (route === "/") {
+    return findPageFile(APP_DIR)
+  }
+
+  if (route.startsWith("/tools/") && route !== "/tools") {
+    const slug = route.replace("/tools/", "")
+    const toolPageFile = findPageFile(path.join(APP_DIR, "tools", slug))
+    if (toolPageFile) return toolPageFile
+    return findPageFile(path.join(APP_DIR, "tools", "[slug]"))
+  }
+
+  const segments = route.replace(/^\//, "").split("/").filter(Boolean)
+  const routeFile = findPageFile(path.join(APP_DIR, ...segments))
+  if (routeFile) return routeFile
+
+  return findPageFile(APP_DIR)
+}
+
+const getRouteLastModified = (route: string): Date => {
+  const cached = lastModifiedCache.get(route)
+  if (cached) return cached
+
+  const routeFile = resolveRouteSourceFile(route)
+  const fallbackDate = routeFile && fs.existsSync(routeFile)
+    ? fs.statSync(routeFile).mtime
+    : new Date()
+
+  if (!routeFile) {
+    lastModifiedCache.set(route, fallbackDate)
+    return fallbackDate
+  }
+
+  try {
+    const relativePath = path.relative(process.cwd(), routeFile)
+    const gitLastModified = execFileSync(
+      "git",
+      ["log", "-1", "--format=%cI", "--", relativePath],
+      { cwd: process.cwd(), encoding: "utf8" }
+    ).trim()
+
+    const parsed = new Date(gitLastModified)
+    if (!Number.isNaN(parsed.getTime())) {
+      lastModifiedCache.set(route, parsed)
+      return parsed
+    }
+  } catch {
+    // Ignore environments without git history and use file metadata fallback.
+  }
+
+  lastModifiedCache.set(route, fallbackDate)
+  return fallbackDate
+}
+
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = getStaticRoutes(APP_DIR).filter(
     (route) => !route.startsWith("/tools/") || route === "/tools"
   )
@@ -104,11 +169,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ])
   )
     .filter((route) => !EXCLUDED_ROUTES.has(route))
+    .filter((route) => !route.startsWith("/comparisons"))
     .sort()
 
   return routes.map((route) => ({
     url: `${BASE_URL}${route}`,
-    lastModified: now,
+    lastModified: getRouteLastModified(route),
     changeFrequency: scoreFrequency(route),
     priority: scorePriority(route),
   }))
