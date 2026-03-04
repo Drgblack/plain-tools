@@ -205,7 +205,7 @@ export default function PlainVsAdobeAcrobatPage() {
             </p>
             <div className="mt-4">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/tools">Try Plain free — no account, no upload</Link>
+                <Link href="/tools/redact-pdf">Try Plain free — no account, no upload</Link>
               </Button>
             </div>
           </section>

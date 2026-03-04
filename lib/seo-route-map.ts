@@ -11,15 +11,15 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
     slug: "merge-pdf",
     name: "Merge PDFs",
     description: "Merge PDF files locally in your browser with zero uploads, fast processing, and privacy-safe output downloads for confidential document workflows with private.",
-    learnHref: "/learn/how-pdfs-work",
-    learnLabel: "How PDFs Work Internally",
+    learnHref: "/learn",
+    learnLabel: "Learning Centre",
   },
   {
     slug: "split-pdf",
     name: "Split PDF",
     description: "Split PDF pages by custom ranges, extraction rules, or single-page output entirely in-browser with local processing and no remote file transfer with private.",
-    learnHref: "/learn/how-pdfs-work",
-    learnLabel: "How PDFs Work Internally",
+    learnHref: "/learn",
+    learnLabel: "Learning Centre",
   },
   {
     slug: "compress-pdf",
@@ -60,8 +60,8 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
     slug: "privacy-scan",
     name: "Plain Privacy Risk Scanner",
     description: "Scan PDFs for privacy risks and PII indicators locally, review confidence and severity signals, and export redaction-ready results on-device with private.",
-    learnHref: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
-    learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
+    learnHref: "/learn/why-you-should-never-upload-medical-records-to-pdf-tools",
+    learnLabel: "Why You Should Never Upload Medical Records",
   },
   {
     slug: "offline-ocr",
@@ -116,8 +116,8 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
     slug: "password-breaker",
     name: "Plain Password Breaker",
     description: "Recover access to your own protected PDFs using known-password or bounded brute-force modes in a private local browser workflow with private no-upload.",
-    learnHref: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
-    learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
+    learnHref: "/learn",
+    learnLabel: "Learning Centre",
   },
   {
     slug: "webgpu-organiser",
@@ -164,8 +164,8 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Browse All Tools",
   },
   "adobe-acrobat-ai-privacy-concerns-explained": {
-    href: "/compare/plain-vs-adobe-acrobat",
-    label: "Compare Plain vs Adobe Acrobat",
+    href: "/tools/redact-pdf",
+    label: "Try Irreversible Redactor",
   },
   "client-side-processing": {
     href: "/tools/merge-pdf",
@@ -196,8 +196,8 @@ export const LEARN_TO_TOOL_MAP: Record<string, LearnToolLink> = {
     label: "Try Local Cryptographic Signer",
   },
   "how-to-verify-a-pdf-tool-doesnt-upload-your-files": {
-    href: "/verify-claims",
-    label: "Open Verify Claims",
+    href: "/tools/pdf-qa",
+    label: "Try Q&A on PDF",
   },
   "is-offline-pdf-processing-secure": {
     href: "/tools/merge-pdf",

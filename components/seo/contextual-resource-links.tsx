@@ -19,9 +19,9 @@ export function ContextualResourceLinks() {
     return (
       <div className="mx-auto mb-10 max-w-6xl rounded-xl border border-[#0070f3]/25 bg-[#0070f3]/8 p-4">
         <p className="text-sm text-white/80">
-          Learn how this workflow works in practice:{" "}
+          Learn more:{" "}
           <Link href={tool.learnHref} className="font-medium text-[#7ab8ff] hover:underline">
-            {tool.learnLabel}
+            {tool.learnLabel} {"\u2192"}
           </Link>
         </p>
       </div>
@@ -46,4 +46,3 @@ export function ContextualResourceLinks() {
 
   return null
 }
-

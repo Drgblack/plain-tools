@@ -7,6 +7,7 @@ import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema, generateTechArticleSchema } from "@/lib/schema"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { getToolBySlug } from "@/lib/tools-catalogue"
 
 export type LearnArticleSection = {
   heading: string
@@ -70,6 +71,13 @@ export const buildLearnArticleMetadata = (article: LearnArticleData): Metadata =
 export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) {
   const publishedIso = article.published ?? "2026-03-03"
   const modifiedIso = "2026-03-03"
+  const ctaSlug = article.cta.href.startsWith("/tools/")
+    ? article.cta.href.replace("/tools/", "")
+    : null
+  const ctaTool = ctaSlug ? getToolBySlug(ctaSlug) : undefined
+  const ctaButtonLabel = ctaTool
+    ? `Try ${ctaTool.name} — free, no upload required \u2192`
+    : `${article.cta.label} \u2192`
 
   const schema = combineSchemas([
     {
@@ -200,7 +208,7 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
             </p>
             <div className="mt-4">
               <Button asChild className="w-full sm:w-auto">
-                <Link href={article.cta.href}>Open Relevant Tool</Link>
+                <Link href={article.cta.href}>{ctaButtonLabel}</Link>
               </Button>
             </div>
           </section>

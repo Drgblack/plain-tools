@@ -152,9 +152,9 @@ const article: LearnArticleData = {
     { label: "WebAssembly PDF Processing Explained", href: "/learn/webassembly-pdf-processing-explained" },
   ],
   cta: {
-    label: "Run the Public Verification Walkthrough",
-    href: "/verify-claims",
-    text: "Follow Plain's verification page to test zero-upload behavior end-to-end with your own browser tools.",
+    label: "Try Q&A on PDF",
+    href: "/tools/pdf-qa",
+    text: "Use a real tool flow and verify network behavior in DevTools while processing PDF content locally.",
   },
 }
 

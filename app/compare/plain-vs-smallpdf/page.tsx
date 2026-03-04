@@ -203,7 +203,7 @@ export default function PlainVsSmallpdfPage() {
             </p>
             <div className="mt-4">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/tools/compress-pdf">Try Plain free — no account, no upload</Link>
+                <Link href="/tools/batch-engine">Try Plain free — no account, no upload</Link>
               </Button>
             </div>
           </section>

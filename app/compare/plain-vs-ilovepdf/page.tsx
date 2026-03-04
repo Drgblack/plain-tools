@@ -201,7 +201,7 @@ export default function PlainVsILovePDFPage() {
             </p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/tools/merge-pdf">Try Plain free — no account, no upload</Link>
+                <Link href="/tools/compress-pdf">Try Plain free — no account, no upload</Link>
               </Button>
               <Button asChild variant="outline" className="w-full sm:w-auto">
                 <Link href="/verify-claims">Verify zero-upload claims</Link>

@@ -129,9 +129,9 @@ const article: LearnArticleData = {
     { label: "Why You Should Never Upload Medical Records", href: "/learn/why-you-should-never-upload-medical-records-to-pdf-tools" },
   ],
   cta: {
-    label: "Compare Privacy Models Directly",
-    href: "/compare/plain-vs-adobe-acrobat",
-    text: "Review a side-by-side comparison and switch sensitive workflows to local-first tools where appropriate.",
+    label: "Try Irreversible Redactor",
+    href: "/tools/redact-pdf",
+    text: "Run sensitive-document redaction locally with irreversible output and no file upload dependency.",
   },
 }
 
