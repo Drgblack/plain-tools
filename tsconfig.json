@@ -7,7 +7,6 @@
     ],
     "allowJs": true,
     "target": "ES6",
-    // Keep typecheck deterministic in CI/local even without generated .next artifacts.
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,

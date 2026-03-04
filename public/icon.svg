@@ -1,10 +1,4 @@
-<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Dark background - works on any browser chrome -->
-  <rect width="32" height="32" rx="6" fill="#1A1B1F"/>
-  <!-- Abstract PDF-inspired "P" shape -->
-  <path d="M10 8h7c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4v6h-3V8z" fill="#F2F2F2"/>
-  <!-- Inner cutout for P bowl -->
-  <path d="M13 11h3.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H13V11z" fill="#1A1B1F"/>
-  <!-- Electric blue accent dot -->
-  <circle cx="24" cy="22" r="3" fill="#6385FF"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#171717"/>
+  <path d="M10 8h7c3.314 0 6 2.686 6 6s-2.686 6-6 6h-3v4h-4V8zm4 8h3c1.105 0 2-.895 2-2s-.895-2-2-2h-3v4z" fill="#fafafa"/>
 </svg>
