@@ -2,18 +2,13 @@
 
 import { useState, useCallback, useRef, useEffect } from "react"
 import { PDFDocument } from "pdf-lib"
-import * as pdfjsLib from "pdfjs-dist"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
 import { Header } from "@/components/legacy/header"
 import { Footer } from "@/components/legacy/footer"
 import { Button } from "@/components/legacy/ui/button"
-
-// Initialize PDF.js worker
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
-}
+import { getPdfJs as loadPdfJs } from "@/lib/pdfjs-loader"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",
@@ -67,6 +62,7 @@ export default function ReorderPDFPage() {
   const generateThumbnails = async (arrayBuffer: ArrayBuffer, numPages: number) => {
     setIsLoadingThumbnails(true)
     try {
+      const pdfjsLib = await loadPdfJs()
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
       const thumbnails: PageThumbnail[] = []
 

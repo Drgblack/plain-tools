@@ -9,6 +9,7 @@ import { Header } from "@/components/legacy/header"
 import { Footer } from "@/components/legacy/footer"
 import { ShareButton } from "@/components/legacy/share-button"
 import { PrivacyAudit } from "@/components/legacy/privacy-audit"
+import { Button } from "@/components/ui/button"
 
 const softwareAppJsonLd = {
   "@context": "https://schema.org",

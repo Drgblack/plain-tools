@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback, useRef, useEffect } from "react"
-import * as pdfjsLib from "pdfjs-dist"
 import { motion, Reorder, useDragControls } from "framer-motion"
 import Image from "next/image"
 import { 
@@ -19,11 +18,7 @@ import {
   ChevronRight
 } from "lucide-react"
 import Link from "next/link"
-
-// Initialise PDF.js worker
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
-}
+import { getPdfJs as loadPdfJs } from "@/lib/pdfjs-loader"
 
 export interface PDFFile {
   id: string
@@ -211,6 +206,7 @@ export function LocalPreview({ files, onClose, onFilesReorder, mode = "single" }
     const loadPDFs = async () => {
       setIsLoading(true)
       const loadedFiles: PDFFile[] = []
+      const pdfjsLib = await loadPdfJs()
 
       for (const file of files) {
         try {
