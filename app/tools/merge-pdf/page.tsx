@@ -37,6 +37,36 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", "position": 3, "name": "Merge PDF", "item": "https://plain.tools/tools/merge-pdf" }
   ]
 }
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Does Merge PDFs upload my file?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. Merge PDFs processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Merge PDFs work offline?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Once the page has loaded, Merge PDFs works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is Merge PDFs free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Merge PDFs is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.",
+      },
+    },
+  ],
+}
 
 interface PDFFile {
   id: string
@@ -236,6 +266,11 @@ const mergePDFs = async () => {
         id="breadcrumb-json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="faq-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <Header />
 

@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
+import Script from "next/script"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
+import { serializeJsonLd } from "@/lib/sanitize"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -29,6 +31,39 @@ const toolComponents: Record<string, ToolComponent> = {
 }
 
 const FallbackToolComponent = () => <div>Tool UI coming soon</div>
+
+function buildToolFaqSchema(toolName: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `Does ${toolName} upload my file?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `No. ${toolName} processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Does ${toolName} work offline?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Yes. Once the page has loaded, ${toolName} works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Is ${toolName} free?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Yes. ${toolName} is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.`,
+        },
+      },
+    ],
+  }
+}
 
 export async function generateStaticParams() {
   return TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
@@ -95,9 +130,15 @@ export default async function ToolPage({ params }: PageProps) {
   const ToolComponent: ToolComponent = tool.available
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
+  const faqSchema = buildToolFaqSchema(tool.name)
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <Script
+        id={`tool-faq-schema-${tool.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
+      />
       <Header />
 
       <main className="flex-1">

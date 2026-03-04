@@ -34,6 +34,36 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", "position": 3, "name": "Compress PDF", "item": "https://plain.tools/tools/compress-pdf" }
   ]
 }
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Does Compress PDF upload my file?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. Compress PDF processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Compress PDF work offline?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Once the page has loaded, Compress PDF works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is Compress PDF free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Compress PDF is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.",
+      },
+    },
+  ],
+}
 
 interface CompressionResult {
   name: string
@@ -173,6 +203,11 @@ export default function CompressPDFPage() {
         id="breadcrumb-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <Header />
 
