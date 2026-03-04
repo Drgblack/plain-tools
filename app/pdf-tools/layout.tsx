@@ -7,8 +7,6 @@ import { WelcomeTour } from '@/components/legacy/welcome-tour'
 import { CookieFreeBanner } from '@/components/legacy/cookie-free-banner'
 import { HydrationLoader } from '@/components/legacy/hydration-loader'
 import { CommandPaletteProvider } from '@/components/legacy/command-palette-provider'
-import './globals.css'
-
 const inter = Inter({ 
   subsets: ["latin"],
   variable: "--font-sans",
@@ -80,12 +78,12 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://plainpdf.com/#organization",
+      "@id": "https://plain.tools/#organization",
       "name": "Plain",
-      "url": "https://plainpdf.com",
+      "url": "https://plain.tools",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://plainpdf.com/logo.png"
+        "url": "https://plain.tools/logo.png"
       },
       "description": "Privacy-first PDF tools that run entirely in your browser using WebAssembly. No uploads, no servers, no tracking. Optimised for complete data isolation.",
       "foundingDate": "2024",
@@ -111,28 +109,28 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://plainpdf.com/#website",
-      "url": "https://plainpdf.com",
+      "@id": "https://plain.tools/#website",
+      "url": "https://plain.tools",
       "name": "Plain PDF",
       "description": "Professional PDF tools with complete privacy. All processing happens locally in your browser using WebAssembly technology. No file uploads, no server processing, no data collection.",
       "inLanguage": "en-GB",
       "publisher": {
-        "@id": "https://plainpdf.com/#organization"
+        "@id": "https://plain.tools/#organization"
       },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://plainpdf.com/tools?search={search_term_string}"
+          "urlTemplate": "https://plain.tools/tools?search={search_term_string}"
         },
         "query-input": "required name=search_term_string"
       }
     },
     {
       "@type": "WebApplication",
-      "@id": "https://plainpdf.com/#application",
+      "@id": "https://plain.tools/#application",
       "name": "Plain PDF Tools",
-      "url": "https://plainpdf.com/tools",
+      "url": "https://plain.tools/tools",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Browser-based (Chrome, Firefox, Safari, Edge)",
       "browserRequirements": "Requires WebAssembly support",
@@ -152,7 +150,7 @@ const jsonLd = {
         "GDPR and UK GDPR compliant by design"
       ],
       "provider": {
-        "@id": "https://plainpdf.com/#organization"
+        "@id": "https://plain.tools/#organization"
       }
     }
   ]
@@ -184,6 +182,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${lora.variable} font-sans antialiased pb-9`}>
+        <SiteHeader />
         <HydrationLoader />
         <CommandPaletteProvider>
           {children}
@@ -191,10 +190,14 @@ export default function RootLayout({
         <SystemStatusBar />
         <WelcomeTour />
         <CookieFreeBanner />
+        <SiteFooter />
         <Analytics />
       </body>
     </html>
   )
 }
+
+
+
 
 

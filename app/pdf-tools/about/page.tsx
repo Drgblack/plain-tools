@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { SummaryBox, KeyTerm, Breadcrumbs } from "@/components/legacy/seo"
 import { AutoLinkContent } from "@/components/legacy/auto-link-content"
 import { 
@@ -108,8 +106,6 @@ export default function AboutPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Hero Section - The Mission */}
         <section className="relative border-b border-[#333] px-4 py-24 md:py-32">
@@ -496,10 +492,9 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

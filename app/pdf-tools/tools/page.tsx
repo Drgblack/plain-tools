@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Merge, Split, Minimize2, ArrowUpDown, FileOutput } from "lucide-react"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Card, CardContent } from "@/components/legacy/ui/card"
 import { Badge } from "@/components/legacy/ui/badge"
 
@@ -60,8 +58,6 @@ const tools = [
 export default function ToolsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-
       <main className="flex-1">
         <section className="px-4 py-16">
           <div className="mx-auto max-w-3xl">
@@ -128,9 +124,8 @@ export default function ToolsPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 

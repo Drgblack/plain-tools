@@ -5,8 +5,6 @@ import { PDFDocument } from "pdf-lib"
 import { GripVertical, X, FileText, Download, Plus, ShieldCheck, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { ShareButton } from "@/components/legacy/share-button"
 import { PrivacyAudit } from "@/components/legacy/privacy-audit"
 import { Button } from "@/components/ui/button"
@@ -179,8 +177,6 @@ const mergePDFs = async () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Tool Header */}
         <section className="relative bg-[oklch(0.12_0.004_250)] px-4 pt-20 pb-10">
@@ -566,10 +562,9 @@ const mergePDFs = async () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import {
   generateTechArticleSchema,
   generateBreadcrumbSchema,
@@ -70,8 +68,6 @@ export default function IsOfflinePdfProcessingSecurePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
       />
-      <Header />
-
       <main className="flex-1">
         <article className="px-4 py-16 md:py-24">
           <div className="mx-auto max-w-2xl">
@@ -353,10 +349,9 @@ export default function IsOfflinePdfProcessingSecurePage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { WifiOff, Activity, Code, CheckCircle2, Monitor, XCircle, ArrowRight, Eye, AlertTriangle } from "lucide-react"
 import {
   generateTechArticleSchema,
@@ -106,8 +104,6 @@ export default function VerifyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Hero */}
         <section className="relative border-b border-accent/10 bg-[oklch(0.12_0.004_250)] px-4 py-20 md:py-28">
@@ -443,10 +439,9 @@ export default function VerifyPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

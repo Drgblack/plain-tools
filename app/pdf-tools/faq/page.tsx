@@ -1,9 +1,6 @@
 import { Metadata } from "next"
 import Script from "next/script"
 import Link from "next/link"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "FAQ",
   description:
@@ -84,7 +81,6 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Header />
       <main className="flex-1 px-4 py-16">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -128,9 +124,9 @@ export default function FAQPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
+
 
 

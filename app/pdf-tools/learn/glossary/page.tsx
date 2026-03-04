@@ -4,8 +4,6 @@ import { useState, useMemo, useEffect, useRef } from "react"
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Search, ArrowLeft, BookOpen, ExternalLink } from "lucide-react"
 
 // Glossary terms data with GEO-optimised definitions
@@ -291,8 +289,6 @@ export default function GlossaryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
       />
-      <Header />
-      
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative border-b border-[#333] px-4 py-16 md:py-20">
@@ -464,10 +460,9 @@ export default function GlossaryPage() {
           </div>
         </section>
       </main>
-      
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -1,6 +1,4 @@
 import { Metadata } from "next"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Monitor, WifiOff, Search, ShieldX } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -19,8 +17,6 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
       <main className="px-4 py-16">
         <div className="mx-auto max-w-3xl">
           {/* Page Title */}
@@ -149,9 +145,8 @@ export default function HowItWorksPage() {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 

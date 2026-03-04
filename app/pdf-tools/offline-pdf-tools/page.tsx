@@ -1,7 +1,4 @@
 import { Metadata } from "next"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "Offline PDF Tools Explained",
   description:
@@ -18,8 +15,6 @@ export const metadata: Metadata = {
 export default function OfflinePdfToolsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-4 py-16">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -170,9 +165,8 @@ export default function OfflinePdfToolsPage() {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 

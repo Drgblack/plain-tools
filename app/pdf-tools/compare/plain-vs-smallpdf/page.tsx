@@ -1,9 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "Plain vs Smallpdf: Offline vs Online PDF Processing",
   description:
@@ -116,7 +113,6 @@ export default function PlainVsSmallpdfComparePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Header />
       <main className="flex-1">
         <article className="px-4 py-20">
           <div className="mx-auto max-w-2xl">
@@ -578,9 +574,9 @@ export default function PlainVsSmallpdfComparePage() {
           </div>
         </article>
       </main>
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -1,7 +1,5 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Card, CardContent } from "@/components/legacy/ui/card"
 import { ArrowRight } from "lucide-react"
 import Script from "next/script"
@@ -49,7 +47,6 @@ export default function ComparisonsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
       <main className="flex-1">
         <section className="px-4 py-16">
           <div className="mx-auto max-w-3xl">
@@ -82,8 +79,8 @@ export default function ComparisonsPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }
+
 

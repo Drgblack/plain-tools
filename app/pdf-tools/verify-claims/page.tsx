@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { VerifyClaimsContent } from "@/components/legacy/verify-claims-content"
 
 export const metadata: Metadata = {
@@ -63,12 +61,11 @@ export default function VerifyClaimsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header />
       <main>
         <VerifyClaimsContent />
       </main>
-      <Footer />
     </>
   )
 }
+
 

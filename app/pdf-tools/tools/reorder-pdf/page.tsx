@@ -5,8 +5,6 @@ import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Button } from "@/components/legacy/ui/button"
 import { getPdfJs as loadPdfJs } from "@/lib/pdfjs-loader"
 
@@ -248,8 +246,6 @@ export default function ReorderPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Tool Header */}
         <section className="relative bg-[oklch(0.12_0.004_250)] px-4 pt-20 pb-10">
@@ -592,10 +588,9 @@ export default function ReorderPDFPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

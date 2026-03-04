@@ -2,8 +2,6 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { ArrowLeft, Info } from "lucide-react"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { ArticleShareRow } from "@/components/legacy/share-button"
 
 export const metadata: Metadata = {
@@ -58,8 +56,6 @@ export default function WhyOfflineCompressionHasLimitsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1 px-4 py-16 md:py-24">
         <article className="mx-auto max-w-2xl">
           {/* Breadcrumb */}
@@ -284,10 +280,9 @@ export default function WhyOfflineCompressionHasLimitsPage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Script from "next/script"
 import Link from "next/link"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Clock, Calendar, ArrowLeft } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -102,8 +100,6 @@ export default function WhatHappensWhenYouUploadPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         <article className="px-4 py-16 md:py-24">
           <div className="mx-auto max-w-2xl">
@@ -425,10 +421,9 @@ export default function WhatHappensWhenYouUploadPDFPage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

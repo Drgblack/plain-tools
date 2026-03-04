@@ -1,8 +1,5 @@
 import { Metadata } from "next"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "Plain vs iLovePDF",
   description:
@@ -34,7 +31,6 @@ export default function PlainVsILovePDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
       <main className="flex-1">
         <article className="px-4 py-16">
           <div className="mx-auto max-w-3xl">
@@ -219,9 +215,9 @@ export default function PlainVsILovePDFPage() {
           </div>
         </article>
       </main>
-      <Footer />
     </div>
   )
 }
+
 
 

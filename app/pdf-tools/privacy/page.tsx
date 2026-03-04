@@ -1,7 +1,4 @@
 import { Metadata } from "next"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "Privacy",
   description:
@@ -18,8 +15,6 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-
       <main className="flex-1 px-4 py-16">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -84,9 +79,8 @@ export default function PrivacyPage() {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 

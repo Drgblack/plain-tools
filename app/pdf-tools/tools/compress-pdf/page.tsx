@@ -5,8 +5,6 @@ import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, Info } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Button } from "@/components/legacy/ui/button"
 import { ShareButton } from "@/components/legacy/share-button"
 
@@ -172,8 +170,6 @@ export default function CompressPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative px-4 pt-16 pb-6 md:pt-20">
@@ -418,10 +414,9 @@ export default function CompressPDFPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

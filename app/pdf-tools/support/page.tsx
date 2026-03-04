@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { 
   ChevronDown, 
   ArrowLeft, 
@@ -242,7 +240,6 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-screen bg-[#000]">
-      <Header />
       <main>
         {/* Hero Section */}
         <section className="relative border-b border-[#333] px-4 py-16 md:py-24">
@@ -422,9 +419,9 @@ export default function SupportPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }
+
 
 

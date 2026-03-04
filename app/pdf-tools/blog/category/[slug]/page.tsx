@@ -3,8 +3,6 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import Script from "next/script"
 import { ChevronRight } from "lucide-react"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { categories, posts, getCategoryBySlug, type CategoryId } from "@/lib/legacy/blog-data"
 import { generateFAQSchema, generateBreadcrumbSchema, combineSchemas } from "@/lib/legacy/schema"
 
@@ -103,8 +101,6 @@ export default async function CategoryPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Hero */}
         <section className="border-b border-accent/10 bg-[oklch(0.12_0.004_250)] px-4 py-16 md:py-24">
@@ -272,10 +268,9 @@ export default async function CategoryPage({ params }: PageProps) {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

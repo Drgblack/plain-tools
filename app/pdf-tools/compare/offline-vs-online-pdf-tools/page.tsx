@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -110,7 +108,6 @@ export default function OfflineVsOnlinePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Header />
       <main className="min-h-screen bg-background">
         <article className="mx-auto max-w-3xl px-4 py-16 md:py-24">
           {/* Breadcrumb */}
@@ -464,9 +461,9 @@ export default function OfflineVsOnlinePage() {
           </div>
         </article>
       </main>
-      <Footer />
     </>
   )
 }
+
 
 

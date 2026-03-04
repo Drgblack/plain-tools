@@ -5,8 +5,6 @@ import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import { Button } from "@/components/legacy/ui/button"
 import { ShareButton } from "@/components/legacy/share-button"
 
@@ -233,8 +231,6 @@ export default function ExtractPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Tool Header */}
         <section className="relative bg-[oklch(0.12_0.004_250)] px-4 pt-20 pb-10">
@@ -581,9 +577,6 @@ export default function ExtractPDFPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
-
       <style jsx global>{`
         @keyframes processing-pulse {
           0%, 100% { opacity: 0.6; }
@@ -596,5 +589,6 @@ export default function ExtractPDFPage() {
     </div>
   )
 }
+
 
 

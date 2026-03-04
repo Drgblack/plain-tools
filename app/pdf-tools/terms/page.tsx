@@ -1,9 +1,6 @@
 import type { Metadata } from 'next'
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms of Service for Plain - the local-first PDF processing platform. All processing is executed locally on your device.',
@@ -45,7 +42,6 @@ const sections = [
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="relative px-4 py-16 md:py-24">
         {/* Background subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-[oklch(0.11_0.004_250)] pointer-events-none" />
@@ -124,9 +120,9 @@ export default function TermsOfServicePage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
+
 
 

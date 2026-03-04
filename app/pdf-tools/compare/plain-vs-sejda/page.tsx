@@ -1,9 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
-
 export const metadata: Metadata = {
   title: "Plain vs Sejda: Free Limits vs Unlimited Local Processing",
   description: "A technical comparison of Sejda's free-tier limits and online editing versus Plain's unlimited local PDF processing. Understand daily task limits versus offline execution.",
@@ -121,7 +118,6 @@ export default function PlainVsSejdaComparePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Header />
       <main className="flex-1">
         <article className="px-4 py-20">
           <div className="mx-auto max-w-2xl">
@@ -391,10 +387,9 @@ export default function PlainVsSejdaComparePage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 

@@ -2,8 +2,6 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { Globe, FolderTree, Link2, Languages } from "lucide-react"
-import { Header } from "@/components/legacy/header"
-import { Footer } from "@/components/legacy/footer"
 import {
   generateArticleSchema,
   generateBreadcrumbSchema,
@@ -65,8 +63,6 @@ export default function LanguageSupportPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
       />
-      <Header />
-
       <main className="flex-1">
         {/* Breadcrumb */}
         <div className="border-b border-accent/10 bg-[oklch(0.12_0.004_250)] px-4 py-3">
@@ -383,10 +379,9 @@ export default function LanguageSupportPage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 
 
