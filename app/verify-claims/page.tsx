@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { VerifyClaimsContent } from "@/components/verify-claims-content"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -64,12 +62,11 @@ export default function VerifyClaimsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
-      <Header />
       <main className="overflow-x-hidden">
         <VerifyClaimsContent />
       </main>
-      <Footer />
     </>
   )
 }
+
 

@@ -16,8 +16,16 @@ function titleCase(value: string) {
     .join(" ")
 }
 
-export function buildLearnArticleMetadata(article: TrancheLearnArticle): Metadata {
-  const canonical = `${BASE_URL}/learn/${article.slug}`
+type LearnTemplateOptions = {
+  basePath?: string
+}
+
+export function buildLearnArticleMetadata(
+  article: TrancheLearnArticle,
+  options?: LearnTemplateOptions
+): Metadata {
+  const basePath = options?.basePath ?? "/learn"
+  const canonical = `${BASE_URL}${basePath}/${article.slug}`
   const title = `${titleCase(article.primaryQuery)} - Offline & Private | Plain.tools`
   return {
     title,
@@ -39,7 +47,7 @@ export function buildLearnArticleMetadata(article: TrancheLearnArticle): Metadat
   }
 }
 
-function buildLearnSchema(article: TrancheLearnArticle) {
+function buildLearnSchema(article: TrancheLearnArticle, basePath: string, sectionLabel: string) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -57,21 +65,21 @@ function buildLearnSchema(article: TrancheLearnArticle) {
         },
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": `${BASE_URL}/learn/${article.slug}`,
+          "@id": `${BASE_URL}${basePath}/${article.slug}`,
         },
-        url: `${BASE_URL}/learn/${article.slug}`,
+        url: `${BASE_URL}${basePath}/${article.slug}`,
         inLanguage: "en-GB",
       },
       {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
-          { "@type": "ListItem", position: 2, name: "Learn", item: `${BASE_URL}/learn` },
+          { "@type": "ListItem", position: 2, name: sectionLabel, item: `${BASE_URL}${basePath}` },
           {
             "@type": "ListItem",
             position: 3,
             name: article.title,
-            item: `${BASE_URL}/learn/${article.slug}`,
+            item: `${BASE_URL}${basePath}/${article.slug}`,
           },
         ],
       },
@@ -92,10 +100,18 @@ function buildLearnSchema(article: TrancheLearnArticle) {
 
 type LearnArticleTemplateProps = {
   article: TrancheLearnArticle
+  routeBase?: string
+  routeLabel?: string
+  relatedLabel?: string
 }
 
-export function LearnArticleTemplate({ article }: LearnArticleTemplateProps) {
-  const schema = buildLearnSchema(article)
+export function LearnArticleTemplate({
+  article,
+  routeBase = "/learn",
+  routeLabel = "Learn",
+  relatedLabel = "Related workflows and guides",
+}: LearnArticleTemplateProps) {
+  const schema = buildLearnSchema(article, routeBase, routeLabel)
   const links = getLearnSeoLinks(article.slug)
 
   return (
@@ -105,8 +121,8 @@ export function LearnArticleTemplate({ article }: LearnArticleTemplateProps) {
       sections={article.sections}
       breadcrumbs={[
         { label: "Home", href: "/" },
-        { label: "Learn", href: "/learn" },
-        { label: article.title, href: `/learn/${article.slug}` },
+        { label: routeLabel, href: routeBase },
+        { label: article.title, href: `${routeBase}/${article.slug}` },
       ]}
       jsonLd={schema}
       disclaimer={article.disclaimer}
@@ -128,12 +144,34 @@ export function LearnArticleTemplate({ article }: LearnArticleTemplateProps) {
               links: links ? [links.primaryTool] : article.nextSteps.filter((step) => step.href.startsWith("/tools/")).slice(0, 1),
             },
             {
-              title: "Learn",
+              title: relatedLabel,
               links: links ? links.relatedLearn : article.nextSteps.filter((step) => step.href.startsWith("/learn/")).slice(0, 2),
+            },
+            {
+              title: "Privacy guides",
+              links: [
+                { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+                { label: "Why PDF Uploads Are Risky", href: "/learn/why-pdf-uploads-are-risky" },
+              ],
             },
             {
               title: "Verify",
               links: links ? [links.verify] : [{ label: "Verify Claims", href: "/verify-claims" }],
+            },
+            {
+              title: "Compare",
+              links:
+                article.nextSteps.filter((step) => step.href.startsWith("/compare")).slice(0, 1).length > 0
+                  ? article.nextSteps.filter((step) => step.href.startsWith("/compare")).slice(0, 1)
+                  : [{ label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" }],
+            },
+            {
+              title: "PDF tools hub",
+              links: [{ label: "Browse all PDF tools", href: "/pdf-tools/tools" }],
+            },
+            {
+              title: "Learn hub",
+              links: [{ label: "Browse all learn guides", href: "/learn" }],
             },
           ]}
         />

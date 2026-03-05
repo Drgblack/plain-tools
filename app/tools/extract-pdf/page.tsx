@@ -6,8 +6,6 @@ import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
@@ -277,7 +275,7 @@ export default function ExtractPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Tool Header */}
@@ -634,7 +632,7 @@ export default function ExtractPDFPage() {
                 <ToolRelatedLinks toolSlug="extract-pdf" className="mt-8" />
       </main>
 
-      <Footer />
+      
 
       <style jsx global>{`
         @keyframes processing-pulse {

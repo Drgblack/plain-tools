@@ -3,8 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { SummaryBox, KeyTerm } from "@/components/seo"
 import { TiltCard } from "@/components/ui/tilt-card"
@@ -162,9 +160,6 @@ export default function ComparePage() {
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <link rel="canonical" href="https://plain.tools/compare" />
-      
-      <Header />
-
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative border-b border-[#333] px-4 py-20 md:py-28">
@@ -456,8 +451,7 @@ export default function ComparePage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

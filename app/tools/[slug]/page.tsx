@@ -4,8 +4,6 @@ import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "re
 import Script from "next/script"
 
 import { ErrorBoundary } from "@/components/error-boundary"
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
@@ -174,7 +172,7 @@ export default async function ToolPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         <div className="container mx-auto py-8">
@@ -222,7 +220,7 @@ export default async function ToolPage({ params }: PageProps) {
         </div>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

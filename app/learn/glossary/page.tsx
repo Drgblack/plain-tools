@@ -3,8 +3,6 @@
 import { useState, useMemo, useEffect, useRef } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Search, ArrowLeft, BookOpen, ExternalLink } from "lucide-react"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -291,7 +289,7 @@ export default function GlossaryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLdSchema) }}
       />
-      <Header />
+      
       
       <main className="flex-1">
         {/* Hero Section */}
@@ -464,7 +462,7 @@ export default function GlossaryPage() {
         </section>
       </main>
       
-      <Footer />
+      
     </div>
   )
 }

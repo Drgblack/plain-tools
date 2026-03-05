@@ -6,8 +6,6 @@ import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { ShareButton } from "@/components/share-button"
@@ -298,7 +296,7 @@ export default function SplitPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Tool Header */}
@@ -752,7 +750,7 @@ export default function SplitPDFPage() {
                 <ToolRelatedLinks toolSlug="split-pdf" className="mt-8" />
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

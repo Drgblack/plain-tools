@@ -1,7 +1,5 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Check, X, Chrome, MousePointer, Zap, Shield, FileText } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -69,7 +67,6 @@ const useCases = [
 export default function ExtensionPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main>
         {/* Hero */}
         <section className="relative px-4 py-20 md:py-28">
@@ -305,7 +302,7 @@ export default function ExtensionPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }
+

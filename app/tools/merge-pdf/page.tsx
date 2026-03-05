@@ -5,8 +5,6 @@ import { useState, useCallback, useRef, useEffect } from "react"
 import { GripVertical, X, FileText, Plus, ShieldCheck, Zap } from "lucide-react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { ShareButton } from "@/components/share-button"
 import { PrivacyAudit } from "@/components/privacy-audit"
@@ -279,7 +277,7 @@ const mergePDFs = async () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Tool Header */}
@@ -709,9 +707,6 @@ const mergePDFs = async () => {
                 <ToolRelatedLinks toolSlug="merge-pdf" className="mt-8" />
       </main>
 
-      <div className="mt-auto w-full">
-        <Footer />
-      </div>
     </div>
   )
 }

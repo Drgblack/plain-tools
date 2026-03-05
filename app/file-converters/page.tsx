@@ -2,6 +2,7 @@
 
 import { FileType, Image, FileText, Upload, Download, ArrowRight } from "lucide-react"
 import { useState, useCallback } from "react"
+import Link from "next/link"
 import { ToolShell } from "@/components/tool-shell"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { converterRouteSlugs } from "@/lib/seo/file-converters-content"
 
 const relatedTools = [
   {
@@ -62,6 +64,13 @@ const formatOptions = [
   { value: "gif", label: "GIF" },
   { value: "bmp", label: "BMP" },
 ]
+
+function formatConverterTitle(slug: string) {
+  return slug
+    .split("-")
+    .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
+    .join(" ")
+}
 
 function FileConverterToolInterface() {
   const [file, setFile] = useState<File | null>(null)
@@ -212,7 +221,28 @@ export default function FileConvertersPage() {
           faqs={faqs}
           relatedTools={relatedTools}
     >
-      <FileConverterToolInterface />
+      <div className="space-y-8">
+        <FileConverterToolInterface />
+
+        <section className="rounded-lg border border-border bg-secondary/30 p-4">
+          <h2 className="text-lg font-semibold text-foreground">Popular conversion guides</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Step-by-step workflows with privacy-first handling. Runs locally in your browser. No uploads.
+          </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {converterRouteSlugs.map((slug) => (
+              <li key={slug}>
+                <Link
+                  href={`/file-converters/${slug}`}
+                  className="text-sm font-medium text-accent hover:underline"
+                >
+                  {formatConverterTitle(slug)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
     </ToolShell>
   )
 }

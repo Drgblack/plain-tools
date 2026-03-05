@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Script from "next/script"
 import Link from "next/link"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
@@ -84,7 +82,6 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-      <Header />
       <main className="flex-1 px-4 py-16">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -128,8 +125,8 @@ export default function FAQPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
+
 

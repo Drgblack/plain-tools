@@ -29,7 +29,7 @@ export function ToolWorkspace({
       {/* Workspace Header */}
       <header className="flex items-center justify-between border-b border-white/[0.08] bg-[oklch(0.115_0.008_250)] px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href="/tools" className="text-muted-foreground/70 hover:text-foreground transition-colors">
+          <Link href="/pdf-tools/tools" className="text-muted-foreground/70 hover:text-foreground transition-colors">
             <X className="h-5 w-5" strokeWidth={1.5} />
           </Link>
           <div className="h-5 w-px bg-white/[0.08]" />

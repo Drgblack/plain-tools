@@ -1,9 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema, generateTechArticleSchema } from "@/lib/schema"
 import { serializeJsonLd } from "@/lib/sanitize"
@@ -115,8 +112,6 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
-      <Header />
-
       <main className="flex-1 px-4 py-16 sm:py-20">
         <article className="mx-auto max-w-3xl space-y-10">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -214,8 +209,7 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
           </section>
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

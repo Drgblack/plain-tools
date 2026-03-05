@@ -2,8 +2,6 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -91,7 +89,7 @@ export default function PlainVsAdobeAcrobatPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-      <Header />
+      
       <main className="flex-1 px-4 py-14 sm:py-20">
         <article className="mx-auto max-w-4xl space-y-10">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -279,7 +277,7 @@ export default function PlainVsAdobeAcrobatPage() {
           </section>
         </article>
       </main>
-      <Footer />
+      
     </div>
   )
 }

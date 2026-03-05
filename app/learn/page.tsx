@@ -3,8 +3,6 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { FocusedSearch } from "@/components/ui/focused-search"
 import { SummaryBox, KeyTerm } from "@/components/seo"
@@ -122,8 +120,6 @@ export default function LearnPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
-      <Header />
-
       <main className="flex-1 [&_p]:text-base">
         {/* Hero Section - Compact */}
         <section className="relative px-4 py-14 md:py-18 border-b border-[#333]">
@@ -308,8 +304,7 @@ export default function LearnPage() {
           </div>
         </nav>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

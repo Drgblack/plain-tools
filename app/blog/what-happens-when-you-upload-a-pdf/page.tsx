@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Script from "next/script"
 import Link from "next/link"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Clock, Calendar, ArrowLeft } from "lucide-react"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -102,7 +100,7 @@ export default function WhatHappensWhenYouUploadPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         <article className="px-4 py-16 md:py-24">
@@ -426,7 +424,7 @@ export default function WhatHappensWhenYouUploadPDFPage() {
         </article>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

@@ -3,8 +3,6 @@
 import { useState, useEffect, ReactNode } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { AutoLinkContent } from "@/components/auto-link-content"
 import { motion, useScroll, useSpring } from "framer-motion"
 import { 
@@ -421,9 +419,6 @@ export function TechnicalArticle({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      
-      <Header />
-
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative border-b border-[#222] bg-[#000] px-4 py-16 md:py-24">
@@ -517,8 +512,6 @@ export function TechnicalArticle({
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
@@ -598,3 +591,4 @@ export function ArticleNote({ children, type = "info" }: { children: ReactNode; 
     </div>
   )
 }
+

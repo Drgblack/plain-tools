@@ -3,8 +3,6 @@
 import { useState, useMemo, useCallback } from "react"
 import Link from "next/link"
 import { Search, Clock, Share2, X, ChevronRight, ExternalLink } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { SummaryBox, KeyTerm } from "@/components/seo"
 import { sanitizeInlineHtml } from "@/lib/sanitize"
@@ -664,8 +662,6 @@ export default function BlogPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#000]">
-      <Header />
-
       {/* Share Overlay */}
       <ShareOverlay
         isOpen={!!sharePost}
@@ -1054,8 +1050,7 @@ export default function BlogPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

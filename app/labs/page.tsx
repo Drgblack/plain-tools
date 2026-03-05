@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { PerformanceBenchmark } from "@/components/performance-benchmark"
 import { ArrowLeft, FlaskConical } from "lucide-react"
 import Link from "next/link"
@@ -13,7 +11,6 @@ export const metadata: Metadata = {
 export default function LabsPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="px-4 py-20 md:py-28 [&_p]:text-base">
         <div className="mx-auto max-w-4xl">
           {/* Back link */}
@@ -72,8 +69,8 @@ export default function LabsPage() {
           </section>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
+
 

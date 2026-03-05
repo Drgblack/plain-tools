@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import LocalSignerTool from "@/components/tools/local-signer-tool"
 
 export const metadata: Metadata = {
@@ -22,7 +20,7 @@ export const metadata: Metadata = {
 export default function LocalSignerPage() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
-      <Header />
+      
 
       <main className="flex-1 px-4 py-8 sm:py-10">
         <div className="mx-auto max-w-5xl space-y-6">
@@ -41,7 +39,7 @@ export default function LocalSignerPage() {
                 <ToolRelatedLinks toolSlug="local-signer" className="mt-8" />
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

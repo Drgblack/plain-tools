@@ -1,10 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
-
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
@@ -14,8 +10,6 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-
       <main className="flex-1 px-4 py-16">
         <div className="mx-auto max-w-3xl space-y-10">
           <Link
@@ -88,8 +82,7 @@ export default function TermsPage() {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

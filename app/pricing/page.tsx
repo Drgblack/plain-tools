@@ -4,9 +4,6 @@ import { useMemo, useState } from "react"
 import { CheckCircle2, Loader2, Sparkles } from "lucide-react"
 import Script from "next/script"
 import { toast, Toaster } from "sonner"
-
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -120,9 +117,6 @@ export default function PricingPage() {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
-
-      <Header />
-
       <main className="flex-1 px-4 py-16 sm:py-20">
         <div className="mx-auto max-w-5xl space-y-8">
           <div className="text-center">
@@ -264,8 +258,7 @@ export default function PricingPage() {
           </Card>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+

@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ArticleShareRow } from "@/components/share-button"
 import { ChevronRight } from "lucide-react"
 import {
@@ -76,7 +74,7 @@ export default function OnlineVsOfflinePdfToolsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
-      <Header />
+      
 
       <main className="flex-1 px-4 py-16 md:py-24">
         <article className="mx-auto max-w-2xl">
@@ -385,7 +383,7 @@ export default function OnlineVsOfflinePdfToolsPage() {
         </article>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

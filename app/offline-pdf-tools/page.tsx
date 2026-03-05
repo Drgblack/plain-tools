@@ -1,7 +1,4 @@
 import { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-
 export const metadata: Metadata = {
   title: "Offline PDF Tools Explained",
   description: "Plain explains how offline PDF tools work and why local processing matters for file privacy. Built for private, offline-first PDF workflows with clear.",
@@ -17,8 +14,6 @@ export const metadata: Metadata = {
 export default function OfflinePdfToolsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
-
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-4 py-16">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -169,9 +164,8 @@ export default function OfflinePdfToolsPage() {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }
+
 

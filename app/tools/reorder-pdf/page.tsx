@@ -6,8 +6,6 @@ import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, Chevron
 import Link from "next/link"
 import Image from "next/image"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
@@ -264,7 +262,7 @@ export default function ReorderPDFPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Tool Header */}
@@ -628,7 +626,7 @@ export default function ReorderPDFPage() {
                 <ToolRelatedLinks toolSlug="reorder-pdf" className="mt-8" />
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

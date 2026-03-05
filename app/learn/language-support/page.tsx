@@ -2,8 +2,6 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { Globe, FolderTree, Link2, Languages } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import {
   generateArticleSchema,
   generateBreadcrumbSchema,
@@ -65,7 +63,7 @@ export default function LanguageSupportPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Breadcrumb */}
@@ -384,7 +382,7 @@ export default function LanguageSupportPage() {
         </article>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

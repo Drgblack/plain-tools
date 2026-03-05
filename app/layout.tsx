@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
+import { AppShellChrome } from '@/components/app-shell-chrome'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -70,12 +68,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased min-h-screen flex flex-col bg-background text-foreground">
-        <SiteHeader />
-        <main className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
-        <Analytics />
+        <AppShellChrome>{children}</AppShellChrome>
       </body>
     </html>
   )

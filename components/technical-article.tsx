@@ -3,8 +3,6 @@
 import { useState, ReactNode } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { AutoLinkContent } from "@/components/auto-link-content"
 import { motion, useScroll, useSpring } from "framer-motion"
 import { 
@@ -428,7 +426,7 @@ export function TechnicalArticle({
         />
       )}
       
-      <Header />
+      
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -524,7 +522,7 @@ export function TechnicalArticle({
         </section>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

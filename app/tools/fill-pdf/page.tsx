@@ -4,8 +4,6 @@ import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
 import { Lock, Sparkles } from "lucide-react"
 
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import FillPdfTool from "@/components/tools/fill-pdf-tool"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -49,7 +47,7 @@ export default async function FillPdfPage() {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
-      <Header />
+      
 
       <main className="flex-1 px-4 py-8 sm:py-10">
         <div className="mx-auto max-w-4xl space-y-6">
@@ -106,7 +104,7 @@ export default async function FillPdfPage() {
                 <ToolRelatedLinks toolSlug="fill-pdf" className="mt-8" />
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

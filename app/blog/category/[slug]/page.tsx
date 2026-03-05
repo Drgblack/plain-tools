@@ -3,8 +3,6 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import Script from "next/script"
 import { ChevronRight } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { categories, posts, getCategoryBySlug } from "@/lib/blog-data"
 import { generateFAQSchema, combineSchemas } from "@/lib/schema"
 import { serializeJsonLd } from "@/lib/sanitize"
@@ -104,7 +102,7 @@ export default async function CategoryPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
-      <Header />
+      
 
       <main className="flex-1">
         {/* Hero */}
@@ -274,7 +272,7 @@ export default async function CategoryPage({ params }: PageProps) {
         </section>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

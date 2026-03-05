@@ -3,8 +3,6 @@
 import { useState, useEffect, Children, isValidElement } from "react"
 import Link from "next/link"
 import Script from "next/script"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { TechnicalFigure } from "@/components/seo"
 import { AutoLinkContent } from "@/components/auto-link-content"
 import { BlogSchema, isQuestionTitle } from "@/components/blog-schema"
@@ -524,7 +522,7 @@ export function BlogArticle({
     proficiencyLevel="Professional"
   />
   
-  <Header />
+  
 
       <main className="flex-1 hero-grid-pattern">
         <article className="px-4 py-16 md:py-24">
@@ -667,7 +665,7 @@ export function BlogArticle({
         </article>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

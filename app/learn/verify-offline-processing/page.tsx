@@ -2,8 +2,6 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { ChevronRight } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import {
   generateTechArticleSchema,
   generateBreadcrumbSchema,
@@ -110,7 +108,7 @@ export default function VerifyOfflineProcessingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
       />
-      <Header />
+      
 
       <main className="flex-1 px-4 py-16 md:py-24">
         <article className="mx-auto max-w-2xl">
@@ -490,7 +488,7 @@ export default function VerifyOfflineProcessingPage() {
         </article>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next"
 
+import { converterSitemapUrls } from "@/lib/seo/file-converters-content"
 import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
+import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 const BASE_URL = "https://plain.tools"
@@ -55,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }))
 
-  const tranchePages = trancheSitemapUrls.map((path) => ({
+  const tranchePages = [...trancheSitemapUrls, ...workflowSitemapUrls, ...converterSitemapUrls].map((path) => ({
     url: `${BASE_URL}${path}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
@@ -64,4 +66,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [homepage, ...staticHigh, ...staticCore, ...toolPages, ...tranchePages]
 }
-

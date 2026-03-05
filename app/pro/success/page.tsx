@@ -2,8 +2,6 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { CheckCircle2, Sparkles } from "lucide-react"
 
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -18,7 +16,7 @@ export const metadata: Metadata = {
 export default function ProSuccessPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      
       <main className="flex-1 px-4 py-16">
         <div className="mx-auto max-w-2xl">
           <Card>
@@ -62,7 +60,7 @@ export default function ProSuccessPage() {
           </Card>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

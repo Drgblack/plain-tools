@@ -1,4 +1,6 @@
 import { comparePages, learnPages } from "@/lib/seo/tranche1-content"
+import { converterPages } from "@/lib/seo/file-converters-content"
+import { workflowPages } from "@/lib/seo/workflows-content"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export type RouteLink = {
@@ -182,13 +184,22 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
   },
 }
 
-const learnTitleBySlug = new Map(learnPages.map((page) => [page.slug, page.title]))
+const allLearnPages = [...learnPages, ...workflowPages, ...converterPages]
+const learnTitleBySlug = new Map(allLearnPages.map((page) => [page.slug, page.title]))
+const converterSlugSet = new Set(converterPages.map((page) => page.slug))
+
+function buildLearnRouteFromSlug(slug: string) {
+  if (converterSlugSet.has(slug)) {
+    return `/file-converters/${slug}`
+  }
+  return `/learn/${slug}`
+}
 
 export const LEARN_TO_SEO_LINKS: Record<string, LearnLinkRule> = Object.fromEntries(
-  learnPages.map((article) => {
+  allLearnPages.map((article) => {
     const relatedLearn = article.relatedLearn.slice(0, 2).map((slug) => ({
       label: learnTitleBySlug.get(slug) ?? slug,
-      href: `/learn/${slug}`,
+      href: buildLearnRouteFromSlug(slug),
     }))
     return [
       article.slug,
