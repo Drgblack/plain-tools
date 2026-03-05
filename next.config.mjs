@@ -24,6 +24,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/pdf-tools/blog',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/pdf-tools/blog/:path*',
+        destination: '/blog/:path*',
+        permanent: true,
+      },
+      {
         source: '/pdf-tools/compare',
         destination: '/compare',
         permanent: true,
@@ -31,6 +41,21 @@ const nextConfig = {
       {
         source: '/pdf-tools/compare/:path*',
         destination: '/compare/:path*',
+        permanent: true,
+      },
+      {
+        source: '/verify',
+        destination: '/verify-claims',
+        permanent: true,
+      },
+      {
+        source: '/pdf-tools/verify',
+        destination: '/verify-claims',
+        permanent: true,
+      },
+      {
+        source: '/pdf-tools/verify-claims',
+        destination: '/verify-claims',
         permanent: true,
       },
     ]

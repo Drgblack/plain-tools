@@ -46,7 +46,7 @@ export function SeoContent() {
             <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 transition-all duration-200 group-hover:text-accent group-hover:translate-x-0.5" strokeWidth={2} />
           </Link>
           <Link
-            href="/verify"
+            href="/verify-claims"
             className="group flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-200 hover:border-accent/20 hover:bg-accent/[0.04]"
           >
             <div className="flex items-center gap-3">

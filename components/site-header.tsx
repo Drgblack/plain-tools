@@ -16,7 +16,7 @@ const navItems = [
   { name: "PDF Tools", href: "/pdf-tools" },
   { name: "Calculators", href: "https://plainfigures.org", external: true },
   { name: "About", href: "/about" },
-  { name: "Verify", href: "/verify" },
+  { name: "Verify", href: "/verify-claims" },
   { name: "TimeMeaning", href: "https://timemeaning.com", external: true },
 ]
 

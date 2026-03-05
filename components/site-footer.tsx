@@ -30,9 +30,9 @@ const footerSections = [
   {
     title: "Verify",
     links: [
-      { name: "Verify claims", href: "/verify" },
+      { name: "Verify claims", href: "/verify-claims" },
       { name: "View source", href: "https://github.com", external: true },
-      { name: "How it works", href: "/verify#how-it-works" },
+      { name: "How it works", href: "/verify-claims#how-it-works" },
     ],
   },
   {
@@ -94,7 +94,7 @@ export function SiteFooter() {
             All tools run locally. Nothing is uploaded.
           </p>
           <Link
-            href="/verify"
+            href="/verify-claims"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:text-foreground focus-visible:underline"
           >
             View source to verify claims

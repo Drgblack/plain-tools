@@ -281,6 +281,21 @@ const nextConfig: NextConfig = {
         destination: "/compare/:path*",
         permanent: true,
       },
+      {
+        source: "/verify",
+        destination: "/verify-claims",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/verify",
+        destination: "/verify-claims",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/verify-claims",
+        destination: "/verify-claims",
+        permanent: true,
+      },
 
       // Legacy blog slug migrations to canonical published posts.
       ...legacyBlogSlugRedirects,

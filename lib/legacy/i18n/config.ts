@@ -220,7 +220,7 @@ export const routePatterns = {
   about: "/about",
   faq: "/faq",
   privacy: "/privacy",
-  verify: "/verify",
+  verify: "/verify-claims",
   
   // Tool pages
   mergePdf: "/tools/merge-pdf",

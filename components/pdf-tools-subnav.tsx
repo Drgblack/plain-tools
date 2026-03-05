@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils"
 const subnavItems = [
   { label: "Home", href: "/" },
   { label: "Tools", href: "/pdf-tools/tools", matches: ["/pdf-tools", "/pdf-tools/tools"] },
-  { label: "Learn", href: "/pdf-tools/learn" },
-  { label: "Blog", href: "/pdf-tools/blog" },
-  { label: "Verify claims", href: "/pdf-tools/verify-claims" },
+  { label: "Learn", href: "/learn" },
+  { label: "Blog", href: "/blog" },
+  { label: "Compare", href: "/compare" },
+  { label: "Verify claims", href: "/verify-claims" },
 ]
 
 function isActive(pathname: string, href: string, matches?: string[]) {

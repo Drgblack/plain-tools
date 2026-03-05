@@ -51,7 +51,7 @@ const commands: CommandItem[] = [
   // Company
   { id: "about", name: "About", description: "Learn about plain.tools", href: "/about", icon: <Info className="h-4 w-4" />, category: "Company" },
   { id: "privacy", name: "Privacy", description: "Our privacy policy", href: "/privacy", icon: <Shield className="h-4 w-4" />, category: "Company" },
-  { id: "verify", name: "Verify", description: "Verify our privacy claims", href: "/verify", icon: <CheckCircle className="h-4 w-4" />, category: "Company" },
+  { id: "verify", name: "Verify", description: "Verify our privacy claims", href: "/verify-claims", icon: <CheckCircle className="h-4 w-4" />, category: "Company" },
   
   // External
   { id: "calculators", name: "Calculators", description: "plainfigures.org", href: "https://plainfigures.org", icon: <Calculator className="h-4 w-4" />, category: "External" },
