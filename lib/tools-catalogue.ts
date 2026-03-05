@@ -159,6 +159,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "pdf-to-jpg",
+    name: "PDF to JPG",
+    slug: "pdf-to-jpg",
+    category: "Core",
+    description: "Convert PDF pages to JPG images locally with adjustable quality and scale.",
+    badge: "100% Local",
+    icon: "FileImage",
+    available: true,
+  },
+  {
     id: "word-to-pdf",
     name: "Word to PDF",
     slug: "word-to-pdf",

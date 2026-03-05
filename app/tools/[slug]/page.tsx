@@ -30,6 +30,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
   "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
   "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
+  "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
 }
 
 const FallbackToolComponent = () => <div>Tool UI coming soon</div>
