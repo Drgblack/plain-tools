@@ -1,10 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
+import type { ReactNode } from "react"
+
 import { Button } from "@/components/ui/button"
-import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema, generateTechArticleSchema } from "@/lib/schema"
+import { combineSchemas, generateFAQSchema, generateTechArticleSchema } from "@/lib/schema"
 import { serializeJsonLd } from "@/lib/sanitize"
 import { getToolBySlug } from "@/lib/tools-catalogue"
+
+const SITE_URL = "https://plain.tools"
 
 export type LearnArticleSection = {
   heading: string
@@ -25,6 +29,7 @@ export type LearnArticleData = {
   keywords: string[]
   intro: string[]
   sections: LearnArticleSection[]
+  customContent?: ReactNode
   faqs: {
     question: string
     answer: string
@@ -38,36 +43,87 @@ export type LearnArticleData = {
     href: string
     text: string
   }
+  basePath?: string
+  sectionLabel?: string
+  extraSchemas?: Record<string, unknown>[]
 }
 
-export const buildLearnArticleMetadata = (article: LearnArticleData): Metadata => ({
-  title: `${article.title} - Plain Learn`,
-  description: article.description,
-  keywords: article.keywords,
-  alternates: {
-    canonical: `https://plain.tools/learn/${article.slug}`,
-    languages: {
-      en: `https://plain.tools/learn/${article.slug}`,
-      de: `https://plain.tools/learn/${article.slug}`,
-      "x-default": `https://plain.tools/learn/${article.slug}`,
+type MetadataOptions = {
+  basePath?: string
+}
+
+export const buildLearnArticleMetadata = (
+  article: LearnArticleData,
+  options?: MetadataOptions
+): Metadata => {
+  const basePath = options?.basePath ?? article.basePath ?? "/learn"
+  const canonicalUrl = `${SITE_URL}${basePath}/${article.slug}`
+
+  return {
+    title: `${article.title} - Plain Learn`,
+    description: article.description,
+    keywords: article.keywords,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        en: canonicalUrl,
+        de: canonicalUrl,
+        "x-default": canonicalUrl,
+      },
     },
-  },
-  openGraph: {
-    title: `${article.title} - Plain`,
-    description: article.description,
-    url: `https://plain.tools/learn/${article.slug}`,
-    type: "article",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${article.title} - Plain`,
-    description: article.description,
-  },
-})
+    openGraph: {
+      title: `${article.title} - Plain`,
+      description: article.description,
+      url: canonicalUrl,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${article.title} - Plain`,
+      description: article.description,
+    },
+  }
+}
+
+function buildBreadcrumbSchema(
+  sectionLabel: string,
+  sectionPath: string,
+  articleTitle: string,
+  canonicalUrl: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: sectionLabel,
+        item: `${SITE_URL}${sectionPath}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: articleTitle,
+        item: canonicalUrl,
+      },
+    ],
+  }
+}
 
 export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) {
   const publishedIso = article.published ?? "2026-03-03"
   const modifiedIso = "2026-03-03"
+  const basePath = article.basePath ?? "/learn"
+  const sectionLabel = article.sectionLabel ?? "Learn"
+  const canonicalUrl = `${SITE_URL}${basePath}/${article.slug}`
+
   const ctaSlug = article.cta.href.startsWith("/tools/")
     ? article.cta.href.replace("/tools/", "")
     : null
@@ -76,7 +132,7 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
     ? `Try ${ctaTool.name} — free, no upload required \u2192`
     : `${article.cta.label} \u2192`
 
-  const schema = combineSchemas([
+  const schemas: (Record<string, unknown> | null)[] = [
     {
       "@context": "https://schema.org",
       "@type": "Article",
@@ -90,20 +146,34 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
       dateModified: modifiedIso,
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": `https://plain.tools/learn/${article.slug}`,
+        "@id": canonicalUrl,
       },
+      url: canonicalUrl,
     },
-    generateTechArticleSchema({
-      title: article.title,
-      description: article.description,
-      slug: article.slug,
-      datePublished: publishedIso,
-      dateModified: modifiedIso,
-      proficiencyLevel: "Beginner",
-    }),
-    generateBreadcrumbSchema([{ name: article.title, slug: article.slug }]),
+    buildBreadcrumbSchema(sectionLabel, basePath, article.title, canonicalUrl),
     generateFAQSchema(article.faqs),
-  ])
+  ]
+
+  if (basePath === "/learn") {
+    schemas.splice(
+      1,
+      0,
+      generateTechArticleSchema({
+        title: article.title,
+        description: article.description,
+        slug: article.slug,
+        datePublished: publishedIso,
+        dateModified: modifiedIso,
+        proficiencyLevel: "Beginner",
+      }) as Record<string, unknown>
+    )
+  }
+
+  if (article.extraSchemas && article.extraSchemas.length > 0) {
+    schemas.push(...article.extraSchemas)
+  }
+
+  const schema = combineSchemas(schemas)
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -119,8 +189,8 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
               Home
             </Link>
             <span>/</span>
-            <Link href="/learn" className="hover:text-foreground">
-              Learn
+            <Link href={basePath} className="hover:text-foreground">
+              {sectionLabel}
             </Link>
             <span>/</span>
             <span className="text-foreground">{article.title}</span>
@@ -142,28 +212,34 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
             </div>
           </header>
 
-          {article.sections.map((section) => (
-            <section key={section.heading} className="space-y-4">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                {section.heading}
-              </h2>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph} className="text-base leading-relaxed text-muted-foreground">
-                  {paragraph}
-                </p>
-              ))}
-              {section.subSections?.map((subSection) => (
-                <div key={subSection.heading} className="space-y-3 rounded-lg border border-white/[0.08] p-4">
-                  <h3 className="text-lg font-semibold text-foreground">{subSection.heading}</h3>
-                  {subSection.paragraphs.map((paragraph) => (
-                    <p key={paragraph} className="text-base leading-relaxed text-muted-foreground">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              ))}
+          {article.customContent ? (
+            <section className="space-y-6 text-base leading-relaxed text-muted-foreground">
+              {article.customContent}
             </section>
-          ))}
+          ) : (
+            article.sections.map((section) => (
+              <section key={section.heading} className="space-y-4">
+                <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                  {section.heading}
+                </h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="text-base leading-relaxed text-muted-foreground">
+                    {paragraph}
+                  </p>
+                ))}
+                {section.subSections?.map((subSection) => (
+                  <div key={subSection.heading} className="space-y-3 rounded-lg border border-white/[0.08] p-4">
+                    <h3 className="text-lg font-semibold text-foreground">{subSection.heading}</h3>
+                    {subSection.paragraphs.map((paragraph) => (
+                      <p key={paragraph} className="text-base leading-relaxed text-muted-foreground">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </section>
+            ))
+          )}
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">FAQ</h2>
@@ -181,7 +257,7 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              Related Learn Articles
+              Related Resources
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {article.relatedLearn.map((item) => (
@@ -212,4 +288,3 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
     </div>
   )
 }
-

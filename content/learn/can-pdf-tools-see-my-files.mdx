@@ -1,0 +1,117 @@
+---
+title: "Can PDF Tools See My Files?"
+description: "Learn what PDF tools can and cannot access, how local processing works, and how to verify file privacy with practical browser checks."
+updated: "5 March 2026"
+readTime: "8 min read"
+keywords:
+  - "can pdf tools see my files"
+  - "pdf privacy"
+  - "local pdf processing"
+  - "no upload pdf tools"
+intro:
+  - "Some PDF tools can see your files because they upload documents to remote servers before processing. Others process the file entirely in your browser tab. Runs locally in your browser. No uploads."
+  - "The difference matters when handling contracts, identity documents, or internal reports. This guide shows what is technically visible to a tool provider, how to test claims yourself, and how to choose lower-risk workflows."
+faqs:
+  - question: "Can a website read my file if I never click upload?"
+    answer: "A website can only process file bytes once you explicitly select a file in the file picker or drop zone. You can still verify whether it sends those bytes off-device by checking network requests while processing."
+  - question: "What does local processing actually mean?"
+    answer: "It means processing happens inside your browser runtime on your device, rather than on a provider-controlled server. You should still verify this behaviour using DevTools instead of trusting copy alone."
+  - question: "Do local tools still need internet access?"
+    answer: "Usually only for the initial page load and static assets. After loading, many local PDF operations continue offline."
+  - question: "Can I use this approach for compliance-sensitive documents?"
+    answer: "It can reduce transfer exposure, but compliance obligations vary by organisation and jurisdiction. Treat this as technical guidance, not legal advice."
+  - question: "Where should I start if my team is unsure?"
+    answer: "Run a controlled test with a dummy PDF, inspect network traffic, and document what you observed. Then set handling rules by document sensitivity."
+relatedLinks:
+  - label: "Verify Claims"
+    href: "/verify-claims"
+  - label: "PDF tools hub"
+    href: "/pdf-tools"
+  - label: "How to audit PDF tool network requests"
+    href: "/learn/how-to-audit-pdf-tool-network-requests"
+  - label: "No Uploads Explained"
+    href: "/learn/no-uploads-explained"
+  - label: "Best PDF tools with no upload"
+    href: "/compare/best-pdf-tools-no-upload"
+cta:
+  label: "Try a local workflow"
+  href: "/pdf-tools/tools"
+  text: "Open the tools hub and run a file operation locally. Then verify the same session in your network inspector."
+---
+
+## Direct answer
+
+If a PDF tool uploads your document to a server, the provider can technically access file contents during processing and potentially retain logs or derived data according to its own policies. If a PDF tool runs locally in the browser, processing happens on-device and the provider should not receive the file bytes.
+
+The practical point is verification. Marketing copy is not enough. Use [Verify Claims](/verify-claims) as a baseline and run your own checks.
+
+## How tool architectures differ
+
+### Upload-first tools
+
+Upload-first workflows typically follow this path:
+
+1. You pick a file.
+2. The browser sends that file to a remote endpoint.
+3. Processing happens server-side.
+4. A processed file is returned.
+
+That model can work for convenience, but it introduces transfer and retention surfaces outside your direct control.
+
+### Local browser tools
+
+Local workflows process bytes in the current browser session, often using WebAssembly libraries. The output is generated in-browser and offered as a download. This model reduces transfer exposure because there is no required file upload step.
+
+For a quick starting point, see [No Uploads Explained](/learn/no-uploads-explained).
+
+## How to verify in practice
+
+Use a test file that contains obvious marker text, not sensitive data.
+
+### Step 1 - Open DevTools network panel
+
+- Open the site in a fresh tab.
+- Open DevTools.
+- Go to **Network**.
+- Enable **Preserve log**.
+- Filter to **Fetch/XHR**.
+
+### Step 2 - Run one operation
+
+Use one operation from [/pdf-tools](/pdf-tools), for example merge or split. Process the file once.
+
+### Step 3 - Inspect requests
+
+Look for requests made after file selection and during processing.
+
+Check:
+
+- Request URL and domain
+- Payload size
+- Request body type
+- Response timing
+
+### Step 4 - Separate asset traffic from file traffic
+
+It is normal to see static assets (JS, CSS, fonts, analytics scripts). That is not the same as your PDF file being uploaded. Focus on requests whose payload size tracks your file operation.
+
+For a full procedure with screenshots and red flags, use [How to audit PDF tool network requests](/learn/how-to-audit-pdf-tool-network-requests).
+
+## Common false signals
+
+- **"No upload" but hidden background transfer**: always verify with DevTools.
+- **Large response mistaken for upload**: responses can be script bundles or worker assets.
+- **Small request mistaken for safe processing**: metadata or event payloads may still leave the browser.
+
+Treat verification as a repeatable checklist, not a one-off test.
+
+## A practical policy for teams
+
+If your team handles sensitive PDFs, define a simple handling policy:
+
+- Default to local processing routes.
+- Use upload-based tools only when there is a documented need.
+- Record verification evidence for key workflows.
+- Re-test when tools or browser versions change.
+
+This approach keeps decisions technical and auditable without overcomplicating daily work.

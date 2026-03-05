@@ -1,0 +1,116 @@
+---
+title: "Prepare PDF for Government Portal Upload"
+description: "Practical workflow for preparing PDFs for government portal limits, including compression, splitting, validation, and privacy checks."
+updated: "5 March 2026"
+readTime: "9 min read"
+keywords:
+  - "prepare pdf for government portal upload"
+  - "government portal pdf limit"
+  - "compress pdf for portal"
+  - "split pdf for online forms"
+intro:
+  - "Government portals often reject PDF submissions for avoidable reasons such as size limits, wrong page order, or unsupported formatting. Runs locally in your browser. No uploads."
+  - "Use this checklist to prepare files before submission, reduce repeat uploads, and keep sensitive data handling predictable."
+faqs:
+  - question: "What is the most common portal rejection reason?"
+    answer: "File size and formatting mismatches are the most common issues, followed by missing pages and incorrect naming conventions."
+  - question: "Should I merge or compress first?"
+    answer: "Usually merge first, then compress once on the final file so quality and page consistency are easier to validate."
+  - question: "Can I split one document into required attachments?"
+    answer: "Yes. If a portal needs separate uploads, split by page range and name each output clearly before upload."
+  - question: "How can I verify privacy before submission?"
+    answer: "Run one local processing test and check network traffic with DevTools. Also remove metadata where appropriate."
+  - question: "Is this legal advice for immigration or visa applications?"
+    answer: "No. This is technical workflow guidance only. Always follow the official instructions from the issuing authority."
+relatedLinks:
+  - label: "PDF tools hub"
+    href: "/pdf-tools"
+  - label: "How to merge PDFs offline"
+    href: "/learn/how-to-merge-pdfs-offline"
+  - label: "How to split a PDF by pages"
+    href: "/learn/how-to-split-a-pdf-by-pages"
+  - label: "How to remove PDF metadata"
+    href: "/learn/how-to-remove-pdf-metadata"
+  - label: "Offline vs online PDF tools"
+    href: "/compare/offline-vs-online-pdf-tools"
+  - label: "Verify Claims"
+    href: "/verify-claims"
+cta:
+  label: "Start with local tools"
+  href: "/pdf-tools/tools"
+  text: "Open merge, split, or compress tools and run this workflow end to end before your portal deadline."
+---
+
+## Step 1 - Confirm portal requirements first
+
+Before touching the file, collect the portal rules:
+
+- maximum file size
+- accepted file format
+- per-file or total upload limits
+- required page order
+- naming rules
+
+Many submission failures come from missing these basics.
+
+## Step 2 - Build the document package
+
+### When one final PDF is required
+
+1. Merge source files in final reading order.
+2. Check page sequence manually.
+3. Compress once on the merged file.
+4. Validate readability on key pages.
+
+### When multiple PDFs are required
+
+1. Split by page ranges based on the portal sections.
+2. Name files with clear prefixes.
+3. Keep each file under the portal limit.
+
+If needed, use [How to split a PDF by pages](/learn/how-to-split-a-pdf-by-pages) for range handling.
+
+## Step 3 - Validate quality before upload
+
+Do a quick visual check:
+
+- first page and last page
+- any signature or stamp areas
+- scanned pages with small text
+- orientation and rotation consistency
+
+If quality drops too far after compression, reduce compression level and re-check.
+
+## Step 4 - Run privacy checks
+
+For sensitive IDs, financial records, or supporting letters:
+
+- minimise included pages
+- remove unnecessary metadata
+- avoid sharing full source bundles when only extracts are required
+
+Use [How to remove PDF metadata](/learn/how-to-remove-pdf-metadata) for a metadata pass.
+
+## Step 5 - Verify local processing claim
+
+If privacy is critical, verify the tool path technically:
+
+1. Open DevTools network tab.
+2. Process a sample file.
+3. Confirm there is no request carrying file bytes.
+
+You can follow [/verify-claims](/verify-claims) to run this quickly.
+
+## Step 6 - Final upload checklist
+
+- Correct file names
+- Correct file size limits
+- Correct page order
+- Correct language/translation attachments where required
+- Local archive copy saved with date stamp
+
+A short checklist saves more time than repeated portal retries.
+
+## Practical note
+
+Portal behaviour changes over time. Re-check official requirements each time you submit, even if you used the same portal last month.

@@ -1,0 +1,134 @@
+---
+title: "How to Audit PDF Tool Network Requests"
+description: "Step-by-step guide to check whether a PDF tool sends your file over the network using browser DevTools and practical verification checks."
+updated: "5 March 2026"
+readTime: "10 min read"
+keywords:
+  - "how to audit pdf tool network requests"
+  - "verify no upload pdf"
+  - "devtools pdf privacy"
+  - "network tab pdf check"
+intro:
+  - "You can verify whether a PDF tool uploads files by watching real network traffic while processing a test document. Runs locally in your browser. No uploads."
+  - "This guide gives a repeatable method for Chrome, Edge, Firefox, and Safari so teams can validate privacy claims with evidence rather than assumptions."
+faqs:
+  - question: "Do I need technical skills to run this audit?"
+    answer: "Basic familiarity with browser DevTools is enough. Follow the checklist step by step and focus on request timing, size, and payload clues."
+  - question: "What should I use as a test file?"
+    answer: "Use a harmless sample PDF with marker text so you can run multiple tests safely without exposing sensitive data."
+  - question: "What is a clear upload red flag?"
+    answer: "A request sent after file selection with a multipart or binary payload sized similarly to your document is a strong indicator that file data left the browser."
+  - question: "Can I trust one successful test forever?"
+    answer: "No. Re-run checks after major tool updates, browser updates, or architecture changes."
+  - question: "Should I also test offline mode?"
+    answer: "Yes. Offline testing helps confirm whether processing genuinely happens on-device after initial page load."
+  - question: "Is this compliance advice?"
+    answer: "No. This is technical verification guidance."
+relatedLinks:
+  - label: "Verify Claims"
+    href: "/verify-claims"
+  - label: "Can PDF tools see my files?"
+    href: "/learn/can-pdf-tools-see-my-files"
+  - label: "No Uploads Explained"
+    href: "/learn/no-uploads-explained"
+  - label: "Plain vs PDF24"
+    href: "/compare/plain-vs-pdf24"
+  - label: "PDF tools hub"
+    href: "/pdf-tools"
+cta:
+  label: "Run the audit with a local tool"
+  href: "/pdf-tools/tools"
+  text: "Open a tool, process a sample file, and run this audit checklist in the same session."
+---
+
+## Why this audit matters
+
+Privacy claims should be testable. If a provider says it does not upload files, you should be able to confirm that through network inspection during real operations.
+
+This process is designed to be lightweight enough for one person and structured enough for team policy evidence.
+
+## Audit setup
+
+### Browser prep
+
+- Open a new private/incognito window.
+- Disable extensions that alter traffic if possible.
+- Open the target tool page.
+
+### DevTools prep
+
+- Open **Network**.
+- Enable **Preserve log**.
+- Disable cache during the test.
+- Set filter to **Fetch/XHR**.
+
+Keep the panel open during the full operation.
+
+## Run a controlled test
+
+### Step 1 - Baseline before file selection
+
+Load the page and wait until initial requests settle. Note which domains are present before any file operation.
+
+### Step 2 - Select a test file
+
+Use a known sample from your own machine and run one operation through [/pdf-tools](/pdf-tools) or a direct tool route.
+
+### Step 3 - Watch request timeline
+
+Focus on requests fired:
+
+- immediately after file selection
+- during processing
+- at download generation
+
+### Step 4 - Inspect suspicious requests
+
+Open each candidate request and inspect:
+
+- headers (`content-type`, `content-length`)
+- request payload/body
+- domain ownership
+
+If payload size is similar to file size and appears after file selection, treat it as potential upload behaviour.
+
+## How to verify results cleanly
+
+Use this checklist:
+
+1. Confirm whether any request contains binary or multipart payload data.
+2. Confirm whether request timing aligns with your file operation.
+3. Confirm whether destination is first-party or third-party.
+4. Confirm whether offline mode blocks the operation.
+
+You can cross-check with [/verify-claims](/verify-claims) for the same workflow.
+
+## Common pitfalls
+
+### Misreading static asset requests
+
+Scripts, fonts, and analytics requests are normal page infrastructure. They are not automatically file transfers.
+
+### Ignoring request bodies
+
+A request URL alone is not enough. Always inspect body and payload size.
+
+### Testing with only one browser
+
+Run at least one secondary browser test if workflow risk is high.
+
+## Team-ready audit evidence
+
+For internal governance, keep a minimal record:
+
+- tool and version/date
+- browser and version
+- test file size
+- observed domains and payload notes
+- screenshots of key request panes
+
+Repeat quarterly or after major changes.
+
+## Where this fits in a privacy workflow
+
+This audit does not replace broader controls, but it gives high-value technical evidence quickly. Combine it with document minimisation, metadata checks, and redaction validation for sensitive files.
