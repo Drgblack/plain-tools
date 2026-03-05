@@ -43,6 +43,7 @@ const commands: CommandItem[] = [
   
   // PDF Tools
   { id: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDFs into one file", href: "/tools/merge-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "split-pdf", name: "Split PDF", description: "Split one PDF by ranges or pages", href: "/tools/split-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
   { id: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size", href: "/tools/compress-pdf", icon: <Minimize2 className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-word", name: "PDF to Word", description: "Convert PDF to .docx", href: "/tools/pdf-to-word", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   { id: "word-to-pdf", name: "Word to PDF", description: "Convert .docx to PDF", href: "/tools/word-to-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
