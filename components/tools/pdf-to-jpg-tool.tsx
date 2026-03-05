@@ -1,6 +1,5 @@
 "use client"
 
-import { zipSync } from "fflate"
 import { Download, FileImage, Loader2, Trash2, UploadCloud } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Toaster, toast } from "sonner"
@@ -14,11 +13,14 @@ import { Slider } from "@/components/ui/slider"
 import { Progress } from "@/components/ui/progress"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { getPdfJs } from "@/lib/pdfjs-loader"
+import { blobToUint8Array, downloadZip, makeZip } from "@/lib/zip-download"
 
 type PageSelectionMode = "all" | "selected"
 
 type OutputFile = {
-  url: string
+  kind: "single" | "zip"
+  url?: string
+  zipBytes?: Uint8Array
   fileName: string
   sizeBytes: number
   imageCount: number
@@ -138,14 +140,14 @@ export default function PdfToJpgTool() {
 
   useEffect(() => {
     return () => {
-      if (output?.url) {
+      if (output?.kind === "single" && output.url) {
         URL.revokeObjectURL(output.url)
       }
     }
   }, [output])
 
   const clearOutput = useCallback(() => {
-    if (output?.url) {
+    if (output?.kind === "single" && output.url) {
       URL.revokeObjectURL(output.url)
     }
     setOutput(null)
@@ -214,7 +216,7 @@ export default function PdfToJpgTool() {
 
       try {
         const sourcePdf = await loadingTask.promise
-        const outputEntries: Record<string, Uint8Array> = {}
+        const outputEntries: Array<{ name: string; data: Uint8Array }> = []
         let singleBlob: Blob | null = null
         let singleFileName = ""
 
@@ -263,7 +265,10 @@ export default function PdfToJpgTool() {
             singleBlob = blob
             singleFileName = imageName
           } else {
-            outputEntries[imageName] = new Uint8Array(await blob.arrayBuffer())
+            outputEntries.push({
+              name: imageName,
+              data: await blobToUint8Array(blob),
+            })
           }
 
           canvas.width = 0
@@ -274,19 +279,19 @@ export default function PdfToJpgTool() {
         if (targetPages.length === 1 && singleBlob) {
           const url = URL.createObjectURL(singleBlob)
           setOutput({
+            kind: "single",
             url,
             fileName: singleFileName,
             sizeBytes: singleBlob.size,
             imageCount: 1,
           })
         } else {
-          const zipBytes = zipSync(outputEntries, { level: 6 })
-          const zipBlob = new Blob([zipBytes], { type: "application/zip" })
-          const url = URL.createObjectURL(zipBlob)
+          const zipBytes = makeZip(outputEntries)
           setOutput({
-            url,
-            fileName: "plain-tools-pdf-to-jpg.zip",
-            sizeBytes: zipBlob.size,
+            kind: "zip",
+            zipBytes,
+            fileName: "pdf-to-jpg-output.zip",
+            sizeBytes: zipBytes.byteLength,
             imageCount: targetPages.length,
           })
         }
@@ -532,12 +537,29 @@ export default function PdfToJpgTool() {
             <p className="text-xs text-muted-foreground">
               {output.imageCount} image file{output.imageCount === 1 ? "" : "s"} generated.
             </p>
-            <Button asChild className="w-full sm:w-auto">
-              <a href={output.url} download={output.fileName} onClick={() => notifyLocalDownloadSuccess()}>
+            {output.kind === "single" && output.url ? (
+              <Button asChild className="w-full sm:w-auto">
+                <a href={output.url} download={output.fileName} onClick={() => notifyLocalDownloadSuccess()}>
+                  <Download className="h-4 w-4" />
+                  Download JPG
+                </a>
+              </Button>
+            ) : null}
+            {output.kind === "zip" ? (
+              <Button
+                type="button"
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  if (output.zipBytes) {
+                    downloadZip(output.zipBytes, output.fileName)
+                    notifyLocalDownloadSuccess()
+                  }
+                }}
+              >
                 <Download className="h-4 w-4" />
-                Download {output.fileName.endsWith(".zip") ? "ZIP" : "JPG"}
-              </a>
-            </Button>
+                Download ZIP
+              </Button>
+            ) : null}
           </CardContent>
         </Card>
       ) : null}

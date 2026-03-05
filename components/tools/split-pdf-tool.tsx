@@ -1,8 +1,7 @@
 "use client"
 
-import { zipSync } from "fflate"
 import { Download, FileText, Loader2, Scissors, Trash2, UploadCloud } from "lucide-react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -15,6 +14,7 @@ import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { getPdfJs } from "@/lib/pdfjs-loader"
 import { getPdfLib } from "@/lib/pdf-lib-loader"
 import { splitPdf, type PdfPageRange } from "@/lib/pdf-batch-engine"
+import { downloadZip, makeZip } from "@/lib/zip-download"
 
 type SplitMode = "extract" | "individual" | "ranges"
 
@@ -27,7 +27,7 @@ type SplitOutput = {
 
 type DownloadBundle = {
   outputFiles: SplitOutput[]
-  zipUrl?: string
+  zipBytes?: Uint8Array
   zipName?: string
   zipSizeBytes?: number
 }
@@ -44,7 +44,7 @@ const formatBytes = (bytes: number) => {
   return `${(mb / 1024).toFixed(2)} GB`
 }
 
-const baseName = (name: string) => name.replace(/\.pdf$/i, "")
+const pad3 = (value: number) => String(value).padStart(3, "0")
 
 const parseRanges = (value: string, pageCount: number): PdfPageRange[] => {
   const tokens = value
@@ -116,12 +116,11 @@ const countPages = async (file: File) => {
   }
 }
 
-const makeSplitName = (fileName: string, range: PdfPageRange, index: number) => {
-  const stem = baseName(fileName)
-  if (range.start === range.end) {
-    return `${stem}-page-${String(range.start).padStart(3, "0")}.pdf`
+const makeSplitName = (mode: SplitMode, range: PdfPageRange, index: number) => {
+  if (mode === "individual" || range.start === range.end) {
+    return `page-${pad3(index + 1)}.pdf`
   }
-  return `${stem}-range-${index + 1}-${range.start}-${range.end}.pdf`
+  return `split-range-${pad3(index + 1)}.pdf`
 }
 
 const createExtractPdf = async (file: File, pages: number[]) => {
@@ -151,20 +150,9 @@ export default function SplitPdfTool() {
   const [status, setStatus] = useState("Upload a PDF to begin splitting locally.")
   const [bundle, setBundle] = useState<DownloadBundle | null>(null)
 
-  useEffect(() => {
-    return () => {
-      if (bundle?.zipUrl) {
-        URL.revokeObjectURL(bundle.zipUrl)
-      }
-    }
-  }, [bundle])
-
   const clearOutputs = useCallback(() => {
-    if (bundle?.zipUrl) {
-      URL.revokeObjectURL(bundle.zipUrl)
-    }
     setBundle(null)
-  }, [bundle])
+  }, [])
 
   const handleFile = useCallback(
     async (candidate: File) => {
@@ -229,7 +217,7 @@ export default function SplitPdfTool() {
         const bytes = await createExtractPdf(file, pages)
         outputs = [
           {
-            name: `${baseName(file.name)}-extracted.pdf`,
+            name: "extracted.pdf",
             bytes,
             sizeBytes: bytes.byteLength,
             rangeLabel: pages.length === 1 ? `Page ${pages[0]}` : `Pages ${pages[0]}-${pages[pages.length - 1]}`,
@@ -245,7 +233,7 @@ export default function SplitPdfTool() {
         outputs = splitBytes.map((bytes, index) => {
           const range = ranges[index]
           return {
-            name: makeSplitName(file.name, range, index),
+            name: makeSplitName(mode, range, index),
             bytes,
             sizeBytes: bytes.byteLength,
             rangeLabel:
@@ -261,20 +249,18 @@ export default function SplitPdfTool() {
       }
 
       if (outputs.length > 1) {
-        const entries: Record<string, Uint8Array> = {}
-        outputs.forEach((output) => {
-          entries[output.name] = output.bytes
-        })
-
-        const zipBytes = zipSync(entries, { level: 6 })
-        const zipBlob = new Blob([zipBytes], { type: "application/zip" })
-        const zipUrl = URL.createObjectURL(zipBlob)
+        const zipBytes = makeZip(
+          outputs.map((output) => ({
+            name: output.name,
+            data: output.bytes,
+          }))
+        )
 
         setBundle({
           outputFiles: outputs,
-          zipUrl,
-          zipName: `${baseName(file.name)}-split.zip`,
-          zipSizeBytes: zipBlob.size,
+          zipBytes,
+          zipName: "split-pdf-output.zip",
+          zipSizeBytes: zipBytes.byteLength,
         })
       } else {
         setBundle({ outputFiles: outputs })
@@ -518,16 +504,17 @@ export default function SplitPdfTool() {
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
 
-            {bundle.zipUrl && bundle.zipName ? (
-              <Button asChild className="w-full sm:w-auto">
-                <a
-                  href={bundle.zipUrl}
-                  download={bundle.zipName}
-                  onClick={() => notifyLocalDownloadSuccess()}
-                >
-                  <Download className="h-4 w-4" />
-                  Download ZIP ({bundle.zipSizeBytes ? formatBytes(bundle.zipSizeBytes) : "ready"})
-                </a>
+            {bundle.zipBytes && bundle.zipName ? (
+              <Button
+                type="button"
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  downloadZip(bundle.zipBytes!, bundle.zipName!)
+                  notifyLocalDownloadSuccess()
+                }}
+              >
+                <Download className="h-4 w-4" />
+                Download ZIP ({bundle.zipSizeBytes ? formatBytes(bundle.zipSizeBytes) : "ready"})
               </Button>
             ) : null}
 
@@ -538,7 +525,7 @@ export default function SplitPdfTool() {
                   <p className="mt-1 text-xs text-muted-foreground">
                     {output.rangeLabel} • {formatBytes(output.sizeBytes)}
                   </p>
-                  {!bundle.zipUrl ? (
+                  {!bundle.zipBytes ? (
                     <Button
                       type="button"
                       variant="secondary"
