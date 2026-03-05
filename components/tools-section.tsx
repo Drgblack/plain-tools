@@ -202,30 +202,37 @@ export function ToolsSection() {
           </div>
         </div>
 
-        <div className="mt-8 overflow-x-auto pb-1">
-          <div className="inline-flex min-w-full items-center gap-2 whitespace-nowrap rounded-lg bg-white/[0.03] p-1 ring-1 ring-white/[0.06]">
-            {CATEGORY_CONFIG.map((category) => {
-              const Icon = category.icon
-              const isActive = !showingSearchResults && activeCategory === category.id
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => {
-                    setActiveCategory(category.id)
-                    setSearchQuery("")
-                  }}
-                  className={`flex min-h-[44px] shrink-0 items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium transition ${
-                    isActive
-                      ? "bg-accent/15 text-accent"
-                      : "text-muted-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{`${category.label} (${categoryCounts[category.id] ?? 0})`}</span>
-                </button>
-              )
-            })}
+        <div className="relative mt-8">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-background to-transparent md:hidden" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent md:hidden" />
+          <div className="overflow-x-auto pb-1 [scrollbar-width:thin]">
+            <div className="inline-flex min-w-max items-center gap-2 whitespace-nowrap rounded-lg bg-white/[0.03] p-1 ring-1 ring-white/[0.06]">
+              {CATEGORY_CONFIG.map((category) => {
+                const Icon = category.icon
+                const isActive = !showingSearchResults && activeCategory === category.id
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => {
+                      setActiveCategory(category.id)
+                      setSearchQuery("")
+                    }}
+                    className={`flex min-h-[44px] shrink-0 items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium transition ${
+                      isActive
+                        ? "bg-accent/15 text-accent"
+                        : "text-muted-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{`${category.label} (${categoryCounts[category.id] ?? 0})`}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
+          <p className="mt-1 text-right text-[11px] text-muted-foreground/70 md:hidden">
+            Swipe to view categories
+          </p>
         </div>
 
         {showingSearchResults ? (
@@ -252,7 +259,7 @@ export function ToolsSection() {
 
             const card = (
               <Card
-                className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#333] bg-[#111] transition-all duration-150 outline-none hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
+                className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#3b3b3b] bg-[#151515] transition-all duration-150 outline-none hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -290,13 +297,13 @@ export function ToolsSection() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-start gap-2">
-                      <h3 className="text-[14px] font-semibold leading-tight text-foreground/90 group-hover:text-foreground">
+                      <h3 className="text-[14px] font-semibold leading-tight text-foreground group-hover:text-foreground">
                         {tool.name}
                       </h3>
                       <ArrowRight className="h-3.5 w-3.5 -translate-x-1 text-accent opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                     </div>
 
-                    <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground/90 group-hover:text-muted-foreground">
+                    <p className="mt-2 text-[13px] leading-relaxed text-foreground/80 group-hover:text-foreground/90">
                       {tool.description}
                     </p>
 
