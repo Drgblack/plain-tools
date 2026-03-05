@@ -48,6 +48,7 @@ const commands: CommandItem[] = [
   { id: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size", href: "/tools/compress-pdf", icon: <Minimize2 className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-word", name: "PDF to Word", description: "Convert PDF to .docx", href: "/tools/pdf-to-word", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-jpg", name: "PDF to JPG", description: "Convert PDF pages to JPG images", href: "/tools/pdf-to-jpg", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "jpg-to-pdf", name: "JPG to PDF", description: "Combine images into a PDF", href: "/tools/jpg-to-pdf", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "word-to-pdf", name: "Word to PDF", description: "Convert .docx to PDF", href: "/tools/word-to-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
   
   // File Tools

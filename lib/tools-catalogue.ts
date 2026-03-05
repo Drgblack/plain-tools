@@ -169,6 +169,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "jpg-to-pdf",
+    name: "JPG to PDF",
+    slug: "jpg-to-pdf",
+    category: "Core",
+    description: "Combine JPG, JPEG, or PNG images into one PDF locally with layout controls.",
+    badge: "100% Local",
+    icon: "FileImage",
+    available: true,
+  },
+  {
     id: "word-to-pdf",
     name: "Word to PDF",
     slug: "word-to-pdf",
