@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
@@ -37,6 +38,7 @@ export default function PasswordBreakerPage() {
 
           <PasswordBreakerTool />
         </div>
+                <ToolRelatedLinks toolSlug="password-breaker" className="mt-8" />
       </main>
 
       <Footer />

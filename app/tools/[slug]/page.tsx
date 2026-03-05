@@ -6,6 +6,7 @@ import Script from "next/script"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
@@ -207,6 +208,8 @@ export default async function ToolPage({ params }: PageProps) {
                   </a>
                 </div>
               ) : null}
+
+              <ToolRelatedLinks toolSlug={tool.slug} className="mt-6" />
             </>
           ) : (
             <div className="rounded-xl border border-border bg-card p-6">

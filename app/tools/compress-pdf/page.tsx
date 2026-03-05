@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useState, useCallback, useRef } from "react"
 import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, Info } from "lucide-react"
@@ -464,6 +465,7 @@ export default function CompressPDFPage() {
             </p>
           </div>
         </section>
+                <ToolRelatedLinks toolSlug="compress-pdf" className="mt-8" />
       </main>
 
       <Footer />

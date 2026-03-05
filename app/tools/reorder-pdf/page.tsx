@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useState, useCallback, useRef, useEffect } from "react"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, GripVertical, ChevronDown, RotateCcw, Zap } from "lucide-react"
 import Link from "next/link"
@@ -624,6 +625,7 @@ export default function ReorderPDFPage() {
             </div>
           </div>
         </section>
+                <ToolRelatedLinks toolSlug="reorder-pdf" className="mt-8" />
       </main>
 
       <Footer />

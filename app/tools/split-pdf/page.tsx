@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useState, useCallback, useRef } from "react"
 import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, Zap } from "lucide-react"
@@ -748,6 +749,7 @@ export default function SplitPDFPage() {
             </div>
           </div>
         </section>
+                <ToolRelatedLinks toolSlug="split-pdf" className="mt-8" />
       </main>
 
       <Footer />

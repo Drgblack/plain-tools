@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useState, useCallback, useRef, useEffect } from "react"
 import { GripVertical, X, FileText, Plus, ShieldCheck, Zap } from "lucide-react"
 import Link from "next/link"
@@ -705,6 +706,7 @@ const mergePDFs = async () => {
             </p>
           </div>
         </section>
+                <ToolRelatedLinks toolSlug="merge-pdf" className="mt-8" />
       </main>
 
       <div className="mt-auto w-full">

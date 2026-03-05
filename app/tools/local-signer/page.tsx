@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
@@ -37,6 +38,7 @@ export default function LocalSignerPage() {
 
           <LocalSignerTool />
         </div>
+                <ToolRelatedLinks toolSlug="local-signer" className="mt-8" />
       </main>
 
       <Footer />

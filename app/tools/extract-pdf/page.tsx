@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useState, useCallback, useRef, useMemo } from "react"
 import { PDFDocument } from "pdf-lib"
 import { FileText, Download, ShieldCheck, CheckCircle2, X, ChevronDown, AlertCircle } from "lucide-react"
@@ -630,6 +631,7 @@ export default function ExtractPDFPage() {
             </p>
           </div>
         </section>
+                <ToolRelatedLinks toolSlug="extract-pdf" className="mt-8" />
       </main>
 
       <Footer />

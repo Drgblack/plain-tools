@@ -1,5 +1,6 @@
 "use client"
 
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { useMemo, useState } from "react"
 import { Bot, FileText, Loader2, MessageSquareText, Sparkles } from "lucide-react"
 
@@ -236,7 +237,8 @@ export default function AIPdfAssistantPage() {
           </div>
         ) : null}
       </div>
-    </main>
+              <ToolRelatedLinks toolSlug="summarize-pdf" className="mt-8" />
+      </main>
   )
 }
 

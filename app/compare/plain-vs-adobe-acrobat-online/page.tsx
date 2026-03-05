@@ -4,7 +4,7 @@ import {
 } from "@/components/seo/compare-page-template"
 import { getTrancheComparePageOrThrow } from "@/lib/seo/tranche1-content"
 
-const page = getTrancheComparePageOrThrow("plain-vs-sejda")
+const page = getTrancheComparePageOrThrow("plain-vs-adobe-acrobat-online")
 
 export const metadata = buildComparePageMetadata(page)
 

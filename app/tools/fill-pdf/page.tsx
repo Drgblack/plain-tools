@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
 import { Lock, Sparkles } from "lucide-react"
@@ -102,6 +103,7 @@ export default async function FillPdfPage() {
             </Card>
           )}
         </div>
+                <ToolRelatedLinks toolSlug="fill-pdf" className="mt-8" />
       </main>
 
       <Footer />

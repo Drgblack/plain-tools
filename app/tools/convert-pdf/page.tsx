@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
@@ -36,6 +37,7 @@ export default function ConvertPdfPage() {
 
           <ConvertTool />
         </div>
+                <ToolRelatedLinks toolSlug="convert-pdf" className="mt-8" />
       </main>
 
       <Footer />

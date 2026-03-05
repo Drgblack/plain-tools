@@ -4,7 +4,7 @@ import {
 } from "@/components/seo/learn-article-template"
 import { getTrancheLearnArticleOrThrow } from "@/lib/seo/tranche1-content"
 
-const article = getTrancheLearnArticleOrThrow("how-to-verify-a-pdf-tool-doesnt-upload-your-files")
+const article = getTrancheLearnArticleOrThrow("what-happens-when-you-upload-a-pdf")
 
 export const metadata = buildLearnArticleMetadata(article)
 
