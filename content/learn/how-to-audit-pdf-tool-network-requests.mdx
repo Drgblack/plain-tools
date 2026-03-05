@@ -1,134 +1,108 @@
 ---
 title: "How to Audit PDF Tool Network Requests"
-description: "Step-by-step guide to check whether a PDF tool sends your file over the network using browser DevTools and practical verification checks."
+description: "A repeatable DevTools audit method to check if PDF files are transmitted, with a practical worksheet and red-flag criteria."
 updated: "5 March 2026"
-readTime: "10 min read"
+readTime: "11 min read"
 keywords:
   - "how to audit pdf tool network requests"
+  - "devtools pdf upload check"
   - "verify no upload pdf"
-  - "devtools pdf privacy"
-  - "network tab pdf check"
+  - "network request audit"
 intro:
-  - "You can verify whether a PDF tool uploads files by watching real network traffic while processing a test document. Runs locally in your browser. No uploads."
-  - "This guide gives a repeatable method for Chrome, Edge, Firefox, and Safari so teams can validate privacy claims with evidence rather than assumptions."
+  - "You can verify a PDF tool's upload behaviour by tracing request traffic during a real file operation. Runs locally in your browser. No uploads."
+  - "This method is built for repeatability: one worksheet, one test file, and a clear pass-fail interpretation that non-specialists can follow."
 faqs:
-  - question: "Do I need technical skills to run this audit?"
-    answer: "Basic familiarity with browser DevTools is enough. Follow the checklist step by step and focus on request timing, size, and payload clues."
-  - question: "What should I use as a test file?"
-    answer: "Use a harmless sample PDF with marker text so you can run multiple tests safely without exposing sensitive data."
-  - question: "What is a clear upload red flag?"
-    answer: "A request sent after file selection with a multipart or binary payload sized similarly to your document is a strong indicator that file data left the browser."
-  - question: "Can I trust one successful test forever?"
-    answer: "No. Re-run checks after major tool updates, browser updates, or architecture changes."
-  - question: "Should I also test offline mode?"
-    answer: "Yes. Offline testing helps confirm whether processing genuinely happens on-device after initial page load."
-  - question: "Is this compliance advice?"
-    answer: "No. This is technical verification guidance."
+  - question: "How long should one audit run take?"
+    answer: "A basic audit takes around 10 to 15 minutes once your worksheet is prepared."
+  - question: "Which browser is best for this test?"
+    answer: "Any modern browser with a Network panel works. Chrome and Edge are usually easiest for first-time reviewers."
+  - question: "What is a hard fail signal?"
+    answer: "A request body containing binary or multipart data that matches the test file operation timing is a hard fail for no-upload claims."
+  - question: "Should I test more than one file size?"
+    answer: "Yes. Test both a small and medium file to see whether payload behaviour scales with document size."
+  - question: "Do I need to keep screenshots?"
+    answer: "For team governance, screenshots of key requests are useful evidence and reduce future disputes."
+  - question: "Is this security certification guidance?"
+    answer: "No. It is an operational verification method."
 relatedLinks:
   - label: "Verify Claims"
     href: "/verify-claims"
   - label: "Can PDF tools see my files?"
     href: "/learn/can-pdf-tools-see-my-files"
-  - label: "No Uploads Explained"
-    href: "/learn/no-uploads-explained"
   - label: "Plain vs PDF24"
     href: "/compare/plain-vs-pdf24"
   - label: "PDF tools hub"
     href: "/pdf-tools"
 cta:
-  label: "Run the audit with a local tool"
+  label: "Audit a live workflow"
   href: "/pdf-tools/tools"
-  text: "Open a tool, process a sample file, and run this audit checklist in the same session."
+  text: "Use one real task in the tools hub and log your findings with the worksheet below."
 ---
 
-## Why this audit matters
+## Audit worksheet
 
-Privacy claims should be testable. If a provider says it does not upload files, you should be able to confirm that through network inspection during real operations.
+Before testing, create a simple worksheet with these fields:
 
-This process is designed to be lightweight enough for one person and structured enough for team policy evidence.
+| Field | Example |
+| --- | --- |
+| Tool route | `/tools/merge-pdf` |
+| Browser and version | Chrome 134 |
+| Test file name and size | `audit-sample-2mb.pdf` |
+| Time window tested | 14:05 to 14:12 CET |
+| Result | Pass / Needs review |
 
-## Audit setup
+This prevents ad-hoc interpretation later.
 
-### Browser prep
+## Step-by-step method
 
-- Open a new private/incognito window.
-- Disable extensions that alter traffic if possible.
-- Open the target tool page.
+### Step 1 - Prepare a clean environment
 
-### DevTools prep
+- open private/incognito session
+- disable non-essential extensions
+- clear old Network entries
 
-- Open **Network**.
-- Enable **Preserve log**.
-- Disable cache during the test.
-- Set filter to **Fetch/XHR**.
+### Step 2 - Establish baseline traffic
 
-Keep the panel open during the full operation.
+Load the page and wait for initial static traffic to settle. Mark this as baseline.
 
-## Run a controlled test
+### Step 3 - Trigger one operation
 
-### Step 1 - Baseline before file selection
+Select a file and run one complete action from selection to download.
 
-Load the page and wait until initial requests settle. Note which domains are present before any file operation.
+### Step 4 - Inspect only operation-window requests
 
-### Step 2 - Select a test file
+Review requests created during the operation window. Capture:
 
-Use a known sample from your own machine and run one operation through [/pdf-tools](/pdf-tools) or a direct tool route.
+- request URL
+- content type
+- request body preview
+- payload size
 
-### Step 3 - Watch request timeline
+## Red-flag criteria
 
-Focus on requests fired:
+| Signal | Risk level | Interpretation |
+| --- | --- | --- |
+| Multipart request created immediately after file pick | High | Likely upload path |
+| Binary payload matching file size pattern | High | Possible file transfer |
+| Only static assets and tiny telemetry events | Low | No file transfer evidence in this run |
+| Processing works fully offline after first load | Low | Strong indicator of local execution |
 
-- immediately after file selection
-- during processing
-- at download generation
+## Decision rule
 
-### Step 4 - Inspect suspicious requests
+Use a strict decision rule for consistency:
 
-Open each candidate request and inspect:
+- **Pass**: no binary/multipart file payload observed in operation window.
+- **Needs review**: ambiguous payload or unclear route behaviour.
+- **Fail**: clear file-body transfer to remote endpoint.
 
-- headers (`content-type`, `content-length`)
-- request payload/body
-- domain ownership
+Document the decision and reviewer name.
 
-If payload size is similar to file size and appears after file selection, treat it as potential upload behaviour.
+## Re-test cadence
 
-## How to verify results cleanly
+Re-run this audit when:
 
-Use this checklist:
+- browser major version changes
+- tool architecture changes
+- your team introduces a new document type workflow
 
-1. Confirm whether any request contains binary or multipart payload data.
-2. Confirm whether request timing aligns with your file operation.
-3. Confirm whether destination is first-party or third-party.
-4. Confirm whether offline mode blocks the operation.
-
-You can cross-check with [/verify-claims](/verify-claims) for the same workflow.
-
-## Common pitfalls
-
-### Misreading static asset requests
-
-Scripts, fonts, and analytics requests are normal page infrastructure. They are not automatically file transfers.
-
-### Ignoring request bodies
-
-A request URL alone is not enough. Always inspect body and payload size.
-
-### Testing with only one browser
-
-Run at least one secondary browser test if workflow risk is high.
-
-## Team-ready audit evidence
-
-For internal governance, keep a minimal record:
-
-- tool and version/date
-- browser and version
-- test file size
-- observed domains and payload notes
-- screenshots of key request panes
-
-Repeat quarterly or after major changes.
-
-## Where this fits in a privacy workflow
-
-This audit does not replace broader controls, but it gives high-value technical evidence quickly. Combine it with document minimisation, metadata checks, and redaction validation for sensitive files.
+That cadence keeps trust checks practical and current.
