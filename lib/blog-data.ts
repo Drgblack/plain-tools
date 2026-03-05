@@ -333,3 +333,4 @@ export function getPostsByCategory(categoryId: CategoryId) {
 export function getCategoryLabel(categoryId: CategoryId) {
   return categories.find((c) => c.id === categoryId)?.label || categoryId
 }
+

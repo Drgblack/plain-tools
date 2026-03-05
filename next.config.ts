@@ -243,7 +243,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
-      // Canonical comparison route migration.
+      
+      { source: '/pdf-tools/tools', destination: '/tools', permanent: true },
+      { source: '/pdf-tools/tools/:path*', destination: '/tools/:path*', permanent: true },
+// Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
         destination: "/compare/plain-vs-adobe-acrobat-online",
@@ -362,3 +365,4 @@ const nextConfig: NextConfig = {
 }
 
 export default withAxiom(withBundleAnalyzer(nextConfig))
+

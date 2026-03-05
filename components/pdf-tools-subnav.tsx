@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 const subnavItems = [
   { label: "Home", href: "/" },
-  { label: "Tools", href: "/pdf-tools/tools", matches: ["/pdf-tools", "/pdf-tools/tools"] },
+  { label: "Tools", href: "/tools", matches: ["/pdf-tools", "/pdf-tools/tools"] },
   { label: "Learn", href: "/learn" },
   { label: "Blog", href: "/blog" },
   { label: "Compare", href: "/compare" },
@@ -51,3 +51,4 @@ export function PdfToolsSubnav() {
     </div>
   )
 }
+
