@@ -179,7 +179,7 @@ export function ToolsSection() {
   }, [activeCategory, availableTools, searchQuery])
 
   return (
-    <section id="tools" className="relative px-4 pt-24 pb-28 md:pt-28 md:pb-36">
+    <section id="tools" className="scroll-mt-24 relative px-4 pt-24 pb-28 md:pt-28 md:pb-36">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
       <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-accent/[0.02] to-transparent" />
 
@@ -349,4 +349,6 @@ export function ToolsSection() {
     </section>
   )
 }
+
+
 
