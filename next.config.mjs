@@ -58,6 +58,16 @@ const nextConfig = {
         destination: '/verify-claims',
         permanent: true,
       },
+      {
+        source: '/file-converters/pdf-to-word',
+        destination: '/tools/pdf-to-word',
+        permanent: true,
+      },
+      {
+        source: '/file-converters/word-to-pdf',
+        destination: '/tools/word-to-pdf',
+        permanent: true,
+      },
     ]
   },
 }

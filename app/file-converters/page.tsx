@@ -19,14 +19,21 @@ const relatedTools = [
   {
     name: "PDF to Word",
     description: "Convert PDF to editable Word files",
-    href: "/pdf-to-word",
+    href: "/tools/pdf-to-word",
     tags: ["Local", "WASM"],
     icon: <FileText className="h-4 w-4" />,
   },
   {
+    name: "Word to PDF",
+    description: "Convert .docx files to PDF locally",
+    href: "/tools/word-to-pdf",
+    tags: ["Local", "WASM"],
+    icon: <FileType className="h-4 w-4" />,
+  },
+  {
     name: "Compress PDF",
     description: "Reduce PDF file size",
-    href: "/compress-pdf",
+    href: "/tools/compress-pdf",
     tags: ["Local", "WASM"],
     icon: <FileType className="h-4 w-4" />,
   },

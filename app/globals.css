@@ -171,3 +171,10 @@
   --foreground: oklch(0.95 0 0);
   --muted-foreground: oklch(0.74 0.01 250);
 }
+
+/* Keep /pdf-tools accents aligned with brand blue while preserving status colors. */
+[data-pdf-tools-theme] {
+  --accent: oklch(0.62 0.21 250);
+  --accent-foreground: oklch(0.98 0 0);
+  --ring: oklch(0.62 0.21 250);
+}

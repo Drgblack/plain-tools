@@ -27,6 +27,8 @@ const toolComponents: Record<string, ToolComponent> = {
   "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),
   "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
   "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
+  "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
+  "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
 }
 
 const FallbackToolComponent = () => <div>Tool UI coming soon</div>
