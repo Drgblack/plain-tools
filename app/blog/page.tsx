@@ -6,6 +6,7 @@ import { Search, Clock, Share2, X, ChevronRight, ExternalLink } from "lucide-rea
 import { TiltCard } from "@/components/ui/tilt-card"
 import { SummaryBox, KeyTerm } from "@/components/seo"
 import { sanitizeInlineHtml } from "@/lib/sanitize"
+import { posts as publishedBlogPosts } from "@/lib/blog-data"
 
 // Technical density levels for articles
 type TechnicalDensity = "Foundation" | "Intermediate" | "Advanced" | "Case Study"
@@ -619,10 +620,18 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activePillar, setActivePillar] = useState<PillarId | "all">("all")
   const [sharePost, setSharePost] = useState<{ url: string; title: string } | null>(null)
+  const publishedSlugSet = useMemo(
+    () => new Set(publishedBlogPosts.map((post) => post.slug)),
+    []
+  )
 
   // Filter articles by pillar and search
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
+      if (!publishedSlugSet.has(article.slug)) {
+        return false
+      }
+
       const matchesSearch =
         searchQuery === "" ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -633,7 +642,7 @@ export default function BlogPage() {
 
       return matchesSearch && matchesPillar
     })
-  }, [searchQuery, activePillar])
+  }, [searchQuery, activePillar, publishedSlugSet])
 
   // Group articles by pillar for roadmap view
   const articlesByPillar = useMemo(() => {
