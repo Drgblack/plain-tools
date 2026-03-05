@@ -724,7 +724,7 @@ export default function BlogPage() {
                     : "text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
                 }`}
               >
-                All Pillars
+                All
               </button>
               {contentPillars.map((pillar) => (
                 <button
@@ -1062,4 +1062,5 @@ export default function BlogPage() {
     </div>
   )
 }
+
 

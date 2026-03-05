@@ -244,7 +244,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       
-      { source: '/pdf-tools/tools', destination: '/tools', permanent: true },
+      
+      { source: '/pdf-tools/tools', destination: '/pdf-tools#tool-catalogue', permanent: true },
+      { source: '/pdf-tools/tools/:path*', destination: '/tools/:path*', permanent: true },{ source: '/pdf-tools/tools', destination: '/tools', permanent: true },
       { source: '/pdf-tools/tools/:path*', destination: '/tools/:path*', permanent: true },
 // Canonical comparison route migration.
       {
@@ -365,4 +367,5 @@ const nextConfig: NextConfig = {
 }
 
 export default withAxiom(withBundleAnalyzer(nextConfig))
+
 
