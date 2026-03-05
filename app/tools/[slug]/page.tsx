@@ -18,6 +18,7 @@ type ToolComponent = ComponentType | LazyExoticComponent<ComponentType>
 const toolComponents: Record<string, ToolComponent> = {
   "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
   "split-pdf": lazy(() => import("@/components/tools/split-pdf-tool")),
+  "compress-pdf": lazy(() => import("@/components/tools/compress-pdf-tool")),
   "irreversible-redactor": lazy(() => import("@/components/tools/redact-tool")),
   "redact-pdf": lazy(() => import("@/components/tools/redact-tool")),
   "privacy-risk-scanner": lazy(() => import("@/components/tools/privacy-scanner-tool")),
