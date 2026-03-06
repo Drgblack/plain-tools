@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 export const metadata: Metadata = buildPageMetadata({
   title: "Support - Plain Tools",
   description:
-    "Get support for Plain Tools with troubleshooting guidance, system checks, and direct contact options for privacy-first browser workflows.",
+    "Contact Plain Tools support with a privacy-first, email-first workflow. Find help routes for tools, learning guides, pricing, and verification.",
   path: "/support",
   image: "/og/default.png",
 })

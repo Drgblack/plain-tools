@@ -235,6 +235,24 @@ const richSections = [
     href: "/pricing",
     description: "Core local tools are free. See pricing for advanced and upcoming Pro features.",
   },
+  {
+    name: "Support",
+    href: "/support",
+    description: "Email-first support and practical help routes for tools and workflows.",
+  },
+]
+
+const visibilityCards = [
+  {
+    title: "Learn how to use the tools",
+    description: "Step-by-step guides for private workflows, troubleshooting, and verification checks.",
+    href: "/learn",
+  },
+  {
+    title: "Compare Plain Tools with cloud alternatives",
+    description: "Neutral comparisons focused on privacy trade-offs, workflow fit, and practical constraints.",
+    href: "/compare",
+  },
 ]
 
 export default function HomePage() {
@@ -353,6 +371,12 @@ export default function HomePage() {
                 Read the blog
               </Link>
               <Link
+                href="/support"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Contact support
+              </Link>
+              <Link
                 href="https://github.com/Drgblack/plain-tools"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -360,6 +384,27 @@ export default function HomePage() {
               >
                 View source on GitHub
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-12">
+            <div className="grid gap-4 md:grid-cols-2">
+              {visibilityCards.map((card) => (
+                <Link
+                  key={card.href}
+                  href={card.href}
+                  className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-accent/40"
+                >
+                  <h2 className="text-lg font-semibold tracking-tight text-foreground">{card.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                    Open
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
