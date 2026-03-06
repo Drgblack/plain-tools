@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 
 import WebgpuOrganiserTool from "@/components/tools/webgpu-organiser-tool"
 
@@ -26,6 +28,13 @@ export default function WebgpuOrganiserPage() {
 
       <main className="flex-1 px-4 py-8 sm:py-10">
         <div className="mx-auto max-w-6xl space-y-6">
+          <PageBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Tools", href: "/tools" },
+              { label: "WebGPU Page Organiser" },
+            ]}
+          />
           <section className="space-y-2 text-center sm:space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               Plain WebGPU Page Organiser
@@ -34,6 +43,12 @@ export default function WebgpuOrganiserPage() {
               Reorder, delete, rotate, duplicate, and bulk edit PDF pages with local thumbnail previews.
             </p>
           </section>
+
+          <ToolHelperPanel
+            uploadHint="Upload one PDF and use thumbnail controls to reorder, rotate, duplicate, or delete pages."
+            resultHint="Download a reorganised PDF with your final page sequence."
+            limitationNote="WebGPU acceleration is device-dependent. If unavailable, performance may fall back to a slower path."
+          />
 
           <WebgpuOrganiserTool />
         </div>

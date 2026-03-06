@@ -15,7 +15,7 @@ export function ToolRelatedLinks({ toolSlug, className }: ToolRelatedLinksProps)
       <RelatedLinks
         sections={[
           { title: "Related tools", links: links.relatedTools },
-          { title: "Learn", links: links.learnLinks },
+          { title: "Related guides", links: links.learnLinks },
           { title: "Compare", links: [links.comparison] },
           { title: "Verify", links: [links.verify] },
         ]}

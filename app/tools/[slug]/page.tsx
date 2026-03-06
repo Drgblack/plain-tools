@@ -5,6 +5,7 @@ import Script from "next/script"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildStandardPageTitle } from "@/lib/page-title"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
@@ -198,6 +199,14 @@ export default async function ToolPage({ params }: PageProps) {
 
       <main className="flex-1">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
+          <PageBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Tools", href: "/tools" },
+              { label: tool.name },
+            ]}
+            className="mb-4"
+          />
           <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{tool.name}</h1>
           <p className="mt-3 mb-8 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
             {profile.description}

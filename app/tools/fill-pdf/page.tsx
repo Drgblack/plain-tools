@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
 import { Lock, Sparkles } from "lucide-react"
@@ -53,6 +55,13 @@ export default async function FillPdfPage() {
 
       <main className="flex-1 px-4 py-8 sm:py-10">
         <div className="mx-auto max-w-4xl space-y-6">
+          <PageBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Tools", href: "/tools" },
+              { label: "Fill PDF Forms" },
+            ]}
+          />
           <section className="space-y-2 text-center sm:space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               Fill PDF Forms
@@ -61,6 +70,12 @@ export default async function FillPdfPage() {
               Fill AcroForm fields fully locally, then export flattened or editable output.
             </p>
           </section>
+
+          <ToolHelperPanel
+            uploadHint="Upload one AcroForm PDF with fillable text fields, checkboxes, radio buttons, or dropdowns."
+            resultHint="Download an updated PDF, either flattened for sharing or kept editable for later updates."
+            limitationNote="Only standard AcroForm field types are supported. XFA or heavily customised forms may not behave as expected."
+          />
 
           {proAccess ? (
             <FillPdfTool />

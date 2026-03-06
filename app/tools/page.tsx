@@ -4,6 +4,7 @@ import Script from "next/script"
 import { Gauge, HardDrive, Lock, Radio, SearchCheck, Server, Shield, Wifi, Globe } from "lucide-react"
 import { ToolsSection } from "@/components/tools-section"
 import { ProofStrip } from "@/components/proof-strip"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildStandardPageTitle } from "@/lib/page-title"
 import { serializeJsonLd } from "@/lib/sanitize"
 import {
@@ -180,6 +181,29 @@ export default function ToolsPage() {
     { label: "Compare alternatives", href: "/compare" },
   ]
 
+  const relatedGuides = [
+    {
+      label: "Compress PDF without losing quality",
+      href: "/learn/compress-pdf-without-losing-quality",
+      description: "Practical steps for balancing PDF size reduction and readable output.",
+    },
+    {
+      label: "How to verify a PDF tool does not upload your files",
+      href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+      description: "Use DevTools and repeatable checks to validate local processing claims.",
+    },
+    {
+      label: "No uploads explained",
+      href: "/learn/no-uploads-explained",
+      description: "Understand what no-upload processing means in real browser workflows.",
+    },
+    {
+      label: "How to merge PDFs offline",
+      href: "/learn/how-to-merge-pdfs-offline",
+      description: "A straightforward merge workflow for sensitive document handling.",
+    },
+  ]
+
   const toolsHubSchema = combineJsonLd([
     buildWebPageSchema({
       name: "Plain Tools PDF hub",
@@ -220,6 +244,7 @@ export default function ToolsPage() {
       <main className="flex-1">
         <section className="border-b border-border px-4 py-14 md:py-16">
           <div className="mx-auto max-w-6xl space-y-4">
+            <PageBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools" }]} />
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               PDF tools for sensitive workflows
             </h1>
@@ -357,6 +382,26 @@ export default function ToolsPage() {
                   >
                     Open tool
                   </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Related guides</h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              Use these practical guides to choose the right tool settings, verify local processing,
+              and avoid common PDF workflow mistakes.
+            </p>
+            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+              {relatedGuides.map((guide) => (
+                <li key={guide.href} className="rounded-lg border border-border bg-card/40 p-4">
+                  <Link href={guide.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                    {guide.label}
+                  </Link>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{guide.description}</p>
                 </li>
               ))}
             </ul>

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { ArrowRight, Gauge, ShieldCheck, Users } from "lucide-react"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -123,6 +124,7 @@ export default function ComparePage() {
       <main className="flex-1 px-4 py-14 md:py-16">
         <div className="mx-auto max-w-6xl space-y-12">
           <section className="space-y-5">
+            <PageBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare" }]} />
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Compare PDF tools with practical, privacy-first criteria
             </h1>

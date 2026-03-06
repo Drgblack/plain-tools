@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import Script from "next/script"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { FocusedSearch } from "@/components/ui/focused-search"
 import { SummaryBox, KeyTerm } from "@/components/seo"
@@ -114,6 +115,10 @@ export default function LearnPage() {
           <div className="pointer-events-none absolute inset-0 hero-grid-pattern opacity-30" />
           
           <div className="relative mx-auto max-w-6xl">
+            <PageBreadcrumbs
+              items={[{ label: "Home", href: "/" }, { label: "Learn" }]}
+              className="mb-4"
+            />
             <div className="mb-3 inline-flex items-center rounded-full bg-[#0070f3]/10 px-3 py-1.5 border border-[#0070f3]/30">
               <Cpu className="mr-2 h-3.5 w-3.5 text-[#0070f3]" strokeWidth={2} />
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0070f3]">
