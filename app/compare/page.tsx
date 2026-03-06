@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
+import { ArrowRight, Gauge, ShieldCheck, Users } from "lucide-react"
 
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -121,13 +122,13 @@ export default function ComparePage() {
 
       <main className="flex-1 px-4 py-14 md:py-16">
         <div className="mx-auto max-w-6xl space-y-12">
-          <section className="space-y-4">
+          <section className="space-y-5">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Compare PDF tools with practical privacy criteria
+              Compare PDF tools with practical, privacy-first criteria
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              This section gives neutral comparisons between Plain.tools and common alternatives.
-              Core processing on Plain.tools runs locally in your browser. No uploads are required
+              This section gives neutral comparisons between Plain Tools and common alternatives.
+              Core processing on Plain Tools runs locally in your browser. No uploads are required
               for local workflows.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -152,25 +153,66 @@ export default function ComparePage() {
             </div>
           </section>
 
-          <section className="overflow-x-auto rounded-xl border border-border bg-card/20">
-            <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="bg-muted/50 text-foreground">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">Criterion</th>
-                  <th className="px-4 py-3 font-semibold">Plain.tools</th>
-                  <th className="px-4 py-3 font-semibold">Typical upload-based tools</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonSummary.map((row) => (
-                  <tr key={row.criterion} className="border-t border-border">
-                    <td className="px-4 py-3 text-foreground">{row.criterion}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.plain}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.typicalCloud}</td>
+          <section className="space-y-4">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground">Comparison framework</h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-border bg-card/45 p-3.5">
+                <ShieldCheck className="h-4 w-4 text-accent" />
+                <p className="mt-2 text-sm font-semibold text-foreground">Privacy comparison</p>
+                <p className="mt-1 text-xs text-muted-foreground">Upload behaviour, processing model, and technical verification path.</p>
+              </div>
+              <div className="rounded-xl border border-border bg-card/45 p-3.5">
+                <Gauge className="h-4 w-4 text-accent" />
+                <p className="mt-2 text-sm font-semibold text-foreground">Workflow and speed</p>
+                <p className="mt-1 text-xs text-muted-foreground">Operational friction, transfer steps, and practical execution time.</p>
+              </div>
+              <div className="rounded-xl border border-border bg-card/45 p-3.5">
+                <Users className="h-4 w-4 text-accent" />
+                <p className="mt-2 text-sm font-semibold text-foreground">Best for</p>
+                <p className="mt-1 text-xs text-muted-foreground">Which workflows suit local-first handling versus hosted account models.</p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:hidden">
+              {comparisonSummary.map((row) => (
+                <div
+                  key={row.criterion}
+                  className={`rounded-xl border p-3 ${row.criterion.toLowerCase().includes("upload") ? "border-blue-500/35 bg-blue-500/10" : "border-border bg-card/45"}`}
+                >
+                  <p className="text-sm font-semibold text-foreground">{row.criterion}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">Plain Tools:</span> {row.plain}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">Typical upload tools:</span> {row.typicalCloud}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden overflow-x-auto rounded-xl border border-border bg-card/20 md:block">
+              <table className="w-full min-w-[720px] text-left text-sm">
+                <thead className="bg-muted/50 text-foreground">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold">Criterion</th>
+                    <th className="px-4 py-3 font-semibold">Plain Tools</th>
+                    <th className="px-4 py-3 font-semibold">Typical upload-based tools</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {comparisonSummary.map((row) => (
+                    <tr
+                      key={row.criterion}
+                      className={`border-t border-border ${row.criterion.toLowerCase().includes("upload") ? "bg-blue-500/[0.06]" : ""}`}
+                    >
+                      <td className="px-4 py-3 font-medium text-foreground">{row.criterion}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.plain}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.typicalCloud}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -178,11 +220,14 @@ export default function ComparePage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-xl border border-border bg-card/50 p-5 transition hover:border-accent/40"
+                className="group rounded-xl border border-border bg-card/50 p-5 transition hover:-translate-y-0.5 hover:border-accent/40"
               >
                 <h2 className="text-base font-semibold text-foreground">{item.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>
-                <p className="mt-4 text-xs font-medium text-accent">Read comparison</p>
+                <p className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-accent">
+                  Read comparison
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </p>
               </Link>
             ))}
           </section>

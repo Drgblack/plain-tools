@@ -329,11 +329,11 @@ const buildEvergreen = (
 })
 
 const compareRows = (competitorName: string): TrancheComparisonRow[] => [
-  { feature: "Uploads files?", plain: "No - local processing", competitor: "Usually yes - server processing" },
-  { feature: "Works offline after load", plain: "Yes for local tools", competitor: "Commonly no" },
-  { feature: "Account required", plain: "No for core local tools", competitor: "Often yes for full access" },
-  { feature: "Privacy verification", plain: "DevTools verification available", competitor: "Varies by provider path" },
-  { feature: "Sensitive-document fit", plain: "Strong local-first posture", competitor: `${competitorName} policy dependent` },
+  { feature: "Uploads files?", plain: "No for core local tools - local browser processing", competitor: "Commonly yes for hosted processing workflows" },
+  { feature: "Primary workflow model", plain: "Local-first utility workflow", competitor: `${competitorName} account and service model` },
+  { feature: "Works offline after load", plain: "Yes for local tools", competitor: "Usually limited or unavailable" },
+  { feature: "Privacy verification path", plain: "Inspectable with DevTools", competitor: "Depends on provider controls and transparency" },
+  { feature: "Best fit", plain: "Sensitive-document handling and no-upload operations", competitor: "Hosted collaboration and account-centric routing" },
 ]
 
 const buildCompare = (
@@ -363,48 +363,48 @@ const buildCompare = (
       id: "quick-summary",
       heading: "Quick summary",
       paragraphs: [
-        `${competitorName} can suit account-led, cloud-centric workflows. Plain.tools suits privacy-first workflows where local processing is required.`,
-        "Use both fit criteria and technical verification, not feature lists alone.",
+        `${competitorName} can suit account-led, cloud-centric workflows. Plain Tools suits privacy-first workflows where local processing is required.`,
+        "Use practical workflow criteria and technical verification steps, not feature lists alone.",
       ],
     },
     {
-      id: "privacy",
-      heading: "Privacy and data handling",
+      id: "privacy-comparison",
+      heading: "Privacy comparison",
       paragraphs: [
-        "Upload-based processing depends on policy and controls in external systems.",
-        "Local-first processing reduces transfer and retention exposure for sensitive workflows and can be verified in DevTools.",
+        "Hosted processing depends on provider policy, account controls, and retention settings.",
+        "Local-first processing reduces transfer exposure for sensitive workflows and can be validated directly in your browser.",
       ],
     },
     {
-      id: "speed-workflow",
-      heading: "Speed and workflow comparison",
+      id: "workflow-speed-comparison",
+      heading: "Workflow and speed comparison",
       paragraphs: [
-        "Cloud workflows add upload and download steps that may be acceptable for low-sensitivity tasks.",
-        "Local workflows remove upload waiting and keep handling closer to the operator.",
+        "Cloud workflows add upload and download steps that may still be acceptable for low-sensitivity work.",
+        "Local workflows remove transfer waiting for routine tasks and keep handling close to the operator.",
       ],
     },
     {
       id: "best-for",
       heading: "Best-for guidance",
       paragraphs: [
-        `Choose ${competitorName} when account integration and hosted collaboration are primary requirements.`,
+        `Choose ${competitorName} when account integration and hosted collaboration are central requirements.`,
         "Choose Plain.tools when no-upload handling, privacy verification, and fast local execution are priorities.",
       ],
     },
     {
       id: "when-plain",
-      heading: "When to choose Plain.tools",
+      heading: "When Plain Tools is the better choice",
       paragraphs: [
         "You work with sensitive files and need a no-upload workflow.",
-        "You want to verify data handling behaviour directly from the browser.",
+        "You want to verify behaviour directly in browser tooling.",
       ],
     },
     {
       id: "when-other",
       heading: "When another option may suit better",
       paragraphs: [
-        "You require a vendor-managed signing or review workflow with built-in account routing.",
-        "You prioritise hosted collaboration features over local-only processing controls.",
+        "You require vendor-managed collaboration, routing, or account-level administration.",
+        "You prioritise hosted features over local processing controls for the specific workflow.",
       ],
     },
   ],

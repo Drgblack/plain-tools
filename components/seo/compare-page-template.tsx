@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ShieldCheck, Gauge, Users } from "lucide-react"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
 import { FaqBlock } from "@/components/seo/faq-block"
@@ -113,6 +114,9 @@ type ComparePageTemplateProps = {
 export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
   const schema = buildCompareSchema(page)
   const links = getCompareSeoLinks(page.slug)
+  const uploadRow = page.comparisonRows.find((row) =>
+    row.feature.toLowerCase().includes("upload")
+  )
 
   return (
     <ArticleLayout
@@ -135,25 +139,94 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
         />
       }
       topContent={
-        <section className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="bg-muted/50 text-foreground">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Feature</th>
-                <th className="px-4 py-3 font-semibold">Plain</th>
-                <th className="px-4 py-3 font-semibold">{page.competitorName}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {page.comparisonRows.map((row) => (
-                <tr key={row.feature} className="border-t border-border">
-                  <td className="px-4 py-3 text-foreground">{row.feature}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{row.plain}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{row.competitor}</td>
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground">Quick comparison</h2>
+            <span className="rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              High-level view
+            </span>
+          </div>
+
+          {uploadRow ? (
+            <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-3 text-sm">
+              <p className="font-medium text-foreground">Uploads files?</p>
+              <p className="mt-1 text-muted-foreground">
+                Plain Tools: {uploadRow.plain} | {page.competitorName}: {uploadRow.competitor}
+              </p>
+            </div>
+          ) : null}
+
+          <div className="grid gap-3 md:hidden">
+            {page.comparisonRows.map((row) => {
+              const isUploadRow = row.feature.toLowerCase().includes("upload")
+              return (
+                <div
+                  key={row.feature}
+                  className={`rounded-xl border p-3 ${
+                    isUploadRow
+                      ? "border-blue-500/35 bg-blue-500/10"
+                      : "border-border bg-card/50"
+                  }`}
+                >
+                  <p className="text-sm font-semibold text-foreground">{row.feature}</p>
+                  <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+                    <p>
+                      <span className="font-medium text-foreground">Plain Tools:</span> {row.plain}
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">{page.competitorName}:</span>{" "}
+                      {row.competitor}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="hidden overflow-x-auto rounded-xl border border-border md:block">
+            <table className="w-full min-w-[700px] text-left text-sm">
+              <thead className="bg-muted/50 text-foreground">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">Feature</th>
+                  <th className="px-4 py-3 font-semibold">Plain Tools</th>
+                  <th className="px-4 py-3 font-semibold">{page.competitorName}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {page.comparisonRows.map((row) => {
+                  const isUploadRow = row.feature.toLowerCase().includes("upload")
+                  return (
+                    <tr
+                      key={row.feature}
+                      className={`border-t border-border ${isUploadRow ? "bg-blue-500/[0.06]" : ""}`}
+                    >
+                      <td className="px-4 py-3 font-medium text-foreground">{row.feature}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.plain}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.competitor}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-card/45 p-3">
+              <ShieldCheck className="h-4 w-4 text-accent" />
+              <p className="mt-2 text-sm font-semibold text-foreground">Privacy comparison</p>
+              <p className="mt-1 text-xs text-muted-foreground">How data is handled and what you can verify directly.</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card/45 p-3">
+              <Gauge className="h-4 w-4 text-accent" />
+              <p className="mt-2 text-sm font-semibold text-foreground">Workflow and speed</p>
+              <p className="mt-1 text-xs text-muted-foreground">Day-to-day execution cost, upload friction, and practical throughput.</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card/45 p-3">
+              <Users className="h-4 w-4 text-accent" />
+              <p className="mt-2 text-sm font-semibold text-foreground">Best fit</p>
+              <p className="mt-1 text-xs text-muted-foreground">Where Plain Tools or {page.competitorName} tends to suit better.</p>
+            </div>
+          </div>
         </section>
       }
       faq={<FaqBlock faqs={page.faqs} />}
