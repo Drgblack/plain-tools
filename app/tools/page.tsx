@@ -1,6 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Script from "next/script"
 import { ToolsSection } from "@/components/tools-section"
+import { serializeJsonLd } from "@/lib/sanitize"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = {
@@ -116,8 +124,37 @@ export default function ToolsPage() {
     { label: "Compare alternatives", href: "/compare" },
   ]
 
+  const toolsHubSchema = combineJsonLd([
+    buildCollectionPageSchema({
+      name: "Plain Tools PDF Hub",
+      description:
+        "Collection of privacy-first PDF tools that run in your browser with local processing and no uploads.",
+      url: "https://plain.tools/tools",
+    }),
+    buildBreadcrumbList([
+      { name: "Home", url: "https://plain.tools/" },
+      { name: "Tools", url: "https://plain.tools/tools" },
+    ]),
+    buildItemListSchema(
+      "Major Plain Tools",
+      crawlableToolDirectory.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        url: `https://plain.tools/tools/${tool.slug}`,
+      })),
+      "https://plain.tools/tools"
+    ),
+  ])
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      {toolsHubSchema ? (
+        <Script
+          id="tools-hub-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(toolsHubSchema) }}
+        />
+      ) : null}
       <main className="flex-1">
         <section className="border-b border-border px-4 py-8 sm:py-10">
           <div className="mx-auto max-w-6xl space-y-4">

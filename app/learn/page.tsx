@@ -24,46 +24,26 @@ import {
   Search,
 } from "lucide-react"
 import { serializeJsonLd } from "@/lib/sanitize"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 import { learnSections, type LearnArticleIconKey } from "@/lib/learn-data"
 
 // Structured data for the Learning Centre collection
-const collectionSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Plain Learning Centre",
-  description: "Comprehensive guides on WebAssembly, hardware acceleration, document redaction, offline workflows, and privacy-first PDF processing.",
-  url: "https://plain.tools/learn",
-  isPartOf: {
-    "@type": "WebSite",
-    name: "Plain",
-    url: "https://plain.tools",
-  },
-  about: [
-    { "@type": "Thing", name: "WebAssembly" },
-    { "@type": "Thing", name: "WebGPU" },
-    { "@type": "Thing", name: "Document Processing" },
-    { "@type": "Thing", name: "Privacy" },
-    { "@type": "Thing", name: "Client-Side Processing" },
-  ],
-  inLanguage: "en-GB",
-}
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://plain.tools/" },
-    { "@type": "ListItem", position: 2, name: "Learn", item: "https://plain.tools/learn" },
-  ],
-}
-
-const combinedSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    { ...collectionSchema, "@context": undefined },
-    { ...breadcrumbSchema, "@context": undefined },
-  ],
-}
+const combinedSchema = combineJsonLd([
+  buildCollectionPageSchema({
+    name: "Plain Learning Centre",
+    description:
+      "Comprehensive guides on WebAssembly, hardware acceleration, document redaction, offline workflows, and privacy-first PDF processing.",
+    url: "https://plain.tools/learn",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "Learn", url: "https://plain.tools/learn" },
+  ]),
+]) ?? {}
 
 const learnIconMap: Record<LearnArticleIconKey, typeof Shield> = {
   AlertTriangle,

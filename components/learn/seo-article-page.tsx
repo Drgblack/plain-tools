@@ -4,7 +4,12 @@ import Script from "next/script"
 import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
-import { combineSchemas, generateFAQSchema, generateTechArticleSchema } from "@/lib/schema"
+import {
+  combineSchemas,
+  generateFAQSchema,
+  generateHowToSchema,
+  generateTechArticleSchema,
+} from "@/lib/schema"
 import { serializeJsonLd } from "@/lib/sanitize"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
@@ -181,6 +186,29 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
         datePublished: publishedIso,
         dateModified: modifiedIso,
         proficiencyLevel: "Beginner",
+      }) as Record<string, unknown>
+    )
+  }
+
+  const supportsHowToSchema =
+    article.title.toLowerCase().startsWith("how to") ||
+    article.slug.startsWith("how-") ||
+    article.slug.includes("workflows/")
+
+  if (supportsHowToSchema && article.sections.length > 0) {
+    const howToSteps = article.sections.slice(0, 6).map((section) => ({
+      name: section.heading,
+      text:
+        section.paragraphs[0] ??
+        section.subSections?.[0]?.paragraphs?.[0] ??
+        "Follow this step and verify output before sharing.",
+    }))
+
+    schemas.push(
+      generateHowToSchema({
+        name: article.title,
+        description: article.description,
+        steps: howToSteps,
       }) as Record<string, unknown>
     )
   }

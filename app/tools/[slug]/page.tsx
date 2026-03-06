@@ -8,6 +8,7 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { buildFaqPageSchema, buildSoftwareApplicationSchema } from "@/lib/structured-data"
 import { getToolPageProfile } from "@/lib/tool-page-content"
 
 type ToolRouteParams = { slug: string }
@@ -48,67 +49,6 @@ const FallbackToolComponent = () => <div>Tool UI coming soon</div>
 const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
   const { slug } = await params
   return slug
-}
-
-function buildToolFaqSchema(toolName: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `Does ${toolName} upload my file?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `No. ${toolName} processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `Does ${toolName} work offline?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Yes. Once the page has loaded, ${toolName} works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `Is ${toolName} free?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Yes. ${toolName} is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.`,
-        },
-      },
-    ],
-  }
-}
-
-function buildToolWebApplicationSchema(
-  toolName: string,
-  slug: string,
-  description: string,
-  featureList: string[]
-) {
-  return {
-    "@context": "https://schema.org",
-    "@type": ["SoftwareApplication", "WebApplication"],
-    name: toolName,
-    description,
-    applicationCategory: "UtilitiesApplication",
-    operatingSystem: "Any — runs in web browser",
-    browserRequirements:
-      "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+)",
-    permissions: "No permissions required",
-    storageRequirements: "No installation or storage required",
-    isAccessibleForFree: true,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "EUR",
-    },
-    featureList,
-    url: `https://plain.tools/tools/${slug}`,
-  }
 }
 
 function normaliseToolMetadataTitle(rawTitle: string) {
@@ -184,13 +124,28 @@ export default async function ToolPage({ params }: PageProps) {
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
   const profile = getToolPageProfile(tool)
-  const faqSchema = buildToolFaqSchema(tool.name)
-  const webApplicationSchema = buildToolWebApplicationSchema(
-    tool.name,
-    slug,
-    profile.description,
-    profile.featureList
-  )
+  const faqSchema = buildFaqPageSchema([
+    {
+      question: `Does ${tool.name} upload my file?`,
+      answer: `No. ${tool.name} processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.`,
+    },
+    {
+      question: `Does ${tool.name} work offline?`,
+      answer: `Yes. Once the page has loaded, ${tool.name} works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.`,
+    },
+    {
+      question: `Is ${tool.name} free?`,
+      answer: `Yes. ${tool.name} is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.`,
+    },
+  ])
+  const webApplicationSchema = buildSoftwareApplicationSchema({
+    name: tool.name,
+    description: profile.description,
+    featureList: profile.featureList,
+    url: `https://plain.tools/tools/${slug}`,
+    browserRequirements:
+      "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+).",
+  })
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">

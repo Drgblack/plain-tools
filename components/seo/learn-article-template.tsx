@@ -6,6 +6,13 @@ import { RelatedLinks } from "@/components/seo/related-links"
 import { TrustBox } from "@/components/seo/trust-box"
 import type { TrancheLearnArticle } from "@/lib/seo/tranche1-content"
 import { getLearnSeoLinks } from "@/lib/seo/tranche1-link-map"
+import {
+  buildArticleSchema,
+  buildBreadcrumbList,
+  buildFaqPageSchema,
+  buildHowToSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 
 const BASE_URL = "https://plain.tools"
 
@@ -59,54 +66,45 @@ export function buildLearnArticleMetadata(
 }
 
 function buildLearnSchema(article: TrancheLearnArticle, basePath: string, sectionLabel: string) {
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        headline: article.title,
-        description: article.metaDescription,
-        author: {
-          "@type": "Organization",
-          name: "Plain Team",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "Plain",
-        },
-        mainEntityOfPage: {
-          "@type": "WebPage",
-          "@id": `${BASE_URL}${basePath}/${article.slug}`,
-        },
-        url: `${BASE_URL}${basePath}/${article.slug}`,
-        inLanguage: "en-GB",
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
-          { "@type": "ListItem", position: 2, name: sectionLabel, item: `${BASE_URL}${basePath}` },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: article.title,
-            item: `${BASE_URL}${basePath}/${article.slug}`,
-          },
-        ],
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: article.faqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faq.answer,
-          },
-        })),
-      },
-    ],
+  const pageUrl = `${BASE_URL}${basePath}/${article.slug}`
+  const schemas = [
+    buildArticleSchema({
+      headline: article.title,
+      description: article.metaDescription,
+      url: pageUrl,
+    }),
+    buildBreadcrumbList([
+      { name: "Home", url: BASE_URL },
+      { name: sectionLabel, url: `${BASE_URL}${basePath}` },
+      { name: article.title, url: pageUrl },
+    ]),
+    buildFaqPageSchema(
+      article.faqs.map((faq) => ({
+        question: faq.question,
+        answer: faq.answer,
+      }))
+    ),
+  ]
+
+  if (article.intent === "how-to") {
+    const howToSteps = article.sections
+      .slice(0, 6)
+      .map((section) => ({
+        name: section.heading,
+        text:
+          section.paragraphs[0] ??
+          section.bullets?.[0] ??
+          "Follow this step in sequence for a local no-upload workflow.",
+      }))
+
+    if (howToSteps.length > 0) {
+      schemas.push(
+        buildHowToSchema(article.title, article.metaDescription, howToSteps)
+      )
+    }
   }
+
+  return combineJsonLd(schemas) ?? schemas[0]
 }
 
 type LearnArticleTemplateProps = {
