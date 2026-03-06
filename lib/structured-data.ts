@@ -46,6 +46,14 @@ type WebSiteInput = {
   inLanguage?: string
 }
 
+type OrganizationInput = {
+  name: string
+  url: string
+  logoUrl?: string
+  sameAs?: string[]
+  contactEmail?: string
+}
+
 type WebApplicationInput = {
   name: string
   description: string
@@ -126,6 +134,24 @@ export function buildWebSiteSchema(input: WebSiteInput): JsonLdObject {
     url: input.url,
     ...(input.description ? { description: input.description } : {}),
     inLanguage: input.inLanguage ?? "en-GB",
+  })
+}
+
+export function buildOrganizationSchema(input: OrganizationInput): JsonLdObject {
+  return withContext({
+    "@type": "Organization",
+    name: input.name,
+    url: input.url,
+    ...(input.logoUrl
+      ? {
+          logo: {
+            "@type": "ImageObject",
+            url: input.logoUrl,
+          },
+        }
+      : {}),
+    ...(input.sameAs && input.sameAs.length > 0 ? { sameAs: input.sameAs } : {}),
+    ...(input.contactEmail ? { email: input.contactEmail } : {}),
   })
 }
 

@@ -1,13 +1,16 @@
 import type { Metadata } from "next"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 
-const BASE_URL = "https://plain.tools"
+export const BASE_URL = "https://plain.tools"
+const MIN_DESCRIPTION_LENGTH = 140
+const MAX_DESCRIPTION_LENGTH = 160
 
 type PageMetadataInput = {
   title: string
   description: string
   path: string
   image?: string
+  type?: "website" | "article"
 }
 
 function normalisePageTitle(rawTitle: string): string {
@@ -17,24 +20,43 @@ function normalisePageTitle(rawTitle: string): string {
   return buildStandardPageTitle(cleaned)
 }
 
+function normaliseDescription(rawDescription: string): string {
+  const cleaned = rawDescription.replace(/\s+/g, " ").trim()
+  if (cleaned.length <= MAX_DESCRIPTION_LENGTH) {
+    return cleaned
+  }
+
+  const clipped = cleaned.slice(0, MAX_DESCRIPTION_LENGTH)
+  const lastWhitespace = clipped.lastIndexOf(" ")
+  if (lastWhitespace < MIN_DESCRIPTION_LENGTH) {
+    return `${clipped.trimEnd()}…`
+  }
+  return `${clipped.slice(0, lastWhitespace).trimEnd()}…`
+}
+
 export function buildPageMetadata({
   title,
   description,
   path,
   image = "/og/default.png",
+  type = "website",
 }: PageMetadataInput): Metadata {
   const canonical = `${BASE_URL}${path === "/" ? "" : path}`
   const resolvedTitle = normalisePageTitle(title)
+  const resolvedDescription = normaliseDescription(description)
 
   return {
     title: resolvedTitle,
-    description,
+    description: resolvedDescription,
     alternates: {
       canonical,
     },
     openGraph: {
+      type,
+      siteName: "Plain Tools",
+      locale: "en_GB",
       title: resolvedTitle,
-      description,
+      description: resolvedDescription,
       url: canonical,
       images: [
         {
@@ -48,7 +70,7 @@ export function buildPageMetadata({
     twitter: {
       card: "summary_large_image",
       title: resolvedTitle,
-      description,
+      description: resolvedDescription,
       images: [image],
     },
   }

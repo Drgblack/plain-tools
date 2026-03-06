@@ -1,24 +1,13 @@
 import { Metadata } from "next"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export const metadata: Metadata = {
-  title: "Blog - Privacy-First PDF Insights | Plain Tools",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Blog",
   description:
-    "Read Plain Tools articles on local PDF processing, upload risks, privacy architecture, and practical workflow guidance for sensitive documents.",
-  openGraph: {
-    title: "Blog - Privacy-First PDF Insights | Plain Tools",
-    description:
-      "Insights on local PDF processing, privacy trade-offs, and practical document workflows.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog - Privacy-First PDF Insights | Plain Tools",
-    description:
-      "Insights on local PDF processing, privacy trade-offs, and practical document workflows.",
-  },
-  alternates: {
-    canonical: "https://plain.tools/blog",
-  },
-}
+    "Read Plain Tools articles on local PDF processing, upload risks, trust verification, and practical workflow guidance for sensitive documents.",
+  path: "/blog",
+  image: "/og/default.png",
+})
 
 export default function BlogLayout({
   children,

@@ -1,50 +1,28 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import Script from "next/script"
 import { Gauge, HardDrive, Lock, Radio, SearchCheck, Server, Shield, Wifi, Globe } from "lucide-react"
+import { JsonLd } from "@/components/seo/json-ld"
 import { ToolsSection } from "@/components/tools-section"
 import { ProofStrip } from "@/components/proof-strip"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
-import { buildStandardPageTitle } from "@/lib/page-title"
-import { serializeJsonLd } from "@/lib/sanitize"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
   buildItemListSchema,
+  buildWebApplicationSchema,
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
-export const metadata: Metadata = {
-  title: buildStandardPageTitle("PDF Tools Category"),
+export const metadata: Metadata = buildPageMetadata({
+  title: "PDF Tools",
   description:
-    "Browse the PDF category inside Plain Tools: merge, split, compress, convert, OCR, and signing workflows with browser-first processing.",
-  alternates: {
-    canonical: "https://plain.tools/tools",
-  },
-  openGraph: {
-    title: buildStandardPageTitle("PDF Tools Category"),
-    description:
-      "Explore privacy-first PDF tools that run locally in your browser. No uploads, calm workflows, and practical results.",
-    url: "https://plain.tools/tools",
-    images: [
-      {
-        url: "/og/tools.png",
-        width: 1200,
-        height: 630,
-        alt: "Plain Tools PDF tools",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: buildStandardPageTitle("PDF Tools Category"),
-    description:
-      "Merge, split, compress, convert, and sign PDFs locally in your browser. No uploads.",
-    images: ["/og/tools.png"],
-  },
-}
+    "Browse Plain Tools PDF workflows for merge, split, compress, convert, OCR, and signing. Core tools run in your browser with no upload step.",
+  path: "/tools",
+  image: "/og/tools.png",
+})
 
 export default function ToolsPage() {
   const popularTools = [
@@ -221,6 +199,17 @@ export default function ToolsPage() {
       { name: "Home", url: "https://plain.tools/" },
       { name: "Tools", url: "https://plain.tools/tools" },
     ]),
+    buildWebApplicationSchema({
+      name: "Plain Tools PDF Hub",
+      description:
+        "Browser-based PDF processing tools for conversion, organisation, OCR, and secure document workflows.",
+      url: "https://plain.tools/tools",
+      featureList: [
+        "Core tools process files locally in your browser",
+        "No file upload step for local workflows",
+        "Practical options for conversion, optimisation, and signing",
+      ],
+    }),
     buildItemListSchema(
       "Major Plain Tools",
       crawlableToolDirectory.map((tool) => ({
@@ -235,11 +224,7 @@ export default function ToolsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {toolsHubSchema ? (
-        <Script
-          id="tools-hub-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: serializeJsonLd(toolsHubSchema) }}
-        />
+        <JsonLd id="tools-hub-schema" schema={toolsHubSchema} />
       ) : null}
       <main className="flex-1">
         <section className="border-b border-border px-4 py-14 md:py-16">
@@ -276,6 +261,21 @@ export default function ToolsPage() {
                 </Link>
               ))}
             </div>
+            <form action="/tools" method="get" className="mt-4 rounded-xl border border-border/70 bg-card/35 p-4">
+              <label htmlFor="tool-search-hint" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Find a tool quickly
+              </label>
+              <input
+                id="tool-search-hint"
+                name="q"
+                type="search"
+                placeholder="Search by task, for example merge, split, OCR"
+                className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                Press <kbd className="rounded border border-border px-1 py-0.5">Ctrl</kbd>/<kbd className="rounded border border-border px-1 py-0.5">Cmd</kbd> + <kbd className="rounded border border-border px-1 py-0.5">K</kbd> for command search.
+              </p>
+            </form>
           </div>
         </section>
 

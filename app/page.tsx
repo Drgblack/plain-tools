@@ -15,13 +15,12 @@ import {
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
-import Script from "next/script"
 import { CategoryTile } from "@/components/category-tile"
 import { ProofStrip } from "@/components/proof-strip"
+import { JsonLd } from "@/components/seo/json-ld"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
-import { buildStandardPageTitle } from "@/lib/page-title"
-import { serializeJsonLd } from "@/lib/sanitize"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildItemListSchema,
@@ -34,35 +33,13 @@ import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
-export const metadata: Metadata = {
-  title: buildStandardPageTitle("Plain Tools"),
+export const metadata: Metadata = buildPageMetadata({
+  title: "Plain Tools",
   description:
-    "Plain Tools is a trust-first utility hub for PDF, network, file, and uptime workflows. Fast browser-first tools with privacy-conscious handling.",
-  alternates: {
-    canonical: "https://plain.tools",
-  },
-  openGraph: {
-    title: buildStandardPageTitle("Plain Tools"),
-    description:
-      "Practical utility tools across PDF, network diagnostics, and uptime checks, built with a trust-first approach.",
-    url: "https://plain.tools",
-    images: [
-      {
-        url: "/og/default.png",
-        width: 1200,
-        height: 630,
-        alt: "Plain Tools homepage preview",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: buildStandardPageTitle("Plain Tools"),
-    description:
-      "A trust-first utility platform with PDF tools, network diagnostics, and uptime checks.",
-    images: ["/og/default.png"],
-  },
-}
+    "Trust-first utility hub for PDF workflows, network diagnostics, file tools, and site status checks. Process files locally where supported with clear, verifiable behaviour.",
+  path: "/",
+  image: "/og/default.png",
+})
 
 const homePageSchema = combineJsonLd([
   buildWebSiteSchema({
@@ -360,11 +337,7 @@ export default function HomePage() {
   return (
     <>
       {homePageSchema ? (
-        <Script
-          id="homepage-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: serializeJsonLd(homePageSchema) }}
-        />
+        <JsonLd id="homepage-schema" schema={homePageSchema} />
       ) : null}
       
       <div className="flex flex-col">

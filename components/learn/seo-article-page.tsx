@@ -153,6 +153,10 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
   const ctaButtonLabel = ctaTool
     ? `Try ${ctaTool.name} — free, no upload required \u2192`
     : `${article.cta.label} \u2192`
+  const relatedComparisons = [
+    { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+    { label: "Plain vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+  ]
 
   const schemas: (Record<string, unknown> | null)[] = [
     {
@@ -301,6 +305,23 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {article.relatedLearn.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg border border-white/[0.08] bg-muted/20 p-4 text-sm font-medium text-foreground hover:border-accent/40 hover:text-accent"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              Related comparisons
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {relatedComparisons.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

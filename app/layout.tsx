@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AppShellChrome } from '@/components/app-shell-chrome'
+import { JsonLd } from '@/components/seo/json-ld'
 import { buildStandardPageTitle } from '@/lib/page-title'
+import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
 
@@ -18,11 +20,26 @@ ${themeInitScript}
   } catch {}
 }
 `
+const rootSchema = combineJsonLd([
+  buildWebSiteSchema({
+    name: "Plain Tools",
+    url: "https://plain.tools",
+    description:
+      "Trust-first utility platform for PDF workflows, file tasks, network diagnostics, and site availability checks.",
+  }),
+  buildOrganizationSchema({
+    name: "Plain Tools",
+    url: "https://plain.tools",
+    logoUrl: "https://plain.tools/icon-512x512.png",
+    contactEmail: "hello@plain.tools",
+    sameAs: ["https://github.com/Drgblack/plain-tools"],
+  }),
+])
 
 export const metadata: Metadata = {
   title: buildStandardPageTitle("Plain Tools"),
   description:
-    "Plain Tools offers privacy-first browser utilities for PDF workflows and practical file tasks. Files are processed locally with no upload requirement.",
+    "Plain Tools offers privacy-first browser utilities for PDF workflows, network diagnostics, and practical file tasks. Local processing where supported, no uploads for core tools.",
   generator: "Plain Tools",
   keywords: [
     "offline PDF tools",
@@ -108,6 +125,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
+        {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
         <AppShellChrome>{children}</AppShellChrome>

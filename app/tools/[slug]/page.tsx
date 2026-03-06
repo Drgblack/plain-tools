@@ -1,16 +1,15 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
-import Script from "next/script"
 import Link from "next/link"
 
 import { ErrorBoundary } from "@/components/error-boundary"
+import { JsonLd } from "@/components/seo/json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
-import { buildStandardPageTitle } from "@/lib/page-title"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
-import { serializeJsonLd } from "@/lib/sanitize"
 import {
   buildFaqPageSchema,
   buildHowToSchema,
@@ -60,10 +59,14 @@ const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
 
 function normaliseToolMetadataTitle(rawTitle: string, fallbackToolName: string) {
   const cleaned = rawTitle.replace("Plain.tools", "Plain Tools")
-  if (cleaned.includes("|") || cleaned.includes(" - ")) {
-    return buildStandardPageTitle(fallbackToolName)
-  }
-  return buildStandardPageTitle(cleaned)
+  if (cleaned.includes("|") || cleaned.includes(" - ")) return fallbackToolName
+  return cleaned
+}
+
+function buildToolLeadParagraph(description: string, category: string) {
+  if (category === "AI Assistant") return description
+  if (/files?\s+never\s+leave\s+your\s+device/i.test(description)) return description
+  return `${description} Files never leave your device.`
 }
 
 export async function generateStaticParams() {
@@ -77,46 +80,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const tool = getToolBySlug(slug)
 
   if (!tool) {
-    return {
-      title: "Tool Not Found - Plain",
+    return buildPageMetadata({
+      title: "Tool not found",
       description:
-        "The requested Plain tool could not be found. Browse available offline PDF tools and process documents locally without uploads.",
-    }
+        "The requested tool could not be found. Browse available Plain Tools workflows for local processing and practical document tasks.",
+      path: "/tools",
+      image: "/og/tools.png",
+    })
   }
 
   const profile = getToolPageProfile(tool)
-  const description = profile.description
+  const description = buildToolLeadParagraph(profile.description, tool.category)
   const title = normaliseToolMetadataTitle(profile.title, tool.name)
-
-  return {
+  const baseMetadata = buildPageMetadata({
     title,
     description,
+    path: `/tools/${slug}`,
+    image: "/og/tools.png",
+  })
+
+  return {
+    ...baseMetadata,
     alternates: {
-      canonical: `https://plain.tools/tools/${slug}`,
+      ...baseMetadata.alternates,
       languages: {
         en: `https://plain.tools/tools/${slug}`,
         de: `https://plain.tools/tools/${slug}`,
         "x-default": `https://plain.tools/tools/${slug}`,
       },
-    },
-    openGraph: {
-      title,
-      description,
-      url: `https://plain.tools/tools/${slug}`,
-      images: [
-        {
-          url: "/opengraph-image",
-          width: 1200,
-          height: 630,
-          alt: `${tool.name} - Plain`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: ["/opengraph-image"],
     },
   }
 }
@@ -134,6 +125,7 @@ export default async function ToolPage({ params }: PageProps) {
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
   const profile = getToolPageProfile(tool)
+  const introLead = buildToolLeadParagraph(profile.description, tool.category)
   const faqSchema = buildFaqPageSchema([
     {
       question: `Does ${tool.name} upload my file?`,
@@ -181,21 +173,9 @@ export default async function ToolPage({ params }: PageProps) {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
-      <Script
-        id={`tool-webapp-schema-${tool.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(webApplicationSchema) }}
-      />
-      <Script
-        id={`tool-faq-schema-${tool.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
-      />
-      <Script
-        id={`tool-howto-schema-${tool.slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }}
-      />
+      <JsonLd id={`tool-webapp-schema-${tool.slug}`} schema={webApplicationSchema} />
+      <JsonLd id={`tool-faq-schema-${tool.slug}`} schema={faqSchema} />
+      <JsonLd id={`tool-howto-schema-${tool.slug}`} schema={howToSchema} />
       
 
       <main className="flex-1">
@@ -210,7 +190,7 @@ export default async function ToolPage({ params }: PageProps) {
           />
           <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{tool.name}</h1>
           <p className="mt-3 mb-8 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            {profile.description}
+            {introLead}
           </p>
 
           {tool.available ? (

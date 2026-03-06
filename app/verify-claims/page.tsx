@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
+import { JsonLd } from "@/components/seo/json-ld"
 import { VerifyClaimsContent } from "@/components/verify-claims-content"
-import { serializeJsonLd } from "@/lib/sanitize"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
@@ -11,35 +12,13 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 
-export const metadata: Metadata = {
-  title: "Verify No-Upload Claims - Plain Tools",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Verify claims",
   description:
-    "Verify Plain Tools privacy claims with step-by-step DevTools checks. Confirm local processing behaviour and inspect network requests yourself.",
-  alternates: {
-    canonical: "https://plain.tools/verify-claims",
-  },
-  openGraph: {
-    title: "Verify No-Upload Claims - Plain Tools",
-    description:
-      "Use this verification guide to confirm whether PDF processing stays local in your browser.",
-    url: "https://plain.tools/verify-claims",
-    images: [
-      {
-        url: "/og/default.png",
-        width: 1200,
-        height: 630,
-        alt: "Verify Plain Tools privacy claims",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Verify No-Upload Claims - Plain Tools",
-    description:
-      "Step-by-step DevTools checks to verify local processing and no-upload behaviour.",
-    images: ["/og/default.png"],
-  },
-}
+    "Verify Plain Tools no-upload claims using practical DevTools checks. Confirm local processing behaviour and inspect requests yourself, step by step.",
+  path: "/verify-claims",
+  image: "/og/default.png",
+})
 
 const jsonLd = combineJsonLd([
   buildWebPageSchema({
@@ -91,10 +70,7 @@ export default function VerifyClaimsPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd ?? {}) }}
-      />
+      {jsonLd ? <JsonLd id="verify-claims-schema" schema={jsonLd} /> : null}
       <main className="overflow-x-hidden">
         <section className="border-b border-border/70 bg-card/20 px-4 py-10">
           <div className="mx-auto max-w-5xl space-y-6">
