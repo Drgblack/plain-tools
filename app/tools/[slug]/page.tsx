@@ -31,6 +31,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
   "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
   "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
+  "sign-pdf": lazy(() => import("@/components/tools/sign-pdf-tool")),
   "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
   "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
   "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),

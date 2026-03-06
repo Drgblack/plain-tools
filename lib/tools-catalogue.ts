@@ -149,6 +149,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     },
   },
   {
+    id: "sign-pdf",
+    name: "Sign PDF",
+    slug: "sign-pdf",
+    category: "Security & Privacy",
+    description:
+      "Place a visual signature on a PDF locally using draw or typed input.",
+    badge: "100% Local",
+    icon: "PenTool",
+    available: true,
+  },
+  {
     id: "pdf-to-word",
     name: "PDF to Word",
     slug: "pdf-to-word",
