@@ -22,14 +22,14 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = {
-  title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+  title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
   description:
-    "Use Plain.tools for private PDF workflows: merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no uploads.",
+    "Use Plain Tools for private PDF workflows: merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no uploads.",
   alternates: {
     canonical: "https://plain.tools",
   },
   openGraph: {
-    title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+    title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
     description:
       "Calm, practical PDF tools for sensitive documents. Processed locally in your browser with no file uploads.",
     url: "https://plain.tools",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+    title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
     description:
       "Merge, split, convert, and sign PDFs locally in your browser. No uploads.",
     images: ["/og/default.png"],
@@ -55,8 +55,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Plain.tools',
-  description: 'Plain.tools is a privacy-first collection of PDF and browser tools that run locally on your device without uploading files to external servers.',
+  name: 'Plain Tools',
+  description: 'Plain Tools is a privacy-first collection of PDF and browser tools that run locally on your device without uploading files to external servers.',
   url: 'https://plain.tools',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
@@ -77,14 +77,14 @@ const categories = [
   {
     name: "Network Tools",
     description: "IP lookup, DNS queries, connectivity tests, and network diagnostics",
-    href: "/network-tools",
+    href: "/tools",
     icon: <Globe className="h-6 w-6" />,
     toolCount: 4,
   },
   {
     name: "File Tools",
     description: "Convert, compress, and transform files in your browser",
-    href: "/file-tools",
+    href: "/tools",
     icon: <FileText className="h-6 w-6" />,
     toolCount: 3,
   },

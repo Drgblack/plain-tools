@@ -1,16 +1,19 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Read Plain blog posts on offline PDF tools, local browser processing, privacy architecture, tool comparisons, and practical guides for secure document.",
+  title: "Blog - Privacy-First PDF Insights | Plain Tools",
+  description:
+    "Read Plain Tools articles on local PDF processing, upload risks, privacy architecture, and practical workflow guidance for sensitive documents.",
   openGraph: {
-    title: "Blog - Plain",
-    description: "Plain writes about PDFs, local file processing, and browser-based document tools.",
+    title: "Blog - Privacy-First PDF Insights | Plain Tools",
+    description:
+      "Insights on local PDF processing, privacy trade-offs, and practical document workflows.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog - Plain",
-    description: "Plain writes about PDFs, local file processing, and browser-based document tools.",
+    title: "Blog - Privacy-First PDF Insights | Plain Tools",
+    description:
+      "Insights on local PDF processing, privacy trade-offs, and practical document workflows.",
   },
   alternates: {
     canonical: "https://plain.tools/blog",

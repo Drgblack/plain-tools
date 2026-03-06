@@ -2,6 +2,10 @@ import { Metadata } from 'next'
 
 const BASE_URL = 'https://plain.tools'
 
+function withBrand(title: string) {
+  return title.includes("Plain Tools") ? title : `${title} | Plain Tools`
+}
+
 interface ToolMetadataProps {
   name: string
   description: string
@@ -9,14 +13,14 @@ interface ToolMetadataProps {
 }
 
 export function generateToolMetadata({ name, description, slug }: ToolMetadataProps): Metadata {
-  const title = name
+  const title = withBrand(name)
   const fullDescription = `${description} Plain Tools runs entirely in your browser with no uploads and no tracking.`
   
   return {
     title,
     description: fullDescription,
     openGraph: {
-      title: `${name} | Plain Tools`,
+      title,
       description: fullDescription,
       url: `${BASE_URL}/${slug}`,
       siteName: 'Plain Tools',
@@ -24,7 +28,7 @@ export function generateToolMetadata({ name, description, slug }: ToolMetadataPr
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${name} | Plain Tools`,
+      title,
       description: fullDescription,
     },
     alternates: {
@@ -41,14 +45,14 @@ interface CategoryMetadataProps {
 }
 
 export function generateCategoryMetadata({ name, description, slug, toolCount }: CategoryMetadataProps): Metadata {
-  const title = name
+  const title = withBrand(name)
   const fullDescription = `${description} Browse ${toolCount} privacy-first ${name.toLowerCase()} that run locally in your browser.`
   
   return {
     title,
     description: fullDescription,
     openGraph: {
-      title: `${name} | Plain Tools`,
+      title,
       description: fullDescription,
       url: `${BASE_URL}/${slug}`,
       siteName: 'Plain Tools',
@@ -56,7 +60,7 @@ export function generateCategoryMetadata({ name, description, slug, toolCount }:
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${name} | Plain Tools`,
+      title,
       description: fullDescription,
     },
     alternates: {
@@ -72,11 +76,12 @@ interface StaticPageMetadataProps {
 }
 
 export function generateStaticPageMetadata({ title, description, slug }: StaticPageMetadataProps): Metadata {
+  const brandedTitle = withBrand(title)
   return {
-    title,
+    title: brandedTitle,
     description,
     openGraph: {
-      title: `${title} | Plain Tools`,
+      title: brandedTitle,
       description,
       url: `${BASE_URL}/${slug}`,
       siteName: 'Plain Tools',
@@ -84,7 +89,7 @@ export function generateStaticPageMetadata({ title, description, slug }: StaticP
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | Plain Tools`,
+      title: brandedTitle,
       description,
     },
     alternates: {

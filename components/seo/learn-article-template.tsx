@@ -26,7 +26,9 @@ export function buildLearnArticleMetadata(
 ): Metadata {
   const basePath = options?.basePath ?? "/learn"
   const canonical = `${BASE_URL}${basePath}/${article.slug}`
-  const title = article.metaTitle.replace("Plain Tools", "Plain.tools") || `${titleCase(article.primaryQuery)} - Offline & Private | Plain.tools`
+  const title =
+    article.metaTitle.replace("Plain.tools", "Plain Tools") ||
+    `${titleCase(article.primaryQuery)} - Offline & Private | Plain Tools`
   return {
     title,
     description: article.metaDescription,

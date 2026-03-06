@@ -58,9 +58,16 @@ export const buildLearnArticleMetadata = (
 ): Metadata => {
   const basePath = options?.basePath ?? article.basePath ?? "/learn"
   const canonicalUrl = `${SITE_URL}${basePath}/${article.slug}`
+  const title = `${article.title} | Plain Tools`
+  const socialImage =
+    basePath === "/compare"
+      ? "/og/compare.png"
+      : basePath === "/file-converters"
+        ? "/og/tools.png"
+        : "/og/learn.png"
 
   return {
-    title: `${article.title} - Plain Learn`,
+    title,
     description: article.description,
     keywords: article.keywords,
     alternates: {
@@ -72,15 +79,24 @@ export const buildLearnArticleMetadata = (
       },
     },
     openGraph: {
-      title: `${article.title} - Plain`,
+      title,
       description: article.description,
       url: canonicalUrl,
       type: "article",
+      images: [
+        {
+          url: socialImage,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${article.title} - Plain`,
+      title,
       description: article.description,
+      images: [socialImage],
     },
   }
 }

@@ -12,7 +12,7 @@ const BASE_URL = "https://plain.tools"
 
 export function buildComparePageMetadata(page: TrancheComparePage): Metadata {
   const canonical = `${BASE_URL}/compare/${page.slug}`
-  const title = page.metaTitle.replace("Plain Tools", "Plain.tools")
+  const title = page.metaTitle.replace("Plain.tools", "Plain Tools")
   return {
     title,
     description: page.metaDescription,

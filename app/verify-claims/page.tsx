@@ -4,11 +4,32 @@ import { VerifyClaimsContent } from "@/components/verify-claims-content"
 import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
-  title: "We Dare You to Catch Us Uploading Your Files",
+  title: "Verify No-Upload Claims - Plain Tools",
   description:
-    "Interactive proof page showing exactly how to verify Plain's zero-upload privacy claims in DevTools.",
+    "Verify Plain Tools privacy claims with step-by-step DevTools checks. Confirm local processing behaviour and inspect network requests yourself.",
   alternates: {
     canonical: "https://plain.tools/verify-claims",
+  },
+  openGraph: {
+    title: "Verify No-Upload Claims - Plain Tools",
+    description:
+      "Use this verification guide to confirm whether PDF processing stays local in your browser.",
+    url: "https://plain.tools/verify-claims",
+    images: [
+      {
+        url: "/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Verify Plain Tools privacy claims",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Verify No-Upload Claims - Plain Tools",
+    description:
+      "Step-by-step DevTools checks to verify local processing and no-upload behaviour.",
+    images: ["/og/default.png"],
   },
 }
 

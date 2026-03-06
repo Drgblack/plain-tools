@@ -111,6 +111,11 @@ function buildToolWebApplicationSchema(
   }
 }
 
+function normaliseToolMetadataTitle(rawTitle: string) {
+  const title = rawTitle.replace("Plain.tools", "Plain Tools")
+  return title.includes("Plain Tools") ? title : `${title} | Plain Tools`
+}
+
 export async function generateStaticParams() {
   return TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     slug: tool.slug,
@@ -131,9 +136,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const profile = getToolPageProfile(tool)
   const description = profile.description
+  const title = normaliseToolMetadataTitle(profile.title)
 
   return {
-    title: profile.title,
+    title,
     description,
     alternates: {
       canonical: `https://plain.tools/tools/${slug}`,
@@ -144,7 +150,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     openGraph: {
-      title: profile.title,
+      title,
       description,
       url: `https://plain.tools/tools/${slug}`,
       images: [
@@ -158,7 +164,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: profile.title,
+      title,
       description,
       images: ["/opengraph-image"],
     },

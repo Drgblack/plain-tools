@@ -5,14 +5,14 @@ import Script from "next/script"
 import { serializeJsonLd } from "@/lib/sanitize"
 
 export const metadata: Metadata = {
-  title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain.tools",
+  title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
   description:
-    "Compare Plain.tools with major PDF platforms on privacy handling, upload requirements, workflow speed, and practical fit for sensitive documents.",
+    "Compare Plain Tools with major PDF platforms on privacy handling, upload requirements, workflow speed, and practical fit for sensitive documents.",
   alternates: {
     canonical: "https://plain.tools/compare",
   },
   openGraph: {
-    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain.tools",
+    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
     description:
       "Use neutral, practical comparisons between Plain.tools and upload-based PDF alternatives.",
     url: "https://plain.tools/compare",
@@ -21,13 +21,13 @@ export const metadata: Metadata = {
         url: "/og/compare.png",
         width: 1200,
         height: 630,
-        alt: "Plain.tools comparison hub",
+        alt: "Plain Tools comparison hub",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain.tools",
+    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
     description:
       "Practical PDF-tool comparisons focused on privacy, speed, and operational fit.",
     images: ["/og/compare.png"],

@@ -4,14 +4,14 @@ import { ToolsSection } from "@/components/tools-section"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = {
-  title: "Private PDF Tools - Local Browser Processing | Plain.tools",
+  title: "PDF Tools - Local & Private | Plain Tools",
   description:
-    "Browse Plain.tools PDF utilities for merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no file uploads.",
+    "Browse local PDF tools for merge, split, compress, convert, OCR, and signing. Process files in your browser with no uploads or account friction.",
   alternates: {
     canonical: "https://plain.tools/tools",
   },
   openGraph: {
-    title: "Private PDF Tools - Local Browser Processing | Plain.tools",
+    title: "PDF Tools - Local & Private | Plain Tools",
     description:
       "Explore privacy-first PDF tools that run locally in your browser. No uploads, calm workflows, and practical results.",
     url: "https://plain.tools/tools",
@@ -20,13 +20,13 @@ export const metadata: Metadata = {
         url: "/og/tools.png",
         width: 1200,
         height: 630,
-        alt: "Plain.tools PDF tools",
+        alt: "Plain Tools PDF tools",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Private PDF Tools - Local Browser Processing | Plain.tools",
+    title: "PDF Tools - Local & Private | Plain Tools",
     description:
       "Merge, split, compress, convert, and sign PDFs locally in your browser. No uploads.",
     images: ["/og/tools.png"],

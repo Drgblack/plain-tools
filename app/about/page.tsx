@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ChevronRight, Shield, Zap, Globe, Code } from "lucide-react"
-import { generateStaticPageMetadata } from "@/lib/seo"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export const metadata: Metadata = generateStaticPageMetadata({
-  title: "About",
-  description: "Plain Tools builds privacy-first browser utilities that run entirely on your device. No uploads, no tracking, no compromises.",
-  slug: "about",
+export const metadata: Metadata = buildPageMetadata({
+  title: "About Plain Tools - Privacy-First Browser Utilities",
+  description:
+    "Learn how Plain Tools is built for local browser processing, no-upload workflows, and transparent privacy claims for sensitive files.",
+  path: "/about",
+  image: "/og/default.png",
 })
 
 const principles = [

@@ -1,20 +1,19 @@
-import { Metadata } from "next"
+import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Reorder PDF Pages Offline – Plain",
-  description: "Reorder PDF pages locally with drag-and-drop controls, page rotation, and secure no-upload processing for private document organisation workflows. Built for.",
-  openGraph: {
-    title: "Reorder PDF Pages Offline – Plain",
-    description:
-      "Rearrange PDF pages offline in your browser with local processing and no server uploads for confidential file preparation.",
-  },
-}
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export default function ReorderPDFLayout({
+export const metadata: Metadata = buildPageMetadata({
+  title: "Reorder PDF Pages in Browser - Private and Free | Plain Tools",
+  description:
+    "Reorder PDF pages with local browser processing only. Drag pages into place and export without uploads or server-side handling.",
+  path: "/tools/reorder-pdf",
+  image: "/og/tools.png",
+})
+
+export default function ReorderPdfLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return children
 }
-

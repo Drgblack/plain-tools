@@ -9,10 +9,7 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 const themeInitScript = buildThemeInitScript()
 
 export const metadata: Metadata = {
-  title: {
-    default: "Plain.tools - Private Browser PDF Tools",
-    template: "%s | Plain.tools",
-  },
+  title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
   description:
     "Plain.tools offers privacy-first browser utilities for PDF workflows and practical file tasks. Files are processed locally with no upload requirement.",
   generator: "plain.tools",
@@ -31,8 +28,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: "https://plain.tools",
-    siteName: "Plain.tools",
-    title: "Plain.tools - Private Browser PDF Tools",
+    siteName: "Plain Tools",
+    title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
     description:
       "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
     images: [
@@ -40,13 +37,13 @@ export const metadata: Metadata = {
         url: "/og/default.png",
         width: 1200,
         height: 630,
-        alt: "Plain.tools",
+        alt: "Plain Tools",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Plain.tools - Private Browser PDF Tools",
+    title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
     description:
       "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
     images: ["/og/default.png"],

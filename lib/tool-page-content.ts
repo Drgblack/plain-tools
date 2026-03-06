@@ -19,9 +19,9 @@ const DEFAULT_LIMITATION =
 
 const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
   "merge-pdf": {
-    title: "Merge PDF Locally - Free Private PDF Merger | Plain.tools",
+    title: "Merge PDFs Locally - No Upload | Plain Tools",
     description:
-      "Merge PDF files locally in your browser with Plain.tools. No uploads, no file storage, and fast private output.",
+      "Merge PDF files locally in your browser with Plain Tools. No uploads, no file storage, and fast private output.",
     trustPoints: DEFAULT_TRUST_POINTS,
     limitation: "Best-effort merge. Source PDF corruption or encryption can prevent successful output.",
     featureList: [
@@ -32,7 +32,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "split-pdf": {
-    title: "Split PDF Files Locally - No Upload Required | Plain.tools",
+    title: "Split PDF Locally - No Upload | Plain Tools",
     description:
       "Split PDF pages by range or extract individual pages locally in your browser. Private, fast, and no upload required.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -45,7 +45,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "compress-pdf": {
-    title: "Compress PDF in Your Browser - Private & Free | Plain.tools",
+    title: "Compress PDF Locally - No Upload | Plain Tools",
     description:
       "Compress PDF files locally with light, medium, or strong settings. No uploads and no server-side file handling.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -59,9 +59,9 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "pdf-to-word": {
-    title: "PDF to Word Locally - Private .docx Conversion | Plain.tools",
+    title: "PDF to Word Locally - No Upload | Plain Tools",
     description:
-      "Convert PDF to Word (.docx) locally in your browser. No uploads, no cloud storage, and private text extraction.",
+      "Convert PDF to Word (.docx) locally in your browser with Plain Tools. No uploads, no cloud storage, and private text extraction.",
     trustPoints: DEFAULT_TRUST_POINTS,
     limitation: "Best-effort conversion. Complex layouts and forms may not stay perfectly formatted.",
     featureList: [
@@ -72,7 +72,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "word-to-pdf": {
-    title: "Word to PDF in Browser - Offline Private Conversion | Plain.tools",
+    title: "Word to PDF Locally - No Upload | Plain Tools",
     description:
       "Convert Word (.docx) files to PDF locally in your browser. Fast private processing with no uploads.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -85,7 +85,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "pdf-to-jpg": {
-    title: "PDF to JPG Converter - Local No Upload Tool | Plain.tools",
+    title: "PDF to JPG Locally - No Upload | Plain Tools",
     description:
       "Convert PDF pages to JPG images locally with quality and scale options. No uploads and private output handling.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -98,7 +98,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "jpg-to-pdf": {
-    title: "JPG to PDF Converter - Private Browser Tool | Plain.tools",
+    title: "JPG to PDF Locally - No Upload | Plain Tools",
     description:
       "Combine JPG, JPEG, or PNG images into one PDF locally. No uploads, no cloud storage, and simple layout controls.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -111,7 +111,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "pdf-to-excel": {
-    title: "PDF to Excel Converter - Local Table Extraction | Plain.tools",
+    title: "PDF to Excel Locally - No Upload | Plain Tools",
     description:
       "Extract table-like data from PDF to spreadsheet output locally in your browser with no uploads.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -125,7 +125,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "pdf-to-ppt": {
-    title: "PDF to PowerPoint Locally - Private Slide Export | Plain.tools",
+    title: "PDF to PowerPoint Locally - No Upload | Plain Tools",
     description:
       "Convert PDF pages to PowerPoint slides locally in your browser. No upload required and private processing.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -138,7 +138,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "sign-pdf": {
-    title: "Sign PDF Locally - Visual Signature Placement | Plain.tools",
+    title: "Sign PDF Locally - No Upload | Plain Tools",
     description:
       "Add a visual signature to PDF pages locally using draw or typed input. Private browser processing with no uploads.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -152,7 +152,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "protect-pdf": {
-    title: "Protect PDF with Password - Local Encryption Tool | Plain.tools",
+    title: "Protect PDF Locally - No Upload | Plain Tools",
     description:
       "Encrypt PDF files with a password locally in your browser. No uploads and no server-side file handling.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -166,7 +166,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "unlock-pdf": {
-    title: "Unlock PDF Locally - Remove Password with Known Key | Plain.tools",
+    title: "Unlock PDF Locally - No Upload | Plain Tools",
     description:
       "Unlock password-protected PDFs locally in your browser when you have the password. No uploads or server processing.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -179,7 +179,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "ocr-pdf": {
-    title: "OCR PDF Locally - Searchable PDF or Text Export | Plain.tools",
+    title: "OCR PDF Locally - No Upload | Plain Tools",
     description:
       "Run OCR on scanned PDFs locally in your browser and export searchable PDF or text output. No uploads.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -193,7 +193,7 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
     ],
   },
   "offline-ocr": {
-    title: "Offline OCR PDF Tool - Private Searchable Output | Plain.tools",
+    title: "Offline OCR PDF Tool - No Upload | Plain Tools",
     description:
       "Generate searchable PDFs locally from scanned documents using offline OCR in your browser with no uploads.",
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -216,7 +216,7 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
   }
 
   return {
-    title: `${tool.name} - Offline Private PDF Tool | Plain.tools`,
+    title: `${tool.name} Locally - No Upload | Plain Tools`,
     description:
       `${tool.description} Process files locally in your browser with no uploads or server-side handling.`,
     trustPoints: DEFAULT_TRUST_POINTS,
@@ -229,4 +229,3 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
     ],
   }
 }
-

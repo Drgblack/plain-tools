@@ -1,24 +1,19 @@
 import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "AI PDF Assistant – Plain",
-  description: "Use Plain's AI PDF assistant workflow with local text extraction and explicit opt-in processing boundaries for summary, Q&A, and editing support. Built for.",
-  openGraph: {
-    title: "AI PDF Assistant – Plain",
-    description:
-      "Run AI-assisted PDF workflows with local extraction, consent controls, and clear privacy boundaries before any server processing.",
-  },
-  alternates: {
-    canonical: "https://plain.tools/tools/ai-pdf-assistant",
-  },
-}
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export default function AiPdfAssistantLayout({
+export const metadata: Metadata = buildPageMetadata({
+  title: "AI PDF Assistant - Summarise and Ask Questions | Plain Tools",
+  description:
+    "Summarise PDFs and ask document questions with Plain Tools. Extraction starts locally and AI responses run only after explicit opt-in.",
+  path: "/tools/ai-pdf-assistant",
+  image: "/og/tools.png",
+})
+
+export default function AIPdfAssistantLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return children
 }
-
-

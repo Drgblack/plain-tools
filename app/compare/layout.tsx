@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Compare Plain.tools with major PDF platforms",
+  title: "Compare PDF Tools - Plain Tools Alternatives",
   description:
-    "Compare Plain.tools with major PDF platforms on privacy handling, upload requirements, offline support, and practical workflow fit.",
+    "Compare Plain Tools with major PDF platforms on privacy handling, upload requirements, offline support, and practical workflow fit.",
   alternates: {
     canonical: "https://plain.tools/compare",
     languages: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Compare Plain.tools with major PDF platforms",
+    title: "Compare PDF Tools - Plain Tools Alternatives",
     description:
       "Compare privacy, upload requirements, and workflow fit across common PDF alternatives.",
     url: "https://plain.tools/compare",
@@ -22,13 +22,13 @@ export const metadata: Metadata = {
         url: "/og/compare.png",
         width: 1200,
         height: 630,
-        alt: "Plain.tools comparison pages",
+        alt: "Plain Tools comparison pages",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compare Plain.tools with major PDF platforms",
+    title: "Compare PDF Tools - Plain Tools Alternatives",
     description:
       "Fair PDF tool comparisons focused on privacy, speed, and practical workflow fit.",
     images: ["/og/compare.png"],
