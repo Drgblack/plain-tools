@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AppShellChrome } from '@/components/app-shell-chrome'
 import { JsonLd } from '@/components/seo/json-ld'
-import { buildStandardPageTitle } from '@/lib/page-title'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
@@ -37,7 +36,7 @@ const rootSchema = combineJsonLd([
 ])
 
 export const metadata: Metadata = {
-  title: buildStandardPageTitle("Plain Tools"),
+  title: "Plain Tools - Local utility hub for PDF, file and network workflows",
   description:
     "Plain Tools offers privacy-first browser utilities for PDF workflows, network diagnostics, and practical file tasks. Local processing where supported, no uploads for core tools.",
   generator: "Plain Tools",

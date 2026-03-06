@@ -4,7 +4,7 @@ import { ChevronRight, Shield, Zap, Globe, Code } from "lucide-react"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "About Plain Tools - Privacy-First Browser Utilities",
+  title: "About",
   description:
     "Learn how Plain Tools is built for local browser processing, no-upload workflows, and transparent privacy claims for sensitive files.",
   path: "/about",

@@ -6,9 +6,9 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 import { CHANGELOG_ITEMS } from "@/lib/changelog-data"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Changelog - Product Updates | Plain Tools",
+  title: "Changelog",
   description:
-    "Track recent Plain Tools updates across privacy, PDF workflows, SEO improvements, and platform reliability.",
+    "Track shipped Plain Tools updates across PDF workflows, network diagnostics, trust features, and site-quality improvements with practical release notes.",
   path: "/changelog",
   image: "/og/default.png",
 })

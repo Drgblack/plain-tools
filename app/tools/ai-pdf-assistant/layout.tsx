@@ -3,9 +3,9 @@ import type { Metadata } from "next"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "AI PDF Assistant - Summarise and Ask Questions | Plain Tools",
+  title: "AI PDF assistant",
   description:
-    "Summarise PDFs and ask document questions with Plain Tools. Extraction starts locally and AI responses run only after explicit opt-in.",
+    "Summarise PDFs and ask focused document questions with explicit AI opt-in, local extraction first, and clear privacy boundaries before any remote inference.",
   path: "/tools/ai-pdf-assistant",
   image: "/og/tools.png",
 })

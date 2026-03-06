@@ -1,16 +1,15 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { buildStandardPageTitle } from "@/lib/page-title"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export const metadata: Metadata = {
-  title: buildStandardPageTitle("Roadmap"),
+export const metadata: Metadata = buildPageMetadata({
+  title: "Roadmap",
   description:
-    "Public Plain Tools roadmap with shipped updates, current polish work, and planned exploration areas without artificial date promises.",
-  alternates: {
-    canonical: "https://plain.tools/roadmap",
-  },
-}
+    "Review the public Plain Tools roadmap with shipped work, active polish priorities, and planned areas, presented without artificial delivery-date promises.",
+  path: "/roadmap",
+  image: "/og/default.png",
+})
 
 const recentlyShipped = [
   "New offline tools for PDF conversion and signing workflows",

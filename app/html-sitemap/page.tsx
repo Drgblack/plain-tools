@@ -1,20 +1,19 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { buildStandardPageTitle } from "@/lib/page-title"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
-export const metadata: Metadata = {
-  title: buildStandardPageTitle("Sitemap"),
+export const metadata: Metadata = buildPageMetadata({
+  title: "HTML sitemap",
   description:
-    "Human-friendly sitemap for Plain Tools with direct links to tools, guides, comparisons, blog sections, and support pages.",
-  alternates: {
-    canonical: "https://plain.tools/sitemap",
-  },
-}
+    "Browse a human-friendly map of Plain Tools sections, including tools, learn guides, comparison pages, blog entries, and legal support routes.",
+  path: "/html-sitemap",
+  image: "/og/default.png",
+})
 
 type SitemapLink = {
   label: string

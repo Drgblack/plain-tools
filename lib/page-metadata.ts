@@ -15,8 +15,8 @@ type PageMetadataInput = {
 
 function normalisePageTitle(rawTitle: string): string {
   const cleaned = normalizeBrandCapitalization(rawTitle).trim()
-  const hasBrandSuffix = /\|\s*Plain Tools$/i.test(cleaned)
-  if (hasBrandSuffix) return cleaned
+  const hasBrandMention = /plain tools/i.test(cleaned)
+  if (hasBrandMention) return cleaned
   return buildStandardPageTitle(cleaned)
 }
 

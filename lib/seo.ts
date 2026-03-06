@@ -134,13 +134,14 @@ export function generateDynamicToolMetadata({ toolName, param, paramType, isVali
   const descriptionMap = {
     domain: `View DNS records for ${param}, including A, AAAA, MX, TXT, NS, and CNAME results for practical troubleshooting.`,
     ip: `View information about IP address ${param}, including approximate geolocation, ISP details, and network context.`,
-    site: `Check whether ${param} is currently up or down, including response time and latest check status.`,
+    site: `Is ${param} down? Check current status, response time, and simple troubleshooting steps.`,
   }
   
   const slug = slugMap[paramType]
   const title = titleMap[paramType]
   const description = descriptionMap[paramType]
-  const contextualDescription = `${description} ${toolName} route.`
+  const contextualDescription =
+    paramType === "site" ? description : `${description} ${toolName} route.`
   const path = `/${slug}/${encodeURIComponent(param)}`
   const canonical = buildCanonicalUrl(path)
   

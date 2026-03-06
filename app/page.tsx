@@ -34,9 +34,9 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = buildPageMetadata({
-  title: "Plain Tools",
+  title: "Offline PDF, file and network tools",
   description:
-    "Trust-first utility hub for PDF workflows, network diagnostics, file tools, and site status checks. Process files locally where supported with clear, verifiable behaviour.",
+    "Use Plain Tools for local PDF workflows, file utilities, and network diagnostics with clear privacy behaviour, practical guidance, and no-upload core processing.",
   path: "/",
   image: "/og/default.png",
 })

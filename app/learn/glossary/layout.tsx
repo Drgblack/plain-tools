@@ -3,9 +3,9 @@ import type { Metadata } from "next"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "PDF Privacy Glossary - WebAssembly, OCR, Metadata | Plain Tools",
+  title: "PDF privacy glossary",
   description:
-    "Read the Plain Tools glossary for WebAssembly, OCR, metadata, redaction, and privacy terms used in local browser-based PDF workflows.",
+    "Read clear definitions for WebAssembly, OCR, metadata, redaction, and privacy terms used in local browser-based PDF workflows.",
   path: "/learn/glossary",
   image: "/og/learn.png",
 })
