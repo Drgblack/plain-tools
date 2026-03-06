@@ -82,6 +82,13 @@ const jsonLd = combineJsonLd([
 ])
 
 export default function VerifyClaimsPage() {
+  const relatedTools = [
+    { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+    { label: "Split PDF locally", href: "/tools/split-pdf" },
+    { label: "Compress PDF locally", href: "/tools/compress-pdf" },
+    { label: "Check site status", href: "/site-status" },
+  ]
+
   return (
     <>
       <script
@@ -138,6 +145,35 @@ export default function VerifyClaimsPage() {
           </div>
         </section>
         <VerifyClaimsContent />
+        <section className="border-t border-border/70 px-4 py-10">
+          <div className="mx-auto max-w-5xl space-y-6">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                Try local workflows yourself
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
+                The quickest way to validate claims is to run a real task while watching Network
+                requests. Start with one of these tools.
+              </p>
+            </div>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {relatedTools.map((tool) => (
+                <li key={tool.href} className="rounded-xl border border-border/70 bg-card/40 p-4">
+                  <Link href={tool.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                    {tool.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="rounded-xl border border-border/70 bg-card/40 p-4">
+              <h3 className="text-sm font-semibold text-foreground">Important limitation</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                AI features are explicitly opt-in and may send extracted text for processing. Core
+                local tools are the no-upload workflows verified on this page.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   )

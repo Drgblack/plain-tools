@@ -52,6 +52,16 @@ const footerSections: FooterSection[] = [
         href: "https://github.com/Drgblack/plain-tools",
         external: true,
       },
+      {
+        label: "Plain Figures",
+        href: "https://plainfigures.org/",
+        external: true,
+      },
+      {
+        label: "TimeMeaning",
+        href: "https://timemeaning.com/",
+        external: true,
+      },
       { label: "hello@plain.tools", href: "mailto:hello@plain.tools", external: true },
     ],
   },
@@ -98,6 +108,9 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border/60 pt-6 text-sm text-muted-foreground">
           <p>Private browser tools. Files processed locally where supported.</p>
+          <p className="mt-1">
+            Looking for calculators? Visit Plain Figures. Need timezone clarity? Use TimeMeaning.
+          </p>
           <p className="mt-1">&copy; {year} Plain Tools. All rights reserved.</p>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ExternalLink, Menu, X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,8 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Tools", href: "/tools" },
   { label: "Converters", href: "/file-converters" },
+  { label: "Network", href: "/network-tools" },
+  { label: "Status", href: "/site-status" },
   { label: "Learn", href: "/learn" },
   { label: "Compare", href: "/compare" },
   { label: "Blog", href: "/blog" },
@@ -31,9 +33,35 @@ const navItems: NavItem[] = [
   },
 ]
 
+const sisterSites: NavItem[] = [
+  {
+    label: "Plain Figures",
+    href: "https://plainfigures.org/",
+    external: true,
+  },
+  {
+    label: "TimeMeaning",
+    href: "https://timemeaning.com/",
+    external: true,
+  },
+]
+
 export function Navigation() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!mobileOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [mobileOpen])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/92 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/78">
@@ -66,6 +94,19 @@ export function Navigation() {
               </Link>
             )
           })}
+          <div className="ml-1 h-6 w-px bg-border/70" />
+          {sisterSites.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+            >
+              {item.label}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -86,6 +127,9 @@ export function Navigation() {
 
       {mobileOpen ? (
         <nav className="border-t border-border/70 bg-background/95 px-4 py-3 lg:hidden">
+          <p className="mb-2 rounded-md border border-border/60 bg-card/30 px-3 py-2 text-xs text-muted-foreground">
+            Quick access to core tools, guides, comparisons, and status checks.
+          </p>
           <div className="grid gap-1">
             {navItems.map((item) => {
               const active = !item.external && pathname === item.href
@@ -108,6 +152,24 @@ export function Navigation() {
                 </Link>
               )
             })}
+            <div className="mt-2 border-t border-border/70 pt-2">
+              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Sister sites
+              </p>
+              {sisterSites.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center justify-between rounded-md px-3 py-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+                >
+                  {item.label}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </Link>
+              ))}
+            </div>
           </div>
         </nav>
       ) : null}
