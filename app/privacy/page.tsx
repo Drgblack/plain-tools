@@ -44,11 +44,21 @@ export default function PrivacyPage() {
 
               <ul className="mt-4 space-y-2 text-muted-foreground">
                 <li>Files you process never leave your device</li>
-                <li>We don't use analytics or tracking scripts</li>
-                <li>We don't use cookies for tracking</li>
+                <li>We do not use advertising trackers or cross-site profiling</li>
+                <li>Core tool workflows do not rely on tracking cookies</li>
                 <li>We don't sell or share any data</li>
                 <li>You can verify our claims by inspecting network traffic</li>
               </ul>
+
+              <h2 className="mt-12 text-lg font-medium text-foreground">
+                Cookies and consent banner
+              </h2>
+              <p className="mt-2 text-muted-foreground">
+                Plain does not use advertising or retargeting cookies. Where authentication or
+                payment sessions are enabled, strictly necessary cookies may be set by those
+                services. Because these are essential session cookies, we do not show a marketing
+                cookie consent modal.
+              </p>
 
               <h2 className="mt-12 text-lg font-medium text-foreground">
                 Local Processing

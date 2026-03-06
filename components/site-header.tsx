@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, lazy, Suspense } from "react"
+import { useEffect, useState, lazy, Suspense } from "react"
 import { Search, Menu, X, Command, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -40,6 +40,19 @@ export function SiteHeader() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
+
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [mobileMenuOpen])
 
   return (
     <>
@@ -154,7 +167,11 @@ export function SiteHeader() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <nav className="border-t border-border/50 bg-background px-4 py-4 md:hidden">
-            <div className="flex flex-col gap-1">
+            <div className="mb-3 rounded-lg border border-border/60 bg-card/30 p-3 text-xs text-muted-foreground">
+              Browse major sections quickly or use search for a specific tool.
+            </div>
+            <div className="max-h-[calc(100vh-9rem)] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-1">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
@@ -186,11 +203,15 @@ export function SiteHeader() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="inline-flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-[background-color,color] duration-200 hover:bg-secondary/55 hover:text-foreground"
                   >
-                    <span>{site.name}</span>
+                    <span>
+                      <span className="block">{site.name}</span>
+                      <span className="block text-xs text-muted-foreground/80">{site.description}</span>
+                    </span>
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Link>
                 ))}
               </div>
+            </div>
             </div>
           </nav>
         )}

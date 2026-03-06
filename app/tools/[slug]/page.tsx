@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 import Script from "next/script"
+import Link from "next/link"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
@@ -256,6 +257,28 @@ export default async function ToolPage({ params }: PageProps) {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
+              </section>
+
+              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                  Quick start
+                </h2>
+                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
+                  <li>Upload the file or files you want to process.</li>
+                  <li>Choose options based on your output goal.</li>
+                  <li>Run processing locally in your browser.</li>
+                  <li>Download and review the output before sharing.</li>
+                </ul>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Need a walkthrough? Open{" "}
+                  <Link href="/learn" className="font-medium text-accent hover:underline">
+                    practical guides in Learn
+                  </Link>{" "}
+                  or verify local processing behaviour in{" "}
+                  <Link href="/verify-claims" className="font-medium text-accent hover:underline">
+                    Verify Claims
+                  </Link>.
+                </p>
               </section>
 
               <section className="mb-3">
