@@ -348,6 +348,71 @@ const nextConfig: NextConfig = {
         destination: "/tools/word-to-pdf",
         permanent: true,
       },
+      {
+        source: "/file-converters/pdf-to-ppt",
+        destination: "/tools/pdf-to-ppt",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/pdf-to-jpg",
+        destination: "/tools/pdf-to-jpg",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/jpg-to-pdf",
+        destination: "/tools/jpg-to-pdf",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/pdf-to-excel",
+        destination: "/tools/pdf-to-excel",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/pdf-to-image",
+        destination: "/tools/pdf-to-jpg",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/pdf-to-png",
+        destination: "/tools/pdf-to-jpg",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/png-to-pdf",
+        destination: "/tools/jpg-to-pdf",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/image-to-pdf",
+        destination: "/tools/jpg-to-pdf",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/excel-to-pdf",
+        destination: "/file-converters",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/ppt-to-pdf",
+        destination: "/file-converters",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/heic-to-pdf",
+        destination: "/file-converters",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/pdf-to-heic",
+        destination: "/file-converters",
+        permanent: true,
+      },
+      {
+        source: "/file-converters/tiff-to-pdf",
+        destination: "/file-converters",
+        permanent: true,
+      },
 
       // Consolidate legacy comparison routes.
       {

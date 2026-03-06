@@ -1,251 +1,154 @@
-"use client"
-
-import { FileType, Image, FileText, Upload, Download, ArrowRight } from "lucide-react"
-import { useState, useCallback } from "react"
+import { FileImage, FileSpreadsheet, FileText, FileType, Presentation } from "lucide-react"
 import Link from "next/link"
+
 import { ToolShell } from "@/components/tool-shell"
-import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { cn } from "@/lib/utils"
-import { converterRouteSlugs } from "@/lib/seo/file-converters-content"
 
 const relatedTools = [
   {
     name: "PDF to Word",
-    description: "Convert PDF to editable Word files",
+    description: "Convert PDF to editable Word files locally",
     href: "/tools/pdf-to-word",
-    tags: ["Local", "WASM"],
+    tags: ["Local", "Best-effort"],
     icon: <FileText className="h-4 w-4" />,
   },
   {
     name: "Word to PDF",
-    description: "Convert .docx files to PDF locally",
+    description: "Convert .docx files to PDF in your browser",
     href: "/tools/word-to-pdf",
-    tags: ["Local", "WASM"],
+    tags: ["Local", "Best-effort"],
     icon: <FileType className="h-4 w-4" />,
   },
   {
-    name: "Compress PDF",
-    description: "Reduce PDF file size",
-    href: "/tools/compress-pdf",
-    tags: ["Local", "WASM"],
-    icon: <FileType className="h-4 w-4" />,
+    name: "PDF to JPG",
+    description: "Export PDF pages as JPG images locally",
+    href: "/tools/pdf-to-jpg",
+    tags: ["Local", "Image output"],
+    icon: <FileImage className="h-4 w-4" />,
   },
   {
-    name: "Image Compressor",
-    description: "Reduce image file size",
-    href: "/file-tools",
-    tags: ["Local", "Worker"],
-    icon: <Image className="h-4 w-4" />,
+    name: "JPG to PDF",
+    description: "Combine JPG/PNG images into one PDF",
+    href: "/tools/jpg-to-pdf",
+    tags: ["Local", "Image input"],
+    icon: <FileImage className="h-4 w-4" />,
   },
 ]
 
 const faqs = [
   {
-    question: "Are my files uploaded anywhere?",
+    question: "Are converter files uploaded?",
     answer:
-      "No. All conversions happen entirely in your browser using WebAssembly and Web Workers. Your files never leave your device.",
+      "Live converters run locally in your browser for supported workflows. Files are not uploaded for those local tools.",
   },
   {
-    question: "What formats are supported?",
+    question: "Why do some converter URLs redirect?",
     answer:
-      "We support common image formats (PNG, JPG, WebP, GIF, BMP), document formats, and archive formats. Each conversion type shows available options.",
+      "Some legacy converter slugs were documentation shells. They now redirect to the nearest live tool or this hub to avoid misleading empty pages.",
   },
   {
-    question: "Is there a file size limit?",
+    question: "Where should I start?",
     answer:
-      "File size is limited by your browser's available memory. Most browsers can handle files up to several hundred megabytes.",
+      "Pick the converter below that matches your source and output format, then process directly on the canonical /tools route.",
   },
 ]
 
-const formatOptions = [
-  { value: "png", label: "PNG" },
-  { value: "jpg", label: "JPG" },
-  { value: "webp", label: "WebP" },
-  { value: "gif", label: "GIF" },
-  { value: "bmp", label: "BMP" },
+const liveConverters = [
+  {
+    label: "PDF to Word",
+    detail: "Best-effort text extraction to DOCX.",
+    href: "/tools/pdf-to-word",
+  },
+  {
+    label: "Word to PDF",
+    detail: "Best-effort DOCX rendering to PDF.",
+    href: "/tools/word-to-pdf",
+  },
+  {
+    label: "PDF to JPG",
+    detail: "Convert PDF pages to JPG with quality and page controls.",
+    href: "/tools/pdf-to-jpg",
+  },
+  {
+    label: "JPG or PNG to PDF",
+    detail: "Merge image files into a single PDF output.",
+    href: "/tools/jpg-to-pdf",
+  },
+  {
+    label: "PDF to Excel",
+    detail: "Extract table-like data to CSV spreadsheet format.",
+    href: "/tools/pdf-to-excel",
+  },
+  {
+    label: "PDF to PowerPoint",
+    detail: "One PDF page per image-based PPT slide.",
+    href: "/tools/pdf-to-ppt",
+  },
 ]
 
-function formatConverterTitle(slug: string) {
-  return slug
-    .split("-")
-    .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
-    .join(" ")
-}
+const redirectedAliases = [
+  "pdf-to-image",
+  "pdf-to-png",
+  "image-to-pdf",
+  "png-to-pdf",
+]
 
-function FileConverterToolInterface() {
-  const [file, setFile] = useState<File | null>(null)
-  const [outputFormat, setOutputFormat] = useState("png")
-  const [converting, setConverting] = useState(false)
-  const [converted, setConverted] = useState(false)
-  const [dragActive, setDragActive] = useState(false)
-
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
-    } else if (e.type === "dragleave") {
-      setDragActive(false)
-    }
-  }, [])
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0])
-      setConverted(false)
-    }
-  }, [])
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0])
-      setConverted(false)
-    }
-  }
-
-  const handleConvert = () => {
-    if (!file) return
-    setConverting(true)
-    // Placeholder - would be replaced with actual conversion
-    setTimeout(() => {
-      setConverting(false)
-      setConverted(true)
-    }, 1000)
-  }
-
-  const handleDownload = () => {
-    // Placeholder - would trigger actual download
-    alert("Download would start here")
-  }
-
-  const getFileExtension = (filename: string) => {
-    return filename.split(".").pop()?.toUpperCase() || "FILE"
-  }
-
-  return (
-    <div className="space-y-4">
-      <div
-        className={cn(
-          "relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-secondary/50 p-6 transition-colors",
-          dragActive && "border-accent bg-accent/10",
-          file && "border-solid"
-        )}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-        onClick={() => document.getElementById("file-input")?.click()}
-      >
-        <input
-          id="file-input"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        {file ? (
-          <div className="text-center">
-            <Image className="mx-auto h-10 w-10 text-muted-foreground" />
-            <p className="mt-2 font-medium text-foreground">{file.name}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {(file.size / 1024).toFixed(1)} KB
-            </p>
-          </div>
-        ) : (
-          <div className="text-center">
-            <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-            <p className="mt-2 text-sm text-foreground">
-              Drop your file here or click to browse
-            </p>
-          </div>
-        )}
-      </div>
-
-      {file && (
-        <div className="flex items-center gap-2">
-          <div className="flex-1 rounded-md bg-secondary px-3 py-2 text-center text-sm text-foreground">
-            {getFileExtension(file.name)}
-          </div>
-          <ArrowRight className="h-4 w-4 text-muted-foreground" />
-          <Select value={outputFormat} onValueChange={setOutputFormat}>
-            <SelectTrigger className="flex-1 bg-secondary">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {formatOptions.map((format) => (
-                <SelectItem key={format.value} value={format.value}>
-                  {format.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-
-      {file && !converted && (
-        <Button
-          onClick={handleConvert}
-          disabled={converting}
-          className="w-full"
-        >
-          {converting ? "Converting..." : "Convert File"}
-        </Button>
-      )}
-
-      {converted && (
-        <Button onClick={handleDownload} className="w-full gap-2">
-          <Download className="h-4 w-4" />
-          Download .{outputFormat}
-        </Button>
-      )}
-
-      <p className="text-center text-xs text-muted-foreground">
-        Your file is processed locally and never uploaded.
-      </p>
-    </div>
-  )
-}
+const unsupportedLegacy = [
+  "excel-to-pdf",
+  "ppt-to-pdf",
+  "heic-to-pdf",
+  "pdf-to-heic",
+  "tiff-to-pdf",
+]
 
 export default function FileConvertersPage() {
   return (
     <ToolShell
-          name="File Converters"
-          description="Convert between various file formats including images and documents"
-          category={{ name: "File Tools", href: "/file-tools", type: "file" }}
-          tags={["Local", "WASM", "Worker"]}
-          explanation="This tool converts files between different formats entirely in your browser. Using WebAssembly and Web Workers, all processing happens on your device. Your files are never uploaded to any server."
-          faqs={faqs}
-          relatedTools={relatedTools}
+      name="File Converters"
+      description="Canonical converter directory for live local tools."
+      category={{ name: "File Tools", href: "/file-tools", type: "file" }}
+      tags={["Local", "Canonical routes"]}
+      explanation="Use the live converter routes below. Legacy /file-converters/* aliases now redirect so no empty converter shells remain exposed."
+      faqs={faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-8">
-        <FileConverterToolInterface />
+        <section className="rounded-lg border border-border bg-secondary/30 p-4">
+          <h2 className="text-lg font-semibold text-foreground">Live converter tools</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            These routes load real working converters under the canonical /tools path.
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {liveConverters.map((converter) => (
+              <li key={converter.href} className="rounded-md border border-border bg-card/60 p-3">
+                <Link href={converter.href} className="text-sm font-semibold text-accent hover:underline">
+                  {converter.label}
+                </Link>
+                <p className="mt-1 text-xs text-muted-foreground">{converter.detail}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <section className="rounded-lg border border-border bg-secondary/30 p-4">
-          <h2 className="text-lg font-semibold text-foreground">Popular conversion guides</h2>
+          <h2 className="text-lg font-semibold text-foreground">Alias handling</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Step-by-step workflows with privacy-first handling. Runs locally in your browser. No uploads.
+            The following legacy aliases redirect to working canonical tools:
           </p>
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-            {converterRouteSlugs.map((slug) => (
-              <li key={slug}>
-                <Link
-                  href={`/file-converters/${slug}`}
-                  className="text-sm font-medium text-accent hover:underline"
-                >
-                  {formatConverterTitle(slug)}
-                </Link>
-              </li>
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+            {redirectedAliases.map((slug) => (
+              <li key={slug}>/file-converters/{slug}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="rounded-lg border border-border bg-secondary/30 p-4">
+          <h2 className="text-lg font-semibold text-foreground">Unsupported legacy requests</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            These routes redirect back to this hub because no live converter is currently available.
+          </p>
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+            {unsupportedLegacy.map((slug) => (
+              <li key={slug}>/file-converters/{slug}</li>
             ))}
           </ul>
         </section>

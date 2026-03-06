@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next"
 
-import { converterSitemapUrls } from "@/lib/seo/file-converters-content"
 import { seoMdxSitemapUrls } from "@/lib/seo/mdx-page-registry"
 import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
@@ -65,7 +64,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const tranchePages = [
     ...trancheSitemapUrls,
     ...workflowSitemapUrls,
-    ...converterSitemapUrls,
     ...seoMdxSitemapUrls,
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
