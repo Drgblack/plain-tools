@@ -16,6 +16,7 @@ import {
   FileCode,
   FileImage,
   FileSpreadsheet,
+  Presentation,
   Minimize2,
   Home,
 } from "lucide-react"
@@ -50,6 +51,7 @@ const commands: CommandItem[] = [
   { id: "pdf-to-word", name: "PDF to Word", description: "Convert PDF to .docx", href: "/tools/pdf-to-word", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-jpg", name: "PDF to JPG", description: "Convert PDF pages to JPG images", href: "/tools/pdf-to-jpg", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-excel", name: "PDF to Excel", description: "Extract table-like data to CSV", href: "/tools/pdf-to-excel", icon: <FileSpreadsheet className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "pdf-to-ppt", name: "PDF to PowerPoint", description: "Convert PDF pages into slides", href: "/tools/pdf-to-ppt", icon: <Presentation className="h-4 w-4" />, category: "PDF Tools" },
   { id: "jpg-to-pdf", name: "JPG to PDF", description: "Combine images into a PDF", href: "/tools/jpg-to-pdf", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "word-to-pdf", name: "Word to PDF", description: "Convert .docx to PDF", href: "/tools/word-to-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
   

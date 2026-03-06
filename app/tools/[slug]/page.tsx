@@ -34,6 +34,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
   "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
   "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
+  "pdf-to-ppt": lazy(() => import("@/components/tools/pdf-to-ppt-tool")),
   "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
 }
 

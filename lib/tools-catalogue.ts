@@ -180,6 +180,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "pdf-to-ppt",
+    name: "PDF to PowerPoint",
+    slug: "pdf-to-ppt",
+    category: "Core",
+    description:
+      "Convert each PDF page to an image-based PowerPoint slide locally in your browser.",
+    badge: "100% Local",
+    icon: "Presentation",
+    available: true,
+  },
+  {
     id: "jpg-to-pdf",
     name: "JPG to PDF",
     slug: "jpg-to-pdf",
