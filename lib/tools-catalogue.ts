@@ -180,6 +180,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "ocr-pdf",
+    name: "OCR PDF",
+    slug: "ocr-pdf",
+    category: "Performance & Edit",
+    description: "Run best-effort OCR locally and export searchable PDF or extracted text.",
+    badge: "100% Local",
+    icon: "ScanText",
+    available: true,
+  },
+  {
     id: "pdf-to-word",
     name: "PDF to Word",
     slug: "pdf-to-word",

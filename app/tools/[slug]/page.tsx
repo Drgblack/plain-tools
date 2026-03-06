@@ -30,6 +30,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),
   "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
   "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
+  "ocr-pdf": lazy(() => import("@/components/tools/ocr-pdf-tool")),
   "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
   "protect-pdf": lazy(() => import("@/components/tools/protect-pdf-tool")),
   "unlock-pdf": lazy(() => import("@/components/tools/unlock-pdf-tool")),
