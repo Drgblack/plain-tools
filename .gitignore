@@ -12,3 +12,5 @@ dist/
 coverage/
 *.tsbuildinfo
 projects/pdf-client-demo/package-lock.json
+projects/*/dist/
+projects/*/package-lock.json
