@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 
 import BatchEngineTool from "@/components/tools/batch-engine-tool"
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 export default function BatchEnginePage() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <ToolJsonLd toolSlug="batch-engine" />
       
 
       <main className="flex-1 px-4 py-8 sm:py-10">

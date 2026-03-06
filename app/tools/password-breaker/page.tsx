@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 
 import PasswordBreakerTool from "@/components/tools/password-breaker-tool"
 
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 export default function PasswordBreakerPage() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <ToolJsonLd toolSlug="password-breaker" />
       
 
       <main className="flex-1 px-4 py-8 sm:py-10">

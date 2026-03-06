@@ -15,11 +15,21 @@ import {
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
+import Script from "next/script"
 import { CategoryTile } from "@/components/category-tile"
 import { ProofStrip } from "@/components/proof-strip"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
 import { buildStandardPageTitle } from "@/lib/page-title"
+import { serializeJsonLd } from "@/lib/sanitize"
+import {
+  buildBreadcrumbList,
+  buildItemListSchema,
+  buildWebApplicationSchema,
+  buildWebPageSchema,
+  buildWebSiteSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
@@ -54,27 +64,47 @@ export const metadata: Metadata = {
   },
 }
 
-// JSON-LD Schema for homepage
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'Plain Tools',
-  description: 'Plain Tools is a trust-first collection of PDF, network, and file utilities with browser-first processing and transparent behaviour.',
-  url: 'https://plain.tools',
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Any',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-  },
-  featureList: [
-    'No file uploads for core local workflows',
-    'No advertising trackers',
-    'Works offline after first load',
-    'Open source and verifiable',
-  ],
-}
+const homePageSchema = combineJsonLd([
+  buildWebSiteSchema({
+    name: "Plain Tools",
+    url: "https://plain.tools",
+    description:
+      "Trust-first utility platform for PDF workflows, file tasks, and network diagnostics.",
+  }),
+  buildWebPageSchema({
+    name: "Plain Tools",
+    description:
+      "Trust-first utility tools for PDF workflows, file tasks, network diagnostics, and uptime checks.",
+    url: "https://plain.tools",
+  }),
+  buildWebApplicationSchema({
+    name: "Plain Tools",
+    description:
+      "Browser-first utility platform with local processing for core workflows and practical diagnostics.",
+    url: "https://plain.tools",
+    offerCurrency: "EUR",
+    featureList: [
+      "No file uploads for core local workflows",
+      "No advertising trackers in core utility workflows",
+      "Works offline after first load for local tools",
+      "Verifiable claims and open source visibility",
+    ],
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+  ]),
+  buildItemListSchema(
+    "Plain Tools key sections",
+    [
+      { name: "PDF Tools", url: "https://plain.tools/tools" },
+      { name: "Learn", url: "https://plain.tools/learn" },
+      { name: "Compare", url: "https://plain.tools/compare" },
+      { name: "Site Status", url: "https://plain.tools/site-status" },
+      { name: "Network Tools", url: "https://plain.tools/network-tools" },
+    ],
+    "https://plain.tools"
+  ),
+])
 
 const categories = [
   {
@@ -324,11 +354,13 @@ const visibilityCards = [
 export default function HomePage() {
   return (
     <>
-      {/* JSON-LD Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {homePageSchema ? (
+        <Script
+          id="homepage-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(homePageSchema) }}
+        />
+      ) : null}
       
       <div className="flex flex-col">
         {/* Hero Section */}

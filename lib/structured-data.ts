@@ -32,6 +32,30 @@ type CollectionPageInput = {
   inLanguage?: string
 }
 
+type WebPageInput = {
+  name: string
+  description: string
+  url: string
+  inLanguage?: string
+}
+
+type WebSiteInput = {
+  name: string
+  url: string
+  description?: string
+  inLanguage?: string
+}
+
+type WebApplicationInput = {
+  name: string
+  description: string
+  url: string
+  applicationCategory?: string
+  operatingSystem?: string
+  offerCurrency?: string
+  featureList?: string[]
+}
+
 type ArticleInput = {
   headline: string
   description: string
@@ -82,6 +106,45 @@ export function buildCollectionPageSchema(input: CollectionPageInput): JsonLdObj
     description: input.description,
     url: input.url,
     inLanguage: input.inLanguage ?? "en-GB",
+  })
+}
+
+export function buildWebPageSchema(input: WebPageInput): JsonLdObject {
+  return withContext({
+    "@type": "WebPage",
+    name: input.name,
+    description: input.description,
+    url: input.url,
+    inLanguage: input.inLanguage ?? "en-GB",
+  })
+}
+
+export function buildWebSiteSchema(input: WebSiteInput): JsonLdObject {
+  return withContext({
+    "@type": "WebSite",
+    name: input.name,
+    url: input.url,
+    ...(input.description ? { description: input.description } : {}),
+    inLanguage: input.inLanguage ?? "en-GB",
+  })
+}
+
+export function buildWebApplicationSchema(input: WebApplicationInput): JsonLdObject {
+  return withContext({
+    "@type": "WebApplication",
+    name: input.name,
+    description: input.description,
+    url: input.url,
+    applicationCategory: input.applicationCategory ?? "UtilitiesApplication",
+    operatingSystem: input.operatingSystem ?? "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: input.offerCurrency ?? "EUR",
+    },
+    ...(input.featureList && input.featureList.length > 0
+      ? { featureList: input.featureList }
+      : {}),
   })
 }
 

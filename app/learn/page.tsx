@@ -27,12 +27,19 @@ import { serializeJsonLd } from "@/lib/sanitize"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
+  buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
 import { learnSections, type LearnArticleIconKey } from "@/lib/learn-data"
 
 // Structured data for the Learning Centre collection
 const combinedSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "Plain Learning Centre",
+    description:
+      "Practical guides for private PDF workflows, no-upload verification, and browser-based document handling.",
+    url: "https://plain.tools/learn",
+  }),
   buildCollectionPageSchema({
     name: "Plain Learning Centre",
     description:

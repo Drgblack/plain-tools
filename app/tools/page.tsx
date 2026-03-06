@@ -10,6 +10,7 @@ import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
   buildItemListSchema,
+  buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
@@ -180,6 +181,12 @@ export default function ToolsPage() {
   ]
 
   const toolsHubSchema = combineJsonLd([
+    buildWebPageSchema({
+      name: "Plain Tools PDF hub",
+      description:
+        "Browse practical PDF workflows for merge, split, compress, conversion, OCR, and secure handling with local processing.",
+      url: "https://plain.tools/tools",
+    }),
     buildCollectionPageSchema({
       name: "Plain Tools PDF Hub",
       description:

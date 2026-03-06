@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
 import { Lock, Sparkles } from "lucide-react"
@@ -47,6 +48,7 @@ export default async function FillPdfPage() {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <ToolJsonLd toolSlug="fill-pdf" />
       
 
       <main className="flex-1 px-4 py-8 sm:py-10">
