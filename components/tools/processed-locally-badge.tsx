@@ -24,7 +24,7 @@ export function ProcessedLocallyBadge({ className }: ProcessedLocallyBadgeProps)
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300",
+        "inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/12 px-2.5 py-1 text-xs font-medium text-emerald-700 shadow-[0_0_0_1px_rgba(16,185,129,0.12)] transition-colors dark:text-emerald-300",
         isPulsing ? "animate-pulse" : "",
         className
       )}
@@ -34,4 +34,3 @@ export function ProcessedLocallyBadge({ className }: ProcessedLocallyBadgeProps)
     </div>
   )
 }
-

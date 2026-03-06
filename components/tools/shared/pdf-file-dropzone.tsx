@@ -82,19 +82,27 @@ export function PdfFileDropzone({
           handleFiles(event.dataTransfer.files)
         }}
         className={cn(
-          "cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10",
+          "cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-[border-color,background-color,box-shadow,transform] duration-200 sm:p-10",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isDragging
-            ? "border-primary bg-primary/10"
-            : "border-border bg-muted/20 hover:border-primary/70",
+            ? "border-primary bg-primary/12 shadow-[0_0_0_1px_rgba(0,112,243,0.18),0_12px_36px_-22px_rgba(0,112,243,0.45)]"
+            : "border-border bg-muted/20 hover:border-primary/70 hover:shadow-[0_12px_30px_-24px_rgba(0,112,243,0.35)]",
           disabled && "cursor-not-allowed opacity-60 hover:border-border"
         )}
       >
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+        <div
+          className={cn(
+            "mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 transition-colors",
+            isDragging && "bg-primary/20"
+          )}
+        >
           <UploadCloud className="h-6 w-6 text-primary" />
         </div>
         <p className="text-sm font-medium text-foreground">{title}</p>
         <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
+        <p className="mt-2 text-[11px] font-medium text-primary/90">
+          {isDragging ? "Release to add files" : "Click or drop files to continue"}
+        </p>
       </div>
     </>
   )

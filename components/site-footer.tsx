@@ -39,7 +39,7 @@ const footerSections = [
     title: "Verify",
     links: [
       { name: "Verify claims", href: "/verify-claims" },
-      { name: "View source", href: "https://github.com", external: true },
+      { name: "View source", href: "https://github.com/Drgblack/plain-tools", external: true },
       { name: "How it works", href: "/verify-claims#how-it-works" },
     ],
   },
@@ -66,7 +66,7 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Fast, private tools that run locally in your browser. No uploads, no tracking.
+              Fast, private tools that run locally in your browser. Core local workflows avoid uploads.
             </p>
           </div>
 
@@ -82,7 +82,7 @@ export function SiteFooter() {
                       href={link.href}
                       target={link.external ? "_blank" : undefined}
                       rel={link.external ? "noopener noreferrer" : undefined}
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:text-foreground focus-visible:underline"
+                      className="inline-flex items-center gap-1.5 rounded-md px-1 py-0.5 text-sm text-muted-foreground transition-[color,background-color] duration-200 hover:bg-muted/40 hover:text-foreground focus:outline-none focus-visible:bg-muted/40 focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {link.name}
                       {link.external && <ExternalLink className="h-3 w-3" />}
@@ -99,11 +99,11 @@ export function SiteFooter() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-8 sm:flex-row">
           <p className="text-sm text-muted-foreground">
-            All tools run locally. Nothing is uploaded.
+            Core tools run locally. AI features are opt-in.
           </p>
           <Link
             href="/verify-claims"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:text-foreground focus-visible:underline"
+            className="rounded-md px-2 py-1 text-sm text-muted-foreground transition-[color,background-color] duration-200 hover:bg-muted/40 hover:text-foreground focus:outline-none focus-visible:bg-muted/40 focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             View source to verify claims
           </Link>

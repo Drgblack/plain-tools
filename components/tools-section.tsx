@@ -359,9 +359,12 @@ export function ToolsSection() {
         </div>
 
         {filteredTools.length === 0 ? (
-          <div className="mt-12 text-center">
-            <p className="text-[14px] text-muted-foreground/70">
+          <div className="mt-12 rounded-xl border border-border/70 bg-card/35 p-6 text-center">
+            <p className="text-[14px] font-medium text-foreground">
               No tools found matching &ldquo;{searchQuery}&rdquo;
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground/80">
+              Try a broader keyword or clear search to view the full catalogue.
             </p>
           </div>
         ) : null}

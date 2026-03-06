@@ -229,7 +229,13 @@ export default async function ToolPage({ params }: PageProps) {
                 </p>
               </section>
 
-              <Suspense fallback={<div>Loading tool...</div>}>
+              <Suspense
+                fallback={
+                  <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                    Loading tool workspace...
+                  </div>
+                }
+              >
                 <ErrorBoundary context={`tool:${tool.slug}`}>
                   <ToolComponent />
                 </ErrorBoundary>
@@ -258,9 +264,9 @@ export default async function ToolPage({ params }: PageProps) {
             </>
           ) : (
             <div className="rounded-xl border border-border bg-card p-6">
-              <p className="text-base font-medium text-foreground">Coming Soon</p>
+              <p className="text-base font-medium text-foreground">Coming soon</p>
               <p className="mt-2 text-sm text-muted-foreground">
-                This tool is listed in the catalogue but its UI is not published yet.
+                This tool is listed in the catalogue but the interface is still being finalised.
               </p>
             </div>
           )}
