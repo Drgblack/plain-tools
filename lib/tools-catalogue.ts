@@ -160,6 +160,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "protect-pdf",
+    name: "Protect PDF",
+    slug: "protect-pdf",
+    category: "Security & Privacy",
+    description: "Encrypt PDFs with a password locally so access requires your key.",
+    badge: "100% Local",
+    icon: "Lock",
+    available: true,
+  },
+  {
     id: "pdf-to-word",
     name: "PDF to Word",
     slug: "pdf-to-word",

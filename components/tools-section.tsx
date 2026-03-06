@@ -65,6 +65,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileSearch,
   ShieldAlert,
   PenTool,
+  Lock,
   Unlock,
   SearchCheck,
   LayoutGrid,

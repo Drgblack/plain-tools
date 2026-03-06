@@ -1242,6 +1242,82 @@ export async function signPDF(
   return signedBytes
 }
 
+type PdfLibWithEncryptModule = typeof import("pdf-lib-with-encrypt")
+
+let pdfLibWithEncryptModulePromise: Promise<PdfLibWithEncryptModule> | null = null
+
+const getPdfLibWithEncrypt = async () => {
+  if (!pdfLibWithEncryptModulePromise) {
+    pdfLibWithEncryptModulePromise = import("pdf-lib-with-encrypt")
+  }
+  return pdfLibWithEncryptModulePromise
+}
+
+export interface PlainProtectPdfOptions {
+  requirePasswordToOpen?: boolean
+  onStageChange?: StageReporter
+}
+
+export async function plainProtectPdf(
+  file: File,
+  password: string,
+  options: PlainProtectPdfOptions = {}
+): Promise<Uint8Array> {
+  const onStageChange = options.onStageChange
+
+  reportStage(
+    "Initialising Wasm",
+    "Initialising local PDF protection engine.",
+    onStageChange
+  )
+
+  const trimmedPassword = password.trim()
+  if (!trimmedPassword) {
+    throw new Error("A password is required to protect this PDF.")
+  }
+
+  if (options.requirePasswordToOpen === false) {
+    throw new Error("Enable 'Require password to open' to continue.")
+  }
+
+  const sourceBytes = new Uint8Array(await file.arrayBuffer())
+  const pdfLibWithEncrypt = await getPdfLibWithEncrypt()
+  const pdfDoc = await pdfLibWithEncrypt.PDFDocument.load(sourceBytes, {
+    ignoreEncryption: true,
+    updateMetadata: false,
+  })
+
+  reportStage(
+    "Scrubbing Metadata",
+    "Applying local password protection with no uploads.",
+    onStageChange
+  )
+
+  await pdfDoc.encrypt({
+    userPassword: trimmedPassword,
+    ownerPassword: trimmedPassword,
+    permissions: {
+      printing: "highResolution",
+      modifying: false,
+      copying: false,
+      annotating: false,
+      fillingForms: true,
+      contentAccessibility: true,
+      documentAssembly: false,
+    },
+  })
+
+  const protectedBytes = await pdfDoc.save({ useObjectStreams: true })
+
+  reportStage(
+    "Complete",
+    "PDF protection complete. Opening the output now requires the local password.",
+    onStageChange
+  )
+
+  return protectedBytes
+}
+
 export async function plainLocalCryptographicSigner(
   file: File,
   keyMaterial: LocalSigningKeyInput,
