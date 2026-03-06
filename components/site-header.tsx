@@ -20,8 +20,20 @@ const navItems = [
   { name: "Compare", href: "/compare" },
   { name: "Pricing", href: "/pricing" },
   { name: "Verify", href: "/verify-claims" },
-  { name: "Calculators", href: "https://plainfigures.org", external: true },
   { name: "About", href: "/about" },
+]
+
+const sisterSites = [
+  {
+    name: "Plain Figures",
+    href: "https://plainfigures.org/",
+    description: "Calculator-focused sister site",
+  },
+  {
+    name: "TimeMeaning",
+    href: "https://timemeaning.com/",
+    description: "Time interpretation and timezone clarity",
+  },
 ]
 
 export function SiteHeader() {
@@ -62,6 +74,37 @@ export function SiteHeader() {
                 {pathname === item.href ? <span className="ml-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" /> : null}
               </Link>
             ))}
+            <details className="group relative">
+              <summary
+                className={cn(
+                  "list-none inline-flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-[background-color,color,box-shadow] duration-200 hover:bg-secondary/55 hover:text-foreground",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                )}
+              >
+                Sister sites
+                <ExternalLink className="h-3 w-3" />
+              </summary>
+              <div className="absolute right-0 z-30 mt-2 w-72 rounded-lg border border-border bg-card p-3 shadow-lg">
+                <ul className="space-y-2">
+                  {sisterSites.map((site) => (
+                    <li key={site.href}>
+                      <Link
+                        href={site.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block rounded-md px-2 py-1.5 transition-colors hover:bg-secondary/50"
+                      >
+                        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                          {site.name}
+                          <ExternalLink className="h-3 w-3" />
+                        </span>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{site.description}</p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </details>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -130,6 +173,24 @@ export function SiteHeader() {
                   {item.external && <ExternalLink className="h-3 w-3" />}
                 </Link>
               ))}
+              <div className="mt-3 border-t border-border/50 pt-3">
+                <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                  Sister sites
+                </p>
+                {sisterSites.map((site) => (
+                  <Link
+                    key={site.href}
+                    href={site.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="inline-flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-[background-color,color] duration-200 hover:bg-secondary/55 hover:text-foreground"
+                  >
+                    <span>{site.name}</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </Link>
+                ))}
+              </div>
             </div>
           </nav>
         )}

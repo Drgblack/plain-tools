@@ -9,7 +9,6 @@ const footerSections = [
       { name: "Network Tools", href: "/network-tools" },
       { name: "File Tools", href: "/file-tools" },
       { name: "PDF Tools", href: "/tools" },
-      { name: "Calculators", href: "https://plainfigures.org", external: true },
     ],
   },
   {
@@ -49,9 +48,20 @@ const footerSections = [
     ],
   },
   {
-    title: "Projects",
+    title: "Sister Sites",
     links: [
-      { name: "TimeMeaning", href: "https://timemeaning.com", external: true, description: "Interpret dates and time zones in plain English" },
+      {
+        name: "Plain Figures",
+        href: "https://plainfigures.org/",
+        external: true,
+        description: "Calculator-focused sister site",
+      },
+      {
+        name: "TimeMeaning",
+        href: "https://timemeaning.com/",
+        external: true,
+        description: "Time interpretation and timezone clarity tool",
+      },
     ],
   },
 ]
