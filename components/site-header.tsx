@@ -12,16 +12,16 @@ import { cn } from "@/lib/utils"
 const CommandPalette = lazy(() => import("@/components/command-palette").then(mod => ({ default: mod.CommandPalette })))
 
 const navItems = [
-  { name: "Tools", href: "/tools" },
+  { name: "PDF", href: "/tools" },
+  { name: "Network", href: "/network-tools" },
+  { name: "Status", href: "/site-status" },
+  { name: "File", href: "/file-tools" },
   { name: "Learn", href: "/learn" },
   { name: "Compare", href: "/compare" },
-  { name: "Network", href: "/network-tools" },
-  { name: "File", href: "/file-tools" },
-  { name: "PDF Tools", href: "/pdf-tools" },
-  { name: "Calculators", href: "https://plainfigures.org", external: true },
+  { name: "Pricing", href: "/pricing" },
   { name: "Verify", href: "/verify-claims" },
+  { name: "Calculators", href: "https://plainfigures.org", external: true },
   { name: "About", href: "/about" },
-  { name: "TimeMeaning", href: "https://timemeaning.com", external: true },
 ]
 
 export function SiteHeader() {
@@ -116,10 +116,10 @@ export function SiteHeader() {
                 <Link
                   key={item.name}
                   href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noopener noreferrer" : undefined}
-              onClick={() => setMobileMenuOpen(false)}
-              className={cn(
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
                     "inline-flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-[background-color,color,box-shadow] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     pathname === item.href
                       ? "bg-secondary text-foreground shadow-sm"

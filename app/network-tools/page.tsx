@@ -5,12 +5,19 @@ import { generateCategoryMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = generateCategoryMetadata({
   name: 'Network Tools',
-  description: 'Free online network diagnostic tools for IP lookup, DNS queries, site status checks, and latency testing.',
+  description: 'Network diagnostics and uptime checks for IP lookup, DNS queries, site availability, and latency testing.',
   slug: 'network-tools',
   toolCount: 4,
 })
 
 const tools = [
+  {
+    name: "Site Status",
+    description: "Check if a website is up, down, or experiencing issues",
+    href: "/site-status",
+    tags: ["Edge", "Status"],
+    icon: <Wifi className="h-4 w-4" />,
+  },
   {
     name: "What is My IP",
     description: "View your public IP address, ISP, and approximate location",
@@ -24,13 +31,6 @@ const tools = [
     href: "/dns-lookup",
     tags: ["Edge", "Worker"],
     icon: <Server className="h-4 w-4" />,
-  },
-  {
-    name: "Site Status",
-    description: "Check if a website is up, down, or experiencing issues",
-    href: "/site-status",
-    tags: ["Edge"],
-    icon: <Wifi className="h-4 w-4" />,
   },
   {
     name: "Ping Test",

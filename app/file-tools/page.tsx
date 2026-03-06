@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { FileText, Image, FileArchive, FileCode } from "lucide-react"
+import { FileText, FileImage, FileSpreadsheet, Presentation } from "lucide-react"
 import { CategoryPage } from "@/components/category-page"
 import { generateCategoryMetadata } from "@/lib/seo"
 
@@ -13,31 +13,31 @@ export const metadata: Metadata = generateCategoryMetadata({
 const tools = [
   {
     name: "File Converters",
-    description: "Convert between various file formats including images and documents",
+    description: "Open conversion workflows for common file and document formats",
     href: "/file-converters",
     tags: ["Local", "WASM"],
     icon: <FileText className="h-4 w-4" />,
   },
   {
-    name: "Image Compressor",
-    description: "Reduce image file size while maintaining quality",
-    href: "/file-converters",
-    tags: ["Local", "Worker"],
-    icon: <Image className="h-4 w-4" />,
+    name: "PDF to JPG",
+    description: "Convert PDF pages to JPG images in your browser",
+    href: "/tools/pdf-to-jpg",
+    tags: ["Local", "Convert"],
+    icon: <FileImage className="h-4 w-4" />,
   },
   {
-    name: "Archive Extractor",
-    description: "Extract files from ZIP, RAR, 7z, and other archive formats",
-    href: "/file-converters",
-    tags: ["Local", "WASM"],
-    icon: <FileArchive className="h-4 w-4" />,
+    name: "PDF to Excel",
+    description: "Extract table-like content from PDF to spreadsheet output",
+    href: "/tools/pdf-to-excel",
+    tags: ["Local", "Best-effort"],
+    icon: <FileSpreadsheet className="h-4 w-4" />,
   },
   {
-    name: "Code Formatter",
-    description: "Format and beautify code in various programming languages",
-    href: "/file-converters",
-    tags: ["Local"],
-    icon: <FileCode className="h-4 w-4" />,
+    name: "PDF to PowerPoint",
+    description: "Convert PDF pages into presentation slides",
+    href: "/tools/pdf-to-ppt",
+    tags: ["Local", "Best-effort"],
+    icon: <Presentation className="h-4 w-4" />,
   },
 ]
 
@@ -50,7 +50,7 @@ const howItWorks = [
   {
     title: "Processing happens locally",
     description:
-      "WebAssembly and Web Workers process your file entirely on your device.",
+      "Browser-side processing runs on your own device for supported workflows.",
   },
   {
     title: "Download the result",

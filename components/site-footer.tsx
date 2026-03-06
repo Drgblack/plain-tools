@@ -5,6 +5,7 @@ const footerSections = [
   {
     title: "Categories",
     links: [
+      { name: "Site Status", href: "/site-status" },
       { name: "Network Tools", href: "/network-tools" },
       { name: "File Tools", href: "/file-tools" },
       { name: "PDF Tools", href: "/tools" },
@@ -14,15 +15,19 @@ const footerSections = [
   {
     title: "Popular",
     links: [
+      { name: "Site Status Checker", href: "/site-status" },
       { name: "What is My IP", href: "/what-is-my-ip" },
       { name: "DNS Lookup", href: "/dns-lookup" },
       { name: "Compress PDF", href: "/tools/compress-pdf" },
-      { name: "PDF to Word", href: "/tools/pdf-to-word" },
+      { name: "File Converters", href: "/file-converters" },
     ],
   },
   {
     title: "Resources",
     links: [
+      { name: "Tools Hub", href: "/tools" },
+      { name: "Network Hub", href: "/network-tools" },
+      { name: "File Hub", href: "/file-tools" },
       { name: "Learn", href: "/learn" },
       { name: "Compare", href: "/compare" },
       { name: "Blog", href: "/blog" },

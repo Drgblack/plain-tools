@@ -27,14 +27,14 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 export const metadata: Metadata = {
   title: buildStandardPageTitle("Plain Tools"),
   description:
-    "Use Plain Tools for private PDF workflows: merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no uploads.",
+    "Plain Tools is a trust-first utility hub for PDF, network, file, and uptime workflows. Fast browser-first tools with privacy-conscious handling.",
   alternates: {
     canonical: "https://plain.tools",
   },
   openGraph: {
     title: buildStandardPageTitle("Plain Tools"),
     description:
-      "Calm, practical PDF tools for sensitive documents. Processed locally in your browser with no file uploads.",
+      "Practical utility tools across PDF, network diagnostics, and uptime checks, built with a trust-first approach.",
     url: "https://plain.tools",
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: buildStandardPageTitle("Plain Tools"),
     description:
-      "Merge, split, convert, and sign PDFs locally in your browser. No uploads.",
+      "A trust-first utility platform with PDF tools, network diagnostics, and uptime checks.",
     images: ["/og/default.png"],
   },
 }
@@ -59,7 +59,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: 'Plain Tools',
-  description: 'Plain Tools is a privacy-first collection of PDF and browser tools that run locally on your device without uploading files to external servers.',
+  description: 'Plain Tools is a trust-first collection of PDF, network, and file utilities with browser-first processing and transparent behaviour.',
   url: 'https://plain.tools',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
@@ -69,8 +69,8 @@ const jsonLd = {
     priceCurrency: 'USD',
   },
   featureList: [
-    'No file uploads - all processing happens locally',
-    'No tracking or analytics',
+    'No file uploads for core local workflows',
+    'No advertising trackers',
     'Works offline after first load',
     'Open source and verifiable',
   ],
@@ -89,7 +89,7 @@ const categories = [
     description: "General browser file utilities for format checks and lightweight file workflows",
     href: "/file-tools",
     icon: <FileText className="h-6 w-6" />,
-    toolCount: 3,
+    toolCount: 4,
   },
   {
     name: "PDF Tools",
@@ -97,6 +97,13 @@ const categories = [
     href: "/tools",
     icon: <FileType className="h-6 w-6" />,
     toolCount: TOOL_CATALOGUE.filter((tool) => tool.available).length,
+  },
+  {
+    name: "Status and Uptime",
+    description: "Check whether a website is down, reachable, and responding in real time",
+    href: "/site-status",
+    icon: <Wifi className="h-6 w-6" />,
+    toolCount: 1,
   },
   {
     name: "Calculators",
@@ -108,6 +115,27 @@ const categories = [
 ]
 
 const popularTools = [
+  {
+    name: "Site Status Checker",
+    description: "Check whether a website is up, down, or degraded",
+    href: "/site-status",
+    tags: ["Network", "Status"],
+    icon: <Wifi className="h-5 w-5" />,
+  },
+  {
+    name: "What is My IP",
+    description: "Instantly view your public IP and basic network context",
+    href: "/what-is-my-ip",
+    tags: ["Network", "Diagnostics"],
+    icon: <Globe className="h-5 w-5" />,
+  },
+  {
+    name: "DNS Lookup",
+    description: "Query A, AAAA, MX, TXT and other DNS records quickly",
+    href: "/dns-lookup",
+    tags: ["Network", "DNS"],
+    icon: <Server className="h-5 w-5" />,
+  },
   {
     name: "Merge PDF",
     description: "Combine multiple PDF files in-browser with no uploads",
@@ -123,32 +151,11 @@ const popularTools = [
     icon: <FileType className="h-5 w-5" />,
   },
   {
-    name: "PDF to Word",
-    description: "Convert PDF text to Word locally with best-effort layout retention",
-    href: "/tools/pdf-to-word",
-    tags: ["Local", "Convert"],
+    name: "File Converters",
+    description: "Open practical browser-based file conversion workflows",
+    href: "/file-converters",
+    tags: ["File", "Convert"],
     icon: <FileText className="h-5 w-5" />,
-  },
-  {
-    name: "Word to PDF",
-    description: "Convert DOCX files to PDF in your browser",
-    href: "/tools/word-to-pdf",
-    tags: ["Local", "Convert"],
-    icon: <FileText className="h-5 w-5" />,
-  },
-  {
-    name: "JPG to PDF",
-    description: "Combine image files into one PDF locally",
-    href: "/tools/jpg-to-pdf",
-    tags: ["Local", "Convert"],
-    icon: <FileText className="h-5 w-5" />,
-  },
-  {
-    name: "Sign PDF",
-    description: "Place a visual signature without uploading your document",
-    href: "/tools/sign-pdf",
-    tags: ["Local", "Secure"],
-    icon: <Lock className="h-5 w-5" />,
   },
 ]
 
@@ -188,8 +195,8 @@ const privacyClaims = [
   },
   {
     icon: <Eye className="h-6 w-6" />,
-    title: "No tracking",
-    description: "No analytics, no cookies, no fingerprinting. We don't know who you are.",
+    title: "No ad tracking",
+    description: "No advertising trackers or behavioural profiling in core utility workflows.",
   },
   {
     icon: <HardDrive className="h-6 w-6" />,
@@ -215,11 +222,32 @@ const privacyClaims = [
 
 const browseCategories = [
   { 
-    name: "All PDF Tools", 
+    name: "PDF Tools", 
     href: "/tools", 
     count: TOOL_CATALOGUE.filter((tool) => tool.available).length,
-    description: "Browse all conversion, organisation, and security workflows",
+    description: "Conversion, organisation, and secure document workflows",
     icon: <FileType className="h-5 w-5" />,
+  },
+  { 
+    name: "Network Tools", 
+    href: "/network-tools", 
+    count: 4,
+    description: "IP, DNS, latency, and availability diagnostics",
+    icon: <Globe className="h-5 w-5" />,
+  },
+  { 
+    name: "File Tools", 
+    href: "/file-tools", 
+    count: 4,
+    description: "Browser-based file conversion and handling utilities",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  { 
+    name: "Status Checker", 
+    href: "/site-status", 
+    count: 1,
+    description: "Quick website uptime checks for operational issues",
+    icon: <Wifi className="h-5 w-5" />,
   },
   { 
     name: "Learn Guides", 
@@ -238,6 +266,16 @@ const browseCategories = [
 ]
 
 const richSections = [
+  {
+    name: "Network",
+    href: "/network-tools",
+    description: "Troubleshoot connectivity, DNS, and uptime questions quickly.",
+  },
+  {
+    name: "File",
+    href: "/file-tools",
+    description: "Use practical file-conversion workflows without heavy software.",
+  },
   {
     name: "Learn",
     href: "/learn",
@@ -267,6 +305,11 @@ const richSections = [
 
 const visibilityCards = [
   {
+    title: "Check if a site is down",
+    description: "Use the site status checker to quickly confirm uptime and response behaviour.",
+    href: "/site-status",
+  },
+  {
     title: "Learn how to use the tools",
     description: "Step-by-step guides for private workflows, troubleshooting, and verification checks.",
     href: "/learn",
@@ -293,17 +336,17 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-24">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              Private PDF tools for sensitive files, running in your browser.
+              Trust-first utility tools for documents, files, networks, and uptime checks.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Core local workflows process files on your device with no upload step. Verify this in your browser&apos;s Network tab.
+              Plain Tools combines practical PDF workflows with network diagnostics and status tools. Privacy-first handling where relevant, with verifiable behaviour.
             </p>
             
             {/* Intro paragraph for SEO/GEO */}
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
-              Plain Tools gives you practical PDF workflows for conversion, organisation, signing, and
-              cleanup. Files are processed on your own device, so you can keep control of confidential
-              documents and verify behaviour with DevTools.
+              Plain Tools gives you practical utilities across PDF processing, website uptime checks,
+              DNS and IP diagnostics, and file conversions. Use one platform for day-to-day utility
+              work with simple, trustworthy workflows.
             </p>
 
             {/* Primary CTAs */}
@@ -317,11 +360,11 @@ export default function HomePage() {
                   "transition-all duration-300 hover:shadow-[0_6px_30px_rgba(100,200,180,0.35)] hover:-translate-y-0.5"
                 )}
               >
-                Explore tools
+                Explore PDF tools
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/verify-claims"
+                href="/site-status"
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full px-6 py-3",
                   "bg-card border border-white/[0.12] text-foreground font-semibold",
@@ -329,10 +372,22 @@ export default function HomePage() {
                   "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
                 )}
               >
-                Verify claims
+                Check site status
               </Link>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-3">
+              <Link
+                href="/network-tools"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Network tools
+              </Link>
+              <Link
+                href="/file-tools"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                File tools
+              </Link>
               <Link
                 href="/learn"
                 className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
@@ -348,7 +403,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
-              {["Legal files", "HR records", "Finance packs", "School and admin paperwork"].map((item) => (
+              {["Sensitive documents", "Uptime triage", "Network diagnostics", "File conversion workflows"].map((item) => (
                 <span
                   key={item}
                   className="rounded-full border border-white/[0.12] bg-card px-3 py-1.5 text-xs text-muted-foreground"
@@ -376,6 +431,12 @@ export default function HomePage() {
                 className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
                 Compare alternatives
+              </Link>
+              <Link
+                href="/site-status"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Use site status checker
               </Link>
               <Link
                 href="/blog"
@@ -409,7 +470,7 @@ export default function HomePage() {
 
         <section className="border-b border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {visibilityCards.map((card) => (
                 <Link
                   key={card.href}
@@ -439,7 +500,7 @@ export default function HomePage() {
                 Pick a section by task type, then jump straight into a working tool.
               </p>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {categories.map((category) => (
                 <CategoryTile
                   key={category.name}
@@ -463,8 +524,8 @@ export default function HomePage() {
                 Explore Plain Tools
               </h2>
               <p className="mt-2 max-w-3xl text-muted-foreground">
-                Move from tool usage to deeper guidance quickly: learn workflows, compare alternatives,
-                read technical posts, and check pricing for advanced features.
+                Move between practical utility hubs quickly: network diagnostics, file workflows,
+                PDF processing, trusted documentation, and support routes.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -501,7 +562,7 @@ export default function HomePage() {
                 Popular Tools
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Most used tools across all categories
+                Most used utilities across the platform
               </p>
               <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
                 Core local tools are free to use. See{" "}
@@ -531,13 +592,13 @@ export default function HomePage() {
           <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
             <div className="mb-10">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                Browse All Tools
+                Browse Major Sections
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Explore our complete collection
+                Jump into the part of the platform you need right now
               </p>
             </div>
-            <div className="grid gap-6 sm:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {browseCategories.map((category) => (
                 <Link
                   key={category.name}
@@ -563,7 +624,7 @@ export default function HomePage() {
                         "bg-white/[0.08] text-sm font-semibold text-muted-foreground ring-1 ring-white/[0.12]",
                         "transition-all duration-300 group-hover:bg-accent group-hover:text-accent-foreground group-hover:ring-accent/40"
                       )}>
-                        Explore tools
+                        Open section
                         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </div>
@@ -628,8 +689,8 @@ export default function HomePage() {
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>
-                Plain Tools is a privacy-first collection of browser utilities for everyday tasks 
-                such as file conversion, networking diagnostics, and developer tools. All tools 
+                Plain Tools is a trust-first collection of browser utilities for everyday tasks
+                such as PDF workflows, file conversion, network diagnostics, and uptime checks. Core local tools
                 run locally on your device without uploading files to external servers.
               </p>
               <p>
@@ -641,7 +702,7 @@ export default function HomePage() {
               <p>
                 Every tool is designed with three principles: speed (no upload/download delays), 
                 privacy (no server-side processing), and transparency (open source and verifiable). 
-                Whether you need to compress a PDF, look up DNS records, or convert file formats, 
+                Whether you need to compress a PDF, check whether a website is down, look up DNS records, or convert file formats,
                 Plain Tools provides fast, secure, and completely private solutions.
               </p>
             </div>

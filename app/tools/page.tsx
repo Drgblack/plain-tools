@@ -15,14 +15,14 @@ import {
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = {
-  title: buildStandardPageTitle("PDF Tools"),
+  title: buildStandardPageTitle("PDF Tools Category"),
   description:
-    "Browse local PDF tools for merge, split, compress, convert, OCR, and signing. Process files in your browser with no uploads or account friction.",
+    "Browse the PDF category inside Plain Tools: merge, split, compress, convert, OCR, and signing workflows with browser-first processing.",
   alternates: {
     canonical: "https://plain.tools/tools",
   },
   openGraph: {
-    title: buildStandardPageTitle("PDF Tools"),
+    title: buildStandardPageTitle("PDF Tools Category"),
     description:
       "Explore privacy-first PDF tools that run locally in your browser. No uploads, calm workflows, and practical results.",
     url: "https://plain.tools/tools",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: buildStandardPageTitle("PDF Tools"),
+    title: buildStandardPageTitle("PDF Tools Category"),
     description:
       "Merge, split, compress, convert, and sign PDFs locally in your browser. No uploads.",
     images: ["/og/tools.png"],
@@ -183,13 +183,24 @@ export default function ToolsPage() {
         <section className="border-b border-border px-4 py-14 md:py-16">
           <div className="mx-auto max-w-6xl space-y-4">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Private PDF tools for sensitive workflows
+              PDF tools for sensitive workflows
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Plain Tools gives you practical PDF workflows for conversion, organisation, signing,
-              and privacy checks. Core local tools process files in-browser with no upload step, and
-              you can verify behaviour yourself.
+              This is the PDF category inside Plain Tools. Use practical workflows for conversion,
+              organisation, signing, and privacy checks. Core local tools process files in-browser
+              with no upload step.
             </p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <Link href="/network-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Network tools
+              </Link>
+              <Link href="/site-status" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Site status checker
+              </Link>
+              <Link href="/file-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                File tools
+              </Link>
+            </div>
             <h2 className="text-sm font-semibold text-foreground">Popular PDF tools</h2>
             <div className="flex flex-wrap gap-2">
               {popularTools.map((tool) => (
