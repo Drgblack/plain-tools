@@ -36,8 +36,8 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/92 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/78">
+      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between px-4">
         <Link
           href="/"
           className="rounded-md text-base font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -45,7 +45,7 @@ export function Navigation() {
           Plain Tools
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1.5 lg:flex">
           {navItems.map((item) => {
             const active = !item.external && pathname === item.href
             return (
@@ -55,7 +55,7 @@ export function Navigation() {
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 className={cn(
-                  "inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors",
+                  "inline-flex items-center gap-1 rounded-md px-3 py-2 text-[13px] transition-colors",
                   active
                     ? "bg-secondary text-foreground"
                     : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
@@ -85,7 +85,7 @@ export function Navigation() {
       </div>
 
       {mobileOpen ? (
-        <nav className="border-t border-border/70 bg-background px-4 py-3 lg:hidden">
+        <nav className="border-t border-border/70 bg-background/95 px-4 py-3 lg:hidden">
           <div className="grid gap-1">
             {navItems.map((item) => {
               const active = !item.external && pathname === item.href
@@ -97,7 +97,7 @@ export function Navigation() {
                   rel={item.external ? "noopener noreferrer" : undefined}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-md px-3 py-2.5 text-sm transition-colors",
+                    "inline-flex items-center gap-2 rounded-md px-3 py-2.5 text-[13px] transition-colors",
                     active
                       ? "bg-secondary text-foreground"
                       : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"

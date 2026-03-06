@@ -119,8 +119,8 @@ export default function ComparePage() {
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
 
-      <main className="flex-1 px-4 py-12 sm:py-16">
-        <div className="mx-auto max-w-6xl space-y-10">
+      <main className="flex-1 px-4 py-14 md:py-16">
+        <div className="mx-auto max-w-6xl space-y-12">
           <section className="space-y-4">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Compare PDF tools with practical privacy criteria
@@ -152,7 +152,7 @@ export default function ComparePage() {
             </div>
           </section>
 
-          <section className="overflow-x-auto rounded-xl border border-border">
+          <section className="overflow-x-auto rounded-xl border border-border bg-card/20">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="bg-muted/50 text-foreground">
                 <tr>
@@ -173,7 +173,7 @@ export default function ComparePage() {
             </table>
           </section>
 
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {comparisonLinks.map((item) => (
               <Link
                 key={item.href}
@@ -187,7 +187,7 @@ export default function ComparePage() {
             ))}
           </section>
 
-          <section className="rounded-xl border border-border bg-card/30 p-6">
+          <section className="rounded-xl border border-border bg-card/30 p-6 md:p-7">
             <h2 className="text-lg font-semibold text-foreground">How to evaluate fairly</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
               <li>Check whether core operations require upload.</li>

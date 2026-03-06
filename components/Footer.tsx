@@ -62,21 +62,21 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border/60 bg-background/95">
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <div className="mb-10">
+      <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
+        <div className="mb-10 md:mb-12">
           <Link href="/" className="text-lg font-semibold tracking-tight text-foreground">
             Plain Tools
           </Link>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
             Private browser utilities for everyday PDF and file workflows. Processed locally with no
             uploads.
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h2 className="text-sm font-semibold text-foreground">{section.title}</h2>
+              <h2 className="text-sm font-semibold tracking-tight text-foreground">{section.title}</h2>
               <ul className="mt-4 space-y-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
@@ -96,7 +96,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-border/60 pt-6 text-sm text-muted-foreground">
+        <div className="mt-12 border-t border-border/60 pt-6 text-sm text-muted-foreground">
           <p>Private browser tools. Files processed locally where supported.</p>
           <p className="mt-1">&copy; {year} Plain Tools. All rights reserved.</p>
         </div>

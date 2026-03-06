@@ -197,13 +197,15 @@ export default async function ToolPage({ params }: PageProps) {
       
 
       <main className="flex-1">
-        <div className="container mx-auto py-8">
-          <h1 className="text-3xl font-bold">{tool.name}</h1>
-          <p className="mb-6 text-muted-foreground">{profile.description}</p>
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{tool.name}</h1>
+          <p className="mt-3 mb-8 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            {profile.description}
+          </p>
 
           {tool.available ? (
             <>
-              <section className="mb-6 rounded-xl border border-border bg-card/60 p-4">
+              <section className="mb-8 rounded-xl border border-border bg-card/60 p-5">
                 <p className="text-sm font-medium text-foreground">
                   {tool.category !== "AI Assistant"
                     ? "Processed locally in your browser. Files never leave your device."
@@ -224,7 +226,7 @@ export default async function ToolPage({ params }: PageProps) {
               </Suspense>
 
               {seo ? (
-                <div className="mt-6 rounded-lg border border-white/[0.1] bg-muted/20 p-4 text-sm text-muted-foreground">
+                <div className="mt-8 rounded-lg border border-white/[0.1] bg-muted/20 p-4 text-sm text-muted-foreground">
                   Learn more about this workflow:{" "}
                   <a
                     href={seo.learnHref}

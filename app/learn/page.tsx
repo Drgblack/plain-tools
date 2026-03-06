@@ -94,7 +94,7 @@ export default function LearnPage() {
   const totalResults = filteredSections.reduce((acc, section) => acc + section.articles.length, 0)
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#000]">
+    <div className="flex min-h-screen flex-col bg-background">
       <Script
         id="structured-data"
         type="application/ld+json"
@@ -102,11 +102,11 @@ export default function LearnPage() {
       />
       <main className="flex-1 [&_p]:text-base">
         {/* Hero Section - Compact */}
-        <section className="relative px-4 py-14 md:py-18 border-b border-[#333]">
+        <section className="relative border-b border-border px-4 py-16 md:py-20">
           {/* Geometric grid background */}
           <div className="pointer-events-none absolute inset-0 hero-grid-pattern opacity-30" />
           
-          <div className="relative mx-auto max-w-5xl">
+          <div className="relative mx-auto max-w-6xl">
             <div className="mb-3 inline-flex items-center rounded-full bg-[#0070f3]/10 px-3 py-1.5 border border-[#0070f3]/30">
               <Cpu className="mr-2 h-3.5 w-3.5 text-[#0070f3]" strokeWidth={2} />
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0070f3]">
@@ -167,12 +167,12 @@ export default function LearnPage() {
         </section>
 
         {/* Content Sections */}
-        <div className="px-4 py-12 md:py-16">
-          <div className="mx-auto max-w-5xl space-y-16">
+        <div className="px-4 py-14 md:py-16">
+          <div className="mx-auto max-w-6xl space-y-14 md:space-y-16">
             {filteredSections.map((section) => (
               <section key={section.id} id={section.id} aria-labelledby={`${section.id}-heading`}>
                 {/* Section header */}
-                <div className="mb-6 border-b border-[#333] pb-4">
+                <div className="mb-6 border-b border-border pb-4">
                   <h2 id={`${section.id}-heading`} className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                     {section.title}
                   </h2>
@@ -257,8 +257,8 @@ export default function LearnPage() {
         </div>
 
 {/* Technical Glossary Card */}
-  <section className="border-t border-[#333] px-4 py-10">
-    <div className="mx-auto max-w-5xl">
+  <section className="border-t border-border px-4 py-12">
+    <div className="mx-auto max-w-6xl">
       <Link
         href="/learn/glossary"
         className="group flex flex-col items-start gap-5 rounded-xl border border-[#333] bg-[#111] p-6 transition-all duration-300 hover:border-[#0070f3]/50 hover:shadow-[0_0_30px_rgba(0,112,243,0.1)] sm:flex-row sm:items-center"
@@ -280,8 +280,8 @@ export default function LearnPage() {
   </section>
 
   {/* Quick Links Footer */}
-  <nav aria-label="Related pages" className="border-t border-[#333] bg-[#0a0a0a] px-4 py-10">
-  <div className="mx-auto max-w-5xl">
+  <nav aria-label="Related pages" className="border-t border-border bg-card/30 px-4 py-12">
+  <div className="mx-auto max-w-6xl">
   <div className="flex flex-wrap items-center justify-center gap-3">
   <span className="mr-3 text-[11px] font-semibold uppercase tracking-wider text-white/60">
   Quick Links

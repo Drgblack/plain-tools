@@ -157,13 +157,13 @@ export default function ToolsPage() {
         />
       ) : null}
       <main className="flex-1">
-        <section className="border-b border-border px-4 py-8 sm:py-10">
+        <section className="border-b border-border px-4 py-14 md:py-16">
           <div className="mx-auto max-w-6xl space-y-4">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Private PDF tools that run locally in your browser
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Plain.tools gives you practical PDF workflows for conversion, organisation, signing,
+              Plain Tools gives you practical PDF workflows for conversion, organisation, signing,
               and privacy checks. Files stay on your device, processing runs in-browser, and you
               can verify the behaviour yourself.
             </p>
@@ -182,7 +182,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <section className="border-b border-border px-4 py-5">
+        <section className="border-b border-border px-4 py-6">
           <div className="mx-auto grid max-w-6xl gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {trustPoints.map((point) => (
               <p
@@ -195,7 +195,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <section className="border-b border-border px-4 py-8">
+        <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Browse by workflow</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -220,7 +220,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <section className="border-b border-border px-4 py-10">
+        <section className="border-b border-border px-4 py-14">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Tool directory</h2>
             <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
@@ -252,7 +252,7 @@ export default function ToolsPage() {
 
         <ToolsSection />
 
-        <section className="border-t border-border px-4 py-10">
+        <section className="border-t border-border px-4 py-12">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2">
             {subtleCtas.map((cta) => (
               <Link

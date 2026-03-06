@@ -117,17 +117,17 @@ export default function PricingPage() {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
-      <main className="flex-1 px-4 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl space-y-8">
+      <main className="flex-1 px-4 py-14 md:py-16">
+        <div className="mx-auto max-w-6xl space-y-10">
           <div className="text-center">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Plain Pro</h1>
-            <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Plain Pro</h1>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Upgrade when your free-tier AI usage cap is reached. Stripe handles billing and
               tax, while document processing remains local-first.
             </p>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Monthly</CardTitle>
@@ -180,7 +180,7 @@ export default function PricingPage() {
             </Card>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Free Tier (stays free)</CardTitle>

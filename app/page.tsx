@@ -268,11 +268,11 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="relative overflow-hidden border-b border-border/50">
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
-          <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-32">
-            <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
+          <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-24">
+            <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
               Private PDF tools for sensitive files, running directly in your browser.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Files are processed locally on your device, with no upload step for core local tools.
             </p>
             
@@ -389,7 +389,7 @@ export default function HomePage() {
         </section>
 
         <section className="border-b border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-12">
+          <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
             <div className="grid gap-4 md:grid-cols-2">
               {visibilityCards.map((card) => (
                 <Link
@@ -411,9 +411,9 @@ export default function HomePage() {
 
         {/* Categories Section */}
         <section className="border-b border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
             <div className="mb-10">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Categories
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -438,9 +438,9 @@ export default function HomePage() {
 
         {/* Site Sections */}
         <section className="border-b border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Explore Plain Tools
               </h2>
               <p className="mt-2 max-w-3xl text-muted-foreground">
@@ -476,9 +476,9 @@ export default function HomePage() {
 
         {/* Popular Tools Section */}
         <section className="border-b border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
             <div className="mb-10">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Popular Tools
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -509,9 +509,9 @@ export default function HomePage() {
 
         {/* Browse All Tools Section */}
         <section id="tools" className="border-b border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
             <div className="mb-10">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Browse All Tools
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -557,9 +557,9 @@ export default function HomePage() {
 
         {/* Privacy Section */}
         <section>
-          <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
             <div className="mb-10">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Verifiable Privacy
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -603,8 +603,8 @@ export default function HomePage() {
 
         {/* What is Plain Tools - SEO/GEO section */}
         <section className="border-t border-border/50">
-          <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="text-xl font-semibold tracking-tight text-foreground">
+          <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
               What is Plain Tools?
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-muted-foreground">
