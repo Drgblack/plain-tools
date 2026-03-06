@@ -49,6 +49,36 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/privacy-policy',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
+        source: '/contact',
+        destination: '/support',
+        permanent: true,
+      },
+      {
+        source: '/terms-of-service',
+        destination: '/terms',
+        permanent: true,
+      },
+      {
+        source: '/sitemap',
+        destination: '/sitemap.xml',
+        permanent: true,
+      },
+      {
+        source: '/roadmap',
+        destination: '/labs',
+        permanent: true,
+      },
+      {
+        source: '/changelog',
+        destination: '/labs',
+        permanent: true,
+      },
+      {
         source: '/pdf-tools/verify',
         destination: '/verify-claims',
         permanent: true,
