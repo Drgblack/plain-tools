@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ToolsSection } from "@/components/tools-section"
+import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = {
   title: "Private PDF Tools - Local Browser Processing | Plain.tools",
@@ -82,6 +83,26 @@ export default function ToolsPage() {
     },
   ]
 
+  const crawlableToolSlugs = [
+    "merge-pdf",
+    "split-pdf",
+    "compress-pdf",
+    "pdf-to-word",
+    "word-to-pdf",
+    "jpg-to-pdf",
+    "pdf-to-jpg",
+    "pdf-to-excel",
+    "pdf-to-ppt",
+    "sign-pdf",
+    "protect-pdf",
+    "unlock-pdf",
+    "ocr-pdf",
+  ] as const
+
+  const crawlableToolDirectory = crawlableToolSlugs
+    .map((slug) => TOOL_CATALOGUE.find((tool) => tool.slug === slug && tool.available))
+    .filter((tool): tool is NonNullable<(typeof TOOL_CATALOGUE)[number]> => Boolean(tool))
+
   const trustPoints = [
     "Processed locally in your browser",
     "No file uploads",
@@ -158,6 +179,36 @@ export default function ToolsPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-10">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Tool directory</h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              This server-rendered list keeps core tools visible and crawlable. All links below are
+              standard anchors to individual tool pages.
+            </p>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {crawlableToolDirectory.map((tool) => (
+                <li key={tool.slug} className="rounded-lg border border-border bg-card/40 p-4">
+                  <h3 className="text-sm font-semibold text-foreground">
+                    <Link href={`/tools/${tool.slug}`} className="hover:text-accent hover:underline">
+                      {tool.name}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {tool.description}
+                  </p>
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="mt-3 inline-flex text-xs font-medium text-accent hover:underline"
+                  >
+                    Open tool
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 

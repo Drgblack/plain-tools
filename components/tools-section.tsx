@@ -46,10 +46,10 @@ type CategoryConfig = {
 
 const CATEGORY_CONFIG: CategoryConfig[] = [
   { id: "All", label: "All", hint: "Everything", icon: Layers },
-  { id: "Core", label: "Convert and organise", hint: "Core workflows", icon: Layers },
-  { id: "Security & Privacy", label: "Secure", hint: "Protect and sign", icon: ShieldAlert },
-  { id: "Performance & Edit", label: "Optimise and OCR", hint: "Performance tools", icon: LayoutGrid },
-  { id: "AI Assistant", label: "AI assist", hint: "Opt-in AI", icon: Sparkles },
+  { id: "Core", label: "Convert and organise", hint: "Convert and organise", icon: Layers },
+  { id: "Security & Privacy", label: "Secure", hint: "Secure", icon: ShieldAlert },
+  { id: "Performance & Edit", label: "Optimise / Extract / OCR", hint: "Optimise and extract", icon: LayoutGrid },
+  { id: "AI Assistant", label: "AI assist (opt-in)", hint: "AI tools", icon: Sparkles },
 ]
 
 const ICON_MAP: Record<string, LucideIcon> = {
