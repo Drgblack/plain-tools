@@ -83,7 +83,7 @@ export function PdfFileDropzone({
         }}
         className={cn(
           "cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isDragging
             ? "border-primary bg-primary/10"
             : "border-border bg-muted/20 hover:border-primary/70",

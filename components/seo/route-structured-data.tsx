@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { buildHowToSchema } from "@/lib/structured-data"
 
 function formatSegment(segment: string) {
   return segment
@@ -73,22 +74,49 @@ export function RouteStructuredData() {
 
   if (segments[0] === "tools" && segments[1]) {
     const tool = getToolSeoEntry(segments[1])
-    if (tool) {
-      schemas.push({
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        name: `Plain - ${tool.name}`,
-        applicationCategory: "UtilitiesApplication",
-        operatingSystem: "Web Browser",
-        url: `https://plain.tools${pathname}`,
-        description: tool.description,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
+    const toolName = tool?.name ?? formatSegment(segments[1])
+    const toolDescription =
+      tool?.description ??
+      `${toolName} processes files locally in your browser with a no-upload workflow.`
+
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: `Plain - ${toolName}`,
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Web Browser",
+      url: `https://plain.tools${pathname}`,
+      description: toolDescription,
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    })
+
+    const toolHowTo = buildHowToSchema(
+      `How to use ${toolName}`,
+      toolDescription,
+      [
+        {
+          name: "Open the tool",
+          text: `Go to ${toolName} and choose the file you want to process.`,
         },
-      })
-    }
+        {
+          name: "Configure options",
+          text: "Set processing options before running the tool.",
+        },
+        {
+          name: "Process locally",
+          text: "Run the tool in your browser and keep file handling on-device.",
+        },
+        {
+          name: "Download output",
+          text: "Download the result and review it before sharing.",
+        },
+      ]
+    )
+    schemas.push(toolHowTo)
   }
 
   if (segments[0] === "learn" && segments[1] && segments[1] !== "glossary") {
@@ -108,6 +136,26 @@ export function RouteStructuredData() {
         "@id": `https://plain.tools${pathname}`,
       },
     })
+
+    const learnHowTo = buildHowToSchema(
+      `How to use this ${headline} guide`,
+      `Follow the ${headline} learn article to apply a privacy-first workflow in practice.`,
+      [
+        {
+          name: "Read the quick answer",
+          text: "Start with the opening section to understand scope and constraints.",
+        },
+        {
+          name: "Apply the practical steps",
+          text: "Follow the article sections and adapt steps to your file workflow.",
+        },
+        {
+          name: "Verify behaviour",
+          text: "Use verification guidance and confirm processing assumptions in your browser.",
+        },
+      ]
+    )
+    schemas.push(learnHowTo)
   }
 
   if (
@@ -147,4 +195,3 @@ export function RouteStructuredData() {
     </>
   )
 }
-

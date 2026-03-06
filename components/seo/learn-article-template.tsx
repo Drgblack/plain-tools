@@ -4,6 +4,7 @@ import { ArticleLayout } from "@/components/seo/article-layout"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { TrustBox } from "@/components/seo/trust-box"
+import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 import type { TrancheLearnArticle } from "@/lib/seo/tranche1-content"
 import { getLearnSeoLinks } from "@/lib/seo/tranche1-link-map"
 import {
@@ -33,9 +34,9 @@ export function buildLearnArticleMetadata(
 ): Metadata {
   const basePath = options?.basePath ?? "/learn"
   const canonical = `${BASE_URL}${basePath}/${article.slug}`
-  const title =
-    article.metaTitle.replace("Plain.tools", "Plain Tools") ||
-    `${titleCase(article.primaryQuery)} - Offline & Private | Plain Tools`
+  const title = buildStandardPageTitle(
+    normalizeBrandCapitalization(article.title || titleCase(article.primaryQuery))
+  )
   return {
     title,
     description: article.metaDescription,
@@ -86,22 +87,20 @@ function buildLearnSchema(article: TrancheLearnArticle, basePath: string, sectio
     ),
   ]
 
-  if (article.intent === "how-to") {
-    const howToSteps = article.sections
-      .slice(0, 6)
-      .map((section) => ({
-        name: section.heading,
-        text:
-          section.paragraphs[0] ??
-          section.bullets?.[0] ??
-          "Follow this step in sequence for a local no-upload workflow.",
-      }))
+  const howToSteps = article.sections
+    .slice(0, 6)
+    .map((section) => ({
+      name: section.heading,
+      text:
+        section.paragraphs[0] ??
+        section.bullets?.[0] ??
+        "Follow this step in sequence for a local no-upload workflow.",
+    }))
 
-    if (howToSteps.length > 0) {
-      schemas.push(
-        buildHowToSchema(article.title, article.metaDescription, howToSteps)
-      )
-    }
+  if (howToSteps.length > 0) {
+    schemas.push(
+      buildHowToSchema(article.title, article.metaDescription, howToSteps)
+    )
   }
 
   return combineJsonLd(schemas) ?? schemas[0]

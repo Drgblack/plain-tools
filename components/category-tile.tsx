@@ -42,9 +42,9 @@ export function CategoryTile({
 
       <div className="mt-6 border-t border-white/[0.08] pt-5">
         <span className={cn(
-          "inline-flex items-center gap-1.5 rounded-full px-4 py-2",
+          "inline-flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2",
           "bg-white/[0.08] text-sm font-semibold text-muted-foreground ring-1 ring-white/[0.12]",
-          "transition-all duration-300 group-hover:bg-accent group-hover:text-accent-foreground group-hover:ring-accent/40"
+          "transition-all duration-300 group-hover:bg-accent group-hover:text-accent-foreground group-hover:ring-accent/40 group-hover:-translate-y-0.5"
         )}>
           {external ? "Visit site" : "Explore tools"}
           {external ? (
@@ -63,6 +63,8 @@ export function CategoryTile({
     return (
       <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         className="group block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
       >
         {card}

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { PdfToolsSubnav } from "@/components/pdf-tools-subnav"
+import { RouteStructuredData } from "@/components/seo/route-structured-data"
 
 type AppShellChromeProps = {
   children: React.ReactNode
@@ -20,6 +21,7 @@ export function AppShellChrome({ children }: AppShellChromeProps) {
 
   return (
     <>
+      <RouteStructuredData />
       <Navigation />
       {showCanonicalHubSubnav ? <PdfToolsSubnav /> : null}
       <main className="flex-1">{children}</main>

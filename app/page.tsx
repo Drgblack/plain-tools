@@ -39,7 +39,7 @@ export const metadata: Metadata = {
         url: "/og/default.png",
         width: 1200,
         height: 630,
-        alt: "Plain.tools homepage preview",
+        alt: "Plain Tools homepage preview",
       },
     ],
   },
@@ -278,7 +278,7 @@ export default function HomePage() {
             
             {/* Intro paragraph for SEO/GEO */}
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
-              Plain.tools gives you practical PDF workflows for conversion, organisation, signing, and
+              Plain Tools gives you practical PDF workflows for conversion, organisation, signing, and
               cleanup. Files are processed on your own device, so you can keep control of confidential
               documents and verify behaviour with DevTools.
             </p>
@@ -441,7 +441,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-6xl px-4 py-16">
             <div className="mb-8">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                Explore Plain.tools
+                Explore Plain Tools
               </h2>
               <p className="mt-2 max-w-3xl text-muted-foreground">
                 Move from tool usage to deeper guidance quickly: learn workflows, compare alternatives,
@@ -609,13 +609,13 @@ export default function HomePage() {
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>
-                Plain.tools is a privacy-first collection of browser utilities for everyday tasks 
+                Plain Tools is a privacy-first collection of browser utilities for everyday tasks 
                 such as file conversion, networking diagnostics, and developer tools. All tools 
                 run locally on your device without uploading files to external servers.
               </p>
               <p>
                 Unlike traditional online tools that process your files on remote servers, 
-                Plain.tools uses modern web technologies like WebAssembly and Web Workers to 
+                Plain Tools uses modern web technologies like WebAssembly and Web Workers to 
                 perform all operations directly in your browser. This means your sensitive 
                 documents, images, and data never leave your device.
               </p>

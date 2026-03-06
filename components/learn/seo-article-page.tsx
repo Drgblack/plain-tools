@@ -4,6 +4,7 @@ import Script from "next/script"
 import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
+import { buildStandardPageTitle } from "@/lib/page-title"
 import {
   combineSchemas,
   generateFAQSchema,
@@ -63,7 +64,7 @@ export const buildLearnArticleMetadata = (
 ): Metadata => {
   const basePath = options?.basePath ?? article.basePath ?? "/learn"
   const canonicalUrl = `${SITE_URL}${basePath}/${article.slug}`
-  const title = `${article.title} | Plain Tools`
+  const standardTitle = buildStandardPageTitle(article.title)
   const socialImage =
     basePath === "/compare"
       ? "/og/compare.png"
@@ -72,7 +73,7 @@ export const buildLearnArticleMetadata = (
         : "/og/learn.png"
 
   return {
-    title,
+    title: standardTitle,
     description: article.description,
     keywords: article.keywords,
     alternates: {
@@ -84,7 +85,7 @@ export const buildLearnArticleMetadata = (
       },
     },
     openGraph: {
-      title,
+      title: standardTitle,
       description: article.description,
       url: canonicalUrl,
       type: "article",
@@ -99,7 +100,7 @@ export const buildLearnArticleMetadata = (
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: standardTitle,
       description: article.description,
       images: [socialImage],
     },
@@ -190,12 +191,7 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
     )
   }
 
-  const supportsHowToSchema =
-    article.title.toLowerCase().startsWith("how to") ||
-    article.slug.startsWith("how-") ||
-    article.slug.includes("workflows/")
-
-  if (supportsHowToSchema && article.sections.length > 0) {
+  if (article.sections.length > 0) {
     const howToSteps = article.sections.slice(0, 6).map((section) => ({
       name: section.heading,
       text:

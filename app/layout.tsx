@@ -1,18 +1,29 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AppShellChrome } from '@/components/app-shell-chrome'
+import { buildStandardPageTitle } from '@/lib/page-title'
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 const themeInitScript = buildThemeInitScript()
+const safeThemeInitScript = `
+try {
+${themeInitScript}
+} catch (_themeBootstrapError) {
+  try {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.style.colorScheme = "dark";
+  } catch {}
+}
+`
 
 export const metadata: Metadata = {
-  title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
+  title: buildStandardPageTitle("Plain Tools"),
   description:
-    "Plain.tools offers privacy-first browser utilities for PDF workflows and practical file tasks. Files are processed locally with no upload requirement.",
-  generator: "plain.tools",
+    "Plain Tools offers privacy-first browser utilities for PDF workflows and practical file tasks. Files are processed locally with no upload requirement.",
+  generator: "Plain Tools",
   keywords: [
     "offline PDF tools",
     "private PDF tools",
@@ -21,8 +32,8 @@ export const metadata: Metadata = {
     "local processing",
     "WebAssembly PDF",
   ],
-  authors: [{ name: "Plain.tools" }],
-  creator: "Plain.tools",
+  authors: [{ name: "Plain Tools" }],
+  creator: "Plain Tools",
   metadataBase: new URL("https://plain.tools"),
   openGraph: {
     type: "website",
@@ -86,7 +97,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
       </head>
       <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
         <AppShellChrome>{children}</AppShellChrome>

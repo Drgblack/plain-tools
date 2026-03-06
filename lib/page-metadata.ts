@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 
 const BASE_URL = "https://plain.tools"
 
@@ -9,6 +10,13 @@ type PageMetadataInput = {
   image?: string
 }
 
+function normalisePageTitle(rawTitle: string): string {
+  const cleaned = normalizeBrandCapitalization(rawTitle).trim()
+  const hasBrandSuffix = /\|\s*Plain Tools$/i.test(cleaned)
+  if (hasBrandSuffix) return cleaned
+  return buildStandardPageTitle(cleaned)
+}
+
 export function buildPageMetadata({
   title,
   description,
@@ -16,15 +24,16 @@ export function buildPageMetadata({
   image = "/og/default.png",
 }: PageMetadataInput): Metadata {
   const canonical = `${BASE_URL}${path === "/" ? "" : path}`
+  const resolvedTitle = normalisePageTitle(title)
 
   return {
-    title,
+    title: resolvedTitle,
     description,
     alternates: {
       canonical,
     },
     openGraph: {
-      title,
+      title: resolvedTitle,
       description,
       url: canonical,
       images: [
@@ -32,13 +41,13 @@ export function buildPageMetadata({
           url: image,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: resolvedTitle,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: resolvedTitle,
       description,
       images: [image],
     },

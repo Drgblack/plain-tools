@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
 import { ToolsSection } from "@/components/tools-section"
+import { buildStandardPageTitle } from "@/lib/page-title"
 import { serializeJsonLd } from "@/lib/sanitize"
 import {
   buildBreadcrumbList,
@@ -12,14 +13,14 @@ import {
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = {
-  title: "PDF Tools - Local & Private | Plain Tools",
+  title: buildStandardPageTitle("PDF Tools"),
   description:
     "Browse local PDF tools for merge, split, compress, convert, OCR, and signing. Process files in your browser with no uploads or account friction.",
   alternates: {
     canonical: "https://plain.tools/tools",
   },
   openGraph: {
-    title: "PDF Tools - Local & Private | Plain Tools",
+    title: buildStandardPageTitle("PDF Tools"),
     description:
       "Explore privacy-first PDF tools that run locally in your browser. No uploads, calm workflows, and practical results.",
     url: "https://plain.tools/tools",
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PDF Tools - Local & Private | Plain Tools",
+    title: buildStandardPageTitle("PDF Tools"),
     description:
       "Merge, split, compress, convert, and sign PDFs locally in your browser. No uploads.",
     images: ["/og/tools.png"],

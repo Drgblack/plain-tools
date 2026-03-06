@@ -5,10 +5,15 @@ import Script from "next/script"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { buildStandardPageTitle } from "@/lib/page-title"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
-import { buildFaqPageSchema, buildSoftwareApplicationSchema } from "@/lib/structured-data"
+import {
+  buildFaqPageSchema,
+  buildHowToSchema,
+  buildSoftwareApplicationSchema,
+} from "@/lib/structured-data"
 import { getToolPageProfile } from "@/lib/tool-page-content"
 
 type ToolRouteParams = { slug: string }
@@ -51,9 +56,12 @@ const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
   return slug
 }
 
-function normaliseToolMetadataTitle(rawTitle: string) {
-  const title = rawTitle.replace("Plain.tools", "Plain Tools")
-  return title.includes("Plain Tools") ? title : `${title} | Plain Tools`
+function normaliseToolMetadataTitle(rawTitle: string, fallbackToolName: string) {
+  const cleaned = rawTitle.replace("Plain.tools", "Plain Tools")
+  if (cleaned.includes("|") || cleaned.includes(" - ")) {
+    return buildStandardPageTitle(fallbackToolName)
+  }
+  return buildStandardPageTitle(cleaned)
 }
 
 export async function generateStaticParams() {
@@ -76,7 +84,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const profile = getToolPageProfile(tool)
   const description = profile.description
-  const title = normaliseToolMetadataTitle(profile.title)
+  const title = normaliseToolMetadataTitle(profile.title, tool.name)
 
   return {
     title,
@@ -146,6 +154,28 @@ export default async function ToolPage({ params }: PageProps) {
     browserRequirements:
       "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+).",
   })
+  const howToSchema = buildHowToSchema(
+    `How to use ${tool.name}`,
+    profile.description,
+    [
+      {
+        name: "Upload your file",
+        text: "Select a file from your device. The file stays local in your browser session.",
+      },
+      {
+        name: "Choose options",
+        text: "Pick the settings needed for your workflow before processing.",
+      },
+      {
+        name: "Process locally",
+        text: `Run ${tool.name} directly in the browser without server-side file handling.`,
+      },
+      {
+        name: "Download output",
+        text: "Download the processed result and verify output quality before sharing.",
+      },
+    ]
+  )
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
@@ -158,6 +188,11 @@ export default async function ToolPage({ params }: PageProps) {
         id={`tool-faq-schema-${tool.slug}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
+      />
+      <Script
+        id={`tool-howto-schema-${tool.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }}
       />
       
 

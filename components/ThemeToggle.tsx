@@ -21,13 +21,37 @@ const applyTheme = (theme: ResolvedTheme) => {
   applyResolvedTheme(document.documentElement, theme)
 }
 
+const safeGetStorage = () => {
+  try {
+    return window.localStorage
+  } catch {
+    return null
+  }
+}
+
+const safeGetThemeChoice = (): ThemeChoice => {
+  const storage = safeGetStorage()
+  if (!storage) {
+    return "system"
+  }
+  return getThemeChoiceWithFallback(storage, THEME_STORAGE_KEY)
+}
+
+const safeSetThemeChoice = (choice: ThemeChoice) => {
+  const storage = safeGetStorage()
+  if (!storage) {
+    return
+  }
+  safeWriteStoredTheme(storage, choice, THEME_STORAGE_KEY)
+}
+
 export function ThemeToggle() {
   const [themeChoice, setThemeChoice] = useState<ThemeChoice>("system")
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("dark")
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    const initialChoice = getThemeChoiceWithFallback(localStorage, THEME_STORAGE_KEY)
+    const initialChoice = safeGetThemeChoice()
     const initialResolved = resolveThemeChoice(initialChoice, getSystemTheme() === "dark")
     setThemeChoice(initialChoice)
     setResolvedTheme(initialResolved)
@@ -63,7 +87,7 @@ export function ThemeToggle() {
     setThemeChoice(nextChoice)
     setResolvedTheme(nextResolved)
     applyTheme(nextResolved)
-    safeWriteStoredTheme(localStorage, nextChoice, THEME_STORAGE_KEY)
+    safeSetThemeChoice(nextChoice)
   }, [])
 
   const toggleTheme = useCallback(() => {
