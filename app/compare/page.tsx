@@ -1,40 +1,23 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import Script from "next/script"
 import { ArrowRight, Gauge, ShieldCheck, Users } from "lucide-react"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { buildPageMetadata } from "@/lib/page-metadata"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  buildWebPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 
-import { serializeJsonLd } from "@/lib/sanitize"
-
-export const metadata: Metadata = {
-  title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Compare PDF tools",
   description:
     "Compare Plain Tools with major PDF platforms on privacy handling, upload requirements, workflow speed, and practical fit for sensitive documents.",
-  alternates: {
-    canonical: "https://plain.tools/compare",
-  },
-  openGraph: {
-    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
-    description:
-      "Use neutral, practical comparisons between Plain.tools and upload-based PDF alternatives.",
-    url: "https://plain.tools/compare",
-    images: [
-      {
-        url: "/og/compare.png",
-        width: 1200,
-        height: 630,
-        alt: "Plain Tools comparison hub",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Compare PDF Tools - Privacy, Speed, and Workflow Fit | Plain Tools",
-    description:
-      "Practical PDF-tool comparisons focused on privacy, speed, and operational fit.",
-    images: ["/og/compare.png"],
-  },
-}
+  path: "/compare",
+  image: "/og/compare.png",
+})
 
 const comparisonLinks = [
   {
@@ -92,34 +75,29 @@ const comparisonSummary = [
   },
 ]
 
-const schema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebPage",
-      name: "Compare PDF Tools",
-      description:
-        "Neutral comparisons of Plain.tools against upload-based PDF platforms on privacy, speed, and workflow fit.",
-      url: "https://plain.tools/compare",
-    },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://plain.tools" },
-        { "@type": "ListItem", position: 2, name: "Compare", item: "https://plain.tools/compare" },
-      ],
-    },
-  ],
-}
+const compareHubSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "Compare PDF tools",
+    description:
+      "Neutral comparisons of Plain Tools against upload-based PDF platforms on privacy, speed, and workflow fit.",
+    url: "https://plain.tools/compare",
+  }),
+  buildCollectionPageSchema({
+    name: "Plain Tools comparison hub",
+    description:
+      "Structured comparison pages for privacy-sensitive PDF workflows and practical operational trade-offs.",
+    url: "https://plain.tools/compare",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "Compare", url: "https://plain.tools/compare" },
+  ]),
+])
 
 export default function ComparePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Script
-        id="compare-hub-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
-      />
+      {compareHubSchema ? <JsonLd id="compare-hub-schema" schema={compareHubSchema} /> : null}
 
       <main className="flex-1 px-4 py-14 md:py-16">
         <div className="mx-auto max-w-6xl space-y-12">

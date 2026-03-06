@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: "https://plain.tools",
     siteName: "Plain Tools",
-    title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
+    title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
     description:
-      "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
+      "Trust-first utility hub for PDF workflows, file tasks, and network diagnostics. Core local tools run in your browser with no upload step.",
     images: [
       {
         url: "/og/default.png",
@@ -71,9 +71,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Plain Tools - Offline PDF Tools | 100% Local, No Uploads",
+    title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
     description:
-      "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
+      "Trust-first utility hub for PDF workflows, file tasks, and network diagnostics. Core local tools run in your browser with no upload step.",
     images: ["/og/default.png"],
   },
   robots: {
@@ -122,7 +122,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-GB" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
         {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}

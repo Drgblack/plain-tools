@@ -34,6 +34,11 @@ function normaliseDescription(rawDescription: string): string {
   return `${clipped.slice(0, lastWhitespace).trimEnd()}…`
 }
 
+export function buildCanonicalUrl(path: string): string {
+  if (!path || path === "/") return BASE_URL
+  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`
+}
+
 export function buildPageMetadata({
   title,
   description,
@@ -41,7 +46,7 @@ export function buildPageMetadata({
   image = "/og/default.png",
   type = "website",
 }: PageMetadataInput): Metadata {
-  const canonical = `${BASE_URL}${path === "/" ? "" : path}`
+  const canonical = buildCanonicalUrl(path)
   const resolvedTitle = normalisePageTitle(title)
   const resolvedDescription = normaliseDescription(description)
 

@@ -1,40 +1,46 @@
-import { Metadata } from 'next'
+import type { Metadata } from "next"
 
-const BASE_URL = 'https://plain.tools'
+import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
+import { normalizeBrandCapitalization } from "@/lib/page-title"
 
-function withBrand(title: string) {
-  return title.includes("Plain Tools") ? title : `${title} | Plain Tools`
+function normalisePath(slug: string): string {
+  const cleaned = slug.trim().replace(/^\/+/, "")
+  return cleaned ? `/${cleaned}` : "/"
+}
+
+function normaliseDescription(description: string): string {
+  return description.replace(/\s+/g, " ").trim()
+}
+
+function normaliseTitle(title: string): string {
+  return normalizeBrandCapitalization(title).trim()
 }
 
 interface ToolMetadataProps {
   name: string
   description: string
   slug: string
+  category?: string
 }
 
-export function generateToolMetadata({ name, description, slug }: ToolMetadataProps): Metadata {
-  const title = withBrand(name)
-  const fullDescription = `${description} Plain Tools runs entirely in your browser with no uploads and no tracking.`
-  
-  return {
-    title,
+export function generateToolMetadata({
+  name,
+  description,
+  slug,
+  category,
+}: ToolMetadataProps): Metadata {
+  const path = normalisePath(slug)
+  const suffix = category?.toLowerCase().includes("network")
+    ? "Practical browser-based network diagnostics with clear, verifiable behaviour."
+    : "Runs locally in your browser where supported, with no upload step for core local workflows."
+  const fullDescription = `${normaliseDescription(description)} ${suffix}`
+
+  return buildPageMetadata({
+    title: normaliseTitle(name),
     description: fullDescription,
-    openGraph: {
-      title,
-      description: fullDescription,
-      url: `${BASE_URL}/${slug}`,
-      siteName: 'Plain Tools',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description: fullDescription,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/${slug}`,
-    },
-  }
+    path,
+    image: "/og/default.png",
+  })
 }
 
 interface CategoryMetadataProps {
@@ -44,29 +50,24 @@ interface CategoryMetadataProps {
   toolCount: number
 }
 
-export function generateCategoryMetadata({ name, description, slug, toolCount }: CategoryMetadataProps): Metadata {
-  const title = withBrand(name)
-  const fullDescription = `${description} Browse ${toolCount} privacy-first ${name.toLowerCase()} that run locally in your browser.`
-  
-  return {
-    title,
+export function generateCategoryMetadata({
+  name,
+  description,
+  slug,
+  toolCount,
+}: CategoryMetadataProps): Metadata {
+  const path = normalisePath(slug)
+  const scopeNote = name.toLowerCase().includes("network")
+    ? `Browse ${toolCount} practical diagnostics for uptime, DNS, IP, and latency checks.`
+    : `Browse ${toolCount} practical tools with local processing where supported.`
+  const fullDescription = `${normaliseDescription(description)} ${scopeNote}`
+
+  return buildPageMetadata({
+    title: normaliseTitle(name),
     description: fullDescription,
-    openGraph: {
-      title,
-      description: fullDescription,
-      url: `${BASE_URL}/${slug}`,
-      siteName: 'Plain Tools',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description: fullDescription,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/${slug}`,
-    },
-  }
+    path,
+    image: "/og/default.png",
+  })
 }
 
 interface StaticPageMetadataProps {
@@ -75,27 +76,17 @@ interface StaticPageMetadataProps {
   slug: string
 }
 
-export function generateStaticPageMetadata({ title, description, slug }: StaticPageMetadataProps): Metadata {
-  const brandedTitle = withBrand(title)
-  return {
-    title: brandedTitle,
-    description,
-    openGraph: {
-      title: brandedTitle,
-      description,
-      url: `${BASE_URL}/${slug}`,
-      siteName: 'Plain Tools',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: brandedTitle,
-      description,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/${slug}`,
-    },
-  }
+export function generateStaticPageMetadata({
+  title,
+  description,
+  slug,
+}: StaticPageMetadataProps): Metadata {
+  return buildPageMetadata({
+    title: normaliseTitle(title),
+    description: normaliseDescription(description),
+    path: normalisePath(slug),
+    image: "/og/default.png",
+  })
 }
 
 // Validation helpers for dynamic routes
@@ -135,54 +126,56 @@ export function generateDynamicToolMetadata({ toolName, param, paramType, isVali
   }
   
   const titleMap = {
-    domain: `DNS Lookup for ${param}`,
-    ip: `IP Address ${param}`,
-    site: `Is ${param} Down?`,
+    domain: `DNS lookup for ${param}`,
+    ip: `IP address ${param}`,
+    site: `Is ${param} down?`,
   }
   
   const descriptionMap = {
-    domain: `View DNS records for ${param} including A, AAAA, MX, TXT, NS, and CNAME records. Free DNS lookup tool.`,
-    ip: `View information about IP address ${param} including geolocation, ISP, and network details.`,
-    site: `Check if ${param} is up or down right now. Free website status checker with response time.`,
+    domain: `View DNS records for ${param}, including A, AAAA, MX, TXT, NS, and CNAME results for practical troubleshooting.`,
+    ip: `View information about IP address ${param}, including approximate geolocation, ISP details, and network context.`,
+    site: `Check whether ${param} is currently up or down, including response time and latest check status.`,
   }
   
   const slug = slugMap[paramType]
   const title = titleMap[paramType]
   const description = descriptionMap[paramType]
-  const fullUrl = `${BASE_URL}/${slug}/${encodeURIComponent(param)}`
+  const contextualDescription = `${description} ${toolName} route.`
+  const path = `/${slug}/${encodeURIComponent(param)}`
+  const canonical = buildCanonicalUrl(path)
   
   // For invalid params, add noindex
   if (!isValid) {
+    const invalidLabel =
+      paramType === "domain" ? "domain" : paramType === "ip" ? "IP address" : "site"
+    const base = buildPageMetadata({
+      title: `Invalid ${invalidLabel}`,
+      description: `The provided ${invalidLabel} is not valid for this ${toolName.toLowerCase()} route. Check the input and try again.`,
+      path,
+      image: "/og/default.png",
+    })
+
     return {
-      title: `Invalid ${paramType === 'domain' ? 'Domain' : paramType === 'ip' ? 'IP Address' : 'Site'}`,
-      description: `The provided ${paramType} is not valid. Please check your input.`,
+      ...base,
       robots: {
         index: false,
         follow: false,
       },
-      alternates: {
-        canonical: fullUrl,
-      },
     }
   }
-  
-  return {
+
+  const metadata = buildPageMetadata({
     title,
-    description,
-    openGraph: {
-      title: `${title} | Plain Tools`,
-      description,
-      url: fullUrl,
-      siteName: 'Plain Tools',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | Plain Tools`,
-      description,
-    },
+    description: contextualDescription,
+    path,
+    image: "/og/default.png",
+  })
+
+  return {
+    ...metadata,
     alternates: {
-      canonical: fullUrl,
+      ...metadata.alternates,
+      canonical,
     },
   }
 }

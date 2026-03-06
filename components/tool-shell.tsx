@@ -1,7 +1,13 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { ToolCard, type ToolCardProps } from "@/components/tool-card"
+import { JsonLd } from "@/components/seo/json-ld"
 import { Surface } from "@/components/surface"
+import {
+  buildFaqPageSchema,
+  buildSoftwareApplicationSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -35,6 +41,10 @@ interface ToolShellProps {
   explanation?: string
   faqs?: FAQ[]
   relatedTools?: ToolCardProps[]
+  /** Canonical route path for structured data, e.g. "/tools/merge-pdf". */
+  schemaPath?: string
+  /** Optional feature list override for SoftwareApplication schema. */
+  schemaFeatureList?: string[]
   /** Example links to show in "Try these examples" section */
   examples?: Example[]
 }
@@ -49,54 +59,59 @@ const categoryClasses: Record<CategoryType, string> = {
   file: 'category-file',
 }
 
-// Generate JSON-LD schema for tool pages
+function buildSchemaUrl(schemaPath?: string): string | undefined {
+  if (!schemaPath) return undefined
+  const path = schemaPath.startsWith("/") ? schemaPath : `/${schemaPath}`
+  return `https://plain.tools${path}`
+}
+
+function buildDefaultFeatureList(categoryType?: CategoryType): string[] {
+  if (categoryType === "network") {
+    return [
+      "Live diagnostics for domains, hosts, and response timing",
+      "No account required for day-to-day checks",
+      "Shareable result routes for repeat checks",
+    ]
+  }
+
+  return [
+    "Local browser processing where supported",
+    "No account required for core workflows",
+    "Download results directly to your device",
+  ]
+}
+
 function generateToolSchema(props: {
   name: string
   description: string
-  explanation?: string
+  categoryType?: CategoryType
+  schemaPath?: string
+  schemaFeatureList?: string[]
   faqs?: FAQ[]
 }) {
-  const schemas: object[] = []
-  
-  // WebApplication schema
-  schemas.push({
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: props.name,
-    description: props.description,
-    url: `https://plain.tools/${props.name.toLowerCase().replace(/\s+/g, '-')}`,
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    featureList: [
-      'No file uploads required',
-      'Runs entirely in browser',
-      'No tracking or analytics',
-      'Privacy-first design',
-    ],
-  })
-  
-  // FAQPage schema if FAQs exist
-  if (props.faqs && props.faqs.length > 0) {
-    schemas.push({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: props.faqs.map((faq) => ({
-        '@type': 'Question',
-        name: faq.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: faq.answer,
-        },
-      })),
-    })
+  const url = buildSchemaUrl(props.schemaPath)
+  const featureList =
+    props.schemaFeatureList && props.schemaFeatureList.length > 0
+      ? props.schemaFeatureList
+      : buildDefaultFeatureList(props.categoryType)
+
+  const schemas = []
+  if (url) {
+    schemas.push(
+      buildSoftwareApplicationSchema({
+        name: props.name,
+        description: props.description,
+        url,
+        featureList,
+      })
+    )
   }
-  
-  return schemas
+
+  if (props.faqs && props.faqs.length > 0) {
+    schemas.push(buildFaqPageSchema(props.faqs))
+  }
+
+  return combineJsonLd(schemas)
 }
 
 export function ToolShell({
@@ -108,21 +123,23 @@ export function ToolShell({
   explanation,
   faqs,
   relatedTools,
+  schemaPath,
+  schemaFeatureList,
   examples,
 }: ToolShellProps) {
-  const schemas = generateToolSchema({ name, description, explanation, faqs })
+  const schema = generateToolSchema({
+    name,
+    description,
+    categoryType: category.type,
+    schemaPath,
+    schemaFeatureList,
+    faqs,
+  })
   const categoryClass = category.type ? categoryClasses[category.type] : ''
   
   return (
     <>
-      {/* JSON-LD Schemas */}
-      {schemas.map((schema, index) => (
-        <script
-          key={index}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
+      {schema ? <JsonLd id={`${name.toLowerCase().replace(/\s+/g, "-")}-schema`} schema={schema} /> : null}
       
       <article className={cn("mx-auto max-w-6xl px-4 py-8", categoryClass)}>
         {/* Breadcrumb */}
