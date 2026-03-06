@@ -204,7 +204,7 @@ export default function WordToPdfTool() {
 
       <Card className="border-blue-500/25 bg-card/80">
         <CardHeader>
-          <CardTitle className="text-base">Best-effort Word to PDF conversion</CardTitle>
+          <CardTitle className="text-base">Convert Word to PDF locally</CardTitle>
           <CardDescription>
             Complex formatting may shift. Conversion runs locally in your browser. No uploads.
           </CardDescription>
@@ -301,7 +301,7 @@ export default function WordToPdfTool() {
           {(isConverting || progress > 0) && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isConverting ? "Converting" : "Complete"}</span>
+                <span>{isConverting ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2 w-full" />
@@ -313,12 +313,12 @@ export default function WordToPdfTool() {
             {isConverting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Converting...
+                Converting to PDF...
               </>
             ) : (
               <>
                 <FileType2 className="h-4 w-4" />
-                Convert
+                Convert to PDF
               </>
             )}
           </Button>
@@ -342,13 +342,14 @@ export default function WordToPdfTool() {
       {output ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Download PDF</CardTitle>
+            <CardTitle className="text-base">Your file is ready</CardTitle>
             <CardDescription className="break-words">
               {output.fileName} • {formatFileSize(output.sizeBytes)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">Download your converted PDF below.</p>
             <Button asChild className="w-full sm:w-auto">
               <a
                 href={output.url}

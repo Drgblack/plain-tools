@@ -273,7 +273,7 @@ export default function CompressPdfTool() {
 
       <Card className="border-blue-500/25 bg-card/80">
         <CardHeader>
-          <CardTitle className="text-base">Best-effort offline optimisation</CardTitle>
+          <CardTitle className="text-base">Optimise PDF locally</CardTitle>
           <CardDescription>
             Results vary by PDF content. Files never leave your device.
           </CardDescription>
@@ -377,7 +377,7 @@ export default function CompressPdfTool() {
           {(isCompressing || progress > 0) && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isCompressing ? "Processing" : "Complete"}</span>
+                <span>{isCompressing ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2 w-full" />
@@ -395,7 +395,7 @@ export default function CompressPdfTool() {
             {isCompressing ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Optimising...
+                Optimising PDF...
               </>
             ) : (
               <>
@@ -428,13 +428,16 @@ export default function CompressPdfTool() {
       {result && downloadUrl ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Optimised output</CardTitle>
+            <CardTitle className="text-base">Your file is ready</CardTitle>
             <CardDescription>
               {result.fileName} • {formatFileSize(result.outputSize)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">
+              Review the size change below, then download the optimised file.
+            </p>
 
             <div className="grid gap-2 sm:grid-cols-3">
               <div className="rounded-lg border p-3">

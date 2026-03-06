@@ -272,7 +272,7 @@ export function ToolsSection() {
 
             const card = (
               <Card
-                className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#3b3b3b] bg-[#151515] transition-all duration-150 outline-none hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
+                className="group relative h-full min-h-[44px] cursor-pointer overflow-hidden rounded-xl border border-[#3b3b3b] bg-[#151515] transition-all duration-200 outline-none hover:-translate-y-0.5 hover:border-[#0070f3] hover:shadow-[0_0_24px_rgba(0,112,243,0.18)]"
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -294,21 +294,14 @@ export function ToolsSection() {
                   </div>
                 ) : null}
 
-                <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/[0.04] px-2 py-1 ring-1 ring-white/[0.06]">
-                  <Lock className={`h-2.5 w-2.5 ${isAiTool ? "text-amber-300/80" : "text-emerald-400/80"}`} />
-                  <span className="text-[10px] font-medium text-foreground/90">
-                    {privacyBadge}
-                  </span>
-                </div>
-
-                <CardContent className="relative flex items-start gap-4 p-6 pt-10">
+                <CardContent className="relative flex h-full items-start gap-4 p-6">
                   <div
                     className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/12 ring-1 ring-accent/25 transition-all group-hover:bg-accent/20 group-hover:ring-accent/45"
                   >
                     <Icon className="h-7 w-7 text-accent/80 transition-all group-hover:text-accent" />
                   </div>
 
-                  <div className="min-w-0 flex-1">
+                  <div className="flex min-w-0 flex-1 flex-col">
                     <div className="flex flex-wrap items-start gap-2">
                       <h3 className="text-[14px] font-semibold leading-tight text-foreground group-hover:text-foreground">
                         {tool.name}
@@ -316,17 +309,31 @@ export function ToolsSection() {
                       <ArrowRight className="h-3.5 w-3.5 -translate-x-1 text-accent opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                     </div>
 
-                    <p className="mt-2 text-[13px] leading-relaxed text-foreground/80 group-hover:text-foreground/90">
+                    <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-foreground/80 group-hover:text-foreground/90">
                       {tool.description}
                     </p>
 
-                    {systemBadge ? (
-                      <div className="mt-3 inline-flex items-center rounded-full border border-[#0070f3]/30 bg-[#0070f3]/10 px-2.5 py-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#76bcff]">
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex items-center rounded-full border border-white/[0.12] bg-white/[0.03] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/80">
+                        {tool.category}
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full border border-white/[0.12] bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium text-foreground/90">
+                        <Lock className={`h-2.5 w-2.5 ${isAiTool ? "text-amber-300/80" : "text-emerald-400/80"}`} />
+                        {privacyBadge}
+                      </span>
+                      {systemBadge ? (
+                        <span className="inline-flex items-center rounded-full border border-[#0070f3]/30 bg-[#0070f3]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#76bcff]">
                           {systemBadge}
                         </span>
-                      </div>
-                    ) : null}
+                      ) : null}
+                    </div>
+
+                    <div className="mt-5 border-t border-white/[0.08] pt-3">
+                      <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-accent transition-colors group-hover:text-[#8ac6ff]">
+                        Open tool
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

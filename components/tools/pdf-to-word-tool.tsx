@@ -275,7 +275,7 @@ export default function PdfToWordTool() {
 
       <Card className="border-blue-500/25 bg-card/80">
         <CardHeader>
-          <CardTitle className="text-base">Best-effort PDF to Word conversion</CardTitle>
+          <CardTitle className="text-base">Convert PDF to Word locally</CardTitle>
           <CardDescription>
             Complex layouts may not be preserved. Your file never leaves your device.
           </CardDescription>
@@ -372,7 +372,7 @@ export default function PdfToWordTool() {
           {(isConverting || progress > 0) && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isConverting ? "Converting" : "Complete"}</span>
+                <span>{isConverting ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2 w-full" />
@@ -384,12 +384,12 @@ export default function PdfToWordTool() {
             {isConverting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Converting...
+                Converting to Word...
               </>
             ) : (
               <>
                 <FileText className="h-4 w-4" />
-                Convert
+                Convert to Word
               </>
             )}
           </Button>
@@ -413,13 +413,14 @@ export default function PdfToWordTool() {
       {output ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Download Word file</CardTitle>
+            <CardTitle className="text-base">Your file is ready</CardTitle>
             <CardDescription className="break-words">
               {output.fileName} • {formatBytes(output.sizeBytes)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">Download your converted Word file below.</p>
             <Button asChild className="w-full sm:w-auto">
               <a
                 href={output.url}

@@ -508,6 +508,15 @@ export default function RedactTool() {
     <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
+      <Card className="border-blue-500/25 bg-card/80">
+        <CardHeader>
+          <CardTitle className="text-base">Redact PDF locally</CardTitle>
+          <CardDescription>
+            Best-effort irreversible redaction. This removes selected content from the output file. Files never leave your device.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
       <Card>
         <CardContent className="pt-6">
           <PdfFileDropzone
@@ -704,7 +713,7 @@ export default function RedactTool() {
           {(isProcessing || progress > 0) && (
             <div className="space-y-2">
               <div className="flex min-w-0 items-center justify-between gap-2 text-xs text-muted-foreground">
-                <span className="min-w-0 flex-1 truncate">{isProcessing ? "Processing" : "Complete"}</span>
+                <span className="min-w-0 flex-1 truncate">{isProcessing ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -727,7 +736,7 @@ export default function RedactTool() {
             ) : (
               <>
                 <ShieldAlert className="h-4 w-4" />
-                Redact
+                Apply Redaction
               </>
             )}
           </Button>
@@ -737,11 +746,12 @@ export default function RedactTool() {
       {resultUrl ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Redacted Output</CardTitle>
+            <CardTitle className="text-base">Your file is ready</CardTitle>
             <CardDescription>Download your final file and verify its SHA-256 hash.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">Download the redacted file below.</p>
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               <span className="rounded-full border px-2 py-0.5">redacted.pdf</span>
               {resultSize !== null ? <span>{formatFileSize(resultSize)}</span> : null}

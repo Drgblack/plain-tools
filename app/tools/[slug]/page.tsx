@@ -205,18 +205,28 @@ export default async function ToolPage({ params }: PageProps) {
 
           {tool.available ? (
             <>
-              <section className="mb-8 rounded-xl border border-border bg-card/60 p-5">
-                <p className="text-sm font-medium text-foreground">
+              <section className="mb-8 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
+                  Privacy and trust
+                </p>
+                <p className="mt-2 text-sm font-medium text-foreground">
                   {tool.category !== "AI Assistant"
                     ? "Processed locally in your browser. Files never leave your device."
                     : "Text is extracted locally first. AI response requires explicit opt-in."}
                 </p>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs text-muted-foreground">
                   {profile.trustPoints.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
                 <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
+              </section>
+
+              <section className="mb-3">
+                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Upload your file, choose options, and download the processed output in the result area.
+                </p>
               </section>
 
               <Suspense fallback={<div>Loading tool...</div>}>
@@ -225,8 +235,15 @@ export default async function ToolPage({ params }: PageProps) {
                 </ErrorBoundary>
               </Suspense>
 
+              <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
+                <p className="font-medium text-foreground">Result experience</p>
+                <p className="mt-1 text-muted-foreground">
+                  When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.
+                </p>
+              </section>
+
               {seo ? (
-                <div className="mt-8 rounded-lg border border-white/[0.1] bg-muted/20 p-4 text-sm text-muted-foreground">
+                <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
                   Learn more about this workflow:{" "}
                   <a
                     href={seo.learnHref}

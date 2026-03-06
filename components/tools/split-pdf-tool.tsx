@@ -228,7 +228,7 @@ export default function SplitPdfTool() {
 
       <Card className="border-blue-500/25 bg-card/80">
         <CardHeader>
-          <CardTitle className="text-base">Best-effort offline split</CardTitle>
+          <CardTitle className="text-base">Split PDF locally</CardTitle>
           <CardDescription>
             Best-effort offline split. Files never leave your device.
           </CardDescription>
@@ -343,7 +343,7 @@ export default function SplitPdfTool() {
           {(isSplitting || progress > 0) && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isSplitting ? "Processing" : "Complete"}</span>
+                <span>{isSplitting ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2 w-full" />
@@ -356,12 +356,12 @@ export default function SplitPdfTool() {
             {isSplitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Splitting...
+                Splitting PDF...
               </>
             ) : (
               <>
                 <Scissors className="h-4 w-4" />
-                Split
+                Split PDF
               </>
             )}
           </Button>
@@ -389,13 +389,16 @@ export default function SplitPdfTool() {
       {bundle ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Split output</CardTitle>
+            <CardTitle className="text-base">Your files are ready</CardTitle>
             <CardDescription>
               {bundle.outputFiles.length} file{bundle.outputFiles.length === 1 ? "" : "s"} generated
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">
+              {bundle.zipBytes ? "Download the ZIP to get all outputs at once." : "Download each output file below."}
+            </p>
 
             {bundle.zipBytes && bundle.zipName ? (
               <Button

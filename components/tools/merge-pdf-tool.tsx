@@ -34,7 +34,7 @@ export default function MergePdfTool() {
   const [files, setFiles] = useState<QueuedPdf[]>([])
   const [isMerging, setIsMerging] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [status, setStatus] = useState("Upload 2 or more PDFs to merge them locally.")
+  const [status, setStatus] = useState("Upload 2 or more PDFs to merge them. Processing stays local.")
   const [result, setResult] = useState<MergeResult | null>(null)
   const { url: downloadUrl, clearUrl, setUrlFromBlob } = useObjectUrlState()
 
@@ -177,7 +177,7 @@ export default function MergePdfTool() {
 
       <Card className="border-blue-500/25 bg-card/80">
         <CardHeader>
-          <CardTitle className="text-base">Best-effort offline merge</CardTitle>
+          <CardTitle className="text-base">Merge PDFs locally</CardTitle>
           <CardDescription>
             Best-effort offline merge. Files never leave your device.
           </CardDescription>
@@ -205,7 +205,7 @@ export default function MergePdfTool() {
         </CardHeader>
         <CardContent className="space-y-3">
           {files.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Add at least two PDFs.</p>
+            <p className="text-sm text-muted-foreground">Add at least two PDFs to start.</p>
           ) : (
             files.map((entry, index) => (
               <div
@@ -256,7 +256,7 @@ export default function MergePdfTool() {
           {(isMerging || progress > 0) && (
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isMerging ? "Processing" : "Complete"}</span>
+                <span>{isMerging ? "Working" : "Complete"}</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2 w-full" />
@@ -274,12 +274,12 @@ export default function MergePdfTool() {
             {isMerging ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Merging...
+                Merging PDFs...
               </>
             ) : (
               <>
                 <FileText className="h-4 w-4" />
-                Merge
+                Merge PDFs
               </>
             )}
           </Button>
@@ -290,7 +290,7 @@ export default function MergePdfTool() {
             onClick={() => {
               setFiles([])
               setProgress(0)
-              setStatus("Upload 2 or more PDFs to merge them locally.")
+              setStatus("Upload 2 or more PDFs to merge them. Processing stays local.")
               clearResult()
             }}
             disabled={isMerging || files.length === 0}
@@ -304,11 +304,12 @@ export default function MergePdfTool() {
       {result && downloadUrl ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Merged output ready</CardTitle>
-            <CardDescription>merged.pdf • {formatFileSize(result.sizeBytes)}</CardDescription>
+            <CardTitle className="text-base">Your file is ready</CardTitle>
+            <CardDescription>Merged output: merged.pdf • {formatFileSize(result.sizeBytes)}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
+            <p className="text-sm text-muted-foreground">Download the merged file below.</p>
             <Button asChild className="w-full sm:w-auto">
               <a
                 href={downloadUrl}
