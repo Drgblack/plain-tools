@@ -2,6 +2,7 @@
 
 import { generateCompressionPreview } from "./compression-engine"
 import { getPdfLib } from "./pdf-lib-loader"
+import { getPdfJs } from "./pdfjs-loader"
 
 const LARGE_FILE_THRESHOLD_BYTES = 500 * 1024 * 1024
 
@@ -152,12 +153,10 @@ export interface PlainRealTimeCompressionPreviewResult {
 
 type BatchProgress = (progress: number, status: string) => void
 
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
+type PdfJsModule = Awaited<ReturnType<typeof getPdfJs>>
 
 const TWO_GB_BYTES = 2 * 1024 * 1024 * 1024
 const DEFAULT_BATCH_PARALLELISM = 2
-
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
 
 const createBatchWorker = () =>
   new Worker(new URL("../workers/pdf-batch.worker.ts", import.meta.url), {
@@ -175,18 +174,6 @@ const waitForUiFrame = () =>
     }
     setTimeout(() => resolve(), 0)
   })
-
-const getPdfJsModule = async () => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-  return pdfJsModulePromise
-}
 
 const bytesToTransferableBuffer = (bytes: Uint8Array): ArrayBuffer =>
   bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
@@ -458,7 +445,7 @@ export async function convertPdf(
     throw new Error("Unsupported conversion format. Use 'png', 'jpg', or 'text'.")
   }
 
-  const pdfjs = await getPdfJsModule()
+  const pdfjs = await getPdfJs()
   const sourceBytes = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data: sourceBytes,
@@ -571,7 +558,7 @@ export async function plainRealTimeCompressionPreviewer(
 
   const originalBytes = new Uint8Array(await file.arrayBuffer())
   const compressedBytes = compressed.bytes
-  const pdfjs = await getPdfJsModule()
+  const pdfjs = await getPdfJs()
   const originalTask = pdfjs.getDocument({
     data: originalBytes,
     disableAutoFetch: true,

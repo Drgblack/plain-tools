@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AppShellChrome } from '@/components/app-shell-chrome'
+import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const themeInitScript = buildThemeInitScript()
 
 export const metadata: Metadata = {
   title: {
@@ -66,7 +68,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="font-sans antialiased min-h-screen flex flex-col bg-background text-foreground">
         <AppShellChrome>{children}</AppShellChrome>
       </body>

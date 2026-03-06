@@ -27,10 +27,15 @@ export async function generateMetadata({ params }: WorkflowPageProps) {
 export default async function WorkflowArticlePage({ params }: WorkflowPageProps) {
   const { slug } = await params
 
+  let article: ReturnType<typeof getWorkflowArticleOrThrow> | null = null
   try {
-    const article = getWorkflowArticleOrThrow(slug)
-    return <LearnArticleTemplate article={article} />
+    article = getWorkflowArticleOrThrow(slug)
   } catch {
     notFound()
   }
+  if (!article) {
+    notFound()
+  }
+
+  return <LearnArticleTemplate article={article} />
 }

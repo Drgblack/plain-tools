@@ -1,14 +1,22 @@
 "use client"
 
-import { Download, FileText, Loader2, ShieldAlert, Trash2, UploadCloud } from "lucide-react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Download, FileText, Loader2, ShieldAlert, Trash2 } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
 import { Toaster, toast } from "sonner"
 
+import { PdfFileDropzone } from "@/components/tools/shared/pdf-file-dropzone"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { useObjectUrlState } from "@/hooks/use-object-url-state"
+import {
+  countPdfPages,
+  ensureSafeLocalFileSize,
+  formatFileSize,
+  isPdfLikeFile,
+} from "@/lib/pdf-client-utils"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { getPdfLib } from "@/lib/pdf-lib-loader"
 import { getPdfJs } from "@/lib/pdfjs-loader"
@@ -16,44 +24,15 @@ import { getPdfJs } from "@/lib/pdfjs-loader"
 type CompressionMode = "light" | "medium" | "strong"
 
 type CompressionResult = {
-  url: string
   fileName: string
   outputSize: number
   mode: CompressionMode
   flattened: boolean
 }
 
-const isPdfFile = (file: File) =>
-  file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
-
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb.toFixed(1)} KB`
-  const mb = kb / 1024
-  if (mb < 1024) return `${mb.toFixed(2)} MB`
-  return `${(mb / 1024).toFixed(2)} GB`
-}
+const MAX_COMPRESS_FILE_BYTES = 200 * 1024 * 1024
 
 const baseName = (name: string) => name.replace(/\.pdf$/i, "")
-
-const countPages = async (file: File) => {
-  const pdfjs = await getPdfJs()
-  const bytes = new Uint8Array(await file.arrayBuffer())
-  const loadingTask = pdfjs.getDocument({
-    data: bytes,
-    disableAutoFetch: true,
-    disableRange: true,
-    disableStream: true,
-  })
-
-  try {
-    const pdf = await loadingTask.promise
-    return pdf.numPages
-  } finally {
-    await loadingTask.destroy()
-  }
-}
 
 const optimiseLight = async (file: File) => {
   const { PDFDocument } = await getPdfLib()
@@ -174,55 +153,49 @@ const renderFlattenedCompression = async (
 }
 
 export default function CompressPdfTool() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const [file, setFile] = useState<File | null>(null)
   const [pageCount, setPageCount] = useState<number | null>(null)
   const [mode, setMode] = useState<CompressionMode>("light")
   const [allowStrongFlattening, setAllowStrongFlattening] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
   const [isCompressing, setIsCompressing] = useState(false)
   const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState("Upload a PDF to begin offline optimisation.")
   const [result, setResult] = useState<CompressionResult | null>(null)
-
-  useEffect(() => {
-    return () => {
-      if (result?.url) {
-        URL.revokeObjectURL(result.url)
-      }
-    }
-  }, [result])
+  const { url: downloadUrl, clearUrl, setUrlFromBlob } = useObjectUrlState()
 
   const clearResult = useCallback(() => {
-    if (result?.url) {
-      URL.revokeObjectURL(result.url)
-    }
+    clearUrl()
     setResult(null)
-  }, [result])
+  }, [clearUrl])
 
   const handleFile = useCallback(
     async (candidate: File) => {
-      if (!isPdfFile(candidate)) {
-        toast.error("Only PDF files are supported.")
-        return
-      }
-
-      setFile(candidate)
-      setPageCount(null)
-      clearResult()
-      setProgress(0)
-      setStatus("Reading PDF metadata...")
-
       try {
-        const pages = await countPages(candidate)
+        if (!isPdfLikeFile(candidate)) {
+          toast.error("Only PDF files are supported.")
+          return
+        }
+
+        ensureSafeLocalFileSize(candidate, MAX_COMPRESS_FILE_BYTES)
+
+        setFile(candidate)
+        setPageCount(null)
+        clearResult()
+        setProgress(0)
+        setStatus("Reading PDF metadata...")
+
+        const pages = await countPdfPages(candidate)
         setPageCount(pages)
         setStatus(`Loaded locally. ${pages} page${pages === 1 ? "" : "s"} detected.`)
-      } catch {
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Could not read this PDF. Please choose another file."
         setFile(null)
         setPageCount(null)
-        setStatus("Could not read this PDF.")
-        toast.error("Could not read this PDF. Please choose another file.")
+        setStatus(message)
+        toast.error(message)
       }
     },
     [clearResult]
@@ -260,10 +233,9 @@ export default function CompressPdfTool() {
       }
 
       const blob = new Blob([bytes], { type: "application/pdf" })
-      const url = URL.createObjectURL(blob)
+      setUrlFromBlob(blob)
 
       setResult({
-        url,
         mode,
         flattened,
         outputSize: blob.size,
@@ -280,7 +252,7 @@ export default function CompressPdfTool() {
     } finally {
       setIsCompressing(false)
     }
-  }, [allowStrongFlattening, clearResult, file, mode])
+  }, [allowStrongFlattening, clearResult, file, mode, setUrlFromBlob])
 
   const beforeSize = file?.size ?? 0
   const afterSize = result?.outputSize ?? 0
@@ -308,58 +280,19 @@ export default function CompressPdfTool() {
         </CardHeader>
       </Card>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        className="hidden"
-        onChange={(event) => {
-          const selected = event.target.files?.[0]
-          if (selected) {
-            void handleFile(selected)
-          }
-          event.currentTarget.value = ""
-        }}
-      />
-
       <Card>
         <CardContent className="pt-6">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault()
-                fileInputRef.current?.click()
+          <PdfFileDropzone
+            disabled={isCompressing}
+            title="Drop a PDF here, or click to browse"
+            subtitle="Single file optimisation with local-only processing"
+            onFilesSelected={(selectedFiles) => {
+              const selected = selectedFiles[0]
+              if (selected) {
+                void handleFile(selected)
               }
             }}
-            onDragOver={(event) => {
-              event.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragLeave={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-            }}
-            onDrop={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-              const dropped = event.dataTransfer.files[0]
-              if (dropped) {
-                void handleFile(dropped)
-              }
-            }}
-            className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10 ${
-              isDragging ? "border-primary bg-primary/10" : "border-border bg-muted/20 hover:border-primary/70"
-            }`}
-          >
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <UploadCloud className="h-6 w-6 text-primary" />
-            </div>
-            <p className="text-sm font-medium text-foreground">Drop a PDF here, or click to browse</p>
-            <p className="mt-1 text-xs text-muted-foreground">Single file optimisation with local-only processing</p>
-          </div>
+          />
         </CardContent>
       </Card>
 
@@ -377,7 +310,7 @@ export default function CompressPdfTool() {
                 <p className="truncate text-sm font-medium text-foreground">{file.name}</p>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                {formatBytes(file.size)}
+                {formatFileSize(file.size)}
                 {typeof pageCount === "number" ? ` • ${pageCount} page${pageCount === 1 ? "" : "s"}` : ""}
               </p>
             </div>
@@ -492,12 +425,12 @@ export default function CompressPdfTool() {
         </CardFooter>
       </Card>
 
-      {result ? (
+      {result && downloadUrl ? (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Optimised output</CardTitle>
             <CardDescription>
-              {result.fileName} • {formatBytes(result.outputSize)}
+              {result.fileName} • {formatFileSize(result.outputSize)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -506,11 +439,11 @@ export default function CompressPdfTool() {
             <div className="grid gap-2 sm:grid-cols-3">
               <div className="rounded-lg border p-3">
                 <p className="text-xs text-muted-foreground">Before</p>
-                <p className="text-sm font-medium text-foreground">{formatBytes(beforeSize)}</p>
+                <p className="text-sm font-medium text-foreground">{formatFileSize(beforeSize)}</p>
               </div>
               <div className="rounded-lg border p-3">
                 <p className="text-xs text-muted-foreground">After</p>
-                <p className="text-sm font-medium text-foreground">{formatBytes(afterSize)}</p>
+                <p className="text-sm font-medium text-foreground">{formatFileSize(afterSize)}</p>
               </div>
               <div className="rounded-lg border p-3">
                 <p className="text-xs text-muted-foreground">Saved</p>
@@ -530,7 +463,7 @@ export default function CompressPdfTool() {
 
             <Button asChild className="w-full sm:w-auto">
               <a
-                href={result.url}
+                href={downloadUrl}
                 download={result.fileName}
                 onClick={() => notifyLocalDownloadSuccess()}
               >

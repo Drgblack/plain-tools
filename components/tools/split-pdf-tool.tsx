@@ -1,17 +1,24 @@
 "use client"
 
-import { Download, FileText, Loader2, Scissors, Trash2, UploadCloud } from "lucide-react"
-import { useCallback, useMemo, useRef, useState } from "react"
+import { Download, FileText, Loader2, Scissors, Trash2 } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
 import { toast, Toaster } from "sonner"
 
+import { PdfFileDropzone } from "@/components/tools/shared/pdf-file-dropzone"
 import { Button } from "@/components/ui/button"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import {
+  countPdfPages,
+  ensureSafeLocalFileSize,
+  formatFileSize,
+  isPdfLikeFile,
+} from "@/lib/pdf-client-utils"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
-import { getPdfJs } from "@/lib/pdfjs-loader"
+import { expandPageRangesToUniquePages, formatPaddedIndex, parsePageRanges } from "@/lib/pdf-range-utils"
 import { getPdfLib } from "@/lib/pdf-lib-loader"
 import { splitPdf, type PdfPageRange } from "@/lib/pdf-batch-engine"
 import { downloadZip, makeZip } from "@/lib/zip-download"
@@ -32,95 +39,17 @@ type DownloadBundle = {
   zipSizeBytes?: number
 }
 
-const isPdfFile = (file: File) =>
-  file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
-
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb.toFixed(1)} KB`
-  const mb = kb / 1024
-  if (mb < 1024) return `${mb.toFixed(2)} MB`
-  return `${(mb / 1024).toFixed(2)} GB`
-}
-
-const pad3 = (value: number) => String(value).padStart(3, "0")
-
-const parseRanges = (value: string, pageCount: number): PdfPageRange[] => {
-  const tokens = value
-    .split(/[\n,;]+/)
-    .map((token) => token.trim())
-    .filter(Boolean)
-
-  if (!tokens.length) {
-    throw new Error("Enter at least one range, for example 1-3,4-6.")
-  }
-
-  return tokens.map((token) => {
-    const singleMatch = token.match(/^(\d+)$/)
-    if (singleMatch) {
-      const page = Number(singleMatch[1])
-      if (page < 1 || page > pageCount) {
-        throw new Error(`Page ${page} is outside the document range (1-${pageCount}).`)
-      }
-      return { start: page, end: page }
-    }
-
-    const rangeMatch = token.match(/^(\d+)\s*-\s*(\d+)$/)
-    if (!rangeMatch) {
-      throw new Error(`Invalid token "${token}". Use formats like 1-3 or 5.`)
-    }
-
-    const start = Number(rangeMatch[1])
-    const end = Number(rangeMatch[2])
-
-    if (start > end) {
-      throw new Error(`Invalid range "${token}". Start must be <= end.`)
-    }
-    if (start < 1 || end > pageCount) {
-      throw new Error(`Range "${token}" is outside the document range (1-${pageCount}).`)
-    }
-
-    return { start, end }
-  })
-}
+const MAX_SPLIT_FILE_BYTES = 200 * 1024 * 1024
 
 const parsePageSelection = (value: string, pageCount: number): number[] => {
-  const ranges = parseRanges(value, pageCount)
-  const pages = new Set<number>()
-
-  for (const range of ranges) {
-    for (let page = range.start; page <= range.end; page += 1) {
-      pages.add(page)
-    }
-  }
-
-  return Array.from(pages).sort((left, right) => left - right)
-}
-
-const countPages = async (file: File) => {
-  const pdfjs = await getPdfJs()
-  const bytes = new Uint8Array(await file.arrayBuffer())
-  const loadingTask = pdfjs.getDocument({
-    data: bytes,
-    disableAutoFetch: true,
-    disableRange: true,
-    disableStream: true,
-  })
-
-  try {
-    const pdf = await loadingTask.promise
-    return pdf.numPages
-  } finally {
-    await loadingTask.destroy()
-  }
+  return expandPageRangesToUniquePages(parsePageRanges(value, pageCount))
 }
 
 const makeSplitName = (mode: SplitMode, range: PdfPageRange, index: number) => {
   if (mode === "individual" || range.start === range.end) {
-    return `page-${pad3(index + 1)}.pdf`
+    return `page-${formatPaddedIndex(index + 1)}.pdf`
   }
-  return `split-range-${pad3(index + 1)}.pdf`
+  return `split-range-${formatPaddedIndex(index + 1)}.pdf`
 }
 
 const createExtractPdf = async (file: File, pages: number[]) => {
@@ -137,14 +66,11 @@ const createExtractPdf = async (file: File, pages: number[]) => {
 }
 
 export default function SplitPdfTool() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const [file, setFile] = useState<File | null>(null)
   const [pageCount, setPageCount] = useState<number | null>(null)
   const [mode, setMode] = useState<SplitMode>("extract")
   const [extractInput, setExtractInput] = useState("")
   const [rangeInput, setRangeInput] = useState("")
-  const [isDragging, setIsDragging] = useState(false)
   const [isSplitting, setIsSplitting] = useState(false)
   const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState("Upload a PDF to begin splitting locally.")
@@ -156,28 +82,34 @@ export default function SplitPdfTool() {
 
   const handleFile = useCallback(
     async (candidate: File) => {
-      if (!isPdfFile(candidate)) {
-        toast.error("Only PDF files are supported.")
-        return
-      }
-
-      setFile(candidate)
-      setPageCount(null)
-      setExtractInput("")
-      setRangeInput("")
-      setProgress(0)
-      setStatus("Reading page count...")
-      clearOutputs()
-
       try {
-        const pages = await countPages(candidate)
+        if (!isPdfLikeFile(candidate)) {
+          toast.error("Only PDF files are supported.")
+          return
+        }
+
+        ensureSafeLocalFileSize(candidate, MAX_SPLIT_FILE_BYTES)
+
+        setFile(candidate)
+        setPageCount(null)
+        setExtractInput("")
+        setRangeInput("")
+        setProgress(0)
+        setStatus("Reading page count...")
+        clearOutputs()
+
+        const pages = await countPdfPages(candidate)
         setPageCount(pages)
         setStatus(`Loaded locally. ${pages} page${pages === 1 ? "" : "s"} detected.`)
-      } catch {
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Could not read this PDF. Please choose another file."
         setFile(null)
         setPageCount(null)
-        setStatus("Could not read this PDF.")
-        toast.error("Could not read this PDF. Please choose another file.")
+        setStatus(message)
+        toast.error(message)
       }
     },
     [clearOutputs]
@@ -227,7 +159,7 @@ export default function SplitPdfTool() {
         const ranges: PdfPageRange[] =
           mode === "individual"
             ? Array.from({ length: pageCount }, (_, index) => ({ start: index + 1, end: index + 1 }))
-            : parseRanges(rangeInput, pageCount)
+            : parsePageRanges(rangeInput, pageCount)
 
         const splitBytes = await splitPdf(file, ranges)
         outputs = splitBytes.map((bytes, index) => {
@@ -303,58 +235,19 @@ export default function SplitPdfTool() {
         </CardHeader>
       </Card>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        className="hidden"
-        onChange={(event) => {
-          const selected = event.target.files?.[0]
-          if (selected) {
-            void handleFile(selected)
-          }
-          event.currentTarget.value = ""
-        }}
-      />
-
       <Card>
         <CardContent className="pt-6">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault()
-                fileInputRef.current?.click()
+          <PdfFileDropzone
+            disabled={isSplitting}
+            title="Drop a PDF here, or click to browse"
+            subtitle="Single file input. Local-only processing."
+            onFilesSelected={(selectedFiles) => {
+              const selected = selectedFiles[0]
+              if (selected) {
+                void handleFile(selected)
               }
             }}
-            onDragOver={(event) => {
-              event.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragLeave={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-            }}
-            onDrop={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-              const dropped = event.dataTransfer.files[0]
-              if (dropped) {
-                void handleFile(dropped)
-              }
-            }}
-            className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10 ${
-              isDragging ? "border-primary bg-primary/10" : "border-border bg-muted/20 hover:border-primary/70"
-            }`}
-          >
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <UploadCloud className="h-6 w-6 text-primary" />
-            </div>
-            <p className="text-sm font-medium text-foreground">Drop a PDF here, or click to browse</p>
-            <p className="mt-1 text-xs text-muted-foreground">Single file input. Local-only processing.</p>
-          </div>
+          />
         </CardContent>
       </Card>
 
@@ -372,7 +265,7 @@ export default function SplitPdfTool() {
                 <span className="truncate text-sm font-medium text-foreground">{file.name}</span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                {formatBytes(file.size)}
+                {formatFileSize(file.size)}
                 {typeof pageCount === "number" ? ` • ${pageCount} page${pageCount === 1 ? "" : "s"}` : ""}
               </p>
             </div>
@@ -514,7 +407,7 @@ export default function SplitPdfTool() {
                 }}
               >
                 <Download className="h-4 w-4" />
-                Download ZIP ({bundle.zipSizeBytes ? formatBytes(bundle.zipSizeBytes) : "ready"})
+                Download ZIP ({bundle.zipSizeBytes ? formatFileSize(bundle.zipSizeBytes) : "ready"})
               </Button>
             ) : null}
 
@@ -523,7 +416,7 @@ export default function SplitPdfTool() {
                 <div key={output.name} className="rounded-lg border p-3">
                   <p className="truncate text-sm font-medium text-foreground">{output.name}</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {output.rangeLabel} • {formatBytes(output.sizeBytes)}
+                    {output.rangeLabel} • {formatFileSize(output.sizeBytes)}
                   </p>
                   {!bundle.zipBytes ? (
                     <Button

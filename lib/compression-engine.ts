@@ -1,8 +1,7 @@
 "use client"
 
 import { PDFDocument } from "pdf-lib"
-
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
+import { getPdfJs } from "./pdfjs-loader"
 
 export type CompressionStage =
   | "Initialising Wasm"
@@ -18,8 +17,6 @@ export interface CompressionPreviewResult {
   scale: number
 }
 
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
-
 const clampScale = (value: number) => Math.min(1, Math.max(0.1, value))
 
 const reportStage = (
@@ -29,18 +26,6 @@ const reportStage = (
 ) => {
   onStageChange?.(stage, message)
   console.info(`[Plain] ${message}`)
-}
-
-const getPdfJs = async () => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-  return pdfJsModulePromise
 }
 
 const formatBytes = (value: number) => {
@@ -145,4 +130,3 @@ export async function generateCompressionPreview(
     scale: targetScale,
   }
 }
-

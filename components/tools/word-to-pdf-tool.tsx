@@ -11,7 +11,9 @@ import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badg
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { ensureSafeLocalFileSize, formatFileSize } from "@/lib/pdf-client-utils"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
+import { sanitizeDocxHtmlForRendering } from "@/lib/word-html-sanitizer"
 
 type ConversionOutput = {
   url: string
@@ -24,43 +26,9 @@ const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingm
 const isDocxFile = (file: File) =>
   file.type === DOCX_MIME || file.name.toLowerCase().endsWith(".docx")
 
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb.toFixed(1)} KB`
-  const mb = kb / 1024
-  if (mb < 1024) return `${mb.toFixed(2)} MB`
-  return `${(mb / 1024).toFixed(2)} GB`
-}
+const MAX_DOCX_BYTES = 40 * 1024 * 1024
 
 const extractBaseName = (name: string) => name.replace(/\.docx$/i, "")
-
-const sanitizeConvertedHtml = (input: string) => {
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(input, "text/html")
-
-  doc.querySelectorAll("script, iframe, object, embed, link, meta[http-equiv], style").forEach((node) => {
-    node.remove()
-  })
-
-  for (const element of Array.from(doc.querySelectorAll("*"))) {
-    for (const attribute of Array.from(element.attributes)) {
-      const name = attribute.name.toLowerCase()
-      const value = attribute.value.trim().toLowerCase()
-
-      if (name.startsWith("on")) {
-        element.removeAttribute(attribute.name)
-        continue
-      }
-
-      if ((name === "src" || name === "href") && (value.startsWith("javascript:") || value.startsWith("data:text/html"))) {
-        element.removeAttribute(attribute.name)
-      }
-    }
-  }
-
-  return doc.body.innerHTML
-}
 
 const createRenderContainer = (html: string) => {
   const host = document.createElement("div")
@@ -109,15 +77,23 @@ export default function WordToPdfTool() {
 
   const handleFile = useCallback(
     (candidate: File) => {
-      if (!isDocxFile(candidate)) {
-        toast.error("Please choose a .docx file.")
-        return
-      }
+      try {
+        if (!isDocxFile(candidate)) {
+          toast.error("Please choose a .docx file.")
+          return
+        }
+        ensureSafeLocalFileSize(candidate, MAX_DOCX_BYTES)
 
-      setFile(candidate)
-      setProgress(0)
-      setStatus("Ready to convert.")
-      resetOutput()
+        setFile(candidate)
+        setProgress(0)
+        setStatus("Ready to convert.")
+        resetOutput()
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Could not use this file."
+        setStatus(message)
+        toast.error(message)
+      }
     },
     [resetOutput]
   )
@@ -138,7 +114,7 @@ export default function WordToPdfTool() {
     try {
       const arrayBuffer = await file.arrayBuffer()
       const mammothResult = await mammoth.convertToHtml({ arrayBuffer })
-      const safeHtml = sanitizeConvertedHtml(mammothResult.value)
+      const safeHtml = sanitizeDocxHtmlForRendering(mammothResult.value)
       const textOnly = safeHtml.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
 
       if (!textOnly) {
@@ -300,7 +276,7 @@ export default function WordToPdfTool() {
             <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{file.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{formatBytes(file.size)}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
               </div>
               <Button
                 type="button"
@@ -368,7 +344,7 @@ export default function WordToPdfTool() {
           <CardHeader>
             <CardTitle className="text-base">Download PDF</CardTitle>
             <CardDescription className="break-words">
-              {output.fileName} • {formatBytes(output.sizeBytes)}
+              {output.fileName} • {formatFileSize(output.sizeBytes)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useState, lazy, Suspense } from "react"
 import { Search, Menu, X, Command, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { cn } from "@/lib/utils"
 
 // Lazy load command palette - only loaded when user opens it
@@ -60,6 +61,8 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
+
             <Button
               variant="outline"
               size="sm"

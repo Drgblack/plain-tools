@@ -10,6 +10,7 @@ import {
   PDFWidgetAnnotation,
   rgb,
 } from "pdf-lib"
+import { getPdfJs } from "./pdfjs-loader"
 
 export interface Rect {
   pageIndex?: number
@@ -40,7 +41,7 @@ export type ProcessingStage =
 
 type StageReporter = (stage: ProcessingStage, message: string) => void
 
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
+type PdfJsModule = Awaited<ReturnType<typeof getPdfJs>>
 
 export type LocalSigningKeyInput = CryptoKey | ArrayBuffer | Uint8Array
 
@@ -87,8 +88,6 @@ export interface PlainPasswordBreakerOptions {
   onStageChange?: StageReporter
 }
 
-let pdfJsModulePromise: Promise<PdfJsModule> | null = null
-
 const METADATA_KEYS = [
   "Author",
   "Creator",
@@ -117,19 +116,6 @@ const reportStage = (
 ) => {
   onStageChange?.(stage, message)
   console.info(`[Plain] ${message}`)
-}
-
-const getPdfJs = async (): Promise<PdfJsModule> => {
-  if (!pdfJsModulePromise) {
-    pdfJsModulePromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-
-  return pdfJsModulePromise
 }
 
 const serialisePdfObject = (value: unknown) => {
@@ -1553,4 +1539,3 @@ export async function plainPasswordBreaker(
     "Password recovery was unsuccessful within the local brute-force limit."
   )
 }
-

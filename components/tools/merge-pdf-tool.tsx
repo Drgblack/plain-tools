@@ -1,14 +1,21 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { ArrowDown, ArrowUp, Download, FileText, Loader2, Trash2, UploadCloud, X } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
+import { ArrowDown, ArrowUp, Download, FileText, Loader2, Trash2, X } from "lucide-react"
 import { toast, Toaster } from "sonner"
 
+import { PdfFileDropzone } from "@/components/tools/shared/pdf-file-dropzone"
 import { Button } from "@/components/ui/button"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { useObjectUrlState } from "@/hooks/use-object-url-state"
 import { mergePdfs } from "@/lib/pdf-batch-engine"
+import {
+  ensureSafeLocalFileSize,
+  formatFileSize,
+  isPdfLikeFile,
+} from "@/lib/pdf-client-utils"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
 type QueuedPdf = {
@@ -17,58 +24,35 @@ type QueuedPdf = {
 }
 
 type MergeResult = {
-  url: string
   sizeBytes: number
 }
 
-const isPdfFile = (file: File) =>
-  file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
-
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb.toFixed(1)} KB`
-  const mb = kb / 1024
-  if (mb < 1024) return `${mb.toFixed(2)} MB`
-  return `${(mb / 1024).toFixed(2)} GB`
-}
+const MAX_MERGE_FILES = 20
+const MAX_MERGE_TOTAL_BYTES = 1024 * 1024 * 1024
 
 export default function MergePdfTool() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const [files, setFiles] = useState<QueuedPdf[]>([])
-  const [isDragging, setIsDragging] = useState(false)
   const [isMerging, setIsMerging] = useState(false)
   const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState("Upload 2 or more PDFs to merge them locally.")
   const [result, setResult] = useState<MergeResult | null>(null)
+  const { url: downloadUrl, clearUrl, setUrlFromBlob } = useObjectUrlState()
 
   const totalBytes = useMemo(
     () => files.reduce((total, entry) => total + entry.file.size, 0),
     [files]
   )
 
-  useEffect(() => {
-    return () => {
-      if (result?.url) {
-        URL.revokeObjectURL(result.url)
-      }
-    }
-  }, [result])
-
   const clearResult = useCallback(() => {
-    if (result?.url) {
-      URL.revokeObjectURL(result.url)
-    }
+    clearUrl()
     setResult(null)
-  }, [result])
+  }, [clearUrl])
 
   const enqueueFiles = useCallback(
-    (incoming: FileList | File[]) => {
-      const candidateFiles = Array.from(incoming)
-      const accepted = candidateFiles.filter(isPdfFile)
+    (incoming: File[]) => {
+      const accepted = incoming.filter(isPdfLikeFile)
 
-      if (accepted.length !== candidateFiles.length) {
+      if (accepted.length !== incoming.length) {
         toast.error("Only PDF files are supported.")
       }
 
@@ -76,17 +60,55 @@ export default function MergePdfTool() {
         return
       }
 
-      const nextEntries = accepted.map((file) => ({
-        id: crypto.randomUUID(),
-        file,
-      }))
+      let totalBytes = files.reduce((total, entry) => total + entry.file.size, 0)
+      const remainingSlots = Math.max(0, MAX_MERGE_FILES - files.length)
+      const nextEntries: QueuedPdf[] = []
+
+      if (remainingSlots === 0) {
+        toast.error(`You can merge up to ${MAX_MERGE_FILES} files at once.`)
+        return
+      }
+
+      for (const file of accepted.slice(0, remainingSlots)) {
+        try {
+          ensureSafeLocalFileSize(file)
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : "Could not use this file."
+          toast.error(message)
+          continue
+        }
+
+        if (totalBytes + file.size > MAX_MERGE_TOTAL_BYTES) {
+          toast.error(
+            `Combined input exceeds local safety limit (${formatFileSize(
+              MAX_MERGE_TOTAL_BYTES
+            )}).`
+          )
+          break
+        }
+
+        nextEntries.push({
+          id: crypto.randomUUID(),
+          file,
+        })
+        totalBytes += file.size
+      }
+
+      if (incoming.length > remainingSlots) {
+        toast.message(`Only the first ${MAX_MERGE_FILES} files are kept.`)
+      }
+
+      if (!nextEntries.length) {
+        return
+      }
 
       setFiles((previous) => [...previous, ...nextEntries])
       setStatus("Ready to merge.")
       setProgress(0)
       clearResult()
     },
-    [clearResult]
+    [clearResult, files]
   )
 
   const removeFile = useCallback((id: string) => {
@@ -130,10 +152,9 @@ export default function MergePdfTool() {
     try {
       const mergedBytes = await mergePdfs(files.map((entry) => entry.file))
       const blob = new Blob([mergedBytes], { type: "application/pdf" })
-      const url = URL.createObjectURL(blob)
+      setUrlFromBlob(blob)
 
       setResult({
-        url,
         sizeBytes: blob.size,
       })
       setProgress(100)
@@ -148,7 +169,7 @@ export default function MergePdfTool() {
       clearInterval(simulatedProgress)
       setIsMerging(false)
     }
-  }, [clearResult, files])
+  }, [clearResult, files, setUrlFromBlob])
 
   return (
     <div className="space-y-6 overflow-x-hidden">
@@ -163,59 +184,15 @@ export default function MergePdfTool() {
         </CardHeader>
       </Card>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        multiple
-        className="hidden"
-        onChange={(event) => {
-          if (event.target.files?.length) {
-            enqueueFiles(event.target.files)
-          }
-          event.currentTarget.value = ""
-        }}
-      />
-
       <Card>
         <CardContent className="pt-6">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault()
-                fileInputRef.current?.click()
-              }
-            }}
-            onDragOver={(event) => {
-              event.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragLeave={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-            }}
-            onDrop={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-              if (event.dataTransfer.files.length) {
-                enqueueFiles(event.dataTransfer.files)
-              }
-            }}
-            className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10 ${
-              isDragging
-                ? "border-primary bg-primary/10"
-                : "border-border bg-muted/20 hover:border-primary/70"
-            }`}
-          >
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <UploadCloud className="h-6 w-6 text-primary" />
-            </div>
-            <p className="text-sm font-medium text-foreground">Drop PDF files here, or click to browse</p>
-            <p className="mt-1 text-xs text-muted-foreground">All processing stays local in your browser</p>
-          </div>
+          <PdfFileDropzone
+            multiple
+            disabled={isMerging}
+            title="Drop PDF files here, or click to browse"
+            subtitle="All processing stays local in your browser"
+            onFilesSelected={enqueueFiles}
+          />
         </CardContent>
       </Card>
 
@@ -223,7 +200,7 @@ export default function MergePdfTool() {
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Files to merge ({files.length})</CardTitle>
           <CardDescription className="break-words">
-            {files.length > 0 ? `${formatBytes(totalBytes)} selected` : "No files selected yet."}
+            {files.length > 0 ? `${formatFileSize(totalBytes)} selected` : "No files selected yet."}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -237,7 +214,7 @@ export default function MergePdfTool() {
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium text-foreground">{entry.file.name}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{formatBytes(entry.file.size)}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{formatFileSize(entry.file.size)}</p>
                 </div>
 
                 <div className="flex w-full gap-2 sm:w-auto">
@@ -324,17 +301,17 @@ export default function MergePdfTool() {
         </CardFooter>
       </Card>
 
-      {result ? (
+      {result && downloadUrl ? (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Merged output ready</CardTitle>
-            <CardDescription>merged.pdf • {formatBytes(result.sizeBytes)}</CardDescription>
+            <CardDescription>merged.pdf • {formatFileSize(result.sizeBytes)}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ProcessedLocallyBadge />
             <Button asChild className="w-full sm:w-auto">
               <a
-                href={result.url}
+                href={downloadUrl}
                 download="merged.pdf"
                 onClick={() => notifyLocalDownloadSuccess()}
               >

@@ -9,6 +9,7 @@ import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badg
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { ensureSafeLocalFileSize } from "@/lib/pdf-client-utils"
 import { getPdfJs } from "@/lib/pdfjs-loader"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 
@@ -26,6 +27,7 @@ type ConversionOutput = {
 
 const isPdfFile = (file: File) =>
   file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+const MAX_PDF_TO_WORD_BYTES = 200 * 1024 * 1024
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`
@@ -132,15 +134,23 @@ export default function PdfToWordTool() {
 
   const handleFile = useCallback(
     (candidate: File) => {
-      if (!isPdfFile(candidate)) {
-        toast.error("Please choose a PDF file.")
-        return
-      }
+      try {
+        if (!isPdfFile(candidate)) {
+          toast.error("Please choose a PDF file.")
+          return
+        }
 
-      setFile(candidate)
-      setProgress(0)
-      setStatus("Ready to convert.")
-      resetOutput()
+        ensureSafeLocalFileSize(candidate, MAX_PDF_TO_WORD_BYTES)
+
+        setFile(candidate)
+        setProgress(0)
+        setStatus("Ready to convert.")
+        resetOutput()
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Could not use this file."
+        setStatus(message)
+        toast.error(message)
+      }
     },
     [resetOutput]
   )

@@ -18,3 +18,22 @@ test("homepage renders hero and tool catalogue, merge card navigates", async ({ 
   await expect(page).toHaveURL(/\/tools\/merge-pdf\/?$/)
 })
 
+test("homepage calculators category links to plainfigures", async ({ page }) => {
+  await page.goto("/")
+
+  const calculatorsLink = page.getByRole("link", { name: /Calculators/i }).first()
+  await expect(calculatorsLink).toHaveAttribute("href", "https://plainfigures.org")
+  await expect(calculatorsLink).not.toHaveAttribute("target", "_blank")
+
+  const [popup] = await Promise.all([
+    page.waitForEvent("popup").catch(() => null),
+    calculatorsLink.click(),
+  ])
+
+  if (popup) {
+    await expect(popup).toHaveURL("https://plainfigures.org/")
+    await popup.close()
+  } else {
+    await expect(page).toHaveURL("https://plainfigures.org/")
+  }
+})

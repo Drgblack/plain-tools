@@ -9,8 +9,10 @@ import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
 
+type ToolRouteParams = { slug: string }
+
 type PageProps = {
-  params: Promise<{ slug: string }>
+  params: Promise<ToolRouteParams>
 }
 
 type ToolComponent = ComponentType | LazyExoticComponent<ComponentType>
@@ -35,6 +37,18 @@ const toolComponents: Record<string, ToolComponent> = {
 }
 
 const FallbackToolComponent = () => <div>Tool UI coming soon</div>
+
+const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
+  const { slug } = await params
+  return slug
+}
+
+const getToolMetaDescription = (
+  tool: ReturnType<typeof getToolBySlug>,
+  seoDescription?: string
+) =>
+  seoDescription ??
+  `${tool?.name ?? "Plain tool"} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`
 
 function buildToolFaqSchema(toolName: string) {
   return {
@@ -99,7 +113,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+  const slug = await resolveToolSlug(params)
   const tool = getToolBySlug(slug)
   const seo = getToolSeoEntry(slug)
 
@@ -111,11 +125,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
+  const description = getToolMetaDescription(tool, seo?.description)
+
   return {
     title: tool.name,
-    description:
-      seo?.description ??
-      `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+    description,
     alternates: {
       canonical: `https://plain.tools/tools/${slug}`,
       languages: {
@@ -126,9 +140,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       title: `${tool.name} - Plain`,
-      description:
-        seo?.description ??
-        `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+      description,
       url: `https://plain.tools/tools/${slug}`,
       images: [
         {
@@ -142,16 +154,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       title: `${tool.name} - Plain`,
-      description:
-        seo?.description ??
-        `${tool.name} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`,
+      description,
       images: ["/opengraph-image"],
     },
   }
 }
 
 export default async function ToolPage({ params }: PageProps) {
-  const { slug } = await params
+  const slug = await resolveToolSlug(params)
   const tool = getToolBySlug(slug)
   const seo = getToolSeoEntry(slug)
 

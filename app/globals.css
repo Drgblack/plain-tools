@@ -8,6 +8,8 @@
 :root {
   --background: oklch(0.07 0 0);
   --foreground: oklch(0.95 0 0);
+  --bg: var(--background);
+  --text: var(--foreground);
   --card: oklch(0.14 0 0);
   --card-foreground: oklch(0.95 0 0);
   --popover: oklch(0.14 0 0);
@@ -23,6 +25,7 @@
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.95 0 0);
   --border: oklch(0.24 0 0);
+  --line: var(--border);
   --input: oklch(0.18 0 0);
   --ring: oklch(0.72 0.15 180);
   
@@ -49,9 +52,12 @@
   --sidebar-ring: oklch(0.72 0.15 180);
 }
 
+html[data-theme="light"],
 .light {
   --background: oklch(0.98 0 0);
   --foreground: oklch(0.12 0 0);
+  --bg: var(--background);
+  --text: var(--foreground);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.12 0 0);
   --popover: oklch(1 0 0);
@@ -67,6 +73,7 @@
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.88 0 0);
+  --line: var(--border);
   --input: oklch(0.94 0 0);
   --ring: oklch(0.55 0.15 180);
   --sidebar: oklch(0.96 0 0);

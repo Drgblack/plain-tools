@@ -1,10 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Download, FileText, Loader2, Plus, Share2, ShieldAlert, Trash2, UploadCloud } from "lucide-react"
+import { Download, FileText, Loader2, Plus, Share2, ShieldAlert, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { toast, Toaster } from "sonner"
 
+import { PdfFileDropzone } from "@/components/tools/shared/pdf-file-dropzone"
 import { Button } from "@/components/ui/button"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import {
@@ -23,10 +24,10 @@ import {
   type PlainRedactionRegion,
   type ProcessingStage,
 } from "@/lib/pdf-security-engines"
+import { formatFileSize, isPdfLikeFile } from "@/lib/pdf-client-utils"
+import { getPdfJs } from "@/lib/pdfjs-loader"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { buildShareCardPng } from "@/lib/share-card"
-
-type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs")
 
 type PageSize = {
   width: number
@@ -53,20 +54,6 @@ type RegionItem = PlainRedactionRegion & { id: string }
 const THUMB_MAX_WIDTH = 220
 const EXTRA_BLEED_POINTS = 2
 
-let pdfJsPromise: Promise<PdfJsModule> | null = null
-
-const getPdfJs = async () => {
-  if (!pdfJsPromise) {
-    pdfJsPromise = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
-      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.js"
-      }
-      return pdfjs
-    })
-  }
-  return pdfJsPromise
-}
-
 const defaultRegionInput = (): RegionInputDraft => ({
   page: "1",
   x: "0",
@@ -74,19 +61,6 @@ const defaultRegionInput = (): RegionInputDraft => ({
   width: "140",
   height: "40",
 })
-
-const isPdfFile = (file: File) =>
-  file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
-
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb.toFixed(1)} KB`
-  const mb = kb / 1024
-  if (mb < 1024) return `${mb.toFixed(2)} MB`
-  const gb = mb / 1024
-  return `${gb.toFixed(2)} GB`
-}
 
 const canvasToBlob = (canvas: HTMLCanvasElement) =>
   new Promise<Blob>((resolve, reject) => {
@@ -277,14 +251,12 @@ const stageToProgress = (stage: ProcessingStage, message: string, pageCount: num
 }
 
 export default function RedactTool() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const loadTokenRef = useRef(0)
 
   const [file, setFile] = useState<File | null>(null)
   const [pageCount, setPageCount] = useState<number | null>(null)
   const [pageSizes, setPageSizes] = useState<PageSize[]>([])
   const [previews, setPreviews] = useState<PagePreview[]>([])
-  const [isDragging, setIsDragging] = useState(false)
   const [isPreparingPreviews, setIsPreparingPreviews] = useState(false)
 
   const [regionDraft, setRegionDraft] = useState<RegionInputDraft>(defaultRegionInput)
@@ -334,7 +306,7 @@ export default function RedactTool() {
 
   const loadFile = useCallback(
     async (nextFile: File) => {
-      if (!isPdfFile(nextFile)) {
+      if (!isPdfLikeFile(nextFile)) {
         toast.error("Only PDF files are supported.")
         return
       }
@@ -536,63 +508,19 @@ export default function RedactTool() {
     <div className="space-y-6 overflow-x-hidden">
       <Toaster richColors position="top-right" />
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        className="hidden"
-        onChange={(event) => {
-          const selected = event.target.files?.[0]
-          if (selected) {
-            void loadFile(selected)
-          }
-          event.currentTarget.value = ""
-        }}
-      />
-
       <Card>
         <CardContent className="pt-6">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault()
-                fileInputRef.current?.click()
+          <PdfFileDropzone
+            disabled={isPreparingPreviews || isProcessing}
+            title="Drop one PDF here, or click to browse"
+            subtitle="Pages are rendered and redacted locally in your browser."
+            onFilesSelected={(selectedFiles) => {
+              const selectedFile = selectedFiles[0]
+              if (selectedFile) {
+                void loadFile(selectedFile)
               }
             }}
-            onDragOver={(event) => {
-              event.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragLeave={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-            }}
-            onDrop={(event) => {
-              event.preventDefault()
-              setIsDragging(false)
-              const droppedFile = event.dataTransfer.files?.[0]
-              if (!droppedFile) return
-              void loadFile(droppedFile)
-            }}
-            className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors sm:p-10 ${
-              isDragging
-                ? "border-primary bg-primary/10"
-                : "border-border bg-muted/20 hover:border-primary/70"
-            }`}
-          >
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <UploadCloud className="h-6 w-6 text-primary" />
-            </div>
-            <p className="text-sm font-medium text-foreground">
-              Drop one PDF here, or click to browse
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Pages are rendered and redacted locally in your browser.
-            </p>
-          </div>
+          />
         </CardContent>
       </Card>
 
@@ -609,7 +537,7 @@ export default function RedactTool() {
                 <FileText className="h-4 w-4 shrink-0 text-primary" />
                 <span className="truncate text-sm font-medium text-foreground">{file.name}</span>
               </div>
-              <span className="text-xs text-muted-foreground">{formatBytes(file.size)}</span>
+              <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
               {pageCount ? (
                 <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
                   {pageCount} page{pageCount === 1 ? "" : "s"}
@@ -816,7 +744,7 @@ export default function RedactTool() {
             <ProcessedLocallyBadge />
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               <span className="rounded-full border px-2 py-0.5">redacted.pdf</span>
-              {resultSize !== null ? <span>{formatBytes(resultSize)}</span> : null}
+              {resultSize !== null ? <span>{formatFileSize(resultSize)}</span> : null}
             </div>
             {sha256 ? (
               <div className="rounded-md border bg-muted/30 p-3">

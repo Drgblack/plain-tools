@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Share2, Link2, Check, Mail } from "lucide-react"
+import { Share2, Link2, Check, Mail, X } from "lucide-react"
 
 interface ShareButtonProps {
   variant?: "icon" | "inline" | "subtle"
@@ -248,7 +248,7 @@ const SharePopover = ({
           className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
           aria-label="Close"
         >
-          <XIcon className="h-3.5 w-3.5" />
+          <X className="h-3.5 w-3.5" />
         </button>
       </div>
 

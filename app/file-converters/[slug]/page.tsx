@@ -30,17 +30,22 @@ export async function generateMetadata({ params }: ConverterPageProps) {
 export default async function ConverterArticlePage({ params }: ConverterPageProps) {
   const { slug } = await params
 
+  let article: ReturnType<typeof getConverterArticleOrThrow> | null = null
   try {
-    const article = getConverterArticleOrThrow(slug)
-    return (
-      <LearnArticleTemplate
-        article={article}
-        routeBase="/file-converters"
-        routeLabel="File Converters"
-        relatedLabel="Related converters"
-      />
-    )
+    article = getConverterArticleOrThrow(slug)
   } catch {
     notFound()
   }
+  if (!article) {
+    notFound()
+  }
+
+  return (
+    <LearnArticleTemplate
+      article={article}
+      routeBase="/file-converters"
+      routeLabel="File Converters"
+      relatedLabel="Related converters"
+    />
+  )
 }
