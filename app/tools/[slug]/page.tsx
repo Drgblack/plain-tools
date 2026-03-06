@@ -8,6 +8,7 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { getToolPageProfile } from "@/lib/tool-page-content"
 
 type ToolRouteParams = { slug: string }
 
@@ -49,13 +50,6 @@ const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
   return slug
 }
 
-const getToolMetaDescription = (
-  tool: ReturnType<typeof getToolBySlug>,
-  seoDescription?: string
-) =>
-  seoDescription ??
-  `${tool?.name ?? "Plain tool"} by Plain runs in your browser with local processing and no file uploads for private PDF document workflows.`
-
 function buildToolFaqSchema(toolName: string) {
   return {
     "@context": "https://schema.org",
@@ -89,11 +83,17 @@ function buildToolFaqSchema(toolName: string) {
   }
 }
 
-function buildToolWebApplicationSchema(toolName: string, slug: string) {
+function buildToolWebApplicationSchema(
+  toolName: string,
+  slug: string,
+  description: string,
+  featureList: string[]
+) {
   return {
     "@context": "https://schema.org",
     "@type": ["SoftwareApplication", "WebApplication"],
     name: toolName,
+    description,
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any — runs in web browser",
     browserRequirements:
@@ -106,8 +106,7 @@ function buildToolWebApplicationSchema(toolName: string, slug: string) {
       price: "0",
       priceCurrency: "EUR",
     },
-    featureList:
-      "Offline processing, Zero uploads, No account required, GDPR compliant, Works without internet",
+    featureList,
     url: `https://plain.tools/tools/${slug}`,
   }
 }
@@ -121,7 +120,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const slug = await resolveToolSlug(params)
   const tool = getToolBySlug(slug)
-  const seo = getToolSeoEntry(slug)
 
   if (!tool) {
     return {
@@ -131,10 +129,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const description = getToolMetaDescription(tool, seo?.description)
+  const profile = getToolPageProfile(tool)
+  const description = profile.description
 
   return {
-    title: tool.name,
+    title: profile.title,
     description,
     alternates: {
       canonical: `https://plain.tools/tools/${slug}`,
@@ -145,7 +144,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     openGraph: {
-      title: `${tool.name} - Plain`,
+      title: profile.title,
       description,
       url: `https://plain.tools/tools/${slug}`,
       images: [
@@ -159,7 +158,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tool.name} - Plain`,
+      title: profile.title,
       description,
       images: ["/opengraph-image"],
     },
@@ -178,8 +177,14 @@ export default async function ToolPage({ params }: PageProps) {
   const ToolComponent: ToolComponent = tool.available
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
+  const profile = getToolPageProfile(tool)
   const faqSchema = buildToolFaqSchema(tool.name)
-  const webApplicationSchema = buildToolWebApplicationSchema(tool.name, slug)
+  const webApplicationSchema = buildToolWebApplicationSchema(
+    tool.name,
+    slug,
+    profile.description,
+    profile.featureList
+  )
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
@@ -198,17 +203,23 @@ export default async function ToolPage({ params }: PageProps) {
       <main className="flex-1">
         <div className="container mx-auto py-8">
           <h1 className="text-3xl font-bold">{tool.name}</h1>
-          <p className="mb-6 text-muted-foreground">{tool.description}</p>
+          <p className="mb-6 text-muted-foreground">{profile.description}</p>
 
           {tool.available ? (
             <>
-              {tool.category !== "AI Assistant" ? (
-                <div className="mb-4 text-sm text-green-600">100% Local Processing - No Uploads</div>
-              ) : (
-                <div className="mb-4 text-sm text-amber-600">
-                  Opt-in: Text extracted locally, sent to Anthropic for processing
-                </div>
-              )}
+              <section className="mb-6 rounded-xl border border-border bg-card/60 p-4">
+                <p className="text-sm font-medium text-foreground">
+                  {tool.category !== "AI Assistant"
+                    ? "Processed locally in your browser. Files never leave your device."
+                    : "Text is extracted locally first. AI response requires explicit opt-in."}
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                  {profile.trustPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
+              </section>
 
               <Suspense fallback={<div>Loading tool...</div>}>
                 <ErrorBoundary context={`tool:${tool.slug}`}>
@@ -218,7 +229,7 @@ export default async function ToolPage({ params }: PageProps) {
 
               {seo ? (
                 <div className="mt-6 rounded-lg border border-white/[0.1] bg-muted/20 p-4 text-sm text-muted-foreground">
-                  Learn more:{" "}
+                  Learn more about this workflow:{" "}
                   <a
                     href={seo.learnHref}
                     className="font-medium text-accent hover:underline"

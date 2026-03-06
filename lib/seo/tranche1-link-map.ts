@@ -78,6 +78,136 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
   },
+  "pdf-to-word": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "Word to PDF", href: "/tools/word-to-pdf" },
+      { label: "PDF to Excel", href: "/tools/pdf-to-excel" },
+      { label: "OCR PDF", href: "/tools/ocr-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "word-to-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "Merge PDFs", href: "/tools/merge-pdf" },
+      { label: "Compress PDF", href: "/tools/compress-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "pdf-to-jpg": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
+      { label: "Compress PDF", href: "/tools/compress-pdf" },
+      { label: "OCR PDF", href: "/tools/ocr-pdf" },
+    ],
+    comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
+  },
+  "jpg-to-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
+      { label: "Merge PDFs", href: "/tools/merge-pdf" },
+      { label: "Sign PDF", href: "/tools/sign-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "pdf-to-excel": {
+    learnLinks: [
+      { label: "OCR PDF Without Cloud", href: "/learn/ocr-pdf-without-cloud" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "OCR PDF", href: "/tools/ocr-pdf" },
+      { label: "PDF to PowerPoint", href: "/tools/pdf-to-ppt" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "pdf-to-ppt": {
+    learnLinks: [
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "PDF to Excel", href: "/tools/pdf-to-excel" },
+      { label: "OCR PDF", href: "/tools/ocr-pdf" },
+    ],
+    comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
+  },
+  "ocr-pdf": {
+    learnLinks: [
+      { label: "OCR PDF Without Cloud", href: "/learn/ocr-pdf-without-cloud" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "PDF to Excel", href: "/tools/pdf-to-excel" },
+      { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
+    ],
+    comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
+  },
+  "sign-pdf": {
+    learnLinks: [
+      { label: "How to Sign a PDF Without Uploading It", href: "/learn/how-to-sign-a-pdf-without-uploading-it" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "Protect PDF", href: "/tools/protect-pdf" },
+      { label: "Unlock PDF", href: "/tools/unlock-pdf" },
+      { label: "Merge PDFs", href: "/tools/merge-pdf" },
+    ],
+    comparison: { label: "Plain vs DocuSign", href: "/compare/plain-vs-docusign" },
+  },
+  "protect-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Is Offline PDF Processing Secure", href: "/learn/is-offline-pdf-processing-secure" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "Unlock PDF", href: "/tools/unlock-pdf" },
+      { label: "Sign PDF", href: "/tools/sign-pdf" },
+      { label: "Merge PDFs", href: "/tools/merge-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "unlock-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Is Offline PDF Processing Secure", href: "/learn/is-offline-pdf-processing-secure" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+    ],
+    relatedTools: [
+      { label: "Protect PDF", href: "/tools/protect-pdf" },
+      { label: "Sign PDF", href: "/tools/sign-pdf" },
+      { label: "Password Breaker", href: "/tools/password-breaker" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
   "metadata-purge": {
     learnLinks: [
       { label: "How to Remove PDF Metadata", href: "/learn/how-to-remove-pdf-metadata" },
