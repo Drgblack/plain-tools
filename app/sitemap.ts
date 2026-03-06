@@ -26,6 +26,9 @@ const staticCorePages = [
   "/support",
   "/pricing",
   "/labs",
+  "/roadmap",
+  "/changelog",
+  "/html-sitemap",
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

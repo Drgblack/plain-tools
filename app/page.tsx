@@ -17,19 +17,20 @@ import Link from "next/link"
 import { CategoryTile } from "@/components/category-tile"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
+import { buildStandardPageTitle } from "@/lib/page-title"
 import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = {
-  title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
+  title: buildStandardPageTitle("Plain Tools"),
   description:
     "Use Plain Tools for private PDF workflows: merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no uploads.",
   alternates: {
     canonical: "https://plain.tools",
   },
   openGraph: {
-    title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
+    title: buildStandardPageTitle("Plain Tools"),
     description:
       "Calm, practical PDF tools for sensitive documents. Processed locally in your browser with no file uploads.",
     url: "https://plain.tools",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Plain Tools – Offline PDF Tools | 100% Local, No Uploads",
+    title: buildStandardPageTitle("Plain Tools"),
     description:
       "Merge, split, convert, and sign PDFs locally in your browser. No uploads.",
     images: ["/og/default.png"],
@@ -334,6 +335,24 @@ export default function HomePage() {
                 Verify local processing claims
               </Link>
               <Link
+                href="/learn"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Browse learn guides
+              </Link>
+              <Link
+                href="/compare"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Compare alternatives
+              </Link>
+              <Link
+                href="/blog"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Read the blog
+              </Link>
+              <Link
                 href="https://github.com/Drgblack/plain-tools"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -395,6 +414,17 @@ export default function HomePage() {
                   </span>
                 </Link>
               ))}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3 text-sm">
+              <Link href="/roadmap" className="text-muted-foreground hover:text-foreground hover:underline">
+                Public roadmap
+              </Link>
+              <Link href="/changelog" className="text-muted-foreground hover:text-foreground hover:underline">
+                Changelog
+              </Link>
+              <Link href="/sitemap" className="text-muted-foreground hover:text-foreground hover:underline">
+                HTML sitemap
+              </Link>
             </div>
           </div>
         </section>
@@ -530,7 +560,7 @@ export default function HomePage() {
         <section className="border-t border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-16">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">
-              What is Plain.tools?
+              What is Plain Tools?
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>

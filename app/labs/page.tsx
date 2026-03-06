@@ -2,11 +2,30 @@ import type { Metadata } from "next"
 import { PerformanceBenchmark } from "@/components/performance-benchmark"
 import { ArrowLeft, FlaskConical } from "lucide-react"
 import Link from "next/link"
+import { buildStandardPageTitle } from "@/lib/page-title"
 
 export const metadata: Metadata = {
-  title: "Labs | Plain - Local PDF Tools",
-  description: "Experimental features and performance benchmarking tools for Plain. Test your hardware's local processing capabilities. Built for private, offline-first PDF.",
+  title: buildStandardPageTitle("Labs"),
+  description:
+    "Experimental diagnostics and exploratory prototypes for Plain Tools. Includes local benchmark tooling and transparent status labels.",
 }
+
+const exploratoryTracks = [
+  {
+    title: "WebGPU Stress Test",
+    status: "Exploratory",
+    note: "No release date yet",
+    description:
+      "Extended GPU diagnostics for heavy local workflows. We are validating reliability across devices before publishing.",
+  },
+  {
+    title: "Memory Profiler",
+    status: "Planned",
+    note: "Depends on benchmark feedback",
+    description:
+      "Live memory visibility during document processing. Scope and UX are still being refined based on real usage patterns.",
+  },
+]
 
 export default function LabsPage() {
   return (
@@ -34,9 +53,23 @@ export default function LabsPage() {
               </div>
             </div>
             <p className="max-w-2xl leading-relaxed text-muted-foreground/80">
-              Test your device&apos;s local processing capabilities and explore experimental features. 
-              All tests run entirely on your hardware with no data transmitted externally.
+              Labs contains diagnostics and experiments. Features listed here are prototypes or research tracks,
+              not production commitments. All tests run entirely on your hardware with no data transmitted externally.
             </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Link
+                href="/roadmap"
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                View roadmap
+              </Link>
+              <Link
+                href="/changelog"
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                View changelog
+              </Link>
+            </div>
           </div>
 
           {/* Performance Benchmark */}
@@ -47,25 +80,30 @@ export default function LabsPage() {
             <PerformanceBenchmark />
           </section>
 
-          {/* Coming soon section */}
+          {/* Exploratory status section */}
           <section>
             <h2 className="text-[13px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-4 font-mono">
-              Coming Soon
+              Exploratory Tracks
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.06]">
-                <h3 className="text-[14px] font-semibold text-foreground/60 mb-2">WebGPU Stress Test</h3>
-                <p className="text-muted-foreground/50 leading-relaxed">
-                  Extended GPU benchmarking for AI workloads with detailed TFLOPS analysis.
-                </p>
-              </div>
-              <div className="p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.06]">
-                <h3 className="text-[14px] font-semibold text-foreground/60 mb-2">Memory Profiler</h3>
-                <p className="text-muted-foreground/50 leading-relaxed">
-                  Real-time memory usage visualisation during document processing.
-                </p>
-              </div>
+              {exploratoryTracks.map((item) => (
+                <div key={item.title} className="p-5 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.06]">
+                  <div className="mb-2 flex items-center gap-2">
+                    <h3 className="text-[14px] font-semibold text-foreground/80">{item.title}</h3>
+                    <span className="rounded-full border border-white/[0.15] px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                      {item.status}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground/60">{item.note}</p>
+                  <p className="mt-2 text-muted-foreground/60 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
             </div>
+            <p className="mt-4 text-xs text-muted-foreground/60">
+              Labs items are intentionally labelled without fixed dates until scope and stability are confirmed.
+            </p>
           </section>
         </div>
       </main>

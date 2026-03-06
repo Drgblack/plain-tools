@@ -25,6 +25,9 @@ const footerSections = [
     links: [
       { name: "Learn", href: "/learn" },
       { name: "Compare", href: "/compare" },
+      { name: "Roadmap", href: "/roadmap" },
+      { name: "Changelog", href: "/changelog" },
+      { name: "HTML Sitemap", href: "/sitemap" },
       { name: "About", href: "/about" },
       { name: "Privacy", href: "/privacy" },
     ],

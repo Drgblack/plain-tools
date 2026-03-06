@@ -289,6 +289,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/privacy-policy",
+        destination: "/privacy",
+        permanent: true,
+      },
+      {
+        source: "/sitemap",
+        destination: "/html-sitemap",
+        permanent: true,
+      },
+      {
         source: "/pdf-tools/verify",
         destination: "/verify-claims",
         permanent: true,

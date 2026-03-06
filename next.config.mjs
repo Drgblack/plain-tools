@@ -54,6 +54,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/sitemap',
+        destination: '/html-sitemap',
+        permanent: true,
+      },
+      {
         source: '/contact',
         destination: '/support',
         permanent: true,
@@ -61,21 +66,6 @@ const nextConfig = {
       {
         source: '/terms-of-service',
         destination: '/terms',
-        permanent: true,
-      },
-      {
-        source: '/sitemap',
-        destination: '/sitemap.xml',
-        permanent: true,
-      },
-      {
-        source: '/roadmap',
-        destination: '/labs',
-        permanent: true,
-      },
-      {
-        source: '/changelog',
-        destination: '/labs',
         permanent: true,
       },
       {
