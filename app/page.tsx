@@ -76,15 +76,15 @@ const jsonLd = {
 const categories = [
   {
     name: "Network Tools",
-    description: "IP lookup, DNS queries, connectivity tests, and network diagnostics",
-    href: "/tools",
+    description: "IP lookup, DNS checks, and quick diagnostics for everyday network troubleshooting",
+    href: "/network-tools",
     icon: <Globe className="h-6 w-6" />,
     toolCount: 4,
   },
   {
     name: "File Tools",
-    description: "Convert, compress, and transform files in your browser",
-    href: "/tools",
+    description: "General browser file utilities for format checks and lightweight file workflows",
+    href: "/file-tools",
     icon: <FileText className="h-6 w-6" />,
     toolCount: 3,
   },
@@ -97,7 +97,7 @@ const categories = [
   },
   {
     name: "Calculators",
-    description: "Financial, scientific, and utility calculators",
+    description: "External calculator suite for finance, maths, and practical day-to-day calculations",
     href: "https://plainfigures.org",
     icon: <Calculator className="h-6 w-6" />,
     external: true,
@@ -213,6 +213,29 @@ const browseCategories = [
   },
 ]
 
+const richSections = [
+  {
+    name: "Learn",
+    href: "/learn",
+    description: "Practical guides for private PDF workflows and verification checks.",
+  },
+  {
+    name: "Compare",
+    href: "/compare",
+    description: "Neutral comparisons against common cloud PDF alternatives.",
+  },
+  {
+    name: "Blog",
+    href: "/blog",
+    description: "Opinionated but factual writing on privacy, architecture, and PDF handling.",
+  },
+  {
+    name: "Pricing",
+    href: "/pricing",
+    description: "Core local tools are free. See pricing for advanced and upcoming Pro features.",
+  },
+]
+
 export default function HomePage() {
   return (
     <>
@@ -228,10 +251,10 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-32">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-              Private PDF tools that run in your browser.
+              Private PDF tools for sensitive files, running directly in your browser.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-              Process sensitive files locally, without upload queues or account friction.
+              Files are processed locally on your device, with no upload step for core local tools.
             </p>
             
             {/* Intro paragraph for SEO/GEO */}
@@ -252,11 +275,11 @@ export default function HomePage() {
                   "transition-all duration-300 hover:shadow-[0_6px_30px_rgba(100,200,180,0.35)] hover:-translate-y-0.5"
                 )}
               >
-                Open PDF Tools
+                Explore tools
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="#tools"
+                href="/verify-claims"
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full px-6 py-3",
                   "bg-card border border-white/[0.12] text-foreground font-semibold",
@@ -264,7 +287,18 @@ export default function HomePage() {
                   "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
                 )}
               >
-                Browse all tools
+                Verify claims
+              </Link>
+              <Link
+                href="/learn"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-6 py-3",
+                  "bg-card border border-white/[0.12] text-foreground font-semibold",
+                  "shadow-[0_4px_24px_rgba(0,0,0,0.5)]",
+                  "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
+                )}
+              >
+                Learn how it works
               </Link>
             </div>
 
@@ -291,6 +325,23 @@ export default function HomePage() {
                 </span>
               ))}
             </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm">
+              <Link
+                href="/verify-claims"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Verify local processing claims
+              </Link>
+              <Link
+                href="https://github.com/Drgblack/plain-tools"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                View source on GitHub
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -302,7 +353,7 @@ export default function HomePage() {
                 Categories
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Browse tools by type
+                Pick a section by task type, then jump straight into a working tool.
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -321,6 +372,33 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Site Sections */}
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-16">
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                Explore Plain.tools
+              </h2>
+              <p className="mt-2 max-w-3xl text-muted-foreground">
+                Move from tool usage to deeper guidance quickly: learn workflows, compare alternatives,
+                read technical posts, and check pricing for advanced features.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {richSections.map((section) => (
+                <Link key={section.name} href={section.href} className="group block rounded-xl border border-white/[0.1] bg-card/40 p-4 transition hover:border-accent/40">
+                  <h3 className="text-base font-semibold text-foreground">{section.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{section.description}</p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                    Open
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Popular Tools Section */}
         <section className="border-b border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-20">
@@ -330,6 +408,13 @@ export default function HomePage() {
               </h2>
               <p className="mt-2 text-muted-foreground">
                 Most used tools across all categories
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
+                Core local tools are free to use. See{" "}
+                <Link href="/pricing" className="text-accent hover:underline">
+                  pricing
+                </Link>{" "}
+                for advanced and upcoming Pro capabilities.
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
