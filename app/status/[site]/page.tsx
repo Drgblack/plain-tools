@@ -195,6 +195,27 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               </Link>
             </Surface>
 
+            <Surface>
+              <h3 className="mb-3 font-semibold text-foreground">Network Toolkit</h3>
+              <p className="mb-3 text-sm text-muted-foreground">
+                Continue diagnosing with DNS, IP, and latency checks.
+              </p>
+              <div className="space-y-2">
+                <Link href="/network-tools" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Browse network tools
+                </Link>
+                <Link href="/dns-lookup" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  DNS lookup
+                </Link>
+                <Link href="/what-is-my-ip" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  What is my IP
+                </Link>
+                <Link href="/ping-test" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Ping test
+                </Link>
+              </div>
+            </Surface>
+
             <div>
               <h3 className="mb-4 font-semibold text-foreground">Related Tools</h3>
               <div className="space-y-3">

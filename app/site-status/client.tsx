@@ -130,6 +130,27 @@ function SiteStatusToolInterface() {
           ))}
         </div>
       </div>
+
+      <div className="rounded-md border border-border bg-card/60 p-4">
+        <h3 className="text-sm font-semibold text-foreground">Network diagnostics</h3>
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          Need more than uptime? Jump into DNS, IP, and latency checks in the same network toolkit.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link href="/network-tools" className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground">
+            Network tools hub
+          </Link>
+          <Link href="/dns-lookup" className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground">
+            DNS lookup
+          </Link>
+          <Link href="/what-is-my-ip" className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground">
+            What is my IP
+          </Link>
+          <Link href="/ping-test" className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground">
+            Ping test
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

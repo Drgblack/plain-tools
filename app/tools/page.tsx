@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
-import { Gauge, HardDrive, Lock, SearchCheck, Shield } from "lucide-react"
+import { Gauge, HardDrive, Lock, Radio, SearchCheck, Server, Shield, Wifi, Globe } from "lucide-react"
 import { ToolsSection } from "@/components/tools-section"
 import { ProofStrip } from "@/components/proof-strip"
 import { buildStandardPageTitle } from "@/lib/page-title"
@@ -91,6 +91,37 @@ export default function ToolsPage() {
         { label: "OCR PDF", href: "/tools/ocr-pdf" },
         { label: "Offline OCR", href: "/tools/offline-ocr" },
       ],
+    },
+  ]
+
+  const networkDiagnostics = [
+    {
+      label: "Site Status Checker",
+      description: "Check if a domain is currently up or down with live response timing.",
+      href: "/site-status",
+      icon: Wifi,
+      group: "Status",
+    },
+    {
+      label: "DNS Lookup",
+      description: "Inspect A, AAAA, MX, TXT, NS, and CNAME records for any domain.",
+      href: "/dns-lookup",
+      icon: Server,
+      group: "DNS",
+    },
+    {
+      label: "What is My IP",
+      description: "View your current public IP and basic routing context.",
+      href: "/what-is-my-ip",
+      icon: Globe,
+      group: "IP",
+    },
+    {
+      label: "Ping Test",
+      description: "Measure endpoint latency to troubleshoot reachability and speed.",
+      href: "/ping-test",
+      icon: Radio,
+      group: "Latency",
     },
   ]
 
@@ -243,6 +274,54 @@ export default function ToolsPage() {
                   </ul>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-foreground">Network diagnostics</h2>
+              <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+                Plain Tools also includes a network diagnostics category for uptime checks, DNS inspection, and connectivity triage.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {networkDiagnostics.map((tool) => {
+                const Icon = tool.icon
+                return (
+                  <Link
+                    key={tool.href}
+                    href={tool.href}
+                    className="group rounded-lg border border-border bg-card/40 p-4 transition hover:border-accent/40"
+                  >
+                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                      <Icon className="h-3.5 w-3.5" />
+                      {tool.group}
+                    </div>
+                    <h3 className="mt-3 text-sm font-semibold text-foreground transition group-hover:text-accent">
+                      {tool.label}
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {tool.description}
+                    </p>
+                    <span className="mt-3 inline-flex text-xs font-medium text-accent group-hover:underline">
+                      Open tool
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Example: chatgpt.com status
+              </Link>
+              <Link href="/status/reddit.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Example: reddit.com status
+              </Link>
+              <Link href="/network-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Open network tools hub
+              </Link>
             </div>
           </div>
         </section>
