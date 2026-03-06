@@ -170,6 +170,16 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "unlock-pdf",
+    name: "Unlock PDF",
+    slug: "unlock-pdf",
+    category: "Security & Privacy",
+    description: "Unlock password-protected PDFs locally when you know the password.",
+    badge: "100% Local",
+    icon: "Unlock",
+    available: true,
+  },
+  {
     id: "pdf-to-word",
     name: "PDF to Word",
     slug: "pdf-to-word",
