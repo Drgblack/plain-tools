@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Script from "next/script"
+import { Gauge, HardDrive, Lock, SearchCheck, Shield } from "lucide-react"
 import { ToolsSection } from "@/components/tools-section"
+import { ProofStrip } from "@/components/proof-strip"
 import { buildStandardPageTitle } from "@/lib/page-title"
 import { serializeJsonLd } from "@/lib/sanitize"
 import {
@@ -112,11 +114,32 @@ export default function ToolsPage() {
     .map((slug) => TOOL_CATALOGUE.find((tool) => tool.slug === slug && tool.available))
     .filter((tool): tool is NonNullable<(typeof TOOL_CATALOGUE)[number]> => Boolean(tool))
 
-  const trustPoints = [
-    "Processed locally in your browser",
-    "No file uploads",
-    "Free to use",
-    "Built for sensitive documents",
+  const toolsProofPoints = [
+    {
+      icon: HardDrive,
+      title: "Local processing",
+      detail: "Core PDF operations run in your browser on your device.",
+    },
+    {
+      icon: Shield,
+      title: "No uploads for core tools",
+      detail: "No file transfer step for local workflows in this catalogue.",
+    },
+    {
+      icon: Lock,
+      title: "Sensitive-file friendly",
+      detail: "Designed for practical workflows where document control matters.",
+    },
+    {
+      icon: SearchCheck,
+      title: "Verifiable behaviour",
+      detail: "Network inspection can validate no-upload processing claims.",
+    },
+    {
+      icon: Gauge,
+      title: "Fast workflow",
+      detail: "Open a tool and process immediately without upload queue delays.",
+    },
   ]
 
   const subtleCtas = [
@@ -160,12 +183,12 @@ export default function ToolsPage() {
         <section className="border-b border-border px-4 py-14 md:py-16">
           <div className="mx-auto max-w-6xl space-y-4">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Private PDF tools that run locally in your browser
+              Private PDF tools for sensitive workflows
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Plain Tools gives you practical PDF workflows for conversion, organisation, signing,
-              and privacy checks. Files stay on your device, processing runs in-browser, and you
-              can verify the behaviour yourself.
+              and privacy checks. Core local tools process files in-browser with no upload step, and
+              you can verify behaviour yourself.
             </p>
             <h2 className="text-sm font-semibold text-foreground">Popular PDF tools</h2>
             <div className="flex flex-wrap gap-2">
@@ -182,16 +205,9 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <section className="border-b border-border px-4 py-6">
-          <div className="mx-auto grid max-w-6xl gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {trustPoints.map((point) => (
-              <p
-                key={point}
-                className="rounded-lg border border-border/80 bg-card/50 px-3 py-2 text-xs text-muted-foreground"
-              >
-                {point}
-              </p>
-            ))}
+        <section className="border-b border-border px-4 py-6 md:py-8">
+          <div className="mx-auto max-w-6xl">
+            <ProofStrip points={toolsProofPoints} />
           </div>
         </section>
 

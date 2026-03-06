@@ -5,16 +5,18 @@ import {
   FileType,
   Calculator,
   Shield,
+  Gauge,
   Wifi,
   Eye,
   Server,
   HardDrive,
-  CheckCircle,
   Lock,
+  SearchCheck,
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
 import { CategoryTile } from "@/components/category-tile"
+import { ProofStrip } from "@/components/proof-strip"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
 import { buildStandardPageTitle } from "@/lib/page-title"
@@ -150,11 +152,32 @@ const popularTools = [
   },
 ]
 
-const trustBadges = [
-  { icon: <Lock className="h-4 w-4" />, label: "Processed locally" },
-  { icon: <Shield className="h-4 w-4" />, label: "No uploads" },
-  { icon: <Eye className="h-4 w-4" />, label: "No tracking" },
-  { icon: <CheckCircle className="h-4 w-4" />, label: "Verifiable claims" },
+const homepageProofPoints = [
+  {
+    icon: HardDrive,
+    title: "Processed locally",
+    detail: "Core local workflows run in your browser, on your device.",
+  },
+  {
+    icon: Shield,
+    title: "No uploads for core tools",
+    detail: "Local PDF operations do not require sending file contents to our servers.",
+  },
+  {
+    icon: Lock,
+    title: "Built for sensitive files",
+    detail: "Practical workflows for legal, HR, finance, and admin documents.",
+  },
+  {
+    icon: SearchCheck,
+    title: "Verifiable claims",
+    detail: "Use DevTools Network inspection to validate no-upload behaviour.",
+  },
+  {
+    icon: Gauge,
+    title: "Fast to use",
+    detail: "No upload queue for local operations. Open, process, and download.",
+  },
 ]
 
 const privacyClaims = [
@@ -270,10 +293,10 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-24">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              Private PDF tools for sensitive files, running directly in your browser.
+              Private PDF tools for sensitive files, running in your browser.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Files are processed locally on your device, with no upload step for core local tools.
+              Core local workflows process files on your device with no upload step. Verify this in your browser&apos;s Network tab.
             </p>
             
             {/* Intro paragraph for SEO/GEO */}
@@ -284,7 +307,7 @@ export default function HomePage() {
             </p>
 
             {/* Primary CTAs */}
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 href="/tools"
                 className={cn(
@@ -308,30 +331,20 @@ export default function HomePage() {
               >
                 Verify claims
               </Link>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link
                 href="/learn"
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-6 py-3",
-                  "bg-card border border-white/[0.12] text-foreground font-semibold",
-                  "shadow-[0_4px_24px_rgba(0,0,0,0.5)]",
-                  "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
-                )}
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
                 Learn how it works
               </Link>
-            </div>
-
-            {/* Trust Strip */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              {trustBadges.map((badge) => (
-                <div
-                  key={badge.label}
-                  className="flex items-center gap-2 rounded-full border border-white/[0.12] bg-card px-4 py-2 text-sm text-muted-foreground shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
-                >
-                  {badge.icon}
-                  <span>{badge.label}</span>
-                </div>
-              ))}
+              <Link
+                href="/compare"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Compare alternatives
+              </Link>
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -385,6 +398,12 @@ export default function HomePage() {
                 View source on GitHub
               </Link>
             </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border/50 px-4 py-6 md:py-8">
+          <div className="mx-auto max-w-6xl">
+            <ProofStrip points={homepageProofPoints} />
           </div>
         </section>
 
