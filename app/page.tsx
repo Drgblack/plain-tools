@@ -108,36 +108,36 @@ const homePageSchema = combineJsonLd([
 
 const categories = [
   {
-    name: "Network Tools",
-    description: "IP lookup, DNS checks, and quick diagnostics for everyday network troubleshooting",
+    name: "Check Network and DNS",
+    description: "Run IP lookup, DNS checks, and latency diagnostics for everyday network troubleshooting",
     href: "/network-tools",
     icon: <Globe className="h-6 w-6" />,
     toolCount: 4,
   },
   {
-    name: "File Tools",
-    description: "General browser file utilities for format checks and lightweight file workflows",
+    name: "Convert and Handle Files",
+    description: "Use browser-based file utilities for format checks and lightweight conversion workflows",
     href: "/file-tools",
     icon: <FileText className="h-6 w-6" />,
     toolCount: 4,
   },
   {
-    name: "PDF Tools",
-    description: "Merge, split, compress, convert, OCR, and sign PDFs locally",
+    name: "Work with PDFs",
+    description: "Merge, split, compress, convert, OCR, and sign PDFs locally in your browser",
     href: "/tools",
     icon: <FileType className="h-6 w-6" />,
     toolCount: TOOL_CATALOGUE.filter((tool) => tool.available).length,
   },
   {
-    name: "Status and Uptime",
+    name: "Check Site Status",
     description: "Check whether a website is down, reachable, and responding in real time",
     href: "/site-status",
     icon: <Wifi className="h-6 w-6" />,
     toolCount: 1,
   },
   {
-    name: "Calculators",
-    description: "External calculator suite for finance, maths, and practical day-to-day calculations",
+    name: "Use Calculators (Sister Site)",
+    description: "Open Plain Figures for finance, maths, and day-to-day calculator workflows",
     href: "https://plainfigures.org",
     icon: <Calculator className="h-6 w-6" />,
     external: true,
@@ -335,6 +335,11 @@ const richSections = [
 
 const visibilityCards = [
   {
+    title: "Open PDF tools",
+    description: "Go straight to merge, split, compress, convert, signing, OCR, and security workflows.",
+    href: "/tools",
+  },
+  {
     title: "Check if a site is down",
     description: "Use the site status checker to quickly confirm uptime and response behaviour.",
     href: "/site-status",
@@ -406,7 +411,25 @@ export default function HomePage() {
               >
                 Check site status
               </Link>
+              <Link
+                href="/learn"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-6 py-3",
+                  "bg-card border border-white/[0.12] text-foreground font-semibold",
+                  "shadow-[0_4px_24px_rgba(0,0,0,0.5)]",
+                  "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
+                )}
+              >
+                Read practical guides
+              </Link>
             </div>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Core PDF tools stay free. See{" "}
+              <Link href="/pricing" className="font-medium text-accent hover:underline">
+                pricing
+              </Link>{" "}
+              for advanced and upcoming Pro features.
+            </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link
                 href="/network-tools"
@@ -521,6 +544,32 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="border-b border-border/50 px-4 py-8">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 rounded-xl border border-border bg-card/35 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              Looking for calculators or time-conversion utilities? Visit our sister projects.
+            </p>
+            <div className="flex flex-wrap gap-2 text-sm">
+              <Link
+                href="https://plainfigures.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                Plain Figures - calculator-focused sister site
+              </Link>
+              <Link
+                href="https://timemeaning.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                TimeMeaning - time and timezone clarity
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Categories Section */}
         <section className="border-b border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-16 md:py-18">
@@ -529,7 +578,7 @@ export default function HomePage() {
                 Categories
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Pick a section by task type, then jump straight into a working tool.
+                Start with a clear task, then jump straight into a working tool.
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
