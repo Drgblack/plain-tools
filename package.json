@@ -68,6 +68,7 @@
     "pdf-lib-with-encrypt": "^1.2.1",
     "pdfjs-dist": "5.4.624",
     "pptxgenjs": "^4.0.1",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-day-picker": "9.13.2",
     "react-dom": "19.2.4",

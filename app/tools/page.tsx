@@ -28,6 +28,7 @@ export default function ToolsPage() {
   const popularTools = [
     { label: "Merge PDF", href: "/tools/merge-pdf" },
     { label: "Split PDF", href: "/tools/split-pdf" },
+    { label: "Compare PDF Files", href: "/tools/compare-pdf" },
     { label: "Compress PDF", href: "/tools/compress-pdf" },
     { label: "PDF to Word", href: "/tools/pdf-to-word" },
     { label: "Word to PDF", href: "/tools/word-to-pdf" },
@@ -42,6 +43,7 @@ export default function ToolsPage() {
         { label: "PDF to Word", href: "/tools/pdf-to-word" },
         { label: "Word to PDF", href: "/tools/word-to-pdf" },
         { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
+        { label: "PDF to HTML", href: "/tools/pdf-to-html" },
         { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
       ],
     },
@@ -50,6 +52,9 @@ export default function ToolsPage() {
       links: [
         { label: "Merge PDF", href: "/tools/merge-pdf" },
         { label: "Split PDF", href: "/tools/split-pdf" },
+        { label: "Compare PDF Files", href: "/tools/compare-pdf" },
+        { label: "Rotate PDF Pages", href: "/tools/rotate-pdf" },
+        { label: "Annotate PDF", href: "/tools/annotate-pdf" },
         { label: "Reorder PDF", href: "/tools/reorder-pdf" },
         { label: "Extract PDF", href: "/tools/extract-pdf" },
       ],
@@ -58,6 +63,7 @@ export default function ToolsPage() {
       title: "Secure",
       links: [
         { label: "Sign PDF", href: "/tools/sign-pdf" },
+        { label: "Add Watermark to PDF", href: "/tools/watermark-pdf" },
         { label: "Protect PDF", href: "/tools/protect-pdf" },
         { label: "Unlock PDF", href: "/tools/unlock-pdf" },
         { label: "Metadata Purge", href: "/tools/metadata-purge" },
@@ -70,6 +76,14 @@ export default function ToolsPage() {
         { label: "Compression Preview", href: "/tools/compression-preview" },
         { label: "OCR PDF", href: "/tools/ocr-pdf" },
         { label: "Offline OCR", href: "/tools/offline-ocr" },
+      ],
+    },
+    {
+      title: "File utilities",
+      links: [
+        { label: "Base64 Encode / Decode", href: "/tools/base64" },
+        { label: "File Hash / Checksum", href: "/tools/file-hash" },
+        { label: "QR Code Generator", href: "/tools/qr-code" },
       ],
     },
   ]
@@ -108,6 +122,9 @@ export default function ToolsPage() {
   const crawlableToolSlugs = [
     "merge-pdf",
     "split-pdf",
+    "compare-pdf",
+    "rotate-pdf",
+    "annotate-pdf",
     "compress-pdf",
     "pdf-to-word",
     "word-to-pdf",
@@ -115,6 +132,11 @@ export default function ToolsPage() {
     "pdf-to-jpg",
     "pdf-to-excel",
     "pdf-to-ppt",
+    "pdf-to-html",
+    "base64",
+    "file-hash",
+    "qr-code",
+    "watermark-pdf",
     "sign-pdf",
     "protect-pdf",
     "unlock-pdf",

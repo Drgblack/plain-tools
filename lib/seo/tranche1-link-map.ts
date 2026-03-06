@@ -46,6 +46,19 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
   },
+  "compare-pdf": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "Merge PDFs", href: "/tools/merge-pdf" },
+      { label: "Split PDF", href: "/tools/split-pdf" },
+      { label: "Annotate PDF", href: "/tools/annotate-pdf" },
+    ],
+    comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
+  },
   "compress-pdf": {
     learnLinks: [
       { label: "Compress PDF Without Losing Quality", href: "/learn/compress-pdf-without-losing-quality" },
@@ -156,6 +169,45 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     comparison: { label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" },
   },
+  "pdf-to-html": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "PDF to Excel", href: "/tools/pdf-to-excel" },
+      { label: "Text to PDF", href: "/tools/text-to-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "file-hash": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "Protect PDF", href: "/tools/protect-pdf" },
+      { label: "Unlock PDF", href: "/tools/unlock-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "qr-code": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "File Hash / Checksum", href: "/tools/file-hash" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
   "ocr-pdf": {
     learnLinks: [
       { label: "OCR PDF Without Cloud", href: "/learn/ocr-pdf-without-cloud" },
@@ -181,6 +233,32 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Merge PDFs", href: "/tools/merge-pdf" },
     ],
     comparison: { label: "Plain vs DocuSign", href: "/compare/plain-vs-docusign" },
+  },
+  "watermark-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "Sign PDF", href: "/tools/sign-pdf" },
+      { label: "Protect PDF", href: "/tools/protect-pdf" },
+      { label: "Rotate PDF Pages", href: "/tools/rotate-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "annotate-pdf": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "Sign PDF", href: "/tools/sign-pdf" },
+      { label: "Add Watermark to PDF", href: "/tools/watermark-pdf" },
+      { label: "Rotate PDF Pages", href: "/tools/rotate-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
   },
   "protect-pdf": {
     learnLinks: [

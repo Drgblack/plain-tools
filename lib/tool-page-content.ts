@@ -46,6 +46,20 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "Download single files or ZIP output",
     ],
   },
+  "compare-pdf": {
+    title: "Compare PDF Files Locally - No Upload | Plain Tools",
+    description:
+      "Compare two PDF files locally with page-by-page text diff and highlighted word changes in your browser.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort text diff. Visual layout-only changes and scanned image differences may not appear without extractable text.",
+    featureList: [
+      "Two-file local PDF comparison",
+      "Page-by-page text extraction",
+      "Line and word-level change highlights",
+      "No-upload local processing",
+    ],
+  },
   "compress-pdf": {
     title: "Compress PDF Locally - No Upload | Plain Tools",
     description:
@@ -58,6 +72,48 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "Before and after size comparison",
       "No upload compression workflow",
       "Fast browser-side output",
+    ],
+  },
+  "rotate-pdf": {
+    title: "Rotate PDF Pages Locally - No Upload | Plain Tools",
+    description:
+      "Rotate PDF pages by 90, 180, or 270 degrees locally with visual thumbnail previews and no uploads.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Rotation changes page orientation only and does not crop or reorder existing page content.",
+    featureList: [
+      "Per-page rotation control",
+      "Global rotation shortcuts",
+      "Thumbnail previews before export",
+      "No-upload local processing",
+    ],
+  },
+  "watermark-pdf": {
+    title: "Add Watermark to PDF Locally - No Upload | Plain Tools",
+    description:
+      "Add text or image watermarks to PDF pages locally with opacity and placement controls and no uploads.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Watermarks are visual overlays. They improve document labelling but do not encrypt or lock content.",
+    featureList: [
+      "Text or image watermark mode",
+      "Opacity, size, colour, and position controls",
+      "Apply overlays across all pages",
+      "No-upload local processing",
+    ],
+  },
+  "annotate-pdf": {
+    title: "Annotate PDF Locally - No Upload | Plain Tools",
+    description:
+      "Annotate PDF pages locally with pen, highlight, and text tools in a browser overlay workspace with no uploads.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort annotation. This tool embeds visible marks and labels but does not support collaborative comments.",
+    featureList: [
+      "Pen, highlight, and text annotation tools",
+      "Per-page canvas overlay workspace",
+      "Thumbnail page navigation",
+      "Local browser-only processing",
     ],
   },
   "pdf-to-word": {
@@ -84,6 +140,20 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "Offline-first browser processing",
       "No server upload",
       "Direct PDF download",
+    ],
+  },
+  "text-to-pdf": {
+    title: "Text to PDF Locally - No Upload | Plain Tools",
+    description:
+      "Convert plain text or Markdown to PDF locally in your browser without uploading files.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Markdown rendering is best-effort and supports core formatting only (headings, bold, italic).",
+    featureList: [
+      "Paste text or Markdown",
+      "Load .txt and .md files locally",
+      "Generate wrapped multi-page PDFs",
+      "No-upload browser processing",
     ],
   },
   "pdf-to-jpg": {
@@ -137,6 +207,48 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "Local page rendering and export",
       "No server upload",
       "Download .pptx directly",
+    ],
+  },
+  "pdf-to-html": {
+    title: "PDF to HTML Locally - No Upload | Plain Tools",
+    description:
+      "Convert PDF files to HTML locally in your browser with extracted text and optional embedded page previews.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort conversion. Complex layouts, fonts, and positioning may differ from the source PDF.",
+    featureList: [
+      "Extract PDF page text to HTML",
+      "Optional embedded page preview images",
+      "Single downloadable .html output",
+      "No-upload local browser processing",
+    ],
+  },
+  "file-hash": {
+    title: "File Hash / Checksum Locally - No Upload | Plain Tools",
+    description:
+      "Compute SHA-256, MD5, SHA-1, and SHA-512 checksums for local files directly in your browser.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Checksums verify integrity but do not encrypt file content. Use SHA-256 for modern integrity workflows.",
+    featureList: [
+      "SHA-256, MD5, SHA-1, and SHA-512 support",
+      "Hex digest output with copy action",
+      "No-upload local browser hashing",
+      "Works with any file type",
+    ],
+  },
+  "qr-code": {
+    title: "QR Code Generator Locally - No Upload | Plain Tools",
+    description:
+      "Generate QR codes for URLs or text locally in your browser with size, error correction, and colour options.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Very long text payloads can reduce scan reliability on older cameras. Keep payloads concise where possible.",
+    featureList: [
+      "URL and text QR generation",
+      "Configurable size and error correction",
+      "Foreground and background colour controls",
+      "PNG and SVG downloads",
     ],
   },
   "sign-pdf": {

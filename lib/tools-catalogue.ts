@@ -8,6 +8,9 @@ import type { LocalSigningKeyInput, ProcessingStage } from "./pdf-security-engin
 
 export type ToolCategory =
   | "Core"
+  | "Edit"
+  | "File Tools"
+  | "Utility"
   | "Security & Privacy"
   | "Performance & Edit"
   | "AI Assistant"
@@ -80,6 +83,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     },
   },
   {
+    id: "compare-pdf",
+    name: "Compare PDF Files",
+    slug: "compare-pdf",
+    category: "Core",
+    description:
+      "Compare two PDFs locally using page-by-page text diff with highlighted changes.",
+    badge: "100% Local",
+    icon: "FileSearch",
+    available: true,
+  },
+  {
     id: "compress-pdf",
     name: "Compress PDF",
     slug: "compress-pdf",
@@ -112,6 +126,38 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
       const { plainWebGPUPageOrganiser } = await import("./page-organiser-engine")
       return await plainWebGPUPageOrganiser(file, operations, options)
     },
+  },
+  {
+    id: "rotate-pdf",
+    name: "Rotate PDF Pages",
+    slug: "rotate-pdf",
+    category: "Core",
+    description: "Rotate individual pages or all pages in a PDF locally with thumbnail preview controls.",
+    badge: "100% Local",
+    icon: "RefreshCw",
+    available: true,
+  },
+  {
+    id: "watermark-pdf",
+    name: "Add Watermark to PDF",
+    slug: "watermark-pdf",
+    category: "Security & Privacy",
+    description:
+      "Apply text or image watermarks to PDF pages locally with opacity, position, size, and colour controls.",
+    badge: "100% Local",
+    icon: "PencilLine",
+    available: true,
+  },
+  {
+    id: "annotate-pdf",
+    name: "Annotate PDF",
+    slug: "annotate-pdf",
+    category: "Edit",
+    description:
+      "Annotate PDF pages locally with pen, highlight, and text tools in a browser overlay workspace.",
+    badge: "100% Local",
+    icon: "PenTool",
+    available: true,
   },
   {
     id: "extract-pages",
@@ -232,6 +278,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "pdf-to-html",
+    name: "PDF to HTML",
+    slug: "pdf-to-html",
+    category: "Core",
+    description:
+      "Convert PDF files to HTML locally with extracted text and optional embedded page previews.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
     id: "jpg-to-pdf",
     name: "JPG to PDF",
     slug: "jpg-to-pdf",
@@ -249,6 +306,50 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     description: "Convert DOCX files to PDF in your browser with best-effort layout preservation.",
     badge: "100% Local",
     icon: "FileType",
+    available: true,
+  },
+  {
+    id: "text-to-pdf",
+    name: "Text to PDF",
+    slug: "text-to-pdf",
+    category: "Core",
+    description:
+      "Convert plain text or Markdown into a local PDF using browser-side processing with no uploads.",
+    badge: "100% Local",
+    icon: "FileText",
+    available: true,
+  },
+  {
+    id: "base64-encode-decode",
+    name: "Base64 Encode / Decode",
+    slug: "base64",
+    category: "File Tools",
+    description:
+      "Encode text or files to Base64 and decode Base64 back into text or downloadable files locally in your browser.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "file-hash-checksum",
+    name: "File Hash / Checksum",
+    slug: "file-hash",
+    category: "File Tools",
+    description:
+      "Compute SHA-256, MD5, SHA-1, and SHA-512 checksums for local files in your browser.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "qr-code-generator",
+    name: "QR Code Generator",
+    slug: "qr-code",
+    category: "Utility",
+    description:
+      "Generate QR codes for links or text locally with size, error correction, and colour controls.",
+    badge: "100% Local",
+    icon: "QrCode",
     available: true,
   },
   {

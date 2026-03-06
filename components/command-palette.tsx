@@ -14,6 +14,8 @@ import {
   Network,
   Wifi,
   FileCode,
+  FileSearch,
+  QrCode,
   FileImage,
   FileSpreadsheet,
   Presentation,
@@ -51,7 +53,11 @@ const commands: CommandItem[] = [
   // PDF Tools
   { id: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDFs into one file", href: "/tools/merge-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   { id: "split-pdf", name: "Split PDF", description: "Split one PDF by ranges or pages", href: "/tools/split-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "compare-pdf", name: "Compare PDF Files", description: "Compare two PDFs with text diff highlights", href: "/tools/compare-pdf", icon: <FileSearch className="h-4 w-4" />, category: "PDF Tools" },
   { id: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size", href: "/tools/compress-pdf", icon: <Minimize2 className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "rotate-pdf", name: "Rotate PDF Pages", description: "Rotate pages by 90, 180, or 270 degrees", href: "/tools/rotate-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "annotate-pdf", name: "Annotate PDF", description: "Add pen, highlight, and text annotations", href: "/tools/annotate-pdf", icon: <PenTool className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "watermark-pdf", name: "Add Watermark to PDF", description: "Overlay text or image watermark on each page", href: "/tools/watermark-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   { id: "sign-pdf", name: "Sign PDF", description: "Place a visual signature locally", href: "/tools/sign-pdf", icon: <PenTool className="h-4 w-4" />, category: "PDF Tools" },
   { id: "protect-pdf", name: "Protect PDF", description: "Encrypt a PDF with a password", href: "/tools/protect-pdf", icon: <Lock className="h-4 w-4" />, category: "PDF Tools" },
   { id: "unlock-pdf", name: "Unlock PDF", description: "Remove PDF password protection locally", href: "/tools/unlock-pdf", icon: <Unlock className="h-4 w-4" />, category: "PDF Tools" },
@@ -60,11 +66,16 @@ const commands: CommandItem[] = [
   { id: "pdf-to-jpg", name: "PDF to JPG", description: "Convert PDF pages to JPG images", href: "/tools/pdf-to-jpg", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-excel", name: "PDF to Excel", description: "Extract table-like data to CSV", href: "/tools/pdf-to-excel", icon: <FileSpreadsheet className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-ppt", name: "PDF to PowerPoint", description: "Convert PDF pages into slides", href: "/tools/pdf-to-ppt", icon: <Presentation className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "pdf-to-html", name: "PDF to HTML", description: "Export PDF pages as HTML with extracted text", href: "/tools/pdf-to-html", icon: <FileCode className="h-4 w-4" />, category: "PDF Tools" },
   { id: "jpg-to-pdf", name: "JPG to PDF", description: "Combine images into a PDF", href: "/tools/jpg-to-pdf", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "word-to-pdf", name: "Word to PDF", description: "Convert .docx to PDF", href: "/tools/word-to-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "text-to-pdf", name: "Text to PDF", description: "Convert plain text or Markdown to PDF", href: "/tools/text-to-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
   
   // File Tools
   { id: "file-converters", name: "File Converters", description: "Convert between formats", href: "/file-converters", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "base64", name: "Base64 Encode / Decode", description: "Encode or decode text and files locally", href: "/tools/base64", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "file-hash", name: "File Hash / Checksum", description: "Compute SHA-256, MD5, SHA-1, or SHA-512 hash values", href: "/tools/file-hash", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "qr-code", name: "QR Code Generator", description: "Generate scannable QR codes for URLs or text", href: "/tools/qr-code", icon: <QrCode className="h-4 w-4" />, category: "Utility" },
   
   // Company
   { id: "about", name: "About", description: "Learn about plain.tools", href: "/about", icon: <Info className="h-4 w-4" />, category: "Company" },

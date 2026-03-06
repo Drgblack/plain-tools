@@ -28,6 +28,10 @@ type ToolComponent = ComponentType | LazyExoticComponent<ComponentType>
 const toolComponents: Record<string, ToolComponent> = {
   "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
   "split-pdf": lazy(() => import("@/components/tools/split-pdf-tool")),
+  "compare-pdf": lazy(() => import("@/components/tools/compare-pdf-tool")),
+  "rotate-pdf": lazy(() => import("@/components/tools/rotate-pdf-tool")),
+  "annotate-pdf": lazy(() => import("@/components/tools/annotate-pdf-tool")),
+  "watermark-pdf": lazy(() => import("@/components/tools/watermark-pdf-tool")),
   "compress-pdf": lazy(() => import("@/components/tools/compress-pdf-tool")),
   "irreversible-redactor": lazy(() => import("@/components/tools/redact-tool")),
   "redact-pdf": lazy(() => import("@/components/tools/redact-tool")),
@@ -47,7 +51,11 @@ const toolComponents: Record<string, ToolComponent> = {
   "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
   "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
   "pdf-to-ppt": lazy(() => import("@/components/tools/pdf-to-ppt-tool")),
+  "pdf-to-html": lazy(() => import("@/components/tools/pdf-to-html-tool")),
   "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
+  "text-to-pdf": lazy(() => import("@/components/tools/text-to-pdf-tool")),
+  "file-hash": lazy(() => import("@/components/tools/file-hash-tool")),
+  "qr-code": lazy(() => import("@/components/tools/qr-code-tool")),
 }
 
 const FallbackToolComponent = () => <div>Tool UI coming soon</div>
