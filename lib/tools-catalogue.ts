@@ -169,6 +169,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "pdf-to-excel",
+    name: "PDF to Excel",
+    slug: "pdf-to-excel",
+    category: "Core",
+    description:
+      "Extract table-like data from PDFs locally and export spreadsheet-ready CSV output.",
+    badge: "100% Local",
+    icon: "FileSpreadsheet",
+    available: true,
+  },
+  {
     id: "jpg-to-pdf",
     name: "JPG to PDF",
     slug: "jpg-to-pdf",
