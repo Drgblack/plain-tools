@@ -6,6 +6,8 @@ type ToolPageProfile = {
   trustPoints: string[]
   limitation: string
   featureList: string[]
+  overview?: string
+  useCases?: string[]
 }
 
 const DEFAULT_TRUST_POINTS = [
@@ -207,12 +209,26 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
   },
 }
 
-export type ResolvedToolPageProfile = ToolPageProfile
+export type ResolvedToolPageProfile = ToolPageProfile & {
+  overview: string
+  useCases: string[]
+}
 
 export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfile {
   const profile = TOOL_PAGE_PROFILES[tool.slug]
   if (profile) {
-    return profile
+    return {
+      ...profile,
+      overview:
+        profile.overview ??
+        `${tool.name} runs in your browser for local, private document handling. Process files directly on your device without a server-side upload step for core workflows.`,
+      useCases:
+        profile.useCases ?? [
+          "Prepare documents quickly before sharing or archiving.",
+          "Handle privacy-sensitive files without third-party upload workflows.",
+          "Run practical browser-first tasks on desktop or mobile.",
+        ],
+    }
   }
 
   return {
@@ -226,6 +242,12 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       "No upload workflow",
       "Fast private output",
       "Cross-device compatible",
+    ],
+    overview: `${tool.name} runs locally in your browser. This keeps file handling on your device for faster, private workflow control.`,
+    useCases: [
+      "Quick day-to-day document tasks",
+      "Private handling for sensitive files",
+      "Simple browser-based processing without extra software",
     ],
   }
 }

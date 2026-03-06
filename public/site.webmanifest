@@ -1,22 +1,27 @@
 {
-  "name": "Plain",
+  "name": "Plain Tools",
   "short_name": "Plain",
-  "description": "Offline PDF tools that run entirely in your browser.",
+  "description": "Privacy-first browser tools for PDF, file, and network workflows.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#1A1B1F",
-  "theme_color": "#1A1B1F",
+  "background_color": "#0b0d0f",
+  "theme_color": "#0b0d0f",
   "icons": [
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     },
     {
-      "src": "/apple-icon.svg",
-      "sizes": "180x180",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-dark-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
     }
   ]
 }

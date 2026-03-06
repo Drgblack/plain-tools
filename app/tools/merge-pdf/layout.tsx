@@ -1,18 +1,18 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Merge PDFs",
+  title: "Merge PDFs Locally - No Upload | Plain Tools",
   description:
-    "Merge multiple PDF files into one document with private local browser processing, drag reorder support, and zero upload requirements for sensitive workflows.",
+    "Merge multiple PDF files into one document locally in your browser. Private workflow, drag reordering, and no upload requirement.",
   openGraph: {
-    title: "Merge PDFs - Plain",
+    title: "Merge PDFs Locally - No Upload | Plain Tools",
     description:
-      "Merge multiple PDFs with local browser processing, fast output generation, and no server uploads for private document handling.",
+      "Merge multiple PDFs locally in your browser with private processing and no server uploads.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Merge PDFs - Plain",
-    description: "Plain combines multiple PDF files into one document. Processing happens locally in your browser.",
+    title: "Merge PDFs Locally - No Upload | Plain Tools",
+    description: "Combine multiple PDF files locally in your browser with no upload requirement.",
   },
   alternates: {
     canonical: "https://plain.tools/tools/merge-pdf",

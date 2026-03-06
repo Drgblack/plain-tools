@@ -241,6 +241,8 @@ const legacyBlogSlugRedirects = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Force metadata to be included in the initial HTML for all user agents.
+  htmlLimitedBots: /.*/,
   async redirects() {
     return [
       { source: "/pdf-tools/tools", destination: "/tools", permanent: true },

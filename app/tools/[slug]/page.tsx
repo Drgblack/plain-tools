@@ -222,6 +222,33 @@ export default async function ToolPage({ params }: PageProps) {
                 <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
               </section>
 
+              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                  What this tool does
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {profile.overview}
+                </p>
+                <ul className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+                  {profile.featureList.map((feature) => (
+                    <li key={feature} className="rounded-lg border border-border/60 bg-background/60 px-3 py-2">
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                  When to use {tool.name}
+                </h2>
+                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
+                  {profile.useCases.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+
               <section className="mb-3">
                 <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -245,6 +272,13 @@ export default async function ToolPage({ params }: PageProps) {
                 <p className="font-medium text-foreground">Result experience</p>
                 <p className="mt-1 text-muted-foreground">
                   When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.
+                </p>
+              </section>
+
+              <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
+                <p className="font-medium text-foreground">Known limitations</p>
+                <p className="mt-1 text-muted-foreground">
+                  {profile.limitation} For complex files, run a quick output check before sharing or archiving.
                 </p>
               </section>
 
