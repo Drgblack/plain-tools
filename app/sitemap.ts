@@ -4,6 +4,7 @@ import { converterSitemapUrls } from "@/lib/seo/file-converters-content"
 import { seoMdxSitemapUrls } from "@/lib/seo/mdx-page-registry"
 import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
+import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 const BASE_URL = "https://plain.tools"
@@ -70,5 +71,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path.startsWith("/compare/") ? 0.75 : 0.8,
   }))
 
-  return [homepage, ...staticHigh, ...staticCore, ...toolPages, ...tranchePages]
+  const blogIndex = {
+    url: `${BASE_URL}/blog`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }
+
+  const blogCategoryPages = blogCategories
+    .filter((category) => category.slug !== "all")
+    .map((category) => ({
+      url: `${BASE_URL}/blog/category/${category.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }))
+
+  const blogPostPages = blogPosts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }))
+
+  const entries = [
+    homepage,
+    ...staticHigh,
+    ...staticCore,
+    blogIndex,
+    ...blogCategoryPages,
+    ...blogPostPages,
+    ...toolPages,
+    ...tranchePages,
+  ]
+
+  const deduped = new Map<string, MetadataRoute.Sitemap[number]>()
+  for (const entry of entries) {
+    deduped.set(entry.url, entry)
+  }
+
+  return Array.from(deduped.values())
 }

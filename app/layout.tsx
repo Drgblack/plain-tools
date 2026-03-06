@@ -4,33 +4,52 @@ import { AppShellChrome } from '@/components/app-shell-chrome'
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 const themeInitScript = buildThemeInitScript()
 
 export const metadata: Metadata = {
   title: {
-    default: 'Plain Tools - Fast, Private Browser Tools',
-    template: '%s | Plain Tools',
+    default: "Plain.tools - Private Browser PDF Tools",
+    template: "%s | Plain.tools",
   },
-  description: 'Plain Tools is a privacy-first collection of browser utilities for file conversion, networking diagnostics, and developer tools. All tools run locally on your device without uploading files to external servers.',
-  generator: 'plain.tools',
-  keywords: ['privacy tools', 'browser tools', 'file converter', 'PDF tools', 'network tools', 'no upload', 'local processing', 'WebAssembly'],
-  authors: [{ name: 'Plain Tools' }],
-  creator: 'Plain Tools',
-  metadataBase: new URL('https://plain.tools'),
+  description:
+    "Plain.tools offers privacy-first browser utilities for PDF workflows and practical file tasks. Files are processed locally with no upload requirement.",
+  generator: "plain.tools",
+  keywords: [
+    "offline PDF tools",
+    "private PDF tools",
+    "client-side PDF processing",
+    "no upload PDF",
+    "local processing",
+    "WebAssembly PDF",
+  ],
+  authors: [{ name: "Plain.tools" }],
+  creator: "Plain.tools",
+  metadataBase: new URL("https://plain.tools"),
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://plain.tools',
-    siteName: 'Plain Tools',
-    title: 'Plain Tools - Fast, Private Browser Tools',
-    description: 'Fast, private tools that run locally in your browser. No uploads, no tracking, just tools.',
+    type: "website",
+    locale: "en_GB",
+    url: "https://plain.tools",
+    siteName: "Plain.tools",
+    title: "Plain.tools - Private Browser PDF Tools",
+    description:
+      "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
+    images: [
+      {
+        url: "/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Plain.tools",
+      },
+    ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Plain Tools - Fast, Private Browser Tools',
-    description: 'Fast, private tools that run locally in your browser. No uploads, no tracking, just tools.',
+    card: "summary_large_image",
+    title: "Plain.tools - Private Browser PDF Tools",
+    description:
+      "Private PDF and file workflows that run locally in your browser. No uploads for core local tools.",
+    images: ["/og/default.png"],
   },
   robots: {
     index: true,
@@ -72,7 +91,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="font-sans antialiased min-h-screen flex flex-col bg-background text-foreground">
+      <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
         <AppShellChrome>{children}</AppShellChrome>
       </body>
     </html>

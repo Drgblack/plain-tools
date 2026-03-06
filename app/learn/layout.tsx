@@ -1,11 +1,32 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Learn Offline PDF Privacy, Security, and Client-Side Processing",
+  title: "Learn - Privacy-First PDF Guides | Plain.tools",
   description:
-    "Explore Plain Learn guides on offline PDF privacy, metadata risks, secure redaction, local OCR, WebAssembly architecture, and verifiable no-upload workflows.",
+    "Read practical guides on private PDF workflows, local browser processing, and no-upload verification.",
   alternates: {
     canonical: "https://plain.tools/learn",
+  },
+  openGraph: {
+    title: "Learn - Privacy-First PDF Guides | Plain.tools",
+    description:
+      "Practical guides on local PDF processing, privacy checks, and reliable no-upload workflows.",
+    url: "https://plain.tools/learn",
+    images: [
+      {
+        url: "/og/learn.png",
+        width: 1200,
+        height: 630,
+        alt: "Plain.tools learn centre",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Learn - Privacy-First PDF Guides | Plain.tools",
+    description:
+      "Guides for private PDF workflows and browser-local processing.",
+    images: ["/og/learn.png"],
   },
 }
 
@@ -16,4 +37,3 @@ export default function LearnLayout({
 }) {
   return children
 }
-

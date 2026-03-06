@@ -192,7 +192,7 @@ function createWorkflowArticle(config: WorkflowConfig): TrancheLearnArticle {
       },
       {
         label: "Browse all PDF tools",
-        href: "/pdf-tools/tools",
+        href: "/tools",
       },
       {
         label: "Privacy guide: No Uploads Explained",

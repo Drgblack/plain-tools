@@ -40,15 +40,16 @@ import { TOOL_CATALOGUE, type ToolCategory, type ToolDefinition } from "@/lib/to
 type CategoryConfig = {
   id: "All" | ToolCategory
   label: string
+  hint: string
   icon: LucideIcon
 }
 
 const CATEGORY_CONFIG: CategoryConfig[] = [
-  { id: "All", label: "All", icon: Layers },
-  { id: "Core", label: "Core", icon: Layers },
-  { id: "Security & Privacy", label: "Security & Privacy", icon: ShieldAlert },
-  { id: "Performance & Edit", label: "Performance & Edit", icon: LayoutGrid },
-  { id: "AI Assistant", label: "AI Assistant", icon: Sparkles },
+  { id: "All", label: "All", hint: "Everything", icon: Layers },
+  { id: "Core", label: "Convert and organise", hint: "Core workflows", icon: Layers },
+  { id: "Security & Privacy", label: "Secure", hint: "Protect and sign", icon: ShieldAlert },
+  { id: "Performance & Edit", label: "Optimise and OCR", hint: "Performance tools", icon: LayoutGrid },
+  { id: "AI Assistant", label: "AI assist", hint: "Opt-in AI", icon: Sparkles },
 ]
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -241,6 +242,9 @@ export function ToolsSection() {
           </div>
           <p className="mt-1 text-right text-[11px] text-muted-foreground/70 md:hidden">
             Swipe to view categories
+          </p>
+          <p className="mt-2 text-[11px] text-muted-foreground/70">
+            {CATEGORY_CONFIG.find((category) => category.id === activeCategory)?.hint ?? "Everything"}
           </p>
         </div>
 

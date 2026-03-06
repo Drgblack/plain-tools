@@ -7,7 +7,7 @@ const footerSections = [
     links: [
       { name: "Network Tools", href: "/network-tools" },
       { name: "File Tools", href: "/file-tools" },
-      { name: "PDF Tools", href: "/pdf-tools" },
+      { name: "PDF Tools", href: "/tools" },
       { name: "Calculators", href: "https://plainfigures.org", external: true },
     ],
   },
@@ -16,13 +16,15 @@ const footerSections = [
     links: [
       { name: "What is My IP", href: "/what-is-my-ip" },
       { name: "DNS Lookup", href: "/dns-lookup" },
-      { name: "Compress PDF", href: "/compress-pdf" },
-      { name: "PDF to Word", href: "/pdf-to-word" },
+      { name: "Compress PDF", href: "/tools/compress-pdf" },
+      { name: "PDF to Word", href: "/tools/pdf-to-word" },
     ],
   },
   {
-    title: "Company",
+    title: "Resources",
     links: [
+      { name: "Learn", href: "/learn" },
+      { name: "Compare", href: "/compare" },
       { name: "About", href: "/about" },
       { name: "Privacy", href: "/privacy" },
     ],

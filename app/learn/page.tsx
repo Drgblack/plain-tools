@@ -147,6 +147,27 @@ export default function LearnPage() {
               Topics include <KeyTerm>WebAssembly</KeyTerm> for local document manipulation, <KeyTerm>WebGPU</KeyTerm> for AI-powered features, 
               permanent redaction techniques, and optimising large file handling in RAM-constrained environments.
             </SummaryBox>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Link
+                href="/tools"
+                className="rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-white/80 transition hover:border-[#0070f3]/60 hover:text-[#7bc3ff]"
+              >
+                Browse PDF tools
+              </Link>
+              <Link
+                href="/compare"
+                className="rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-white/80 transition hover:border-[#0070f3]/60 hover:text-[#7bc3ff]"
+              >
+                Compare alternatives
+              </Link>
+              <Link
+                href="/verify-claims"
+                className="rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-white/80 transition hover:border-[#0070f3]/60 hover:text-[#7bc3ff]"
+              >
+                Verify no-upload claims
+              </Link>
+            </div>
             
   {/* Search Bar with Focus Dim */}
   <div className="mt-6 max-w-xl">
@@ -288,7 +309,8 @@ export default function LearnPage() {
               {[
                 { label: "Home", href: "/" },
                 { label: "Tools", href: "/tools" },
-                { label: "Labs", href: "/labs" },
+                { label: "Compare", href: "/compare" },
+                { label: "Guides", href: "/learn/no-uploads-explained" },
                 { label: "Verification", href: "/verify-claims" },
                 { label: "Privacy Policy", href: "/privacy" },
               ].map((link) => (

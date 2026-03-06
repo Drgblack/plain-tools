@@ -26,7 +26,7 @@ export function buildLearnArticleMetadata(
 ): Metadata {
   const basePath = options?.basePath ?? "/learn"
   const canonical = `${BASE_URL}${basePath}/${article.slug}`
-  const title = `${titleCase(article.primaryQuery)} - Offline & Private | Plain.tools`
+  const title = article.metaTitle.replace("Plain Tools", "Plain.tools") || `${titleCase(article.primaryQuery)} - Offline & Private | Plain.tools`
   return {
     title,
     description: article.metaDescription,
@@ -38,11 +38,20 @@ export function buildLearnArticleMetadata(
       description: article.metaDescription,
       url: canonical,
       type: "article",
+      images: [
+        {
+          url: "/og/learn.png",
+          width: 1200,
+          height: 630,
+          alt: `${article.title} guide`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: article.metaDescription,
+      images: ["/og/learn.png"],
     },
   }
 }
@@ -167,7 +176,7 @@ export function LearnArticleTemplate({
             },
             {
               title: "PDF tools hub",
-              links: [{ label: "Browse all PDF tools", href: "/pdf-tools/tools" }],
+              links: [{ label: "Browse all PDF tools", href: "/tools" }],
             },
             {
               title: "Learn hub",

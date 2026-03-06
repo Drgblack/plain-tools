@@ -10,16 +10,9 @@ import { getToolBySlug } from "@/lib/tools-catalogue"
 
 const BASE_URL = "https://plain.tools"
 
-function titleCase(value: string) {
-  return value
-    .split(" ")
-    .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
-    .join(" ")
-}
-
 export function buildComparePageMetadata(page: TrancheComparePage): Metadata {
   const canonical = `${BASE_URL}/compare/${page.slug}`
-  const title = `${titleCase(page.primaryQuery)} - Offline & Private | Plain.tools`
+  const title = page.metaTitle.replace("Plain Tools", "Plain.tools")
   return {
     title,
     description: page.metaDescription,
@@ -31,11 +24,20 @@ export function buildComparePageMetadata(page: TrancheComparePage): Metadata {
       description: page.metaDescription,
       url: canonical,
       type: "article",
+      images: [
+        {
+          url: "/og/compare.png",
+          width: 1200,
+          height: 630,
+          alt: `${page.title} comparison`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: page.metaDescription,
+      images: ["/og/compare.png"],
     },
   }
 }

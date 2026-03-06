@@ -12,12 +12,15 @@ import { cn } from "@/lib/utils"
 const CommandPalette = lazy(() => import("@/components/command-palette").then(mod => ({ default: mod.CommandPalette })))
 
 const navItems = [
+  { name: "Tools", href: "/tools" },
+  { name: "Learn", href: "/learn" },
+  { name: "Compare", href: "/compare" },
   { name: "Network", href: "/network-tools" },
   { name: "File", href: "/file-tools" },
   { name: "PDF Tools", href: "/pdf-tools" },
   { name: "Calculators", href: "https://plainfigures.org", external: true },
-  { name: "About", href: "/about" },
   { name: "Verify", href: "/verify-claims" },
+  { name: "About", href: "/about" },
   { name: "TimeMeaning", href: "https://timemeaning.com", external: true },
 ]
 

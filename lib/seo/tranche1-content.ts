@@ -360,35 +360,51 @@ const buildCompare = (
   comparisonRows: compareRows(competitorName),
   sections: [
     {
-      id: "model",
-      heading: "Processing model",
+      id: "quick-summary",
+      heading: "Quick summary",
       paragraphs: [
-        `${competitorName} routes commonly involve online infrastructure and provider-managed processing.`,
-        "Plain core tools execute on-device in browser runtime for local-first handling.",
+        `${competitorName} can suit account-led, cloud-centric workflows. Plain.tools suits privacy-first workflows where local processing is required.`,
+        "Use both fit criteria and technical verification, not feature lists alone.",
       ],
     },
     {
       id: "privacy",
-      heading: "Privacy and trust model",
+      heading: "Privacy and data handling",
       paragraphs: [
         "Upload-based processing depends on policy and controls in external systems.",
-        "Local-first processing reduces transfer and retention exposure for sensitive workflows.",
+        "Local-first processing reduces transfer and retention exposure for sensitive workflows and can be verified in DevTools.",
       ],
     },
     {
-      id: "workflow",
-      heading: "Workflow and governance fit",
+      id: "speed-workflow",
+      heading: "Speed and workflow comparison",
       paragraphs: [
-        "Cloud suites can suit collaboration-heavy teams with centralised account controls.",
-        "Local-first routes usually fit teams prioritising minimal data transfer and direct verification.",
+        "Cloud workflows add upload and download steps that may be acceptable for low-sensitivity tasks.",
+        "Local workflows remove upload waiting and keep handling closer to the operator.",
       ],
     },
     {
-      id: "verdict",
-      heading: "Practical verdict",
+      id: "best-for",
+      heading: "Best-for guidance",
       paragraphs: [
-        "Choose based on document sensitivity, control requirements, and policy obligations.",
-        "For strict no-upload constraints, local architecture is usually decisive.",
+        `Choose ${competitorName} when account integration and hosted collaboration are primary requirements.`,
+        "Choose Plain.tools when no-upload handling, privacy verification, and fast local execution are priorities.",
+      ],
+    },
+    {
+      id: "when-plain",
+      heading: "When to choose Plain.tools",
+      paragraphs: [
+        "You work with sensitive files and need a no-upload workflow.",
+        "You want to verify data handling behaviour directly from the browser.",
+      ],
+    },
+    {
+      id: "when-other",
+      heading: "When another option may suit better",
+      paragraphs: [
+        "You require a vendor-managed signing or review workflow with built-in account routing.",
+        "You prioritise hosted collaboration features over local-only processing controls.",
       ],
     },
   ],

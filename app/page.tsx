@@ -11,7 +11,6 @@ import {
   HardDrive,
   CheckCircle,
   Lock,
-  Zap,
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
@@ -19,11 +18,36 @@ import { CategoryTile } from "@/components/category-tile"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
 import { cn } from "@/lib/utils"
+import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = {
+  title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+  description:
+    "Use Plain.tools for private PDF workflows: merge, split, compress, convert, OCR, and signing. Processed locally in your browser with no uploads.",
   alternates: {
-    canonical: 'https://plain.tools',
+    canonical: "https://plain.tools",
+  },
+  openGraph: {
+    title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+    description:
+      "Calm, practical PDF tools for sensitive documents. Processed locally in your browser with no file uploads.",
+    url: "https://plain.tools",
+    images: [
+      {
+        url: "/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Plain.tools homepage preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Private PDF Tools That Run in Your Browser | Plain.tools",
+    description:
+      "Merge, split, convert, and sign PDFs locally in your browser. No uploads.",
+    images: ["/og/default.png"],
   },
 }
 
@@ -31,8 +55,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Plain Tools',
-  description: 'Plain Tools is a privacy-first collection of browser utilities for file conversion, networking diagnostics, and developer tools. All tools run locally on your device without uploading files to external servers.',
+  name: 'Plain.tools',
+  description: 'Plain.tools is a privacy-first collection of PDF and browser tools that run locally on your device without uploading files to external servers.',
   url: 'https://plain.tools',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
@@ -66,10 +90,10 @@ const categories = [
   },
   {
     name: "PDF Tools",
-    description: "Merge, split, compress, and convert PDFs locally",
-    href: "/pdf-tools",
+    description: "Merge, split, compress, convert, OCR, and sign PDFs locally",
+    href: "/tools",
     icon: <FileType className="h-6 w-6" />,
-    toolCount: 5,
+    toolCount: TOOL_CATALOGUE.filter((tool) => tool.available).length,
   },
   {
     name: "Calculators",
@@ -82,54 +106,54 @@ const categories = [
 
 const popularTools = [
   {
-    name: "What is My IP",
-    description: "View your public IP address and location info",
-    href: "/what-is-my-ip",
-    tags: ["Local", "Edge"],
-    icon: <Globe className="h-5 w-5" />,
-  },
-  {
-    name: "DNS Lookup",
-    description: "Query DNS records for any domain",
-    href: "/dns-lookup",
-    tags: ["Edge", "Worker"],
-    icon: <Server className="h-5 w-5" />,
-  },
-  {
-    name: "Site Status",
-    description: "Check if a website is up or down",
-    href: "/site-status",
-    tags: ["Edge"],
-    icon: <Wifi className="h-5 w-5" />,
+    name: "Merge PDF",
+    description: "Combine multiple PDF files in-browser with no uploads",
+    href: "/tools/merge-pdf",
+    tags: ["Local", "Core"],
+    icon: <FileType className="h-5 w-5" />,
   },
   {
     name: "Compress PDF",
-    description: "Reduce PDF file size without quality loss",
-    href: "/compress-pdf",
-    tags: ["Local", "WASM"],
+    description: "Optimise PDF size locally with clear quality controls",
+    href: "/tools/compress-pdf",
+    tags: ["Local", "Optimise"],
     icon: <FileType className="h-5 w-5" />,
   },
   {
     name: "PDF to Word",
-    description: "Convert PDF documents to editable Word files",
-    href: "/pdf-to-word",
-    tags: ["Local", "WASM"],
+    description: "Convert PDF text to Word locally with best-effort layout retention",
+    href: "/tools/pdf-to-word",
+    tags: ["Local", "Convert"],
     icon: <FileText className="h-5 w-5" />,
   },
   {
-    name: "File Converters",
-    description: "Convert between various file formats",
-    href: "/file-converters",
-    tags: ["Local", "Worker"],
-    icon: <HardDrive className="h-5 w-5" />,
+    name: "Word to PDF",
+    description: "Convert DOCX files to PDF in your browser",
+    href: "/tools/word-to-pdf",
+    tags: ["Local", "Convert"],
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "JPG to PDF",
+    description: "Combine image files into one PDF locally",
+    href: "/tools/jpg-to-pdf",
+    tags: ["Local", "Convert"],
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "Sign PDF",
+    description: "Place a visual signature without uploading your document",
+    href: "/tools/sign-pdf",
+    tags: ["Local", "Secure"],
+    icon: <Lock className="h-5 w-5" />,
   },
 ]
 
 const trustBadges = [
-  { icon: <Lock className="h-4 w-4" />, label: "No uploads" },
+  { icon: <Lock className="h-4 w-4" />, label: "Processed locally" },
+  { icon: <Shield className="h-4 w-4" />, label: "No uploads" },
   { icon: <Eye className="h-4 w-4" />, label: "No tracking" },
-  { icon: <Zap className="h-4 w-4" />, label: "Local-first" },
-  { icon: <CheckCircle className="h-4 w-4" />, label: "Verifiable" },
+  { icon: <CheckCircle className="h-4 w-4" />, label: "Verifiable claims" },
 ]
 
 const privacyClaims = [
@@ -167,25 +191,25 @@ const privacyClaims = [
 
 const browseCategories = [
   { 
-    name: "Network Tools", 
-    href: "/network-tools", 
-    count: 4,
-    description: "IP lookup, DNS queries, and connectivity tests",
-    icon: <Globe className="h-5 w-5" />,
+    name: "All PDF Tools", 
+    href: "/tools", 
+    count: TOOL_CATALOGUE.filter((tool) => tool.available).length,
+    description: "Browse all conversion, organisation, and security workflows",
+    icon: <FileType className="h-5 w-5" />,
   },
   { 
-    name: "File Tools", 
-    href: "/file-tools", 
-    count: 3,
-    description: "Convert and transform files locally",
+    name: "Learn Guides", 
+    href: "/learn", 
+    count: 25,
+    description: "Practical privacy and workflow guides",
     icon: <FileText className="h-5 w-5" />,
   },
   { 
-    name: "PDF Tools", 
-    href: "/pdf-tools", 
-    count: 5,
-    description: "Merge, split, compress, and convert PDFs",
-    icon: <FileType className="h-5 w-5" />,
+    name: "Compare Pages", 
+    href: "/compare", 
+    count: 9,
+    description: "Fair comparisons against upload-based alternatives",
+    icon: <Shield className="h-5 w-5" />,
   },
 ]
 
@@ -204,23 +228,23 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-32">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-              Plain tools.{" "}
-              <span className="text-muted-foreground">Nothing uploaded.</span>
+              Private PDF tools that run in your browser.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-              Fast, private tools that run locally in your browser. No servers, no tracking, just tools.
+              Process sensitive files locally, without upload queues or account friction.
             </p>
             
             {/* Intro paragraph for SEO/GEO */}
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
-              Plain Tools is a collection of fast, privacy-first utilities that run entirely in your browser. 
-              Unlike most online tools, files are never uploaded to a server. Everything happens locally on your device, ensuring speed and privacy.
+              Plain.tools gives you practical PDF workflows for conversion, organisation, signing, and
+              cleanup. Files are processed on your own device, so you can keep control of confidential
+              documents and verify behaviour with DevTools.
             </p>
 
             {/* Primary CTAs */}
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link
-                href="/pdf-tools"
+                href="/tools"
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full px-6 py-3",
                   "bg-accent text-accent-foreground font-semibold",
@@ -254,6 +278,17 @@ export default function HomePage() {
                   {badge.icon}
                   <span>{badge.label}</span>
                 </div>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-2">
+              {["Legal files", "HR records", "Finance packs", "School and admin paperwork"].map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-white/[0.12] bg-card px-3 py-1.5 text-xs text-muted-foreground"
+                >
+                  Best for {item}
+                </span>
               ))}
             </div>
           </div>
@@ -410,17 +445,17 @@ export default function HomePage() {
         <section className="border-t border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-16">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">
-              What is Plain Tools?
+              What is Plain.tools?
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>
-                Plain Tools is a privacy-first collection of browser utilities for everyday tasks 
+                Plain.tools is a privacy-first collection of browser utilities for everyday tasks 
                 such as file conversion, networking diagnostics, and developer tools. All tools 
                 run locally on your device without uploading files to external servers.
               </p>
               <p>
                 Unlike traditional online tools that process your files on remote servers, 
-                Plain Tools uses modern web technologies like WebAssembly and Web Workers to 
+                Plain.tools uses modern web technologies like WebAssembly and Web Workers to 
                 perform all operations directly in your browser. This means your sensitive 
                 documents, images, and data never leave your device.
               </p>
