@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import Link from "next/link"
-import { Globe, Server, Wifi, Radio, ChevronRight } from "lucide-react"
+import { redirect } from "next/navigation"
+import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
-import { generateDynamicToolMetadata, isValidSite } from '@/lib/seo'
+import { generateDynamicToolMetadata } from '@/lib/seo'
 import {
   Accordion,
   AccordionContent,
@@ -12,54 +13,52 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { StatusDynamicClient } from './client'
+import {
+  formatSiteLabel,
+  normalizeSiteInput,
+  STATUS_EXAMPLE_SITES,
+  statusPathFor,
+} from '@/lib/site-status'
 
 interface Props {
   params: Promise<{ site: string }>
 }
 
-// Helper to format site name for display
-function formatSiteName(site: string): string {
-  return site
-    .replace(/^is-/, '')
-    .replace(/-down$/, '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, l => l.toUpperCase())
+function toSiteDisplayName(site: string) {
+  const base = formatSiteLabel(site)
+  const host = base.split('.')[0] ?? base
+  return host.charAt(0).toUpperCase() + host.slice(1)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { site } = await params
   const decodedSite = decodeURIComponent(site)
-  const isValid = isValidSite(decodedSite)
-  const siteName = formatSiteName(decodedSite)
-  
+  const normalizedSite = normalizeSiteInput(decodedSite)
+
   return generateDynamicToolMetadata({
-    toolName: `Is ${siteName} Down`,
-    param: decodedSite,
+    toolName: 'Site Status',
+    param: normalizedSite ?? decodedSite,
     paramType: 'site',
-    isValid,
+    isValid: Boolean(normalizedSite),
   })
 }
 
 const faqs = [
   {
     question: "How does this status check work?",
-    answer: "We send an HTTP request from our global edge network and measure the response. If the server responds with a success code (200-399), the site is considered up.",
+    answer: "The checker sends a live HTTP probe and reports whether the site responds successfully. It does not rely on cached status pages.",
   },
   {
     question: "Why might the site be down for me but up here?",
-    answer: "Regional outages, ISP blocks, or geo-restrictions can cause a site to be accessible from our servers but not from your location. The reverse can also happen.",
+    answer: "Regional outages, ISP routing, or local firewall rules can affect your result differently from this check location.",
   },
   {
-    question: "What does response time indicate?",
-    answer: "Response time shows how long the server took to respond from our edge location. Your actual experience may vary based on your geographic proximity to the server.",
+    question: "What does response time mean?",
+    answer: "Response time is the round-trip time for the latest probe request in milliseconds.",
   },
   {
-    question: "Can I check any website?",
-    answer: "Yes, you can check any publicly accessible website. Sites behind authentication or firewalls may show as down even if they're working for authorized users.",
-  },
-  {
-    question: "How often is the status updated?",
-    answer: "Each check is performed fresh when you request it. There's no caching - you always get real-time status information.",
+    question: "Can I check a URL path?",
+    answer: "Use a domain or hostname. Paths are normalized away, so /status/google.com and /status/google.com/docs check the same host.",
   },
 ]
 
@@ -87,25 +86,14 @@ const relatedTools = [
   },
 ]
 
-// Popular sites to check
-const popularSites = [
-  { name: "Google", slug: "google" },
-  { name: "YouTube", slug: "youtube" },
-  { name: "Twitter/X", slug: "twitter" },
-  { name: "Reddit", slug: "reddit" },
-  { name: "ChatGPT", slug: "chatgpt" },
-  { name: "Discord", slug: "discord" },
-]
-
 export default async function SiteStatusDynamicPage({ params }: Props) {
   const { site } = await params
   const decodedSite = decodeURIComponent(site)
-  const isValid = isValidSite(decodedSite)
-  const siteName = formatSiteName(decodedSite)
-  
-  if (!isValid) {
+  const normalizedSite = normalizeSiteInput(decodedSite)
+
+  if (!normalizedSite) {
     return (
-      <InvalidParam 
+      <InvalidParam
         paramType="site"
         value={decodedSite}
         toolHref="/site-status"
@@ -113,10 +101,16 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       />
     )
   }
-  
+
+  if (decodedSite !== normalizedSite) {
+    redirect(statusPathFor(normalizedSite))
+  }
+
+  const siteLabel = formatSiteLabel(normalizedSite)
+  const siteDisplayName = toSiteDisplayName(normalizedSite)
+
   return (
     <article className="category-network">
-      {/* Breadcrumb */}
       <nav className="border-b border-border/50" aria-label="Breadcrumb">
         <div className="mx-auto max-w-6xl px-4 py-3">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -126,54 +120,46 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             <ChevronRight className="h-3 w-3" />
             <li><Link href="/site-status" className="hover:text-foreground">Site Status</Link></li>
             <ChevronRight className="h-3 w-3" />
-            <li className="text-foreground">{siteName}</li>
+            <li className="text-foreground">{siteLabel}</li>
           </ol>
         </div>
       </nav>
 
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* H1 Title */}
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-            Is {siteName} Down?
+            Is {siteLabel} down?
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
-            Check the current status of {siteName} from our global edge network
+            Live availability check for {siteDisplayName}. Status, response time, and the latest check timestamp are shown below.
           </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[1fr,380px]">
-          {/* Main Content */}
           <div className="space-y-8">
-            {/* Result Panel */}
             <Surface as="section">
-              <h2 className="text-lg font-semibold text-foreground mb-4">Current Status</h2>
-              <StatusDynamicClient site={decodedSite} siteName={siteName} />
+              <h2 className="mb-4 text-lg font-semibold text-foreground">Current Status</h2>
+              <StatusDynamicClient site={normalizedSite} siteName={siteLabel} />
             </Surface>
 
-            {/* Explanation Section */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-4">What This Means</h2>
+              <h2 className="mb-4 text-xl font-semibold text-foreground">What This Means</h2>
               <div className="prose prose-invert prose-sm max-w-none">
-                <p className="text-muted-foreground leading-relaxed">
-                  This page checks whether <strong className="text-foreground">{siteName}</strong> is accessible from 
-                  our global edge network. If the site responds successfully, it&apos;s marked as &quot;Up&quot;. If it fails 
-                  to respond or returns an error, it&apos;s marked as &quot;Down&quot;.
+                <p className="leading-relaxed text-muted-foreground">
+                  This page checks whether <strong className="text-foreground">{siteLabel}</strong> responds to live HTTP probes. If the host responds successfully,
+                  it is marked as <strong className="text-foreground">Up</strong>. If the host does not respond or times out, it is marked as <strong className="text-foreground">Down</strong>.
                 </p>
-                <p className="text-muted-foreground leading-relaxed mt-3">
-                  Keep in mind that even if a site shows as up here, you might still have trouble accessing it 
-                  due to local network issues, ISP problems, or geographic restrictions. The reverse can also 
-                  happen - a site might be down from our servers but working for you.
+                <p className="mt-3 leading-relaxed text-muted-foreground">
+                  Status can differ from your local experience. Regional routing, ISP filtering, or temporary edge failures can affect what you see from a specific location.
                 </p>
               </div>
             </section>
 
-            {/* FAQ Section */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-4">Frequently Asked Questions</h2>
+              <h2 className="mb-4 text-xl font-semibold text-foreground">Frequently Asked Questions</h2>
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map((faq, index) => (
-                  <AccordionItem key={index} value={`faq-${index}`}>
+                  <AccordionItem key={faq.question} value={`faq-${index}`}>
                     <AccordionTrigger className="text-left text-sm">
                       {faq.question}
                     </AccordionTrigger>
@@ -186,34 +172,31 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             </section>
           </div>
 
-          {/* Sidebar */}
           <aside className="space-y-6">
-            {/* Check Other Sites */}
             <Surface>
-              <h3 className="font-semibold text-foreground mb-3">Check Other Sites</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Check Other Sites</h3>
               <div className="space-y-2">
-                {popularSites.filter(s => s.slug !== decodedSite.replace('is-', '').replace('-down', '')).slice(0, 5).map((s) => (
-                  <Link 
-                    key={s.slug}
-                    href={`/status/is-${s.slug}-down`}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                {STATUS_EXAMPLE_SITES.filter((value) => value !== normalizedSite).slice(0, 5).map((value) => (
+                  <Link
+                    key={value}
+                    href={statusPathFor(value)}
+                    className="block text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    Is {s.name} Down?
+                    Is {value} down?
                   </Link>
                 ))}
               </div>
-              <Link 
+              <Link
                 href="/site-status"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[var(--category-accent,var(--accent))] hover:underline"
               >
-                Check Any Site
+                Check another domain
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </Surface>
 
-            {/* Related Tools */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Related Tools</h3>
+              <h3 className="mb-4 font-semibold text-foreground">Related Tools</h3>
               <div className="space-y-3">
                 {relatedTools.map((tool) => (
                   <ToolCard key={tool.href} {...tool} />

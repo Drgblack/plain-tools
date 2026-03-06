@@ -1,10 +1,17 @@
 "use client"
 
-import { Globe, Server, Radio, CheckCircle2, XCircle, Loader2 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { Globe, Server, Radio, ArrowRight } from "lucide-react"
+import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { ToolShell } from "@/components/tool-shell"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  normalizeSiteInput,
+  STATUS_EXAMPLE_SITES,
+  statusPathFor,
+} from "@/lib/site-status"
 
 const relatedTools = [
   {
@@ -32,141 +39,114 @@ const relatedTools = [
 
 const faqs = [
   {
-    question: "What does this tool check?",
+    question: "What does this checker test?",
     answer:
-      "This tool sends an HTTP request to the specified URL and reports whether it responds successfully. It checks from our edge network, not your local connection.",
+      "It performs a live HTTP probe to the domain and reports Up, Down, or Invalid website based on the response.",
   },
   {
-    question: "Why might a site appear down to me but up on this tool?",
+    question: "Why is there a dedicated status page per domain?",
     answer:
-      "If a site is blocking your IP, region, or ISP, it may work for our edge workers but not for you. The reverse can also occur if there's a regional outage.",
+      "Each domain gets a canonical route, such as /status/chatgpt.com, so you can share and revisit checks directly.",
   },
   {
-    question: "Does this tool check HTTPS certificates?",
+    question: "Can I enter a URL instead of a domain?",
     answer:
-      "Yes, if you check an HTTPS URL, the tool will report certificate issues as failures.",
+      "Yes. Protocols, paths, and query strings are normalized. For example, https://www.google.com/search becomes google.com.",
   },
   {
-    question: "How often can I check a site?",
+    question: "Does this upload my files?",
     answer:
-      "You can check as often as you need. Each check is performed fresh from our edge network with no caching.",
+      "No files are uploaded. This tool only checks domain availability and response behaviour.",
   },
 ]
 
-// Popular sites for "Try these examples"
-const popularStatusChecks = [
-  { name: "ChatGPT", slug: "is-chatgpt-down" },
-  { name: "Reddit", slug: "is-reddit-down" },
-  { name: "Twitter/X", slug: "is-twitter-down" },
-  { name: "Discord", slug: "is-discord-down" },
-  { name: "YouTube", slug: "is-youtube-down" },
-  { name: "Instagram", slug: "is-instagram-down" },
-  { name: "Netflix", slug: "is-netflix-down" },
-  { name: "Spotify", slug: "is-spotify-down" },
-  { name: "GitHub", slug: "is-github-down" },
-  { name: "AWS", slug: "is-aws-down" },
-]
+function SiteStatusToolInterface() {
+  const router = useRouter()
+  const [siteInput, setSiteInput] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
-type Status = "idle" | "loading" | "up" | "down"
+  const normalizedPreview = useMemo(() => normalizeSiteInput(siteInput), [siteInput])
 
-function SiteStatusToolInterface({ initialSite = "" }: { initialSite?: string }) {
-  const [url, setUrl] = useState(initialSite)
-  const [status, setStatus] = useState<Status>("idle")
-  const [responseTime, setResponseTime] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (initialSite) {
-      handleCheck()
+  const handleSubmit = () => {
+    const normalized = normalizeSiteInput(siteInput)
+    if (!normalized) {
+      setErrorMessage("Enter a valid website such as chatgpt.com")
+      return
     }
-  }, [])
 
-  const handleCheck = () => {
-    if (!url) return
-    setStatus("loading")
-    // Placeholder - would be replaced with actual check
-    setTimeout(() => {
-      setStatus("up")
-      setResponseTime(142)
-    }, 800)
+    setErrorMessage("")
+    router.push(statusPathFor(normalized))
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <label className="mb-2 block text-sm text-muted-foreground">
-          Website URL
+        <label htmlFor="status-site-input" className="mb-2 block text-sm text-muted-foreground">
+          Website or domain
         </label>
         <Input
-          type="url"
-          placeholder="https://example.com"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          id="status-site-input"
+          type="text"
+          placeholder="chatgpt.com or https://chatgpt.com"
+          value={siteInput}
+          onChange={(event) => setSiteInput(event.target.value)}
           className="bg-secondary"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault()
+              handleSubmit()
+            }
+          }}
         />
+        {normalizedPreview ? (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Canonical domain: <span className="font-medium text-foreground">{normalizedPreview}</span>
+          </p>
+        ) : null}
+        {errorMessage ? (
+          <p className="mt-2 text-xs text-red-400">{errorMessage}</p>
+        ) : null}
       </div>
 
       <Button
-        onClick={handleCheck}
-        disabled={!url || status === "loading"}
+        onClick={handleSubmit}
         className="w-full bg-[var(--category-accent,var(--accent))] text-[var(--accent-foreground)] hover:bg-[var(--category-accent,var(--accent))]/90"
       >
-        {status === "loading" ? "Checking..." : "Check Status"}
+        Check Status
       </Button>
 
-      {status !== "idle" && status !== "loading" && (
-        <div className="mt-4 rounded-md border border-border p-6 text-center">
-          {status === "up" ? (
-            <>
-              <CheckCircle2 className="mx-auto h-12 w-12 text-green-500" />
-              <p className="mt-3 text-lg font-medium text-foreground">
-                Site is Up
-              </p>
-              {responseTime && (
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Response time: {responseTime}ms
-                </p>
-              )}
-            </>
-          ) : (
-            <>
-              <XCircle className="mx-auto h-12 w-12 text-red-500" />
-              <p className="mt-3 text-lg font-medium text-foreground">
-                Site is Down
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Could not connect to the server
-              </p>
-            </>
-          )}
+      <div className="rounded-md border border-border bg-card/60 p-4">
+        <h3 className="text-sm font-semibold text-foreground">Popular checks</h3>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          {STATUS_EXAMPLE_SITES.map((site) => (
+            <Link
+              key={site}
+              href={statusPathFor(site)}
+              className="inline-flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+            >
+              <span>Is {site} down?</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          ))}
         </div>
-      )}
-
-      {status === "loading" && (
-        <div className="mt-4 flex items-center justify-center rounded-md border border-border p-6">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      )}
+      </div>
     </div>
   )
 }
 
-interface SiteStatusClientProps {
-  initialSite?: string
-}
-
-export function SiteStatusClient({ initialSite }: SiteStatusClientProps = {}) {
+export function SiteStatusClient() {
   return (
     <ToolShell
       name="Site Status"
-      description="Check if a website is up, down, or experiencing issues"
+      description="Check whether a website is up, down, or invalid using a live availability probe."
       category={{ name: "Network Tools", href: "/network-tools", type: "network" }}
-      tags={["Edge"]}
-      explanation="This tool checks website availability from our global edge network. It sends an HTTP request and reports the response status. Note that results may differ from your local experience if there are regional issues or blocks."
+      tags={["Edge", "Live check"]}
+      explanation="Enter any domain and this tool normalizes it to a canonical status route. Checks run live and return current reachability plus response timing."
       faqs={faqs}
       relatedTools={relatedTools}
-      examples={popularStatusChecks.map(s => ({ label: `Is ${s.name} Down?`, href: `/status/${s.slug}` }))}
+      examples={STATUS_EXAMPLE_SITES.map((site) => ({ label: `Is ${site} down?`, href: statusPathFor(site) }))}
     >
-      <SiteStatusToolInterface initialSite={initialSite} />
+      <SiteStatusToolInterface />
     </ToolShell>
   )
 }

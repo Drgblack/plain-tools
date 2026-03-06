@@ -1,82 +1,123 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, XCircle, Loader2, RefreshCw } from "lucide-react"
+import { CheckCircle2, XCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react"
+import type { SiteStatusCheckResult } from "@/lib/site-status"
 
 interface StatusDynamicClientProps {
   site: string
   siteName: string
 }
 
-type Status = "loading" | "up" | "down"
-
 export function StatusDynamicClient({ site, siteName }: StatusDynamicClientProps) {
-  const [status, setStatus] = useState<Status>("loading")
-  const [responseTime, setResponseTime] = useState<number | null>(null)
-  const [checkedAt, setCheckedAt] = useState<Date | null>(null)
+  const [result, setResult] = useState<SiteStatusCheckResult | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    checkStatus()
+  const checkStatus = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`/api/site-status?site=${encodeURIComponent(site)}`, {
+        method: "GET",
+        cache: "no-store",
+      })
+      const data = (await response.json()) as SiteStatusCheckResult
+      setResult(data)
+    } catch {
+      setResult({
+        site,
+        status: "down",
+        responseTimeMs: null,
+        checkedAt: new Date().toISOString(),
+        httpStatus: null,
+        errorMessage: "Status check failed. Please try again.",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }, [site])
 
-  const checkStatus = () => {
-    setStatus("loading")
-    // Placeholder - would be replaced with actual status check
-    setTimeout(() => {
-      // Simulate mostly up, occasionally down
-      const isUp = Math.random() > 0.1
-      setStatus(isUp ? "up" : "down")
-      setResponseTime(isUp ? Math.floor(Math.random() * 200) + 50 : null)
-      setCheckedAt(new Date())
-    }, 1000)
-  }
+  useEffect(() => {
+    void checkStatus()
+  }, [checkStatus])
 
-  return (
-    <div className="space-y-4">
-      {status === "loading" ? (
+  const checkedAtLabel = useMemo(() => {
+    if (!result?.checkedAt) return ""
+    return new Date(result.checkedAt).toLocaleTimeString()
+  }, [result?.checkedAt])
+
+  const statusBlock = (() => {
+    if (isLoading && !result) {
+      return (
         <div className="flex flex-col items-center justify-center py-8">
           <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
           <p className="mt-3 text-sm text-muted-foreground">Checking {siteName}...</p>
         </div>
-      ) : status === "up" ? (
+      )
+    }
+
+    if (!result || isLoading) {
+      return (
+        <div className="flex flex-col items-center justify-center py-8">
+          <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
+          <p className="mt-3 text-sm text-muted-foreground">Refreshing status...</p>
+        </div>
+      )
+    }
+
+    if (result.status === "up") {
+      return (
         <div className="text-center py-6">
           <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
-          <p className="mt-4 text-2xl font-semibold text-foreground">
-            {siteName} is Up
-          </p>
+          <p className="mt-4 text-2xl font-semibold text-foreground">Up</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            The site is responding normally
+            {siteName} is responding normally.
           </p>
-          {responseTime && (
+          {typeof result.responseTimeMs === "number" && (
             <p className="mt-1 text-sm text-muted-foreground">
-              Response time: {responseTime}ms
+              Response time: {result.responseTimeMs}ms
             </p>
           )}
         </div>
-      ) : (
+      )
+    }
+
+    if (result.status === "invalid") {
+      return (
         <div className="text-center py-6">
-          <XCircle className="mx-auto h-16 w-16 text-red-500" />
-          <p className="mt-4 text-2xl font-semibold text-foreground">
-            {siteName} is Down
-          </p>
+          <AlertTriangle className="mx-auto h-16 w-16 text-amber-500" />
+          <p className="mt-4 text-2xl font-semibold text-foreground">Invalid website</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            The site is not responding or returned an error
+            Enter a valid domain such as chatgpt.com.
           </p>
         </div>
-      )}
+      )
+    }
 
-      <div className="flex items-center justify-between pt-4 border-t border-border">
-        <p className="text-xs text-muted-foreground">
-          {checkedAt ? `Last checked: ${checkedAt.toLocaleTimeString()}` : "Checking..."}
+    return (
+      <div className="text-center py-6">
+        <XCircle className="mx-auto h-16 w-16 text-red-500" />
+        <p className="mt-4 text-2xl font-semibold text-foreground">Down</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {siteName} is not responding from the checker endpoint.
         </p>
-        <Button 
-          onClick={checkStatus} 
-          variant="outline" 
-          size="sm"
-          disabled={status === "loading"}
-        >
-          <RefreshCw className={`h-4 w-4 mr-2 ${status === "loading" ? "animate-spin" : ""}`} />
+        {result.errorMessage ? (
+          <p className="mt-1 text-sm text-muted-foreground">{result.errorMessage}</p>
+        ) : null}
+      </div>
+    )
+  })()
+
+  return (
+    <div className="space-y-4">
+      {statusBlock}
+
+      <div className="flex items-center justify-between border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
+          {result?.checkedAt ? `Last checked: ${checkedAtLabel}` : "Checking..."}
+        </p>
+        <Button onClick={() => void checkStatus()} variant="outline" size="sm" disabled={isLoading}>
+          <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           Check Again
         </Button>
       </div>
