@@ -251,7 +251,15 @@ export default async function ToolPage({ params }: PageProps) {
                   <Link href="/learn" className="font-medium text-accent hover:underline">
                     practical guides in Learn
                   </Link>{" "}
-                  or verify local processing behaviour in{" "}
+                  to follow step-by-step workflows,{" "}
+                  <Link href="/compare/offline-vs-online-pdf-tools" className="font-medium text-accent hover:underline">
+                    compare Plain Tools with cloud alternatives
+                  </Link>
+                  , and{" "}
+                  <Link href="/site-status" className="font-medium text-accent hover:underline">
+                    check service status routes
+                  </Link>{" "}
+                  when troubleshooting availability. You can also verify local processing behaviour in{" "}
                   <Link href="/verify-claims" className="font-medium text-accent hover:underline">
                     Verify Claims
                   </Link>.

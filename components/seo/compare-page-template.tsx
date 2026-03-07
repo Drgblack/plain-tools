@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { ShieldCheck, Gauge, Users } from "lucide-react"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
@@ -114,6 +115,13 @@ type ComparePageTemplateProps = {
 export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
   const schema = buildCompareSchema(page)
   const links = getCompareSeoLinks(page.slug)
+  const toolLinks =
+    links?.relatedTools.length
+      ? links.relatedTools
+      : page.toolHrefs.map((href) => ({
+          label: `Use ${getToolBySlug(href.replace("/tools/", ""))?.name ?? href.replace("/tools/", "").replace(/-/g, " ")} locally`,
+          href,
+        }))
   const uploadRow = page.comparisonRows.find((row) =>
     row.feature.toLowerCase().includes("upload")
   )
@@ -227,6 +235,21 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
               <p className="mt-1 text-xs text-muted-foreground">Where Plain Tools or {page.competitorName} tends to suit better.</p>
             </div>
           </div>
+
+          <div className="rounded-xl border border-border/70 bg-card/45 p-3.5">
+            <h3 className="text-sm font-semibold text-foreground">Relevant tools you can try now</h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {toolLinks.slice(0, 3).map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-accent transition hover:border-accent/40 hover:underline"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </section>
       }
       faq={<FaqBlock faqs={page.faqs} />}
@@ -239,8 +262,8 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
               links: links ? [links.verify] : [{ label: "Verify Claims", href: "/verify-claims" }],
             },
             {
-              title: "Tool",
-              links: links ? links.relatedTools.slice(0, 2) : page.nextSteps.filter((step) => step.href.startsWith("/tools/")).slice(0, 2),
+              title: "Relevant tools",
+              links: toolLinks.slice(0, 3),
             },
             {
               title: "Learn",

@@ -157,6 +157,13 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
     { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
     { label: "Plain vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
   ]
+  const relatedTools = [
+    ctaTool
+      ? { label: `Use ${ctaTool.name} locally`, href: article.cta.href }
+      : { label: "Browse local PDF tools", href: "/tools" },
+    { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+    { label: "Compress PDF without uploading", href: "/tools/compress-pdf" },
+  ]
 
   const schemas: (Record<string, unknown> | null)[] = [
     {
@@ -322,6 +329,23 @@ export function LearnSeoArticlePage({ article }: { article: LearnArticleData }) 
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedComparisons.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg border border-white/[0.08] bg-muted/20 p-4 text-sm font-medium text-foreground hover:border-accent/40 hover:text-accent"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              Related tools
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {relatedTools.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

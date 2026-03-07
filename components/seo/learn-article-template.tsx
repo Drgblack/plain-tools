@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
 import { FaqBlock } from "@/components/seo/faq-block"
@@ -121,6 +122,17 @@ export function LearnArticleTemplate({
 }: LearnArticleTemplateProps) {
   const schema = buildLearnSchema(article, routeBase, routeLabel)
   const links = getLearnSeoLinks(article.slug)
+  const primaryToolLink =
+    links?.primaryTool ??
+    article.nextSteps.find((step) => step.href.startsWith("/tools/")) ?? {
+      label: "Use a matching tool locally",
+      href: article.toolHref,
+    }
+  const compareLink =
+    article.nextSteps.find((step) => step.href.startsWith("/compare")) ?? {
+      label: "Compare Plain Tools with cloud alternatives",
+      href: "/compare/offline-vs-online-pdf-tools",
+    }
 
   return (
     <ArticleLayout
@@ -142,6 +154,26 @@ export function LearnArticleTemplate({
           verifyHref={article.trustBox.verifyHref}
         />
       }
+      topContent={
+        <section className="rounded-xl border border-border/70 bg-card/45 p-4 md:p-5">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">Contextual links</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Apply this guide directly:{" "}
+            <Link href={primaryToolLink.href} className="font-medium text-accent hover:underline">
+              {primaryToolLink.label}
+            </Link>
+            , then{" "}
+            <Link href={compareLink.href} className="font-medium text-accent hover:underline">
+              {compareLink.label}
+            </Link>{" "}
+            and{" "}
+            <Link href="/verify-claims" className="font-medium text-accent hover:underline">
+              verify no-upload claims yourself
+            </Link>
+            .
+          </p>
+        </section>
+      }
       faq={<FaqBlock faqs={article.faqs} />}
       relatedLinks={
         <RelatedLinks
@@ -149,7 +181,7 @@ export function LearnArticleTemplate({
           sections={[
             {
               title: "Tool",
-              links: links ? [links.primaryTool] : article.nextSteps.filter((step) => step.href.startsWith("/tools/")).slice(0, 1),
+              links: [primaryToolLink],
             },
             {
               title: relatedLabel,
@@ -168,10 +200,7 @@ export function LearnArticleTemplate({
             },
             {
               title: "Compare",
-              links:
-                article.nextSteps.filter((step) => step.href.startsWith("/compare")).slice(0, 1).length > 0
-                  ? article.nextSteps.filter((step) => step.href.startsWith("/compare")).slice(0, 1)
-                  : [{ label: "Offline vs Online PDF Tools", href: "/compare/offline-vs-online-pdf-tools" }],
+              links: [compareLink],
             },
             {
               title: "PDF tools hub",

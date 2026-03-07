@@ -286,7 +286,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
 
           <aside className="space-y-6">
             <Surface>
-              <h3 className="mb-3 font-semibold text-foreground">Check Other Sites</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Related status checks</h3>
               <div className="space-y-2">
                 {relatedStatusChecks.map((value) => (
                   <Link
@@ -294,7 +294,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                     href={statusPathFor(value)}
                     className="block text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    Is {value} down?
+                    Check whether {value} is down
                   </Link>
                 ))}
               </div>
@@ -308,7 +308,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             </Surface>
 
             <Surface>
-              <h3 className="mb-3 font-semibold text-foreground">Network Toolkit</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Related network tools</h3>
               <p className="mb-3 text-sm text-muted-foreground">
                 Continue diagnosing with DNS, IP, and latency checks.
               </p>
@@ -324,6 +324,21 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 </Link>
                 <Link href="/ping-test" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Ping test
+                </Link>
+              </div>
+            </Surface>
+
+            <Surface>
+              <h3 className="mb-3 font-semibold text-foreground">Trust and guidance</h3>
+              <div className="space-y-2">
+                <Link href="/verify-claims" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Verify local-processing claims
+                </Link>
+                <Link href="/learn/how-to-audit-pdf-tool-network-requests" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Learn to audit network requests in DevTools
+                </Link>
+                <Link href="/compare/offline-vs-online-pdf-tools" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Compare local and upload-based tools
                 </Link>
               </div>
             </Surface>

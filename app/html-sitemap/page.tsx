@@ -5,6 +5,7 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
+import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = buildPageMetadata({
@@ -72,6 +73,26 @@ const compareLinks: SitemapLink[] = trancheCompareSlugs.map((slug) => ({
   href: `/compare/${slug}`,
 }))
 
+const networkLinks: SitemapLink[] = [
+  { label: "Site status checker", href: "/site-status" },
+  { label: "Network tools hub", href: "/network-tools" },
+  { label: "DNS lookup", href: "/dns-lookup" },
+  { label: "Ping test", href: "/ping-test" },
+  { label: "What is my IP", href: "/what-is-my-ip" },
+]
+
+const popularStatusLinks: SitemapLink[] = STATUS_POPULAR_SITES.slice(0, 12).map((site) => ({
+  label: `Check whether ${site} is down`,
+  href: statusPathFor(site),
+}))
+
+const trustLinks: SitemapLink[] = [
+  { label: "Verify claims", href: "/verify-claims" },
+  { label: "No uploads explained", href: "/learn/no-uploads-explained" },
+  { label: "How to audit network requests", href: "/learn/how-to-audit-pdf-tool-network-requests" },
+  { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+]
+
 const blogLinks: SitemapLink[] = [
   ...blogCategories
     .filter((category) => category.slug !== "all")
@@ -124,6 +145,9 @@ export default function HtmlSitemapPage() {
         ))}
 
         <SitemapSectionList section={{ title: "Key tools", links: toolLinks }} />
+        <SitemapSectionList section={{ title: "Network tools", links: networkLinks }} />
+        <SitemapSectionList section={{ title: "Popular status checks", links: popularStatusLinks }} />
+        <SitemapSectionList section={{ title: "Trust and verification", links: trustLinks }} />
         <SitemapSectionList section={{ title: "Learn guides", links: learnHighlights }} />
         <SitemapSectionList section={{ title: "Workflow guides", links: workflowLinks }} />
         <SitemapSectionList section={{ title: "Compare pages", links: compareLinks }} />

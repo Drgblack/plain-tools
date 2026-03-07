@@ -156,6 +156,30 @@ export default function SiteStatusPage() {
           </div>
         </div>
       </section>
+      <section className="border-b border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+            Related network and trust routes
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            <Link href="/network-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Browse network tools
+            </Link>
+            <Link href="/dns-lookup" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Run DNS lookup for a domain
+            </Link>
+            <Link href="/what-is-my-ip" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Check your current public IP
+            </Link>
+            <Link href="/verify-claims" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Verify local-processing claims
+            </Link>
+            <Link href="/learn/how-to-audit-pdf-tool-network-requests" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Learn how to audit network requests
+            </Link>
+          </div>
+        </div>
+      </section>
       <SiteStatusClient />
       <section className="border-t border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">

@@ -75,6 +75,14 @@ const comparisonSummary = [
   },
 ]
 
+const comparisonToolLinks = [
+  { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+  { label: "Split PDF by pages locally", href: "/tools/split-pdf" },
+  { label: "Compress PDF without uploading", href: "/tools/compress-pdf" },
+  { label: "Convert PDF to Word locally", href: "/tools/pdf-to-word" },
+  { label: "Sign PDF locally in browser", href: "/tools/sign-pdf" },
+]
+
 const compareHubSchema = combineJsonLd([
   buildWebPageSchema({
     name: "Compare PDF tools",
@@ -130,6 +138,20 @@ export default function ComparePage() {
               >
                 Read guides
               </Link>
+            </div>
+            <div className="rounded-xl border border-border bg-card/35 p-4">
+              <h2 className="text-sm font-semibold text-foreground">Relevant tools to try while comparing</h2>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {comparisonToolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-accent transition hover:border-accent/40 hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </section>
 

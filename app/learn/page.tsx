@@ -66,6 +66,54 @@ const learnIconMap: Record<LearnArticleIconKey, typeof Shield> = {
   Zap,
 }
 
+const topicalClusters = [
+  {
+    title: "PDF tools cluster",
+    description: "Run practical workflows such as merge, split, compress, convert, and OCR.",
+    links: [
+      { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+      { label: "Split PDF by pages", href: "/tools/split-pdf" },
+      { label: "Compress PDF without uploads", href: "/tools/compress-pdf" },
+    ],
+  },
+  {
+    title: "Status and network cluster",
+    description: "Diagnose uptime, DNS, IP, and latency issues in one place.",
+    links: [
+      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+      { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
+      { label: "Open network tools hub", href: "/network-tools" },
+    ],
+  },
+  {
+    title: "Trust and verification cluster",
+    description: "Validate local-processing claims with repeatable checks.",
+    links: [
+      { label: "Verify local-processing claims", href: "/verify-claims" },
+      { label: "No uploads explained", href: "/learn/no-uploads-explained" },
+      { label: "Audit network requests in DevTools", href: "/learn/how-to-audit-pdf-tool-network-requests" },
+    ],
+  },
+  {
+    title: "Compare alternatives cluster",
+    description: "Compare Plain Tools with common cloud-first options.",
+    links: [
+      { label: "Compare Plain Tools with Smallpdf", href: "/compare/plain-vs-smallpdf" },
+      { label: "Compare Plain Tools with iLovePDF", href: "/compare/plain-vs-ilovepdf" },
+      { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+    ],
+  },
+  {
+    title: "Learn and workflows cluster",
+    description: "Move from explanation to action using practical guides.",
+    links: [
+      { label: "Browse all learn guides", href: "/learn" },
+      { label: "Open workflow guides", href: "/learn/workflows" },
+      { label: "How to merge PDFs offline", href: "/learn/how-to-merge-pdfs-offline" },
+    ],
+  },
+]
+
 function getCategoryStyles(category: string) {
   switch (category.toLowerCase()) {
     case "hardware":
@@ -262,6 +310,32 @@ export default function LearnPage() {
             )}
           </div>
         </div>
+
+<section className="border-t border-border px-4 py-12">
+  <div className="mx-auto max-w-6xl space-y-5">
+    <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Topic clusters</h2>
+    <p className="max-w-3xl text-sm leading-relaxed text-white/60">
+      Move between related tools and guides using these clusters.
+    </p>
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {topicalClusters.map((cluster) => (
+        <article key={cluster.title} className="rounded-xl border border-[#333] bg-[#111] p-5">
+          <h3 className="text-sm font-semibold text-white">{cluster.title}</h3>
+          <p className="mt-2 text-xs leading-relaxed text-white/60">{cluster.description}</p>
+          <ul className="mt-3 space-y-2">
+            {cluster.links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-xs font-medium text-[#7bc3ff] transition hover:text-[#9dd2ff] hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
 
 {/* Technical Glossary Card */}
   <section className="border-t border-border px-4 py-12">

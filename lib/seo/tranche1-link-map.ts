@@ -1,7 +1,7 @@
 import { comparePages, learnPages } from "@/lib/seo/tranche1-content"
 import { converterPages } from "@/lib/seo/file-converters-content"
 import { workflowPages } from "@/lib/seo/workflows-content"
-import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export type RouteLink = {
   label: string
@@ -28,6 +28,38 @@ type CompareLinkRule = {
 }
 
 const verifyLink: RouteLink = { label: "Verify Claims", href: "/verify-claims" }
+
+function formatToolSlug(slug: string) {
+  return slug.replace(/-/g, " ").replace(/\b\w/g, (token) => token.toUpperCase())
+}
+
+function getToolNameFromHref(href: string) {
+  const slug = href.replace("/tools/", "")
+  return getToolBySlug(slug)?.name ?? formatToolSlug(slug)
+}
+
+function asDescriptiveToolAnchor(link: RouteLink): RouteLink {
+  if (!link.href.startsWith("/tools/")) return link
+  const toolName = getToolNameFromHref(link.href)
+  return {
+    ...link,
+    label: `Use ${toolName} locally`,
+  }
+}
+
+function asDescriptiveCompareAnchor(link: RouteLink): RouteLink {
+  if (!link.href.startsWith("/compare/")) return link
+  if (/^compare plain tools with/i.test(link.label)) return link
+  const raw = link.label
+    .replace(/^plain\s*(tools|\.tools)\s*vs\s*/i, "")
+    .replace(/^plain\s*vs\s*/i, "")
+    .trim()
+  const target = raw || "cloud alternatives"
+  return {
+    ...link,
+    label: `Compare Plain Tools with ${target}`,
+  }
+}
 
 export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
   "merge-pdf": {
@@ -182,6 +214,58 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
   },
+  "html-to-pdf": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "PDF to HTML", href: "/tools/pdf-to-html" },
+      { label: "Text to PDF", href: "/tools/text-to-pdf" },
+      { label: "PDF to Markdown", href: "/tools/pdf-to-markdown" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "pdf-to-markdown": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How PDFs Work", href: "/learn/how-pdfs-work" },
+    ],
+    relatedTools: [
+      { label: "PDF to HTML", href: "/tools/pdf-to-html" },
+      { label: "PDF to Word", href: "/tools/pdf-to-word" },
+      { label: "Text to PDF", href: "/tools/text-to-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "image-compress": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "Compress PDF Without Losing Quality", href: "/learn/compress-pdf-without-losing-quality" },
+    ],
+    relatedTools: [
+      { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
+      { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
+      { label: "PDF to HTML", href: "/tools/pdf-to-html" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "zip-tool": {
+    learnLinks: [
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "File Hash / Checksum", href: "/tools/file-hash" },
+      { label: "Image Compressor / Optimizer", href: "/tools/image-compress" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
   "file-hash": {
     learnLinks: [
       { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
@@ -205,6 +289,19 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "File Hash / Checksum", href: "/tools/file-hash" },
       { label: "Base64 Encode / Decode", href: "/tools/base64" },
       { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
+    ],
+    comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
+  },
+  "qr-scanner": {
+    learnLinks: [
+      { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
+    ],
+    relatedTools: [
+      { label: "QR Code Generator", href: "/tools/qr-code" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "File Hash / Checksum", href: "/tools/file-hash" },
     ],
     comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
   },
@@ -409,12 +506,15 @@ export const LEARN_TO_SEO_LINKS: Record<string, LearnLinkRule> = Object.fromEntr
       label: learnTitleBySlug.get(slug) ?? slug,
       href: buildLearnRouteFromSlug(slug),
     }))
+    const primaryToolHref =
+      article.nextSteps.find((step) => step.href.startsWith("/tools/"))?.href ?? article.toolHref
+    const primaryToolName = getToolNameFromHref(primaryToolHref)
     return [
       article.slug,
       {
         primaryTool: {
-          label: article.nextSteps.find((step) => step.href.startsWith("/tools/"))?.label ?? "Open tool",
-          href: article.toolHref,
+          label: `Use ${primaryToolName} locally`,
+          href: primaryToolHref,
         },
         relatedLearn,
         verify: verifyLink,
@@ -433,7 +533,7 @@ export const COMPARE_TO_SEO_LINKS: Record<string, CompareLinkRule> = Object.from
         href: `/learn/${slug}`,
       })),
       relatedTools: page.toolHrefs.map((href) => ({
-        label: href.replace("/tools/", "").replace(/-/g, " "),
+        label: `Use ${getToolNameFromHref(href)} locally`,
         href,
       })),
     } satisfies CompareLinkRule,
@@ -450,7 +550,7 @@ export function getToolSeoLinks(toolSlug: string) {
     (tool) => tool.available && tool.slug !== toolSlug
   )
     .slice(0, 3)
-    .map((tool) => ({ label: tool.name, href: `/tools/${tool.slug}` }))
+    .map((tool) => ({ label: `Use ${tool.name} locally`, href: `/tools/${tool.slug}` }))
 
   const learnLinks = (base?.learnLinks ?? fallbackLearnLinks)
     .filter((link) => link.href.startsWith("/learn/"))
@@ -459,15 +559,16 @@ export function getToolSeoLinks(toolSlug: string) {
   const relatedTools = (base?.relatedTools ?? fallbackRelatedTools)
     .filter((link) => link.href.startsWith("/tools/"))
     .slice(0, 3)
+    .map(asDescriptiveToolAnchor)
 
   return {
     learnLinks: learnLinks.length >= 2 ? learnLinks : fallbackLearnLinks,
     relatedTools: relatedTools.length >= 3 ? relatedTools : fallbackRelatedTools,
     verify: base?.verify ?? verifyLink,
-    comparison: base?.comparison ?? {
+    comparison: asDescriptiveCompareAnchor(base?.comparison ?? {
       label: "Offline vs Online PDF Tools",
       href: "/compare/offline-vs-online-pdf-tools",
-    },
+    }),
   }
 }
 

@@ -34,7 +34,7 @@ const footerSections = [
       { name: "Support", href: "/support" },
       { name: "Roadmap", href: "/roadmap" },
       { name: "Changelog", href: "/changelog" },
-      { name: "HTML Sitemap", href: "/sitemap" },
+      { name: "HTML Sitemap", href: "/html-sitemap" },
       { name: "About", href: "/about" },
       { name: "Privacy", href: "/privacy" },
     ],

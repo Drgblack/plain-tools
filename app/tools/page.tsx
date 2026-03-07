@@ -38,17 +38,19 @@ export default function ToolsPage() {
 
   const groupedLinks = [
     {
-      title: "Convert",
+      title: "Convert and organise",
       links: [
         { label: "PDF to Word", href: "/tools/pdf-to-word" },
         { label: "Word to PDF", href: "/tools/word-to-pdf" },
         { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
         { label: "PDF to HTML", href: "/tools/pdf-to-html" },
+        { label: "HTML to PDF", href: "/tools/html-to-pdf" },
+        { label: "PDF to Markdown", href: "/tools/pdf-to-markdown" },
         { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
       ],
     },
     {
-      title: "Organise",
+      title: "Organise and edit",
       links: [
         { label: "Merge PDF", href: "/tools/merge-pdf" },
         { label: "Split PDF", href: "/tools/split-pdf" },
@@ -81,9 +83,12 @@ export default function ToolsPage() {
     {
       title: "File utilities",
       links: [
+        { label: "Image Compressor / Optimizer", href: "/tools/image-compress" },
+        { label: "ZIP Extract & Create", href: "/tools/zip-tool" },
         { label: "Base64 Encode / Decode", href: "/tools/base64" },
         { label: "File Hash / Checksum", href: "/tools/file-hash" },
         { label: "QR Code Generator", href: "/tools/qr-code" },
+        { label: "QR Code Scanner", href: "/tools/qr-scanner" },
       ],
     },
   ]
@@ -133,9 +138,14 @@ export default function ToolsPage() {
     "pdf-to-excel",
     "pdf-to-ppt",
     "pdf-to-html",
+    "html-to-pdf",
+    "pdf-to-markdown",
+    "image-compress",
+    "zip-tool",
     "base64",
     "file-hash",
     "qr-code",
+    "qr-scanner",
     "watermark-pdf",
     "sign-pdf",
     "protect-pdf",
@@ -176,9 +186,10 @@ export default function ToolsPage() {
   ]
 
   const subtleCtas = [
-    { label: "Verify claims", href: "/verify-claims" },
-    { label: "Read practical guides", href: "/learn" },
-    { label: "Compare alternatives", href: "/compare" },
+    { label: "Verify local-processing claims", href: "/verify-claims" },
+    { label: "Read practical PDF guides", href: "/learn" },
+    { label: "Compare Plain Tools with alternatives", href: "/compare" },
+    { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
   ]
 
   const relatedGuides = [
