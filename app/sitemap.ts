@@ -10,6 +10,25 @@ import { STATUS_POPULAR_SITES } from "@/lib/site-status"
 const BASE_URL = "https://plain.tools"
 const now = new Date()
 
+/**
+ * Sitemap policy:
+ * - Include canonical root URLs only.
+ * - Exclude legacy mount aliases (/pdf-tools/*) and converter alias slugs.
+ * - Include curated status routes only (prevents arbitrary-domain sitemap pollution).
+ */
+function normalizeCanonicalUrl(url: string) {
+  const parsed = new URL(url)
+  if (parsed.origin !== BASE_URL) return null
+
+  const pathname =
+    parsed.pathname !== "/" ? parsed.pathname.replace(/\/+$/, "") || "/" : "/"
+
+  if (pathname.startsWith("/pdf-tools/")) return null
+  if (pathname.startsWith("/file-converters/")) return null
+
+  return `${BASE_URL}${pathname}`
+}
+
 const staticHighPriority = [
   "/",
   "/tools",
@@ -19,6 +38,7 @@ const staticHighPriority = [
 
 const staticCorePages = [
   "/blog",
+  "/file-converters",
   "/verify-claims",
   "/network-tools",
   "/site-status",
@@ -78,13 +98,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path.startsWith("/compare/") ? 0.75 : 0.8,
   }))
 
-  const blogIndex = {
-    url: `${BASE_URL}/blog`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }
-
   const blogCategoryPages = blogCategories
     .filter((category) => category.slug !== "all")
     .map((category) => ({
@@ -113,7 +126,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     homepage,
     ...staticHigh,
     ...staticCore,
-    blogIndex,
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
@@ -123,7 +135,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const deduped = new Map<string, MetadataRoute.Sitemap[number]>()
   for (const entry of entries) {
-    deduped.set(entry.url, entry)
+    const canonical = normalizeCanonicalUrl(entry.url)
+    if (!canonical) continue
+    deduped.set(canonical, {
+      ...entry,
+      url: canonical,
+    })
   }
 
   return Array.from(deduped.values())

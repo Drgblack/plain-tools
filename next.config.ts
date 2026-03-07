@@ -325,6 +325,16 @@ const nextConfig: NextConfig = {
         destination: "/verify-claims",
         permanent: true,
       },
+      {
+        source: "/pdf-tools/robots.txt",
+        destination: "/robots.txt",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/sitemap.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
 
       // Legacy blog slug migrations to canonical published posts.
       ...legacyBlogSlugRedirects,
