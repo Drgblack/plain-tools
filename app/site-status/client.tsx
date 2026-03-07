@@ -229,6 +229,12 @@ function SiteStatusToolInterface() {
               Is {site} down?
             </Link>
           ))}
+          <Link
+            href="/status/trending"
+            className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+          >
+            View trending checks
+          </Link>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
 import { TrendingStatus } from "@/components/trending-status"
+import { StatusHistory } from "@/components/status-history"
 import { JsonLd } from "@/components/seo/json-ld"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
@@ -305,6 +306,12 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 >
                   Check local network context
                 </Link>
+                <Link
+                  href="/status/trending"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+                >
+                  View trending outage checks
+                </Link>
               </div>
             </section>
 
@@ -312,6 +319,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               <h2 className="mb-4 text-lg font-semibold text-foreground">Current Status</h2>
               <StatusDynamicClient site={normalizedSite} siteName={siteLabel} />
             </Surface>
+
+            <StatusHistory domain={normalizedSite} />
 
             <section>
               <h2 className="mb-4 text-xl font-semibold text-foreground">What This Means</h2>
@@ -384,9 +393,34 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 Check another domain
                 <ChevronRight className="h-4 w-4" />
               </Link>
+              <Link
+                href="/status/trending"
+                className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-[var(--category-accent,var(--accent))] hover:underline"
+              >
+                View trending checks
+                <ChevronRight className="h-4 w-4" />
+              </Link>
             </Surface>
 
-            <TrendingStatus title="Trending checks today" limit={6} />
+            <TrendingStatus
+              title="Trending checks today"
+              limit={6}
+              compact
+              showDescription={false}
+              showTopChecksLink={false}
+            />
+            <div className="rounded-xl border border-border/70 bg-card/40 p-4">
+              <h3 className="text-sm font-semibold text-foreground">Also trending</h3>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Browse the most-checked domains and jump to canonical status pages.
+              </p>
+              <Link
+                href="/status/trending"
+                className="mt-3 inline-flex text-xs font-medium text-accent transition hover:underline"
+              >
+                Open trending checks page
+              </Link>
+            </div>
 
             <Surface>
               <h3 className="mb-3 font-semibold text-foreground">Related network tools</h3>

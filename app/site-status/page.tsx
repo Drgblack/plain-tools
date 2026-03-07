@@ -147,8 +147,34 @@ export default function SiteStatusPage() {
         </div>
       </section>
       <section className="border-b border-border/60 px-4 py-10">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl space-y-4">
           <TrendingStatus title="Trending outages and checks" limit={10} />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <TrendingStatus
+              title="Popular developer service checks"
+              variant="developer"
+              limit={5}
+              compact
+              showDescription={false}
+              showTopChecksLink={false}
+            />
+            <TrendingStatus
+              title="Popular social platform checks"
+              variant="social"
+              limit={5}
+              compact
+              showDescription={false}
+              showTopChecksLink={false}
+            />
+          </div>
+          <div>
+            <Link
+              href="/status/trending"
+              className="text-sm font-medium text-accent transition hover:underline"
+            >
+              View the full top checks page
+            </Link>
+          </div>
         </div>
       </section>
       <section className="border-b border-border/60 px-4 py-10">

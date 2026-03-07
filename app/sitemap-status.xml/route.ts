@@ -13,6 +13,12 @@ export async function GET() {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/status/trending`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.85,
+    },
     ...STATUS_DOMAINS.map((site, index) => ({
       url: `${BASE_URL}${statusPathFor(site)}`,
       lastModified: now,

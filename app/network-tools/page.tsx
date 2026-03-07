@@ -157,6 +157,9 @@ export default function NetworkToolsPage() {
               <Link href="/tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Browse PDF and file tools
               </Link>
+              <Link href="/status/trending" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                View trending status checks
+              </Link>
             </div>
           </div>
         </section>

@@ -17,6 +17,7 @@ import {
 import Link from "next/link"
 import { CategoryTile } from "@/components/category-tile"
 import { ProofStrip } from "@/components/proof-strip"
+import { TrendingStatus } from "@/components/trending-status"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ToolCard } from "@/components/tool-card"
 import { Surface } from "@/components/surface"
@@ -591,6 +592,26 @@ export default function HomePage() {
                   </ul>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                Trending outage checks
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Live popularity signals from anonymous aggregate status checks. Use this to jump
+                straight into high-demand outage pages.
+              </p>
+            </div>
+            <TrendingStatus title="Most checked status pages today" limit={8} />
+            <div className="mt-4">
+              <Link href="/status/trending" className="text-sm font-medium text-accent hover:underline">
+                Open full trending status list
+              </Link>
             </div>
           </div>
         </section>

@@ -472,3 +472,28 @@ export const STATUS_TRENDING_DEFAULT = [
   "stripe.com",
   "google.com",
 ] as const
+
+export const STATUS_DEVELOPER_DOMAINS = [...DEVELOPER_TOOLS]
+export const STATUS_SOCIAL_DOMAINS = [...MESSAGING_APPS_AND_SOCIAL_NETWORKS]
+export const STATUS_STREAMING_DOMAINS = [...STREAMING_SERVICES]
+export const STATUS_SAAS_DOMAINS = [...SAAS_PRODUCTS]
+export const STATUS_CONSUMER_DOMAINS = [...HIGH_PRIORITY_DOMAINS]
+
+export type StatusTrendSegment =
+  | "all"
+  | "consumer"
+  | "developer"
+  | "social"
+  | "streaming"
+  | "saas"
+
+export const STATUS_TREND_SEGMENT_DOMAINS: Record<
+  Exclude<StatusTrendSegment, "all">,
+  string[]
+> = {
+  consumer: STATUS_CONSUMER_DOMAINS,
+  developer: STATUS_DEVELOPER_DOMAINS,
+  social: STATUS_SOCIAL_DOMAINS,
+  streaming: STATUS_STREAMING_DOMAINS,
+  saas: STATUS_SAAS_DOMAINS,
+}

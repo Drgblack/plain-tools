@@ -45,6 +45,7 @@ const staticCorePages = [
   "/verify-claims",
   "/network-tools",
   "/site-status",
+  "/status/trending",
   "/what-is-my-ip",
   "/dns-lookup",
   "/ping-test",
