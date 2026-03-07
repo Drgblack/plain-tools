@@ -275,7 +275,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
     ],
     relatedTools: [
-      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64-encoder" },
       { label: "File Hash / Checksum", href: "/tools/file-hash" },
       { label: "Image Compressor / Optimizer", href: "/tools/image-compress" },
     ],
@@ -288,7 +288,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
     ],
     relatedTools: [
-      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64-encoder" },
       { label: "Protect PDF", href: "/tools/protect-pdf" },
       { label: "Unlock PDF", href: "/tools/unlock-pdf" },
     ],
@@ -302,7 +302,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     relatedTools: [
       { label: "File Hash / Checksum", href: "/tools/file-hash" },
-      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64-encoder" },
       { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
     ],
     comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },
@@ -315,7 +315,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
     ],
     relatedTools: [
       { label: "QR Code Generator", href: "/tools/qr-code" },
-      { label: "Base64 Encode / Decode", href: "/tools/base64" },
+      { label: "Base64 Encode / Decode", href: "/tools/base64-encoder" },
       { label: "File Hash / Checksum", href: "/tools/file-hash" },
     ],
     comparison: { label: "Best PDF Tools with No Upload", href: "/compare/best-pdf-tools-no-upload" },

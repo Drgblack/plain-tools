@@ -23,7 +23,13 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Amazonbot", allow: "/" },
       { userAgent: "Applebot", allow: "/" },
     ],
-    sitemap: "https://plain.tools/sitemap.xml",
+    sitemap: [
+      "https://plain.tools/sitemap.xml",
+      "https://plain.tools/sitemap-tools.xml",
+      "https://plain.tools/sitemap-status.xml",
+      "https://plain.tools/sitemap-learn.xml",
+      "https://plain.tools/sitemap-compare.xml",
+    ],
     host: "https://plain.tools",
   }
 }

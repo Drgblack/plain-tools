@@ -23,6 +23,11 @@ export const metadata: Metadata = buildPageMetadata({
 
 const comparisonLinks = [
   {
+    href: "/compare/smallpdf-alternative",
+    title: "Best Smallpdf Alternative",
+    summary: "Answer-first comparison for users searching a privacy-first Smallpdf alternative.",
+  },
+  {
     href: "/compare/plain-tools-vs-smallpdf",
     title: "Plain Tools vs Smallpdf",
     summary: "Compare upload workflow, privacy model, and day-to-day handling for common PDF tasks.",

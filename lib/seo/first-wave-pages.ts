@@ -60,11 +60,25 @@ export const FIRST_WAVE_STATUS_SITES = [
 
 export const FIRST_WAVE_STATUS_PAGES: PriorityPageLink[] = FIRST_WAVE_STATUS_SITES.map((site) => ({
   label: `Check whether ${site} is down`,
-  href: `/status/${encodeURIComponent(site)}`,
+  href:
+    site === "chatgpt.com"
+      ? "/status/chatgpt"
+      : site === "discord.com"
+        ? "/status/discord"
+        : site === "youtube.com"
+          ? "/status/youtube"
+          : site === "reddit.com"
+            ? "/status/reddit"
+            : `/status/${encodeURIComponent(site)}`,
   description: `Live status route for ${site} with response-time context and troubleshooting guidance.`,
 }))
 
 export const FIRST_WAVE_GUIDE_PAGES: PriorityPageLink[] = [
+  {
+    label: "How to compress a PDF without uploading it",
+    href: "/learn/compress-pdf-without-upload",
+    description: "Step-by-step private PDF compression workflow with no upload requirement.",
+  },
   {
     label: "Why you should not upload sensitive PDFs",
     href: "/learn/why-pdf-uploads-are-risky",
@@ -89,6 +103,11 @@ export const FIRST_WAVE_GUIDE_PAGES: PriorityPageLink[] = [
 
 export const FIRST_WAVE_COMPARE_PAGES: PriorityPageLink[] = [
   {
+    label: "Best Smallpdf alternative",
+    href: "/compare/smallpdf-alternative",
+    description: "Answer-first comparison page for users searching privacy-first Smallpdf alternatives.",
+  },
+  {
     label: "Compare Plain Tools with Smallpdf",
     href: "/compare/plain-tools-vs-smallpdf",
     description: "Privacy and workflow comparison for high-intent alternative queries.",
@@ -111,4 +130,3 @@ export const FIRST_WAVE_PRIORITY_PATHS = [
   ...FIRST_WAVE_GUIDE_PAGES.map((entry) => entry.href),
   ...FIRST_WAVE_COMPARE_PAGES.map((entry) => entry.href),
 ]
-

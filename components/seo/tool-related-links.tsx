@@ -7,7 +7,7 @@ type ToolRelatedLinksProps = {
 }
 
 const FILE_UTILITY_TOOL_SLUGS = new Set([
-  "base64",
+  "base64-encoder",
   "zip-tool",
   "file-hash",
   "qr-code",
@@ -44,7 +44,7 @@ function getAdjacentClusterLink(toolSlug: string) {
   if (toolSlug === "compare-pdf") {
     return {
       label: "Check whether chatgpt.com is down",
-      href: "/status/chatgpt.com",
+      href: "/status/chatgpt",
     }
   }
 

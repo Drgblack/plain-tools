@@ -280,7 +280,7 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
             {
               title: "Status and network checks",
               links: [
-                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt" },
                 { label: "Browse network diagnostics", href: "/network-tools" },
               ],
             },

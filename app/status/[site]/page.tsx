@@ -142,8 +142,13 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
     )
   }
 
-  if (decodedSite !== normalizedSite) {
-    permanentRedirect(statusPathFor(normalizedSite))
+  const canonicalStatusPath = statusPathFor(normalizedSite)
+  const directStatusPath = `/status/${encodeURIComponent(normalizedSite)}`
+
+  // Root-canonical status routes for selected high-demand domains live at short slugs.
+  // Example: /status/chatgpt.com -> /status/chatgpt
+  if (decodedSite !== normalizedSite || canonicalStatusPath !== directStatusPath) {
+    permanentRedirect(canonicalStatusPath)
   }
 
   const siteLabel = formatSiteLabel(normalizedSite)

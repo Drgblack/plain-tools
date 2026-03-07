@@ -84,9 +84,12 @@ export default function ToolsPage() {
     {
       title: "File utilities",
       links: [
+        { label: "JSON Formatter & Validator", href: "/tools/json-formatter" },
+        { label: "UUID Generator", href: "/tools/uuid-generator" },
+        { label: "Regex Tester & Debugger", href: "/tools/regex-tester" },
         { label: "Image Compressor / Optimizer", href: "/tools/image-compress" },
         { label: "ZIP Extract & Create", href: "/tools/zip-tool" },
-        { label: "Base64 Encode / Decode", href: "/tools/base64" },
+        { label: "Base64 Encode / Decode", href: "/tools/base64-encoder" },
         { label: "File Hash / Checksum", href: "/tools/file-hash" },
         { label: "QR Code Generator", href: "/tools/qr-code" },
         { label: "QR Code Scanner", href: "/tools/qr-scanner" },
@@ -162,7 +165,7 @@ export default function ToolsPage() {
     { label: "Verify local-processing claims", href: "/verify-claims" },
     { label: "Read practical PDF guides", href: "/learn" },
     { label: "Compare Plain Tools with alternatives", href: "/compare" },
-    { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+    { label: "Check whether chatgpt.com is down", href: "/status/chatgpt" },
   ]
 
   const relatedGuides = [
@@ -203,8 +206,8 @@ export default function ToolsPage() {
       description: "Check website availability and response behaviour.",
       href: "/site-status",
       links: [
-        { label: "Is chatgpt.com down?", href: "/status/chatgpt.com" },
-        { label: "Is reddit.com down?", href: "/status/reddit.com" },
+        { label: "Is chatgpt.com down?", href: "/status/chatgpt" },
+        { label: "Is reddit.com down?", href: "/status/reddit" },
       ],
     },
     {
@@ -430,10 +433,10 @@ export default function ToolsPage() {
               })}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/status/chatgpt" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Example: chatgpt.com status
               </Link>
-              <Link href="/status/reddit.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/status/reddit" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Example: reddit.com status
               </Link>
               <Link href="/network-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent">

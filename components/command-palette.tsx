@@ -78,7 +78,10 @@ const commands: CommandItem[] = [
   // File Tools
   { id: "file-converters", name: "File Converters", description: "Convert between formats", href: "/file-converters", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
   { id: "zip-tool", name: "ZIP Extract & Create", description: "Extract and create ZIP archives locally", href: "/tools/zip-tool", icon: <Archive className="h-4 w-4" />, category: "File Tools" },
-  { id: "base64", name: "Base64 Encode / Decode", description: "Encode or decode text and files locally", href: "/tools/base64", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "base64", name: "Base64 Encode / Decode", description: "Encode or decode text and files locally", href: "/tools/base64-encoder", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "json-formatter", name: "JSON Formatter & Validator", description: "Format, minify, and validate JSON locally", href: "/tools/json-formatter", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "uuid-generator", name: "UUID Generator", description: "Generate UUID v4 and v7 values instantly", href: "/tools/uuid-generator", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "regex-tester", name: "Regex Tester & Debugger", description: "Test regex patterns with live match preview", href: "/tools/regex-tester", icon: <FileSearch className="h-4 w-4" />, category: "File Tools" },
   { id: "file-hash", name: "File Hash / Checksum", description: "Compute SHA-256, MD5, SHA-1, or SHA-512 hash values", href: "/tools/file-hash", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
   { id: "qr-code", name: "QR Code Generator", description: "Generate scannable QR codes for URLs or text", href: "/tools/qr-code", icon: <QrCode className="h-4 w-4" />, category: "Utility" },
   { id: "qr-scanner", name: "QR Code Scanner", description: "Scan QR codes from camera or uploaded images", href: "/tools/qr-scanner", icon: <QrCode className="h-4 w-4" />, category: "Utility" },

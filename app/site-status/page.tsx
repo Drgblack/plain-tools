@@ -33,7 +33,7 @@ const siteStatusFaqs = [
   {
     question: "Can I share results for one domain?",
     answer:
-      "Yes. Each domain has a canonical route such as /status/reddit.com for repeat checks and sharing.",
+      "Yes. High-demand domains use short canonical routes such as /status/reddit, and other domains use canonical host routes.",
   },
   {
     question: "Is this a file-processing workflow?",
@@ -52,7 +52,7 @@ const siteStatusSchema = combineJsonLd([
   buildSoftwareApplicationSchema({
     name: "Site status checker",
     description:
-      "Browser-based status checks for domains, with canonical result routes such as /status/chatgpt.com.",
+      "Browser-based status checks for domains, with canonical result routes such as /status/chatgpt.",
     url: "https://plain.tools/site-status",
     featureList: [
       "Live domain status checks",
@@ -240,13 +240,13 @@ export default function SiteStatusPage() {
               Example: gmail.com
             </Link>
             <Link
-              href="/status/youtube.com"
+              href="/status/youtube"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Example: youtube.com
             </Link>
             <Link
-              href="/status/chatgpt.com"
+              href="/status/chatgpt"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Example: chatgpt.com

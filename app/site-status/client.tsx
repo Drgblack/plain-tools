@@ -48,7 +48,7 @@ const faqs = [
   {
     question: "Why is there a dedicated status page per domain?",
     answer:
-      "Each domain gets a canonical route, such as /status/chatgpt.com, so you can share and revisit checks directly.",
+      "Each domain gets a canonical route, such as /status/chatgpt, so you can share and revisit checks directly.",
   },
   {
     question: "Can I enter a URL instead of a domain?",

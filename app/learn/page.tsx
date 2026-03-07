@@ -91,7 +91,7 @@ const topicalClusters = [
       { label: "Is it down for everyone or just me?", href: "/learn/is-it-down-for-everyone-or-just-me" },
       { label: "How DNS lookup works", href: "/learn/how-dns-lookup-works" },
       { label: "What response time means in uptime checks", href: "/learn/what-response-time-means-in-uptime-check" },
-      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt" },
       { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
       { label: "Open network tools hub", href: "/network-tools" },
     ],

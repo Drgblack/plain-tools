@@ -366,12 +366,45 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
   {
     id: "base64-encode-decode",
     name: "Base64 Encode / Decode",
-    slug: "base64",
+    slug: "base64-encoder",
     category: "File Tools",
     description:
       "Encode text or files to Base64 and decode Base64 back into text or downloadable files locally in your browser.",
     badge: "100% Local",
     icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "json-formatter",
+    name: "JSON Formatter & Validator",
+    slug: "json-formatter",
+    category: "Utility",
+    description:
+      "Format, validate, and minify JSON locally in your browser with no upload step.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "uuid-generator",
+    name: "UUID Generator",
+    slug: "uuid-generator",
+    category: "Utility",
+    description:
+      "Generate UUID v4 and v7 identifiers instantly in your browser for local development workflows.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "regex-tester",
+    name: "Regex Tester & Debugger",
+    slug: "regex-tester",
+    category: "Utility",
+    description:
+      "Test regular expressions with live match previews locally in your browser.",
+    badge: "100% Local",
+    icon: "FileSearch",
     available: true,
   },
   {

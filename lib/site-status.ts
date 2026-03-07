@@ -24,6 +24,13 @@ export const STATUS_TRAFFIC_SITES = [
   ...FIRST_WAVE_STATUS_SITES,
 ] as const
 
+const STATUS_CANONICAL_SLUG_BY_DOMAIN: Partial<Record<(typeof STATUS_TRAFFIC_SITES)[number], string>> = {
+  "chatgpt.com": "chatgpt",
+  "discord.com": "discord",
+  "youtube.com": "youtube",
+  "reddit.com": "reddit",
+}
+
 export const STATUS_EXAMPLE_SITES = [
   "chatgpt.com",
   "reddit.com",
@@ -267,7 +274,12 @@ export function formatSiteLabel(site: string) {
 }
 
 export function statusPathFor(site: string) {
-  return `/status/${encodeURIComponent(site)}`
+  const normalized = formatSiteLabel(site).toLowerCase() as (typeof STATUS_TRAFFIC_SITES)[number]
+  const canonicalSlug = STATUS_CANONICAL_SLUG_BY_DOMAIN[normalized]
+  if (canonicalSlug) {
+    return `/status/${canonicalSlug}`
+  }
+  return `/status/${encodeURIComponent(normalized)}`
 }
 
 export function getSiteSpecificStatusContext(site: string): SiteSpecificStatusContext {

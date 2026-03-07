@@ -5,7 +5,7 @@ import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
-import { STATUS_TRAFFIC_SITES } from "@/lib/site-status"
+import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 
 const BASE_URL = "https://plain.tools"
@@ -60,6 +60,11 @@ const staticCorePages = [
   "/html-sitemap",
 ]
 
+const curatedLandingPages = [
+  "/compare/smallpdf-alternative",
+  "/learn/compress-pdf-without-upload",
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const homepage = {
     url: BASE_URL,
@@ -82,6 +87,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }))
+
+  const curatedLanding = curatedLandingPages.map((path) => ({
+    url: `${BASE_URL}${path}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
   }))
 
   const toolPages = TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
@@ -120,7 +132,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Curated canonical status URLs only - keeps index coverage focused on high-demand queries.
   const curatedStatusPages = STATUS_TRAFFIC_SITES.map((site) => ({
-    url: `${BASE_URL}/status/${encodeURIComponent(site)}`,
+    url: `${BASE_URL}${statusPathFor(site)}`,
     lastModified: now,
     changeFrequency: "daily" as const,
     priority: 0.75,
@@ -130,6 +142,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     homepage,
     ...staticHigh,
     ...staticCore,
+    ...curatedLanding,
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
