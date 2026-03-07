@@ -250,22 +250,37 @@ const nextConfig: NextConfig = {
       // Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
-        destination: "/compare/plain-vs-adobe-acrobat-online",
+        destination: "/compare/plain-tools-vs-adobe-acrobat-online",
         permanent: true,
       },
       {
-        source: "/compare/plain-tools-vs-smallpdf",
-        destination: "/compare/plain-vs-smallpdf",
+        source: "/compare/plain-vs-smallpdf",
+        destination: "/compare/plain-tools-vs-smallpdf",
         permanent: true,
       },
       {
-        source: "/compare/plain-tools-vs-ilovepdf",
-        destination: "/compare/plain-vs-ilovepdf",
+        source: "/compare/plain-vs-ilovepdf",
+        destination: "/compare/plain-tools-vs-ilovepdf",
         permanent: true,
       },
       {
         source: "/compare/plain-tools-vs-adobe-online",
-        destination: "/compare/plain-vs-adobe-acrobat-online",
+        destination: "/compare/plain-tools-vs-adobe-acrobat-online",
+        permanent: true,
+      },
+      {
+        source: "/compare/plain-vs-adobe-acrobat-online",
+        destination: "/compare/plain-tools-vs-adobe-acrobat-online",
+        permanent: true,
+      },
+      {
+        source: "/compare/plain-vs-pdf24",
+        destination: "/compare/plain-tools-vs-pdf24",
+        permanent: true,
+      },
+      {
+        source: "/compare/plain-vs-sejda",
+        destination: "/compare/plain-tools-vs-sejda",
         permanent: true,
       },
       {
@@ -489,7 +504,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/comparisons/plain-vs-ilovepdf",
-        destination: "/compare/plain-vs-ilovepdf",
+        destination: "/compare/plain-tools-vs-ilovepdf",
         permanent: true,
       },
       {

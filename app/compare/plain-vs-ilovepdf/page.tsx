@@ -1,13 +1,5 @@
-import {
-  ComparePageTemplate,
-  buildComparePageMetadata,
-} from "@/components/seo/compare-page-template"
-import { getTrancheComparePageOrThrow } from "@/lib/seo/tranche1-content"
-
-const page = getTrancheComparePageOrThrow("plain-vs-ilovepdf")
-
-export const metadata = buildComparePageMetadata(page)
+import { permanentRedirect } from "next/navigation"
 
 export default function CompareTranchePage() {
-  return <ComparePageTemplate page={page} />
+  permanentRedirect("/compare/plain-tools-vs-ilovepdf")
 }

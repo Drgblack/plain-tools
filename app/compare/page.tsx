@@ -22,27 +22,27 @@ export const metadata: Metadata = buildPageMetadata({
 
 const comparisonLinks = [
   {
-    href: "/compare/plain-vs-smallpdf",
+    href: "/compare/plain-tools-vs-smallpdf",
     title: "Plain Tools vs Smallpdf",
     summary: "Compare upload workflow, privacy model, and day-to-day handling for common PDF tasks.",
   },
   {
-    href: "/compare/plain-vs-ilovepdf",
+    href: "/compare/plain-tools-vs-ilovepdf",
     title: "Plain Tools vs iLovePDF",
     summary: "Compare local processing against cloud processing for practical privacy-sensitive work.",
   },
   {
-    href: "/compare/plain-vs-adobe-acrobat-online",
+    href: "/compare/plain-tools-vs-adobe-acrobat-online",
     title: "Plain Tools vs Adobe Acrobat Online",
     summary: "Compare document-control trade-offs when handling sensitive internal or client files.",
   },
   {
-    href: "/compare/plain-vs-pdf24",
+    href: "/compare/plain-tools-vs-pdf24",
     title: "Plain Tools vs PDF24",
     summary: "A practical side-by-side focused on workflow clarity, upload risk, and portability.",
   },
   {
-    href: "/compare/plain-vs-sejda",
+    href: "/compare/plain-tools-vs-sejda",
     title: "Plain Tools vs Sejda",
     summary: "Evaluate processing model, operational controls, and suitability for private workflows.",
   },
@@ -251,3 +251,4 @@ export default function ComparePage() {
     </div>
   )
 }
+

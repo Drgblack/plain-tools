@@ -100,8 +100,8 @@ const topicalClusters = [
     title: "Compare alternatives cluster",
     description: "Compare Plain Tools with common cloud-first options.",
     links: [
-      { label: "Compare Plain Tools with Smallpdf", href: "/compare/plain-vs-smallpdf" },
-      { label: "Compare Plain Tools with iLovePDF", href: "/compare/plain-vs-ilovepdf" },
+      { label: "Compare Plain Tools with Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
+      { label: "Compare Plain Tools with iLovePDF", href: "/compare/plain-tools-vs-ilovepdf" },
       { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
     ],
   },
@@ -398,4 +398,5 @@ export default function LearnPage() {
     </div>
   )
 }
+
 

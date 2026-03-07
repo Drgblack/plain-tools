@@ -145,7 +145,7 @@ export const LEARN_GEO_OVERRIDES: Record<string, LearnGeoOverride> = {
 }
 
 export const COMPARE_GEO_OVERRIDES: Record<string, CompareGeoOverride> = {
-  "plain-vs-smallpdf": {
+  "plain-tools-vs-smallpdf": {
     quickAnswer:
       "If your priority is no-upload handling for sensitive files, Plain Tools is usually the stronger fit. If you need an account-centric cloud workflow, Smallpdf may suit better.",
     privacyDifferences: [
@@ -159,7 +159,7 @@ export const COMPARE_GEO_OVERRIDES: Record<string, CompareGeoOverride> = {
       "Large-file handling depends on local device resources versus cloud queues.",
     ],
   },
-  "plain-vs-ilovepdf": {
+  "plain-tools-vs-ilovepdf": {
     quickAnswer:
       "Choose Plain Tools when you need local-first privacy controls. Choose iLovePDF when hosted convenience and account workflows matter more than no-upload architecture.",
     privacyDifferences: [
@@ -173,7 +173,7 @@ export const COMPARE_GEO_OVERRIDES: Record<string, CompareGeoOverride> = {
       "Network quality affects cloud workflow consistency more heavily.",
     ],
   },
-  "plain-vs-adobe-acrobat-online": {
+  "plain-tools-vs-adobe-acrobat-online": {
     quickAnswer:
       "For strict no-upload requirements and straightforward local tasks, Plain Tools is often the better fit. For enterprise account governance and broader hosted suite workflows, Adobe Acrobat Online may fit better.",
     privacyDifferences: [

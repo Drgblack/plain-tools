@@ -257,7 +257,7 @@ export default function ToolsPage() {
       description: "Neutral comparisons for privacy and workflow fit.",
       href: "/compare",
       links: [
-        { label: "Plain Tools vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+        { label: "Plain Tools vs Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
         { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
       ],
     },
@@ -539,4 +539,5 @@ export default function ToolsPage() {
     </div>
   )
 }
+
 

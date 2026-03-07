@@ -471,7 +471,7 @@ export const learnPages: TrancheLearnArticle[] = [
     ["irreversible redaction", "secure pdf redaction", "remove sensitive text from pdf"],
     "/tools/redact-pdf",
     ["how-pdf-redaction-really-works", "why-pdf-uploads-are-risky"],
-    "/compare/plain-vs-adobe-acrobat-online",
+    "/compare/plain-tools-vs-adobe-acrobat-online",
     "Plain vs Adobe Acrobat Online"
   ),
   buildHowTo(
@@ -714,40 +714,49 @@ export const comparePages: TrancheComparePage[] = [
     ["no-uploads-explained", "how-to-verify-a-pdf-tool-doesnt-upload-your-files"]
   ),
   buildCompare(
-    "plain-vs-smallpdf",
-    "Plain vs Smallpdf",
+    "plain-tools-vs-smallpdf",
+    "Plain Tools vs Smallpdf",
     "Smallpdf",
-    "plain vs smallpdf",
+    "plain tools vs smallpdf",
     ["smallpdf alternative", "smallpdf privacy", "smallpdf no upload alternative"],
     ["/tools/merge-pdf", "/tools/compress-pdf"],
     ["why-pdf-uploads-are-risky", "no-uploads-explained"]
   ),
   buildCompare(
-    "plain-vs-ilovepdf",
-    "Plain vs iLovePDF",
+    "plain-tools-vs-ilovepdf",
+    "Plain Tools vs iLovePDF",
     "iLovePDF",
-    "plain vs ilovepdf",
+    "plain tools vs ilovepdf",
     ["ilovepdf alternative", "ilovepdf privacy", "offline pdf alternative"],
     ["/tools/compress-pdf", "/tools/extract-pdf"],
     ["no-uploads-explained", "why-pdf-uploads-are-risky"]
   ),
   buildCompare(
-    "plain-vs-sejda",
-    "Plain vs Sejda",
+    "plain-tools-vs-sejda",
+    "Plain Tools vs Sejda",
     "Sejda",
-    "plain vs sejda",
+    "plain tools vs sejda",
     ["sejda alternative", "sejda privacy", "private pdf tool alternative"],
     ["/tools/split-pdf", "/tools/reorder-pdf"],
     ["how-to-verify-a-pdf-tool-doesnt-upload-your-files", "is-offline-pdf-processing-secure"]
   ),
   buildCompare(
-    "plain-vs-adobe-acrobat-online",
-    "Plain vs Adobe Acrobat Online",
+    "plain-tools-vs-adobe-acrobat-online",
+    "Plain Tools vs Adobe Acrobat Online",
     "Adobe Acrobat Online",
-    "plain vs adobe acrobat online",
+    "plain tools vs adobe acrobat online",
     ["adobe acrobat online alternative", "adobe online pdf privacy", "private adobe alternative"],
     ["/tools/redact-pdf", "/tools/metadata-purge"],
     ["why-pdf-uploads-are-risky", "no-uploads-explained"]
+  ),
+  buildCompare(
+    "plain-tools-vs-pdf24",
+    "Plain Tools vs PDF24",
+    "PDF24",
+    "plain tools vs pdf24",
+    ["pdf24 alternative", "pdf24 privacy", "pdf24 vs plain tools"],
+    ["/tools/merge-pdf", "/tools/split-pdf"],
+    ["how-to-verify-a-pdf-tool-doesnt-upload-your-files", "no-uploads-explained"]
   ),
   {
     ...buildCompare(
@@ -795,17 +804,90 @@ for (const article of learnPages) {
 }
 
 const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
-  "plain-vs-smallpdf": {
+  "plain-tools-vs-smallpdf": {
     title: "Plain Tools vs Smallpdf",
     metaTitle: "Plain Tools vs Smallpdf | Plain Tools",
+    metaDescription:
+      "Compare Plain Tools vs Smallpdf on privacy model, upload requirements, speed, and practical fit for sensitive PDF workflows.",
+    intro: [
+      "Comparing Plain Tools vs Smallpdf usually comes down to processing model and workflow control. Runs locally in your browser. No uploads.",
+      "This page focuses on practical trade-offs so you can decide based on operational reality rather than feature lists.",
+    ],
+    comparisonRows: [
+      { feature: "Uploads required for core tasks", plain: "No for core local tools", competitor: "Usually yes for hosted browser workflows" },
+      { feature: "Workflow model", plain: "Local-first execution in your browser", competitor: "Cloud-assisted workflow with account options" },
+      { feature: "Verification effort", plain: "Low: check one real operation in DevTools", competitor: "Higher: relies on policy and settings" },
+      { feature: "Operational speed profile", plain: "No upload/download round trip for local jobs", competitor: "Can include transfer and queue time" },
+      { feature: "Best fit", plain: "Sensitive files and no-upload handling", competitor: "Cloud convenience and account-centric routing" },
+    ],
   },
-  "plain-vs-ilovepdf": {
+  "plain-tools-vs-ilovepdf": {
     title: "Plain Tools vs iLovePDF",
     metaTitle: "Plain Tools vs iLovePDF | Plain Tools",
+    metaDescription:
+      "Compare Plain Tools vs iLovePDF with a fair view of uploads, local processing, workflow speed, and practical privacy controls.",
+    intro: [
+      "Plain Tools vs iLovePDF is primarily a local-first versus cloud-first decision. Runs locally in your browser. No uploads.",
+      "Use this comparison to evaluate operational fit, privacy handling, and day-to-day workflow friction.",
+    ],
+    comparisonRows: [
+      { feature: "Uploads required for core tasks", plain: "No for core local tools", competitor: "Usually yes for hosted processing" },
+      { feature: "Primary workflow", plain: "In-browser local execution", competitor: "Cloud processing with browser front-end" },
+      { feature: "Offline continuity after first load", plain: "Yes for local tools", competitor: "Limited for upload-dependent features" },
+      { feature: "Privacy verification path", plain: "Direct DevTools validation", competitor: "Policy and account controls dependent" },
+      { feature: "Best fit", plain: "Sensitive-document workflows", competitor: "General hosted conversion workflows" },
+    ],
   },
-  "plain-vs-adobe-acrobat-online": {
+  "plain-tools-vs-adobe-acrobat-online": {
     title: "Plain Tools vs Adobe Acrobat Online",
     metaTitle: "Plain Tools vs Adobe Acrobat Online | Plain Tools",
+    metaDescription:
+      "Compare Plain Tools vs Adobe Acrobat Online on upload model, privacy verification, workflow speed, and practical team fit.",
+    intro: [
+      "Plain Tools vs Adobe Acrobat Online is best evaluated by architecture and workflow constraints, not feature lists alone. Runs locally in your browser. No uploads.",
+      "Use this page for a neutral comparison of privacy handling, process friction, and where each option tends to suit better.",
+    ],
+    comparisonRows: [
+      { feature: "Core processing path", plain: "Local browser processing", competitor: "Hosted online service workflow" },
+      { feature: "Uploads required for core tasks", plain: "No for core local tools", competitor: "Typically yes for online workflows" },
+      { feature: "Verification path", plain: "DevTools checks in your own session", competitor: "Relies on provider statements and controls" },
+      { feature: "Workflow speed", plain: "Local execution, no transfer round trip", competitor: "Can include upload/download latency" },
+      { feature: "Best fit", plain: "No-upload handling and sensitive files", competitor: "Cloud ecosystem and account-led administration" },
+    ],
+  },
+  "plain-tools-vs-pdf24": {
+    title: "Plain Tools vs PDF24",
+    metaTitle: "Plain Tools vs PDF24 | Plain Tools",
+    metaDescription:
+      "Compare Plain Tools vs PDF24 with practical criteria: route clarity, verification effort, upload risk, and daily workflow control.",
+    intro: [
+      "Plain Tools and PDF24 can both support privacy-conscious work, but route clarity and verification effort differ in practice. Runs locally in your browser. No uploads.",
+      "This comparison helps teams choose what they can run consistently under normal time pressure.",
+    ],
+    comparisonRows: [
+      { feature: "Route clarity for local handling", plain: "Single local-first flow for core tools", competitor: "Depends on selected route and setup" },
+      { feature: "Verification effort", plain: "Low: one-session DevTools check", competitor: "Varies by chosen route and environment" },
+      { feature: "Upload exposure risk", plain: "No upload for core local tools", competitor: "Can vary by route and workflow selection" },
+      { feature: "Policy enforcement ease", plain: "Straightforward for mixed-skill teams", competitor: "May need tighter route governance" },
+      { feature: "Best fit", plain: "Teams wanting predictable local-first defaults", competitor: "Teams with established route-control practices" },
+    ],
+  },
+  "plain-tools-vs-sejda": {
+    title: "Plain Tools vs Sejda",
+    metaTitle: "Plain Tools vs Sejda | Plain Tools",
+    metaDescription:
+      "Compare Plain Tools vs Sejda for private PDF workflows, upload handling, speed, and practical fit for everyday document operations.",
+    intro: [
+      "Plain Tools vs Sejda usually comes down to whether your default requires strict local-first handling or hosted convenience. Runs locally in your browser. No uploads.",
+      "Use this comparison to decide based on workflow reality and verification effort.",
+    ],
+    comparisonRows: [
+      { feature: "Uploads required for core tasks", plain: "No for core local tools", competitor: "Often route-dependent and may be hosted" },
+      { feature: "Workflow model", plain: "Local browser workflow", competitor: "Hybrid or hosted flow depending on task" },
+      { feature: "Offline continuity after first load", plain: "Yes for local tools", competitor: "Task-dependent and often limited" },
+      { feature: "Verification path", plain: "Direct local inspection in DevTools", competitor: "Depends on selected flow and provider controls" },
+      { feature: "Best fit", plain: "Privacy-first routine operations", competitor: "Users prioritising hosted workflow convenience" },
+    ],
   },
 }
 

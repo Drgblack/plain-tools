@@ -97,7 +97,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Why PDF Uploads Are Risky", href: "/learn/why-pdf-uploads-are-risky" },
       { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
     ],
-    comparison: { label: "Plain vs iLovePDF", href: "/compare/plain-vs-ilovepdf" },
+    comparison: { label: "Plain Tools vs iLovePDF", href: "/compare/plain-tools-vs-ilovepdf" },
   },
   "extract-pdf": {
     learnLinks: [
@@ -113,7 +113,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "How to Split a PDF by Pages", href: "/learn/how-to-split-a-pdf-by-pages" },
       { label: "What Is a PDF", href: "/learn/what-is-a-pdf" },
     ],
-    comparison: { label: "Plain vs Sejda", href: "/compare/plain-vs-sejda" },
+    comparison: { label: "Plain Tools vs Sejda", href: "/compare/plain-tools-vs-sejda" },
   },
   "convert-pdf": {
     learnLinks: [
@@ -329,7 +329,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Unlock PDF", href: "/tools/unlock-pdf" },
       { label: "Merge PDFs", href: "/tools/merge-pdf" },
     ],
-    comparison: { label: "Plain vs DocuSign", href: "/compare/plain-vs-docusign" },
+    comparison: { label: "Plain Tools vs DocuSign", href: "/compare/plain-vs-docusign" },
   },
   "watermark-pdf": {
     learnLinks: [
@@ -389,7 +389,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "What Is PDF Metadata and Why It Matters", href: "/learn/what-is-pdf-metadata-and-why-it-matters" },
       { label: "GDPR and PDF Tools: What Businesses Need to Know", href: "/learn/gdpr-and-pdf-tools-what-businesses-need-to-know" },
     ],
-    comparison: { label: "Plain vs Adobe Acrobat Online", href: "/compare/plain-vs-adobe-acrobat-online" },
+    comparison: { label: "Plain Tools vs Adobe Acrobat Online", href: "/compare/plain-tools-vs-adobe-acrobat-online" },
   },
   "fill-pdf": {
     learnLinks: [
@@ -397,7 +397,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
       { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
     ],
-    comparison: { label: "Plain vs DocuSign", href: "/compare/plain-vs-docusign" },
+    comparison: { label: "Plain Tools vs DocuSign", href: "/compare/plain-vs-docusign" },
   },
   "redact-pdf": {
     learnLinks: [
@@ -405,7 +405,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "How PDF Redaction Really Works", href: "/learn/how-pdf-redaction-really-works" },
       { label: "Common PDF Privacy Mistakes", href: "/learn/common-pdf-privacy-mistakes" },
     ],
-    comparison: { label: "Plain vs Adobe Acrobat Online", href: "/compare/plain-vs-adobe-acrobat-online" },
+    comparison: { label: "Plain Tools vs Adobe Acrobat Online", href: "/compare/plain-tools-vs-adobe-acrobat-online" },
   },
   "local-signer": {
     learnLinks: [
@@ -413,7 +413,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Is Offline PDF Processing Secure", href: "/learn/is-offline-pdf-processing-secure" },
       { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
     ],
-    comparison: { label: "Plain vs DocuSign", href: "/compare/plain-vs-docusign" },
+    comparison: { label: "Plain Tools vs DocuSign", href: "/compare/plain-vs-docusign" },
   },
   "offline-ocr": {
     learnLinks: [
@@ -445,7 +445,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "What Is a PDF", href: "/learn/what-is-a-pdf" },
       { label: "How to Extract Pages from a PDF", href: "/learn/how-to-extract-pages-from-a-pdf" },
     ],
-    comparison: { label: "Plain vs Sejda", href: "/compare/plain-vs-sejda" },
+    comparison: { label: "Plain Tools vs Sejda", href: "/compare/plain-tools-vs-sejda" },
   },
   "batch-engine": {
     learnLinks: [
@@ -453,7 +453,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
       { label: "How to Verify a PDF Tool Does Not Upload Your Files", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
     ],
-    comparison: { label: "Plain vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+    comparison: { label: "Plain Tools vs Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
   },
   "compression-preview": {
     learnLinks: [
@@ -461,7 +461,7 @@ export const TOOL_TO_SEO_LINKS: Record<string, ToolLinkRule> = {
       { label: "Why PDF Uploads Are Risky", href: "/learn/why-pdf-uploads-are-risky" },
       { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
     ],
-    comparison: { label: "Plain vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+    comparison: { label: "Plain Tools vs Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
   },
   "summarize-pdf": {
     learnLinks: [
@@ -579,3 +579,5 @@ export function getLearnSeoLinks(learnSlug: string) {
 export function getCompareSeoLinks(compareSlug: string) {
   return COMPARE_TO_SEO_LINKS[compareSlug]
 }
+
+

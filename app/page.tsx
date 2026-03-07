@@ -370,7 +370,7 @@ const trafficClusters = [
     description: "Compare Plain Tools with cloud-first alternatives and workflow trade-offs.",
     href: "/compare",
     links: [
-      { label: "Plain Tools vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+      { label: "Plain Tools vs Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
       { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
     ],
   },
@@ -836,3 +836,4 @@ export default function HomePage() {
     </>
   )
 }
+

@@ -3,7 +3,6 @@ export type SeoMdxRoute =
   | "/learn/how-to-audit-pdf-tool-network-requests"
   | "/learn/workflows/prepare-pdf-for-government-portal-upload"
   | "/compare/best-pdf-tools-no-upload"
-  | "/compare/plain-vs-pdf24"
 
 export type SeoMdxPageConfig = {
   route: SeoMdxRoute
@@ -48,17 +47,6 @@ export const seoMdxPageRegistry: Record<SeoMdxRoute, SeoMdxPageConfig> = {
     itemListSchema: {
       name: "Best PDF tools with no upload requirement",
       description: "A practical shortlist of PDF tools that prioritise local processing and verifiable no-upload workflows.",
-    },
-  },
-  "/compare/plain-vs-pdf24": {
-    route: "/compare/plain-vs-pdf24",
-    contentPath: "content/compare/plain-vs-pdf24.mdx",
-    basePath: "/compare",
-    sectionLabel: "Compare",
-    slug: "plain-vs-pdf24",
-    itemListSchema: {
-      name: "Plain vs PDF24 comparison criteria",
-      description: "Comparison criteria for privacy, workflow control, and operational fit between Plain and PDF24.",
     },
   },
 }
