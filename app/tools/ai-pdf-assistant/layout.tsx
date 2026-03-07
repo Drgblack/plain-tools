@@ -2,13 +2,19 @@ import type { Metadata } from "next"
 
 import { buildPageMetadata } from "@/lib/page-metadata"
 
-export const metadata: Metadata = buildPageMetadata({
-  title: "AI PDF assistant",
-  description:
-    "Summarise PDFs and ask focused document questions with explicit AI opt-in, local extraction first, and clear privacy boundaries before any remote inference.",
-  path: "/tools/ai-pdf-assistant",
-  image: "/og/tools.png",
-})
+export const metadata: Metadata = {
+  ...buildPageMetadata({
+    title: "AI PDF Assistant - Opt-in Analysis",
+    description:
+      "Summarise PDFs and ask document questions with local extraction first, then optional server-side AI response when explicitly enabled.",
+    path: "/tools/ai-pdf-assistant",
+    image: "/og/tools.png",
+  }),
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default function AIPdfAssistantLayout({
   children,
@@ -17,3 +23,4 @@ export default function AIPdfAssistantLayout({
 }) {
   return children
 }
+

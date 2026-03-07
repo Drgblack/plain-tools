@@ -125,38 +125,10 @@ export default function ToolsPage() {
     },
   ]
 
-  const crawlableToolSlugs = [
-    "merge-pdf",
-    "split-pdf",
-    "compare-pdf",
-    "rotate-pdf",
-    "annotate-pdf",
-    "compress-pdf",
-    "pdf-to-word",
-    "word-to-pdf",
-    "jpg-to-pdf",
-    "pdf-to-jpg",
-    "pdf-to-excel",
-    "pdf-to-ppt",
-    "pdf-to-html",
-    "html-to-pdf",
-    "pdf-to-markdown",
-    "image-compress",
-    "zip-tool",
-    "base64",
-    "file-hash",
-    "qr-code",
-    "qr-scanner",
-    "watermark-pdf",
-    "sign-pdf",
-    "protect-pdf",
-    "unlock-pdf",
-    "ocr-pdf",
-  ] as const
-
-  const crawlableToolDirectory = crawlableToolSlugs
-    .map((slug) => TOOL_CATALOGUE.find((tool) => tool.slug === slug && tool.available))
-    .filter((tool): tool is NonNullable<(typeof TOOL_CATALOGUE)[number]> => Boolean(tool))
+  const crawlableToolDirectory = TOOL_CATALOGUE
+    .filter((tool) => tool.available)
+    .slice()
+    .sort((left, right) => left.name.localeCompare(right.name))
 
   const toolsProofPoints = [
     {

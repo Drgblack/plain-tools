@@ -3,22 +3,17 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
 import LocalSignerTool from "@/components/tools/local-signer-tool"
 
-export const metadata: Metadata = {
-  title: "Plain Local Cryptographic Signer",
-  description: "Create locally verifiable cryptographic PDF signatures in your browser with visual placement controls, verification support, and no upload exposure. Built for.",
-  alternates: {
-    canonical: "https://plain.tools/tools/local-signer",
-  },
-  openGraph: {
-    title: "Plain Local Cryptographic Signer - Plain",
-    description:
-      "Draw, type, or upload a visual signature and apply cryptographic PDF signing locally with private browser processing.",
-    url: "https://plain.tools/tools/local-signer",
-  },
-}
+export const metadata: Metadata = buildPageMetadata({
+  title: "Local Cryptographic PDF Signer - Private",
+  description:
+    "Create cryptographic and visual PDF signatures locally in your browser with private key handling, verification support, and no upload exposure.",
+  path: "/tools/local-signer",
+  image: "/og/tools.png",
+})
 
 export default function LocalSignerPage() {
   return (

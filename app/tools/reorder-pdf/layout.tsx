@@ -3,9 +3,9 @@ import type { Metadata } from "next"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Reorder PDF Pages in Browser - Private and Free | Plain Tools",
+  title: "Reorder PDF Pages Locally - No Upload",
   description:
-    "Reorder PDF pages with local browser processing only. Drag pages into place and export without uploads or server-side handling.",
+    "Reorder PDF pages with visual thumbnails and local browser processing, then download a new PDF without uploading your document.",
   path: "/tools/reorder-pdf",
   image: "/og/tools.png",
 })
@@ -17,3 +17,4 @@ export default function ReorderPdfLayout({
 }) {
   return children
 }
+

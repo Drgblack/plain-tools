@@ -11,6 +11,7 @@ import {
   buildBreadcrumbList,
   buildFaqPageSchema,
   buildHowToSchema,
+  buildItemListSchema,
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
@@ -78,7 +79,7 @@ export function generateStaticParams() {
   }))
 }
 
-const faqs = [
+const baseFaqs = [
   {
     question: "How does this status check work?",
     answer: "The checker sends a live HTTP probe and reports whether the site responds successfully. It does not rely on cached status pages.",
@@ -154,6 +155,14 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   )
     .filter((value) => value !== normalizedSite)
     .slice(0, 8)
+  const faqs = [
+    {
+      question: `Is ${siteLabel} down for everyone or just me?`,
+      answer:
+        `Use the live status result on this page as a global signal, then run DNS and latency checks to confirm whether access issues are local to your network.`,
+    },
+    ...baseFaqs,
+  ]
   const troubleshootingSteps = siteContext.troubleshootingSteps.map((step, index) => ({
     name: `Step ${index + 1}`,
     text: step,
@@ -164,7 +173,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
     buildWebPageSchema({
       name: `Is ${siteLabel} down?`,
       description:
-        `Live availability check for ${siteLabel} with current up/down signal, response-time context, and troubleshooting guidance.`,
+        `Live availability check for ${siteLabel} with current up/down signal, response-time context, and practical checks for local versus global outage diagnosis.`,
       url: pageUrl,
     }),
     buildBreadcrumbList([
@@ -179,6 +188,14 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       troubleshootingSteps
     ),
     buildFaqPageSchema(faqs),
+    buildItemListSchema(
+      `Related status checks for ${siteLabel}`,
+      relatedStatusChecks.map((value) => ({
+        name: `Is ${value} down?`,
+        url: `https://plain.tools${statusPathFor(value)}`,
+      })),
+      pageUrl
+    ),
   ])
 
   return (

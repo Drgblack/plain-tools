@@ -10,20 +10,22 @@ import { Lock } from "lucide-react"
 import FillPdfTool from "@/components/tools/fill-pdf-tool"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import { isPro } from "@/lib/subscription"
 
-export const metadata: Metadata = {
-  title: "Fill PDF Forms",
+const baseMetadata = buildPageMetadata({
+  title: "Fill PDF Forms Locally - Plain Pro",
   description:
-    "Fill AcroForm PDF fields locally in your browser, choose flattened or editable output, and download without uploads. Plain Pro feature.",
-  alternates: {
-    canonical: "https://plain.tools/tools/fill-pdf",
-  },
-  openGraph: {
-    title: "Fill PDF Forms - Plain",
-    description:
-      "Fill text fields, checkboxes, radio buttons, and dropdowns locally with optional flattening. Available with Plain Pro.",
-    url: "https://plain.tools/tools/fill-pdf",
+    "Fill AcroForm PDF fields locally, choose flattened or editable output, and download without uploads. Access currently limited while Plain Pro is private.",
+  path: "/tools/fill-pdf",
+  image: "/og/tools.png",
+})
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  robots: {
+    index: false,
+    follow: false,
   },
 }
 

@@ -3,22 +3,17 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
 import MetadataPurgeTool from "@/components/tools/metadata-purge-tool"
 
-export const metadata: Metadata = {
-  title: "Plain Metadata Purge",
-  description: "Inspect and remove PDF metadata locally, including XMP and Info Dictionary fields, before sharing documents outside your trusted environment. Built for.",
-  alternates: {
-    canonical: "https://plain.tools/tools/metadata-purge",
-  },
-  openGraph: {
-    title: "Plain Metadata Purge - Plain",
-    description:
-      "Inspect and purge PDF metadata fields locally with no upload requirement and clear before/after visibility.",
-    url: "https://plain.tools/tools/metadata-purge",
-  },
-}
+export const metadata: Metadata = buildPageMetadata({
+  title: "Remove PDF Metadata Locally - No Upload",
+  description:
+    "Inspect and remove PDF metadata fields such as XMP and document info locally in your browser before sharing sensitive files.",
+  path: "/tools/metadata-purge",
+  image: "/og/tools.png",
+})
 
 export default function MetadataPurgePage() {
   return (

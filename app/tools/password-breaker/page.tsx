@@ -3,22 +3,17 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
 import PasswordBreakerTool from "@/components/tools/password-breaker-tool"
 
-export const metadata: Metadata = {
-  title: "Plain Password Breaker",
-  description: "Recover access to your own password-protected PDFs locally with known-password and bounded brute-force modes using private browser execution. Built for.",
-  alternates: {
-    canonical: "https://plain.tools/tools/password-breaker",
-  },
-  openGraph: {
-    title: "Plain Password Breaker - Plain",
-    description:
-      "Attempt local PDF password recovery using known-password or bounded brute-force controls with no file uploads.",
-    url: "https://plain.tools/tools/password-breaker",
-  },
-}
+export const metadata: Metadata = buildPageMetadata({
+  title: "Recover PDF Password Access Locally",
+  description:
+    "Attempt authorised local recovery of password-protected PDFs using known-password and bounded brute-force modes in your browser.",
+  path: "/tools/password-breaker",
+  image: "/og/tools.png",
+})
 
 export default function PasswordBreakerPage() {
   return (

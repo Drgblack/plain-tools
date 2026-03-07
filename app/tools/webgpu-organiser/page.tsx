@@ -3,22 +3,17 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
 import WebgpuOrganiserTool from "@/components/tools/webgpu-organiser-tool"
 
-export const metadata: Metadata = {
-  title: "Plain WebGPU Page Organiser",
-  description: "Reorder, delete, rotate, duplicate, and bulk-edit PDF pages locally with visual thumbnails and private in-browser reconstruction workflows. Built for private.",
-  alternates: {
-    canonical: "https://plain.tools/tools/webgpu-organiser",
-  },
-  openGraph: {
-    title: "Plain WebGPU Page Organiser - Plain",
-    description:
-      "Organise PDF pages in a visual thumbnail grid locally with no upload dependency and responsive touch-friendly controls.",
-    url: "https://plain.tools/tools/webgpu-organiser",
-  },
-}
+export const metadata: Metadata = buildPageMetadata({
+  title: "WebGPU PDF Page Organiser - Local",
+  description:
+    "Reorder, rotate, duplicate, and delete PDF pages in a visual thumbnail workspace with local browser processing and no upload dependency.",
+  path: "/tools/webgpu-organiser",
+  image: "/og/tools.png",
+})
 
 export default function WebgpuOrganiserPage() {
   return (

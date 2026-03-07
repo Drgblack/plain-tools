@@ -3,23 +3,17 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
 import BatchEngineTool from "@/components/tools/batch-engine-tool"
 
-export const metadata: Metadata = {
-  title: "Plain Hardware-Accelerated Batch Engine",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Batch PDF Engine Locally - No Upload",
   description:
-    "Run local batch merge, compress, split, and convert operations in parallel browser workers with queue-level progress, private processing, and no uploads.",
-  alternates: {
-    canonical: "https://plain.tools/tools/batch-engine",
-  },
-  openGraph: {
-    title: "Plain Hardware-Accelerated Batch Engine - Plain",
-    description:
-      "Process multiple PDFs in parallel local workers with private browser execution and no upload dependency.",
-    url: "https://plain.tools/tools/batch-engine",
-  },
-}
+    "Run merge, compress, split, and conversion jobs in parallel browser workers with local processing and queue-level progress on Plain Tools.",
+  path: "/tools/batch-engine",
+  image: "/og/tools.png",
+})
 
 export default function BatchEnginePage() {
   return (

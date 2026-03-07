@@ -3,9 +3,9 @@ import type { Metadata } from "next"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Extract PDF Pages Locally - No Upload | Plain Tools",
+  title: "Extract PDF Pages Locally - No Upload",
   description:
-    "Extract selected pages from PDF files directly in your browser. No uploads, no account, and private local processing by design.",
+    "Extract selected PDF pages or ranges locally in your browser, then download one combined PDF or separate page files without uploads.",
   path: "/tools/extract-pdf",
   image: "/og/tools.png",
 })
@@ -17,3 +17,4 @@ export default function ExtractPdfLayout({
 }) {
   return children
 }
+
