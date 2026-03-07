@@ -5,6 +5,7 @@ import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 
 export async function GET() {
   const now = new Date()
+  const seoLandingPages = ["/is-chatgpt-down", "/check-if-website-is-down"] as const
 
   const entries: SitemapXmlEntry[] = TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     url: `${BASE_URL}/tools/${tool.slug}`,
@@ -19,6 +20,12 @@ export async function GET() {
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.82,
+    })),
+    ...seoLandingPages.map((path) => ({
+      url: `${BASE_URL}${path}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.84,
     }))
   )
 

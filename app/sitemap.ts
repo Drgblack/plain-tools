@@ -69,6 +69,7 @@ const staticCorePages = [
 const curatedLandingPages = [
   "/compare/smallpdf-alternative",
   "/learn/compress-pdf-without-upload",
+  "/check-if-website-is-down",
 ]
 
 const pdfIntentPages = PDF_INTENT_PAGES.map((page) => ({
