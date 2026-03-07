@@ -2,11 +2,19 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { JsonLd } from "@/components/seo/json-ld"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
 import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+  buildWebPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "HTML sitemap",
@@ -105,6 +113,36 @@ const blogLinks: SitemapLink[] = [
   })),
 ]
 
+const htmlSitemapSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "HTML Sitemap - Plain Tools",
+    description:
+      "Human-friendly sitemap for tools, guides, status routes, comparisons, and support pages.",
+    url: "https://plain.tools/html-sitemap",
+  }),
+  buildCollectionPageSchema({
+    name: "Plain Tools page index",
+    description:
+      "Canonical public routes for utility tools, guides, comparisons, status checks, and legal pages.",
+    url: "https://plain.tools/html-sitemap",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "HTML Sitemap", url: "https://plain.tools/html-sitemap" },
+  ]),
+  buildItemListSchema(
+    "Main sections",
+    [
+      { name: "Tools", url: "https://plain.tools/tools" },
+      { name: "Site status checker", url: "https://plain.tools/site-status" },
+      { name: "Network tools", url: "https://plain.tools/network-tools" },
+      { name: "Learn", url: "https://plain.tools/learn" },
+      { name: "Compare", url: "https://plain.tools/compare" },
+    ],
+    "https://plain.tools/html-sitemap"
+  ),
+])
+
 function SitemapSectionList({ section }: { section: SitemapSection }) {
   return (
     <section className="rounded-xl border border-border bg-card/40 p-5">
@@ -125,6 +163,7 @@ function SitemapSectionList({ section }: { section: SitemapSection }) {
 export default function HtmlSitemapPage() {
   return (
     <main className="flex-1 bg-background px-4 py-14 md:py-16">
+      {htmlSitemapSchema ? <JsonLd id="html-sitemap-schema" schema={htmlSitemapSchema} /> : null}
       <div className="mx-auto max-w-5xl space-y-6">
         <header>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">

@@ -168,7 +168,7 @@ function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
         <label className="mb-2 block text-sm text-muted-foreground">
           Record Type
         </label>
-        <Select value={recordType} onValueChange={setRecordType}>
+        <Select value={recordType} onValueChange={(value) => setRecordType(value as DnsRecordType)}>
           <SelectTrigger className="bg-secondary">
             <SelectValue />
           </SelectTrigger>

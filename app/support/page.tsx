@@ -1,7 +1,32 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { Mail, ShieldCheck, Wrench, BookOpen, Scale, SearchCheck } from "lucide-react"
 
 import { SupportForm } from "@/components/support-form"
+import { JsonLd } from "@/components/seo/json-ld"
+import { buildPageMetadata } from "@/lib/page-metadata"
+import { buildBreadcrumbList, buildWebPageSchema, combineJsonLd } from "@/lib/structured-data"
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Support",
+  description:
+    "Get practical support for Plain Tools workflows, privacy questions, and troubleshooting. Contact options are lightweight and privacy-first.",
+  path: "/support",
+  image: "/og/default.png",
+})
+
+const supportPageSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "Support - Plain Tools",
+    description:
+      "Support options and troubleshooting routes for Plain Tools, with privacy-first contact guidance.",
+    url: "https://plain.tools/support",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "Support", url: "https://plain.tools/support" },
+  ]),
+])
 
 const helpfulLinks = [
   { label: "Tools", href: "/tools", icon: Wrench },
@@ -14,6 +39,7 @@ const helpfulLinks = [
 export default function SupportPage() {
   return (
     <main className="min-h-screen bg-background px-4 py-14 md:py-16">
+      {supportPageSchema ? <JsonLd id="support-page-schema" schema={supportPageSchema} /> : null}
       <div className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
           Support

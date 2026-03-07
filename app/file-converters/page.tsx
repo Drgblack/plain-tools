@@ -1,7 +1,25 @@
+import type { Metadata } from "next"
 import { FileImage, FileSpreadsheet, FileText, FileType, Presentation } from "lucide-react"
 import Link from "next/link"
 
 import { ToolShell } from "@/components/tool-shell"
+import { JsonLd } from "@/components/seo/json-ld"
+import { buildPageMetadata } from "@/lib/page-metadata"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+  buildWebPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "File converters",
+  description:
+    "Open canonical file-converter routes on Plain Tools. Live converters redirect to working /tools paths for local, privacy-first processing.",
+  path: "/file-converters",
+  image: "/og/tools.png",
+})
 
 const relatedTools = [
   {
@@ -100,6 +118,34 @@ const unsupportedLegacy = [
   "tiff-to-pdf",
 ]
 
+const converterHubSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "File Converters - Plain Tools",
+    description:
+      "Converter hub that routes users to canonical local-processing tools under /tools.",
+    url: "https://plain.tools/file-converters",
+  }),
+  buildCollectionPageSchema({
+    name: "File converter routes",
+    description:
+      "Live converter routes and alias handling for canonical Plain Tools conversion workflows.",
+    url: "https://plain.tools/file-converters",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "File Converters", url: "https://plain.tools/file-converters" },
+  ]),
+  buildItemListSchema(
+    "Live converter tools",
+    liveConverters.map((converter) => ({
+      name: converter.label,
+      description: converter.detail,
+      url: `https://plain.tools${converter.href}`,
+    })),
+    "https://plain.tools/file-converters"
+  ),
+])
+
 export default function FileConvertersPage() {
   return (
     <ToolShell
@@ -111,6 +157,7 @@ export default function FileConvertersPage() {
       faqs={faqs}
       relatedTools={relatedTools}
     >
+      {converterHubSchema ? <JsonLd id="file-converters-hub-schema" schema={converterHubSchema} /> : null}
       <div className="space-y-8">
         <section className="rounded-lg border border-border bg-secondary/30 p-4">
           <h2 className="text-lg font-semibold text-foreground">Live converter tools</h2>

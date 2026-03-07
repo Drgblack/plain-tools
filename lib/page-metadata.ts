@@ -58,6 +58,11 @@ export function buildPageMetadata({
     description: resolvedDescription,
     alternates: {
       canonical,
+      languages: {
+        en: canonical,
+        de: canonical,
+        "x-default": canonical,
+      },
     },
     openGraph: {
       type,

@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Invalid website status route",
       description:
         "The requested status route is not valid. Use a hostname such as chatgpt.com or reddit.com for a canonical availability check.",
-      path: `/status/${encodeURIComponent(decodedSite)}`,
+      path: "/site-status",
       image: "/og/default.png",
     })
 

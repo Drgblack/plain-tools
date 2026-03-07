@@ -84,7 +84,7 @@ export default function RoadmapPage() {
             Open Labs
           </Link>
           <Link
-            href="/sitemap"
+            href="/html-sitemap"
             className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
           >
             Browse HTML sitemap

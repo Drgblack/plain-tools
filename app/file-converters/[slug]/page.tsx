@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation"
+import { permanentRedirect } from "next/navigation"
 
 type ConverterRouteProps = {
   params: Promise<{ slug: string }>
@@ -31,8 +31,8 @@ export default async function FileConverterAliasPage({ params }: ConverterRouteP
   const target = converterRedirects[slug]
 
   if (target) {
-    redirect(target)
+    permanentRedirect(target)
   }
 
-  redirect("/file-converters")
+  permanentRedirect("/file-converters")
 }

@@ -7,7 +7,7 @@ export interface ToolCardProps {
   name: string
   description: string
   href: string
-  tags?: string[]
+  tags?: readonly string[]
   icon?: React.ReactNode
 }
 
