@@ -65,6 +65,13 @@ type GetStatusHistoryOptions = {
   recentLimit?: number
 }
 
+type StatusHistoryWindow = {
+  domain: string
+  hours: number
+  points: StatusHistoryPoint[]
+  startAt: string
+}
+
 const ONE_HOUR_MS = 60 * 60 * 1000
 const TREND_DEBOUNCE_MS = 45_000
 const MAX_TRACKED_DOMAINS = 5_000
@@ -398,10 +405,10 @@ export async function getStatusTrends(options: GetStatusTrendsOptions = {}) {
     })) satisfies TrendingStatusEntry[]
 }
 
-export async function getStatusHistorySummary(
+export async function getStatusHistoryWindow(
   domainInput: string,
-  options: GetStatusHistoryOptions = {}
-): Promise<StatusHistorySummary | null> {
+  options: Pick<GetStatusHistoryOptions, "hours"> = {}
+): Promise<StatusHistoryWindow | null> {
   const normalized = normalizeSiteInput(domainInput)
   if (!normalized) return null
 
@@ -409,11 +416,6 @@ export async function getStatusHistorySummary(
     Number.isFinite(options.hours) ? Number(options.hours) : DEFAULT_HISTORY_HOURS,
     1,
     MAX_HISTORY_HOURS
-  )
-  const recentLimit = clamp(
-    Number.isFinite(options.recentLimit) ? Number(options.recentLimit) : DEFAULT_RECENT_LIMIT,
-    1,
-    MAX_RECENT_LIMIT
   )
 
   const now = new Date()
@@ -427,6 +429,29 @@ export async function getStatusHistorySummary(
       (left, right) =>
         new Date(left.timestamp).getTime() - new Date(right.timestamp).getTime()
     )
+
+  return {
+    domain: normalized,
+    hours,
+    points: orderedHistory,
+    startAt: start.toISOString(),
+  }
+}
+
+export async function getStatusHistorySummary(
+  domainInput: string,
+  options: GetStatusHistoryOptions = {}
+): Promise<StatusHistorySummary | null> {
+  const window = await getStatusHistoryWindow(domainInput, { hours: options.hours })
+  if (!window) return null
+
+  const { domain: normalized, hours, points: orderedHistory, startAt } = window
+  const recentLimit = clamp(
+    Number.isFinite(options.recentLimit) ? Number(options.recentLimit) : DEFAULT_RECENT_LIMIT,
+    1,
+    MAX_RECENT_LIMIT
+  )
+  const start = new Date(startAt)
 
   const bucketMap = new Map<string, StatusHistoryPoint>()
   for (const point of orderedHistory) {

@@ -29,6 +29,7 @@ export default function robots(): MetadataRoute.Robots {
       "https://plain.tools/sitemap-status.xml",
       "https://plain.tools/sitemap-status-categories.xml",
       "https://plain.tools/sitemap-status-queries.xml",
+      "https://plain.tools/sitemap-outage-history.xml",
       "https://plain.tools/sitemap-learn.xml",
       "https://plain.tools/sitemap-compare.xml",
     ],

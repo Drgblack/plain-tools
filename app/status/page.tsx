@@ -4,6 +4,10 @@ import Link from "next/link"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
+import {
+  outageHistoryPathForSlug,
+  OUTAGE_HISTORY_PAGES,
+} from "@/lib/outage-history-pages"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import {
@@ -132,6 +136,27 @@ export default function StatusDirectoryPage() {
                   className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                 >
                   Is {entry.name} down?
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold text-foreground">Recent outage history</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Curated outage timeline pages built from aggregated status history only.
+          </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {OUTAGE_HISTORY_PAGES.map((entry) => (
+              <li key={entry.slug}>
+                <Link
+                  href={outageHistoryPathForSlug(entry.slug)}
+                  className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                >
+                  {entry.name} outage history
                 </Link>
               </li>
             ))}

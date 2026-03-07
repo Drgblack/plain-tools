@@ -5,6 +5,7 @@ import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { STATUS_CATEGORIES } from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
@@ -81,6 +82,13 @@ const statusQueryPages = STATUS_QUERY_PAGES.map((entry) => ({
   lastModified: now,
   changeFrequency: "daily" as const,
   priority: 0.82,
+}))
+
+const outageHistoryPages = OUTAGE_HISTORY_PAGES.map((entry) => ({
+  url: `${BASE_URL}${outageHistoryPathForSlug(entry.slug)}`,
+  lastModified: now,
+  changeFrequency: "daily" as const,
+  priority: 0.8,
 }))
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -163,6 +171,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...curatedLanding,
     ...statusCategoryPages,
     ...statusQueryPages,
+    ...outageHistoryPages,
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,

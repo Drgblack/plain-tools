@@ -256,6 +256,11 @@ const nextConfig: NextConfig = {
         destination: "/is-:site-down",
         permanent: true,
       },
+      {
+        source: "/outage-history/:service(chatgpt|discord|youtube|reddit|github|netflix|spotify|stripe|slack|openai)",
+        destination: "/:service-outage-history",
+        permanent: true,
+      },
       // Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
@@ -543,6 +548,10 @@ const nextConfig: NextConfig = {
       {
         source: "/is-:site-down",
         destination: "/is/:site",
+      },
+      {
+        source: "/:service(chatgpt|discord|youtube|reddit|github|netflix|spotify|stripe|slack|openai)-outage-history",
+        destination: "/outage-history/:service",
       },
     ]
   },
