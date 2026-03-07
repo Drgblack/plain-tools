@@ -75,6 +75,8 @@ const topicalClusters = [
       { label: "Merge PDF locally", href: "/tools/merge-pdf" },
       { label: "Split PDF by pages", href: "/tools/split-pdf" },
       { label: "Compress PDF without uploads", href: "/tools/compress-pdf" },
+      { label: "How PDF compression works", href: "/learn/how-pdf-compression-works" },
+      { label: "How OCR works on scanned PDFs", href: "/learn/how-ocr-works-on-scanned-pdfs" },
     ],
   },
   {
@@ -82,6 +84,8 @@ const topicalClusters = [
     description: "Diagnose uptime, DNS, IP, and latency issues in one place.",
     links: [
       { label: "Is it down for everyone or just me?", href: "/learn/is-it-down-for-everyone-or-just-me" },
+      { label: "How DNS lookup works", href: "/learn/how-dns-lookup-works" },
+      { label: "What response time means in uptime checks", href: "/learn/what-response-time-means-in-uptime-check" },
       { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
       { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
       { label: "Open network tools hub", href: "/network-tools" },

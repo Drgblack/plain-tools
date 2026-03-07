@@ -577,6 +577,96 @@ export const learnPages: TrancheLearnArticle[] = [
     ["no-uploads-explained", "how-to-verify-a-pdf-tool-doesnt-upload-your-files"]
   ),
   {
+    slug: "online-vs-offline-pdf-tools",
+    title: "Local PDF Tools vs Cloud PDF Tools",
+    metaTitle: "Local PDF Tools vs Cloud PDF Tools | Plain Tools",
+    metaDescription:
+      "Compare local PDF tools and cloud PDF tools with practical guidance on uploads, privacy controls, speed, and operational fit.",
+    primaryQuery: "local pdf tools vs cloud pdf tools",
+    secondaryQueries: [
+      "online vs offline pdf tools",
+      "cloud pdf tools privacy",
+      "no upload pdf workflow",
+    ],
+    intent: "trust",
+    intro: [
+      "Local and cloud PDF tools solve similar tasks but operate with very different risk models. Runs locally in your browser. No uploads.",
+      "Use this guide to decide based on file sensitivity, workflow speed, and verification needs rather than feature checklists.",
+    ],
+    sections: [
+      {
+        id: "quick-answer",
+        heading: "Quick answer",
+        paragraphs: [
+          "Use local PDF tools when no-upload handling is a requirement for sensitive files.",
+          "Use cloud PDF tools when account-led collaboration is more important than strict local processing.",
+        ],
+      },
+      {
+        id: "step-by-step",
+        heading: "How to choose in practice",
+        paragraphs: [
+          "Run one representative workflow in both models, then compare upload exposure, turnaround time, and output quality.",
+        ],
+        bullets: [
+          "Classify document sensitivity first.",
+          "Test one operation locally and one in a cloud workflow.",
+          "Measure upload friction, review effort, and practical speed.",
+          "Standardise the model that your team can execute consistently.",
+        ],
+      },
+      {
+        id: "privacy-angle",
+        heading: "Privacy and governance trade-offs",
+        paragraphs: [
+          "Cloud workflows depend on provider policy, retention controls, and account governance.",
+          "Local workflows reduce transfer exposure and can be verified directly through browser tooling.",
+        ],
+      },
+      {
+        id: "quality-checks",
+        heading: "Limitations and caveats",
+        paragraphs: [
+          "Local workflows are constrained by browser memory and device performance for very large files.",
+          "Cloud workflows can add upload latency and introduce additional data-handling obligations.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Are local PDF tools always better than cloud tools?",
+        answer:
+          "No. The better option depends on your workflow requirements, especially privacy constraints and collaboration needs.",
+      },
+      {
+        question: "When should sensitive files stay in local workflows?",
+        answer:
+          "When policy or risk tolerance requires no-upload handling for personal, legal, medical, or financial documents.",
+      },
+      {
+        question: "How can I verify a local processing claim?",
+        answer:
+          "Run a real operation and inspect DevTools Network requests to confirm no file payload is transmitted.",
+      },
+      {
+        question: "Can cloud workflows still be useful?",
+        answer:
+          "Yes. They can be useful when account-level collaboration and hosted integrations are central to your process.",
+      },
+    ],
+    trustBox: defaultTrustBox,
+    nextSteps: [
+      { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+      { label: "Compare offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+      { label: "How to verify no-upload claims", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      { label: "No Uploads Explained", href: "/learn/no-uploads-explained" },
+      { label: "Verify Claims", href: "/verify-claims" },
+    ],
+    toolHref: "/tools/merge-pdf",
+    relatedLearn: ["no-uploads-explained", "how-to-verify-a-pdf-tool-doesnt-upload-your-files"],
+    verifyHref: "/verify-claims",
+  },
+  {
     slug: "is-it-down-for-everyone-or-just-me",
     title: "Is It Down for Everyone or Just Me: Status Checks Explained",
     metaTitle: "Is It Down for Everyone or Just Me: Status Checks Explained | Plain Tools",
@@ -669,6 +759,220 @@ export const learnPages: TrancheLearnArticle[] = [
     relatedLearn: ["how-to-verify-a-pdf-tool-doesnt-upload-your-files", "no-uploads-explained"],
     verifyHref: "/verify-claims",
   },
+  {
+    slug: "how-dns-lookup-works",
+    title: "How DNS Lookup Works",
+    metaTitle: "How DNS Lookup Works | Plain Tools",
+    metaDescription:
+      "Learn how DNS lookup works, why DNS failures happen, and how to troubleshoot domain resolution issues with practical checks.",
+    primaryQuery: "how dns lookup works",
+    secondaryQueries: [
+      "dns lookup explained",
+      "how domain name resolution works",
+      "dns troubleshooting basics",
+    ],
+    intent: "trust",
+    intro: [
+      "DNS lookup converts a domain name into an IP address so your browser knows where to connect.",
+      "This guide explains DNS resolution in practical terms and shows how to diagnose common lookup failures.",
+    ],
+    sections: [
+      {
+        id: "quick-answer",
+        heading: "Quick answer",
+        paragraphs: [
+          "When you enter a domain, your resolver asks DNS servers for matching records such as A or AAAA.",
+          "If DNS resolution fails, websites may appear down even when the service itself is healthy.",
+        ],
+      },
+      {
+        id: "step-by-step",
+        heading: "Step-by-step DNS workflow",
+        paragraphs: [
+          "Use this order to troubleshoot resolution issues quickly and avoid false outage conclusions.",
+        ],
+        bullets: [
+          "Query the domain using a DNS lookup tool.",
+          "Check whether A or AAAA records are returned.",
+          "Repeat with another resolver to compare results.",
+          "Clear local DNS cache and test again.",
+        ],
+      },
+      {
+        id: "limitations",
+        heading: "Limitations and caveats",
+        paragraphs: [
+          "Different resolvers can return different results during propagation windows.",
+          "Corporate DNS policies and filtering can alter resolution behaviour.",
+        ],
+      },
+      {
+        id: "privacy-note",
+        heading: "Privacy note",
+        paragraphs: [
+          "DNS diagnostics do not require document uploads. Keep checks focused on domain resolution and timing signals.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the difference between A and AAAA records?",
+        answer:
+          "A records map domains to IPv4 addresses. AAAA records map domains to IPv6 addresses.",
+      },
+      {
+        question: "Why can DNS work on one network but fail on another?",
+        answer:
+          "Resolvers, local cache, filtering rules, or ISP routing can differ between networks.",
+      },
+      {
+        question: "How long does DNS propagation usually take?",
+        answer:
+          "It varies by TTL and resolver behaviour. Some changes appear quickly, while others can take longer to settle globally.",
+      },
+      {
+        question: "Does DNS failure always mean the website is down?",
+        answer:
+          "No. A site can be healthy while DNS resolution fails from your local resolver path.",
+      },
+    ],
+    trustBox: {
+      localProcessing: "DNS checks run in-browser and query resolver endpoints directly from your session.",
+      noUploads: REQUIRED_LOCAL_LINE,
+      noTracking: "No behavioural tracking is required for DNS diagnostics.",
+      verifyHref: "/verify-claims",
+    },
+    nextSteps: [
+      { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
+      { label: "How to check if a website is down", href: "/learn/is-it-down-for-everyone-or-just-me" },
+      { label: "What response time means in uptime checks", href: "/learn/what-response-time-means-in-uptime-check" },
+      { label: "Open site status checker", href: "/site-status" },
+      { label: "Verify Claims", href: "/verify-claims" },
+    ],
+    toolHref: "/dns-lookup",
+    relatedLearn: ["is-it-down-for-everyone-or-just-me", "what-response-time-means-in-uptime-check"],
+    verifyHref: "/verify-claims",
+  },
+  {
+    slug: "what-response-time-means-in-uptime-check",
+    title: "What Response Time Means in an Uptime Check",
+    metaTitle: "What Response Time Means in an Uptime Check | Plain Tools",
+    metaDescription:
+      "Understand what response time means in uptime checks, how to interpret spikes, and when slow responses indicate local versus service issues.",
+    primaryQuery: "what response time means in an uptime check",
+    secondaryQueries: [
+      "uptime response time explained",
+      "website status response time meaning",
+      "how to read latency in status checks",
+    ],
+    intent: "trust",
+    intro: [
+      "Response time shows how quickly a site answers a probe request, not how fast the full page renders for every user.",
+      "Use response-time data with DNS and network context before deciding whether an outage is local or service-wide.",
+    ],
+    sections: [
+      {
+        id: "quick-answer",
+        heading: "Quick answer",
+        paragraphs: [
+          "Low response time generally indicates fast server acknowledgement, while spikes suggest routing, load, or connectivity issues.",
+          "A single high value is not always an outage signal. Look for sustained patterns and corroborating checks.",
+        ],
+      },
+      {
+        id: "step-by-step",
+        heading: "How to interpret response time",
+        paragraphs: [
+          "Use this sequence to avoid overreacting to one measurement.",
+        ],
+        bullets: [
+          "Run at least two consecutive checks for the same domain.",
+          "Compare status code and response time together.",
+          "Cross-check DNS resolution and local network conditions.",
+          "Retest from another network when possible.",
+        ],
+      },
+      {
+        id: "limitations",
+        heading: "Limitations and caveats",
+        paragraphs: [
+          "Probe timing reflects one request path and does not represent every region.",
+          "CDN routing, packet loss, and local ISP congestion can distort short-term measurements.",
+        ],
+      },
+      {
+        id: "privacy-note",
+        heading: "Privacy note",
+        paragraphs: [
+          "Uptime checks involve domain probes only and do not require uploading personal files.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Is high response time the same as downtime?",
+        answer:
+          "No. A service can be up but slow. Downtime usually involves failed responses or sustained unavailability.",
+      },
+      {
+        question: "What response time is considered good?",
+        answer:
+          "It depends on context. The useful signal is baseline consistency and sudden sustained deviation rather than one absolute number.",
+      },
+      {
+        question: "Why do response times vary between checks?",
+        answer:
+          "Network routing, DNS path changes, server load, and local connection quality can all change between requests.",
+      },
+      {
+        question: "Should I escalate on one slow result?",
+        answer:
+          "Usually no. Recheck, compare with DNS and status code, and confirm from another network before escalation.",
+      },
+    ],
+    trustBox: {
+      localProcessing: "Status checks run in-browser and measure probe response timing from your session.",
+      noUploads: REQUIRED_LOCAL_LINE,
+      noTracking: "No behavioural tracking is required for uptime diagnostics.",
+      verifyHref: "/verify-claims",
+    },
+    nextSteps: [
+      { label: "Open site status checker", href: "/site-status" },
+      { label: "How to check if a website is down", href: "/learn/is-it-down-for-everyone-or-just-me" },
+      { label: "How DNS lookup works", href: "/learn/how-dns-lookup-works" },
+      { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
+      { label: "Verify Claims", href: "/verify-claims" },
+    ],
+    toolHref: "/site-status",
+    relatedLearn: ["is-it-down-for-everyone-or-just-me", "how-dns-lookup-works"],
+    verifyHref: "/verify-claims",
+  },
+  buildHowTo(
+    "how-to-protect-a-pdf-with-a-password",
+    "How to Protect a PDF with a Password",
+    "how to protect a pdf with a password",
+    ["password protect pdf offline", "encrypt pdf in browser", "secure pdf with password"],
+    "/tools/protect-pdf",
+    ["is-offline-pdf-processing-secure", "common-pdf-privacy-mistakes"],
+    "/compare/best-pdf-tools-no-upload",
+    "Best PDF Tools with No Upload"
+  ),
+  buildEvergreen(
+    "how-pdf-compression-works",
+    "How PDF Compression Works",
+    "how pdf compression works",
+    ["pdf compression explained", "why pdf size varies", "compress pdf quality trade-off"],
+    "/tools/compress-pdf",
+    ["compress-pdf-without-losing-quality", "why-offline-compression-has-limits"]
+  ),
+  buildEvergreen(
+    "how-ocr-works-on-scanned-pdfs",
+    "How OCR Works on Scanned PDFs",
+    "how ocr works on scanned pdfs",
+    ["ocr scanned pdf explained", "searchable pdf text layer", "ocr accuracy limits"],
+    "/tools/ocr-pdf",
+    ["ocr-pdf-without-cloud", "how-pdfs-work"]
+  ),
   buildEvergreen(
     "what-is-a-pdf",
     "What Is a PDF",
@@ -774,6 +1078,20 @@ export const comparePages: TrancheComparePage[] = [
 ]
 
 const priorityLearnOverrides: Record<string, Partial<TrancheLearnArticle>> = {
+  "why-pdf-uploads-are-risky": {
+    title: "Why You Should Never Upload Sensitive PDFs to Random Online Tools",
+    intro: [
+      "If a PDF contains personal, legal, financial, HR, or medical data, random upload tools add avoidable exposure risk. Runs locally in your browser. No uploads.",
+      "This guide explains where risk appears, what to check before sharing a document, and safer local-first alternatives.",
+    ],
+  },
+  "online-vs-offline-pdf-tools": {
+    title: "Local PDF Tools vs Cloud PDF Tools",
+    intro: [
+      "Local and cloud PDF workflows can both be useful, but they carry different privacy and governance implications.",
+      "Use this guide to choose based on document sensitivity, operational speed, and verification effort.",
+    ],
+  },
   "how-to-merge-pdfs-offline": {
     title: "How to Merge PDFs Offline",
     intro: [
@@ -788,11 +1106,53 @@ const priorityLearnOverrides: Record<string, Partial<TrancheLearnArticle>> = {
       "Start with light optimisation, check output readability, and escalate only when you still need further size reduction.",
     ],
   },
+  "how-pdf-compression-works": {
+    title: "How PDF Compression Works",
+    intro: [
+      "PDF compression is a set of trade-offs between file size, visual quality, and text fidelity.",
+      "This guide explains what actually gets compressed and why results vary between different document types.",
+    ],
+  },
+  "how-ocr-works-on-scanned-pdfs": {
+    title: "How OCR Works on Scanned PDFs",
+    intro: [
+      "OCR turns scanned page images into searchable text by detecting characters and reconstructing words.",
+      "This guide covers how OCR pipelines work, where errors happen, and what to expect in real workflows.",
+    ],
+  },
   "how-to-sign-a-pdf-without-uploading-it": {
     toolHref: "/tools/sign-pdf",
     intro: [
       "Sign a PDF without sending the file to an external signing service. Runs locally in your browser. No uploads.",
       "Use this guide for practical visual signing workflows, plus limits you should know before external submission.",
+    ],
+  },
+  "how-to-protect-a-pdf-with-a-password": {
+    title: "How to Protect a PDF with a Password",
+    intro: [
+      "Password protection helps restrict access to exported PDFs when sharing is unavoidable.",
+      "This guide shows a practical local workflow and clarifies what password protection does and does not protect.",
+    ],
+  },
+  "is-it-down-for-everyone-or-just-me": {
+    title: "How to Check if a Website Is Down",
+    intro: [
+      "Use this guide when a website fails to load and you need to separate local connection issues from real service outages.",
+      "The workflow combines status checks, DNS diagnostics, and response-time interpretation for clearer decisions.",
+    ],
+  },
+  "how-dns-lookup-works": {
+    title: "How DNS Lookup Works",
+    intro: [
+      "DNS lookup is the translation layer between domain names and IP addresses.",
+      "Use this guide to understand resolver behaviour and troubleshoot common lookup failures quickly.",
+    ],
+  },
+  "what-response-time-means-in-uptime-check": {
+    title: "What Response Time Means in an Uptime Check",
+    intro: [
+      "Response time shows how quickly a target acknowledges a request, not full user-perceived page performance.",
+      "This guide explains how to read response-time data in context and avoid false outage conclusions.",
     ],
   },
 }

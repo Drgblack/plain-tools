@@ -148,12 +148,12 @@ export const learnSections: LearnSection[] = [
       "Foundational concepts for understanding data privacy in document processing.",
     articles: [
       {
-        title: "Privacy 101",
+        title: "Never Upload Sensitive PDFs to Random Tools",
         summary:
-          "Why uploading sensitive documents is a security risk. The hidden dangers of cloud-based PDF tools.",
+          "Why random upload tools are risky for legal, financial, HR, and medical PDFs, plus safer local-first handling.",
         href: "/learn/why-pdf-uploads-are-risky",
         category: "Security",
-        readTime: "5 min",
+        readTime: "8 min",
         icon: "AlertTriangle",
       },
       {
@@ -166,12 +166,12 @@ export const learnSections: LearnSection[] = [
         icon: "Shield",
       },
       {
-        title: "Online vs Offline PDF Tools",
+        title: "Local PDF Tools vs Cloud PDF Tools",
         summary:
-          "A neutral comparison of server-based and client-side approaches to document processing.",
+          "A practical comparison of upload-based and local workflows using privacy, speed, and governance criteria.",
         href: "/learn/online-vs-offline-pdf-tools",
         category: "Comparison",
-        readTime: "5 min",
+        readTime: "8 min",
         icon: "FileText",
       },
       {
@@ -191,6 +191,24 @@ export const learnSections: LearnSection[] = [
     description:
       "In-depth explorations of the technologies powering local document processing.",
     articles: [
+      {
+        title: "How PDF Compression Works",
+        summary:
+          "What actually gets compressed in a PDF, why size reduction varies, and how quality trade-offs are introduced.",
+        href: "/learn/how-pdf-compression-works",
+        category: "Tutorial",
+        readTime: "8 min",
+        icon: "Zap",
+      },
+      {
+        title: "How OCR Works on Scanned PDFs",
+        summary:
+          "How scanned images become searchable text, where OCR accuracy fails, and what to validate before use.",
+        href: "/learn/how-ocr-works-on-scanned-pdfs",
+        category: "Tutorial",
+        readTime: "9 min",
+        icon: "Sparkles",
+      },
       {
         title: "WebAssembly Explained",
         summary:
@@ -235,6 +253,15 @@ export const learnSections: LearnSection[] = [
     description: "Advanced guides for professionals handling sensitive documents.",
     articles: [
       {
+        title: "Protect a PDF with a Password",
+        summary:
+          "A practical local workflow for password protection, plus limitations of PDF encryption in shared environments.",
+        href: "/learn/how-to-protect-a-pdf-with-a-password",
+        category: "Security",
+        readTime: "8 min",
+        icon: "Lock",
+      },
+      {
         title: "Permanent Redaction Techniques",
         summary:
           "Ensuring permanent data removal. A comprehensive guide to securely redacting sensitive information.",
@@ -269,6 +296,41 @@ export const learnSections: LearnSection[] = [
         category: "Security",
         readTime: "5 min",
         icon: "Shield",
+      },
+    ],
+  },
+  {
+    id: "network-status-guides",
+    title: "Network and Status Guides",
+    description:
+      "Evergreen diagnostics guides for availability checks, DNS behaviour, and response-time interpretation.",
+    articles: [
+      {
+        title: "How to Check if a Website Is Down",
+        summary:
+          "A practical workflow to separate local connectivity failures from broader service outages.",
+        href: "/learn/is-it-down-for-everyone-or-just-me",
+        category: "Tutorial",
+        readTime: "7 min",
+        icon: "WifiOff",
+      },
+      {
+        title: "How DNS Lookup Works",
+        summary:
+          "How domain names resolve to IP addresses and why DNS errors can mimic outages.",
+        href: "/learn/how-dns-lookup-works",
+        category: "Tutorial",
+        readTime: "7 min",
+        icon: "Search",
+      },
+      {
+        title: "What Response Time Means in Uptime Checks",
+        summary:
+          "How to interpret latency values correctly and avoid false outage conclusions from one slow probe.",
+        href: "/learn/what-response-time-means-in-uptime-check",
+        category: "Tutorial",
+        readTime: "6 min",
+        icon: "Zap",
       },
     ],
   },

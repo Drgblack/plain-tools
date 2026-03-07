@@ -142,6 +142,181 @@ export const LEARN_GEO_OVERRIDES: Record<string, LearnGeoOverride> = {
       "Where can I check related network diagnostics?",
     ],
   },
+  "why-pdf-uploads-are-risky": {
+    summary:
+      "Uploading sensitive PDFs to random tools creates avoidable exposure. Prefer local-first workflows when documents contain personal, legal, financial, or medical information.",
+    whenToUse: [
+      "You need a policy baseline for handling sensitive PDFs.",
+      "You are reviewing tools that claim privacy without technical proof.",
+      "You want practical controls that non-specialists can follow.",
+    ],
+    steps: [
+      "Classify document sensitivity before selecting any processing route.",
+      "For high-sensitivity files, choose no-upload local workflows.",
+      "Verify behaviour in DevTools and document approved tool routes.",
+    ],
+    limitations: [
+      "Local workflows reduce transfer exposure but do not replace endpoint security controls.",
+      "Some advanced cloud features may not have a direct local equivalent.",
+      "Policy enforcement still depends on team discipline and training.",
+    ],
+    relatedQuestions: [
+      "What counts as a sensitive PDF in real workflows?",
+      "How can I prove a tool is not uploading files?",
+      "When can cloud processing still be acceptable?",
+      "How should teams standardise safe defaults?",
+    ],
+  },
+  "online-vs-offline-pdf-tools": {
+    summary:
+      "Local PDF tools and cloud PDF tools solve similar tasks with different privacy and governance trade-offs. Choose based on risk class and workflow constraints.",
+    whenToUse: [
+      "You are selecting a default tool model for team workflows.",
+      "You need to balance privacy requirements against collaboration needs.",
+      "You want a repeatable way to compare local and hosted options.",
+    ],
+    steps: [
+      "Map document types to sensitivity classes first.",
+      "Run the same workflow in local and cloud models.",
+      "Compare upload exposure, speed, output quality, and verification effort.",
+    ],
+    limitations: [
+      "Local model performance depends on device and browser capability.",
+      "Cloud models can add transfer latency and policy overhead.",
+      "No single model is best for every workload.",
+    ],
+    relatedQuestions: [
+      "Is offline always safer than online processing?",
+      "How should regulated teams choose a default model?",
+      "What should be tested in a pilot before rollout?",
+      "How can mixed-skill teams avoid workflow drift?",
+    ],
+  },
+  "how-to-protect-a-pdf-with-a-password": {
+    summary:
+      "Use PDF password protection to limit casual access when sharing is necessary. Apply it locally and validate the result before distribution.",
+    whenToUse: [
+      "You must send a PDF to an external recipient but want access gating.",
+      "You need a lightweight control for confidential attachments.",
+      "You want local processing for sensitive document protection.",
+    ],
+    steps: [
+      "Choose a strong password and confirm it in the tool.",
+      "Apply protection locally and download the output.",
+      "Open the result in a separate viewer to confirm password prompt behaviour.",
+    ],
+    limitations: [
+      "Password protection is not the same as rights management or full workflow security.",
+      "Weak shared passwords reduce the value of protection quickly.",
+      "Recipient handling practices still determine real-world exposure.",
+    ],
+    relatedQuestions: [
+      "What makes a strong PDF password?",
+      "Does password protection stop copying content?",
+      "How should I share passwords safely?",
+      "Can I verify this happened without file uploads?",
+    ],
+  },
+  "how-pdf-compression-works": {
+    summary:
+      "PDF compression reduces size by optimising structure and, in stronger modes, reducing image fidelity. Results vary by document composition.",
+    whenToUse: [
+      "You need to meet upload or email size limits.",
+      "You want to understand why some PDFs compress well and others do not.",
+      "You need predictable quality checks after optimisation.",
+    ],
+    steps: [
+      "Assess whether the PDF is text-heavy, image-heavy, or mixed.",
+      "Start with light optimisation and compare before/after size.",
+      "Escalate only when needed and validate readability in a second viewer.",
+    ],
+    limitations: [
+      "Aggressive compression can flatten selectable text into images.",
+      "Already-optimised files may show little reduction.",
+      "Image quality trade-offs are often irreversible after export.",
+    ],
+    relatedQuestions: [
+      "Why does one PDF shrink a lot while another barely changes?",
+      "What is the safest mode for contracts and forms?",
+      "When does compression reduce OCR quality?",
+      "How should I test quality before sharing?",
+    ],
+  },
+  "how-ocr-works-on-scanned-pdfs": {
+    summary:
+      "OCR converts scanned page images into text by detecting characters, grouping words, and rebuilding a text layer. Accuracy depends on scan quality and layout complexity.",
+    whenToUse: [
+      "You need searchable text from scanned documents.",
+      "You want to understand OCR limits before relying on extracted data.",
+      "You process image-based PDFs containing forms, tables, or mixed fonts.",
+    ],
+    steps: [
+      "Check scan quality and orientation before OCR.",
+      "Run OCR and inspect extracted text on multiple sample pages.",
+      "Correct critical fields manually before downstream use.",
+    ],
+    limitations: [
+      "Low-resolution scans reduce recognition accuracy significantly.",
+      "Handwritten and multi-column layouts often need manual correction.",
+      "Language packs and character sets affect recognition quality.",
+    ],
+    relatedQuestions: [
+      "Why does OCR fail on some scans?",
+      "Can OCR output be trusted for legal values without review?",
+      "How does language selection affect results?",
+      "What is the difference between text-only and searchable-PDF output?",
+    ],
+  },
+  "how-dns-lookup-works": {
+    summary:
+      "DNS lookup resolves domain names to IP addresses. Many apparent outages are actually resolver or cache issues rather than service failure.",
+    whenToUse: [
+      "A domain does not resolve on your network.",
+      "You need to separate DNS failure from true service downtime.",
+      "You are troubleshooting intermittent site-access incidents.",
+    ],
+    steps: [
+      "Run DNS lookup for the target hostname.",
+      "Compare results across at least two resolvers.",
+      "Clear cache and retry before escalating.",
+    ],
+    limitations: [
+      "Propagation windows can produce temporary resolver mismatch.",
+      "Enterprise DNS controls can intentionally override public results.",
+      "DNS success does not guarantee application-layer health.",
+    ],
+    relatedQuestions: [
+      "Why do two resolvers return different answers?",
+      "How long should DNS changes take to appear?",
+      "Can DNS be correct while the site is still unreachable?",
+      "What is the next step after DNS looks healthy?",
+    ],
+  },
+  "what-response-time-means-in-uptime-check": {
+    summary:
+      "Response time is a request-latency signal, not a full user experience score. Use it with status code and DNS context for reliable diagnosis.",
+    whenToUse: [
+      "Uptime checks report slow responses but not outright failures.",
+      "You need to decide whether to escalate an availability incident.",
+      "You want a practical method for interpreting latency spikes.",
+    ],
+    steps: [
+      "Run multiple checks for the same target over a short interval.",
+      "Compare latency together with status code outcome.",
+      "Cross-check DNS and test from another network.",
+    ],
+    limitations: [
+      "One probe path cannot represent global user experience.",
+      "Short spikes can be local-network noise rather than service incidents.",
+      "Latency thresholds differ by service and route profile.",
+    ],
+    relatedQuestions: [
+      "How high is too high for response time?",
+      "Can a site be up but still effectively unusable?",
+      "Why does latency vary between checks?",
+      "When should I escalate to an outage report?",
+    ],
+  },
 }
 
 export const COMPARE_GEO_OVERRIDES: Record<string, CompareGeoOverride> = {

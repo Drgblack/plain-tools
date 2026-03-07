@@ -34,8 +34,23 @@ function formatToolSlug(slug: string) {
 }
 
 function getToolNameFromHref(href: string) {
-  const slug = href.replace("/tools/", "")
-  return getToolBySlug(slug)?.name ?? formatToolSlug(slug)
+  if (href.startsWith("/tools/")) {
+    const slug = href.replace("/tools/", "")
+    return getToolBySlug(slug)?.name ?? formatToolSlug(slug)
+  }
+
+  const routeNames: Record<string, string> = {
+    "/site-status": "Site Status Checker",
+    "/dns-lookup": "DNS Lookup",
+    "/what-is-my-ip": "What Is My IP",
+    "/network-tools": "Network Tools",
+  }
+
+  if (routeNames[href]) {
+    return routeNames[href]
+  }
+
+  return formatToolSlug(href.replace(/^\//, ""))
 }
 
 function asDescriptiveToolAnchor(link: RouteLink): RouteLink {
@@ -507,13 +522,18 @@ export const LEARN_TO_SEO_LINKS: Record<string, LearnLinkRule> = Object.fromEntr
       href: buildLearnRouteFromSlug(slug),
     }))
     const primaryToolHref =
-      article.nextSteps.find((step) => step.href.startsWith("/tools/"))?.href ?? article.toolHref
+      article.nextSteps.find((step) => step.href === article.toolHref)?.href ??
+      article.nextSteps.find((step) => step.href.startsWith("/tools/"))?.href ??
+      article.toolHref
     const primaryToolName = getToolNameFromHref(primaryToolHref)
+    const primaryToolLabel = primaryToolHref.startsWith("/tools/")
+      ? `Use ${primaryToolName} locally`
+      : `Open ${primaryToolName}`
     return [
       article.slug,
       {
         primaryTool: {
-          label: `Use ${primaryToolName} locally`,
+          label: primaryToolLabel,
           href: primaryToolHref,
         },
         relatedLearn,
