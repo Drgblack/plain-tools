@@ -16,6 +16,7 @@ import { ensureSafeLocalFileSize, formatFileSize, isPdfLikeFile } from "@/lib/pd
 
 type WatermarkPosition =
   | "center"
+  | "top-center"
   | "top-left"
   | "top-right"
   | "bottom-left"
@@ -32,6 +33,7 @@ type WatermarkedResult = {
 
 const POSITION_OPTIONS: { value: WatermarkPosition; label: string }[] = [
   { value: "center", label: "Center" },
+  { value: "top-center", label: "Top" },
   { value: "diagonal-center", label: "Diagonal center" },
   { value: "top-left", label: "Top left" },
   { value: "top-right", label: "Top right" },
@@ -73,26 +75,26 @@ const calculatePlacement = (
   const paddingY = pageHeight * 0.06
 
   switch (position) {
+    case "top-center":
+      return { x: (pageWidth - boxWidth) / 2, y: pageHeight - boxHeight - paddingY }
     case "top-left":
-      return { x: paddingX, y: pageHeight - boxHeight - paddingY, rotate: 0 }
+      return { x: paddingX, y: pageHeight - boxHeight - paddingY }
     case "top-right":
-      return { x: pageWidth - boxWidth - paddingX, y: pageHeight - boxHeight - paddingY, rotate: 0 }
+      return { x: pageWidth - boxWidth - paddingX, y: pageHeight - boxHeight - paddingY }
     case "bottom-left":
-      return { x: paddingX, y: paddingY, rotate: 0 }
+      return { x: paddingX, y: paddingY }
     case "bottom-right":
-      return { x: pageWidth - boxWidth - paddingX, y: paddingY, rotate: 0 }
+      return { x: pageWidth - boxWidth - paddingX, y: paddingY }
     case "diagonal-center":
       return {
         x: (pageWidth - boxWidth) / 2,
         y: (pageHeight - boxHeight) / 2,
-        rotate: 35,
       }
     case "center":
     default:
       return {
         x: (pageWidth - boxWidth) / 2,
         y: (pageHeight - boxHeight) / 2,
-        rotate: 0,
       }
   }
 }
@@ -105,6 +107,7 @@ export default function WatermarkPdfTool() {
   const [position, setPosition] = useState<WatermarkPosition>("diagonal-center")
   const [opacity, setOpacity] = useState(0.25)
   const [fontSize, setFontSize] = useState(42)
+  const [rotationAngle, setRotationAngle] = useState(35)
   const [colorHex, setColorHex] = useState("#1E40AF")
   const [imageScalePercent, setImageScalePercent] = useState(34)
   const [isApplying, setIsApplying] = useState(false)
@@ -177,6 +180,7 @@ export default function WatermarkPdfTool() {
       const safeOpacity = clamp(opacity, 0.05, 1)
       const safeFontSize = clamp(fontSize, 10, 180)
       const safeScale = clamp(imageScalePercent, 8, 90) / 100
+      const safeRotation = clamp(rotationAngle, -180, 180)
       const color = hexToRgb(colorHex)
 
       for (let index = 0; index < totalPages; index += 1) {
@@ -199,7 +203,7 @@ export default function WatermarkPdfTool() {
             font,
             color,
             opacity: safeOpacity,
-            rotate: degrees(placement.rotate),
+            rotate: degrees(safeRotation),
           })
         } else if (watermarkImage) {
           let imageWidth = pageWidth * safeScale
@@ -219,7 +223,7 @@ export default function WatermarkPdfTool() {
             width: imageWidth,
             height: imageHeight,
             opacity: safeOpacity,
-            rotate: degrees(placement.rotate),
+            rotate: degrees(safeRotation),
           })
         }
 
@@ -255,6 +259,7 @@ export default function WatermarkPdfTool() {
     imageScalePercent,
     mode,
     opacity,
+    rotationAngle,
     pdfFile,
     position,
     watermarkText,
@@ -399,6 +404,21 @@ export default function WatermarkPdfTool() {
               />
             </div>
 
+            <div>
+              <p className="mb-1 text-xs font-medium text-muted-foreground">
+                Rotation angle ({rotationAngle}°)
+              </p>
+              <input
+                type="range"
+                min={-180}
+                max={180}
+                step={1}
+                value={rotationAngle}
+                onChange={(event) => setRotationAngle(Number.parseInt(event.target.value, 10))}
+                className="h-10 w-full"
+              />
+            </div>
+
             {mode === "text" ? (
               <>
                 <div>
@@ -475,6 +495,7 @@ export default function WatermarkPdfTool() {
                 setPosition("diagonal-center")
                 setOpacity(0.25)
                 setFontSize(42)
+                setRotationAngle(35)
                 setColorHex("#1E40AF")
                 setImageScalePercent(34)
                 setImageFile(null)

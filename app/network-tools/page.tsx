@@ -12,31 +12,31 @@ export const metadata: Metadata = generateCategoryMetadata({
 
 const tools = [
   {
-    name: "Site Status",
-    description: "Check if a website is up, down, or experiencing issues",
+    name: "Site Status Checker",
+    description: "Check if a website is up or down with live status code and response time",
     href: "/site-status",
-    tags: ["Edge", "Status"],
+    tags: ["Live", "Status"],
     icon: <Wifi className="h-4 w-4" />,
   },
   {
     name: "What is My IP",
-    description: "View your public IP address, ISP, and approximate location",
+    description: "See your current public IP and browser-reported connection details",
     href: "/what-is-my-ip",
-    tags: ["Local", "Edge"],
+    tags: ["Local", "IP"],
     icon: <Globe className="h-4 w-4" />,
   },
   {
     name: "DNS Lookup",
-    description: "Query DNS records including A, AAAA, MX, TXT, and more",
+    description: "Query live DNS-over-HTTPS records for A, AAAA, and MX",
     href: "/dns-lookup",
-    tags: ["Edge", "Worker"],
+    tags: ["DoH", "Records"],
     icon: <Server className="h-4 w-4" />,
   },
   {
-    name: "Ping Test",
-    description: "Test latency and response time to any hostname",
+    name: "Latency Test",
+    description: "Measure round-trip latency to a hostname or IP",
     href: "/ping-test",
-    tags: ["Edge", "Worker"],
+    tags: ["Latency", "RTT"],
     icon: <Radio className="h-4 w-4" />,
   },
 ]
@@ -45,17 +45,17 @@ const howItWorks = [
   {
     title: "Select a tool",
     description:
-      "Choose from our collection of network diagnostic tools based on your needs.",
+      "Choose one of four network checks: IP, DNS, site status, or latency.",
   },
   {
     title: "Enter your query",
     description:
-      "Input the domain, IP address, or URL you want to investigate.",
+      "Enter a domain, URL, hostname, or IP address and run a live check.",
   },
   {
     title: "Get instant results",
     description:
-      "Results are fetched in real-time using edge workers for fast response.",
+      "Results are returned immediately with clear status and diagnostics.",
   },
 ]
 

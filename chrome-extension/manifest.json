@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Plain Tools – Offline PDF & Utilities",
+  "description": "Access 29+ offline PDF tools, file converters, and network diagnostics directly from your browser. 100% client-side processing — nothing uploaded, nothing tracked. Open-source: https://github.com/Drgblack/plain-tools",
+  "version": "1.0.1",
+  "privacy_policy": "https://plain.tools/privacy",
+  "homepage_url": "https://plain.tools",
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "storage"
+  ],
+  "optional_permissions": [],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

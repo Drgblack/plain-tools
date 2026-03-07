@@ -134,6 +134,27 @@ export const TOOL_SEO_ENTRIES: ToolSeoEntry[] = [
     learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
   },
   {
+    slug: "html-to-pdf",
+    name: "HTML to PDF",
+    description: "Convert pasted HTML or fetched web content to PDF locally in your browser with best-effort rendering and no upload step.",
+    learnHref: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+    learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
+  },
+  {
+    slug: "pdf-to-markdown",
+    name: "PDF to Markdown",
+    description: "Convert PDF text to structured Markdown locally with best-effort heading and list formatting.",
+    learnHref: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+    learnLabel: "How to Verify a PDF Tool Does not Upload Your Files",
+  },
+  {
+    slug: "image-compress",
+    name: "Image Compressor / Optimizer",
+    description: "Compress JPG, PNG, and WebP images locally with quality controls and before/after previews.",
+    learnHref: "/learn/no-uploads-explained",
+    learnLabel: "No Uploads Explained",
+  },
+  {
     slug: "file-hash",
     name: "File Hash / Checksum",
     description: "Compute SHA-256, MD5, SHA-1, and SHA-512 file checksums locally in your browser with no uploads.",

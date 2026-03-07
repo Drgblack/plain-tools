@@ -1,9 +1,10 @@
 "use client"
 
-import { Globe, Server, Wifi, Radio, Copy, Check } from "lucide-react"
-import { useState } from "react"
+import { Server, Wifi, Radio, Copy, Check, Loader2, RefreshCw, AlertTriangle } from "lucide-react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { ToolShell } from "@/components/tool-shell"
 import { Button } from "@/components/ui/button"
+import { Surface } from "@/components/surface"
 
 const relatedTools = [
   {
@@ -68,18 +69,111 @@ const wellKnownIPs = [
 ]
 
 function IPToolInterface() {
+  const [publicIp, setPublicIp] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [loading, setLoading] = useState(false)
+  const [checkedAt, setCheckedAt] = useState<string>("")
   const [copied, setCopied] = useState(false)
-  // Placeholder IP data - would be replaced with actual detection
-  const ipData = {
-    ip: "192.168.1.1",
-    city: "San Francisco",
-    region: "California",
-    country: "United States",
-    isp: "Example ISP",
-  }
+
+  const connectionInfo = useMemo(() => {
+    if (typeof navigator === "undefined") return null
+    const connection = (
+      navigator as Navigator & {
+        connection?: {
+          effectiveType?: string
+          downlink?: number
+          rtt?: number
+          saveData?: boolean
+        }
+        mozConnection?: {
+          effectiveType?: string
+          downlink?: number
+          rtt?: number
+          saveData?: boolean
+        }
+        webkitConnection?: {
+          effectiveType?: string
+          downlink?: number
+          rtt?: number
+          saveData?: boolean
+        }
+      }
+    ).connection ??
+      (navigator as Navigator & { mozConnection?: unknown }).mozConnection ??
+      (navigator as Navigator & { webkitConnection?: unknown }).webkitConnection
+
+    if (!connection || typeof connection !== "object") return null
+    const value = connection as {
+      effectiveType?: string
+      downlink?: number
+      rtt?: number
+      saveData?: boolean
+    }
+
+    return {
+      effectiveType: value.effectiveType ?? "Unknown",
+      downlink: typeof value.downlink === "number" ? `${value.downlink} Mbps` : "Unknown",
+      rtt: typeof value.rtt === "number" ? `${value.rtt} ms` : "Unknown",
+      saveData: value.saveData === true ? "Enabled" : "Disabled",
+    }
+  }, [])
+
+  const fetchPublicIp = useCallback(async () => {
+    setLoading(true)
+    setErrorMessage("")
+
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+
+    try {
+      const endpoints = [
+        "https://api.ipify.org?format=json",
+        "https://api64.ipify.org?format=json",
+      ]
+
+      let resolvedIp: string | null = null
+
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "GET",
+            cache: "no-store",
+            signal: controller.signal,
+          })
+          if (!response.ok) continue
+          const payload = (await response.json()) as { ip?: string }
+          if (typeof payload.ip === "string" && payload.ip) {
+            resolvedIp = payload.ip
+            break
+          }
+        } catch {
+          // Try the next endpoint.
+        }
+      }
+
+      if (!resolvedIp) {
+        throw new Error("Could not detect your public IP right now.")
+      }
+
+      setPublicIp(resolvedIp)
+      setCheckedAt(new Date().toISOString())
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "IP lookup failed."
+      setErrorMessage(message)
+      setPublicIp(null)
+    } finally {
+      clearTimeout(timeout)
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void fetchPublicIp()
+  }, [fetchPublicIp])
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(ipData.ip)
+    if (!publicIp) return
+    navigator.clipboard.writeText(publicIp)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -87,16 +181,29 @@ function IPToolInterface() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="mb-2 text-sm text-muted-foreground">Your IP Address</p>
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">Your public IP address</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchPublicIp()}
+            disabled={loading}
+            className="h-8"
+          >
+            {loading ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
+            Refresh
+          </Button>
+        </div>
         <div className="flex items-center gap-2">
           <code className="flex-1 rounded-md bg-secondary px-4 py-3 font-mono text-lg text-foreground">
-            {ipData.ip}
+            {loading ? "Detecting..." : publicIp ?? "Unavailable"}
           </code>
           <Button
             variant="outline"
             size="icon"
             onClick={handleCopy}
             className="h-12 w-12 shrink-0"
+            disabled={!publicIp}
           >
             {copied ? (
               <Check className="h-4 w-4 text-green-500" />
@@ -107,28 +214,41 @@ function IPToolInterface() {
         </div>
       </div>
 
+      {errorMessage ? (
+        <Surface className="border-red-400/30 bg-red-500/5 p-4">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="mt-0.5 h-4 w-4 text-red-300" />
+            <p className="text-sm text-red-100">{errorMessage}</p>
+          </div>
+        </Surface>
+      ) : null}
+
       <div className="space-y-3 rounded-md border border-border p-4">
+        <h3 className="text-sm font-medium text-foreground">Connection details (when available)</h3>
         <div className="flex justify-between">
-          <span className="text-sm text-muted-foreground">City</span>
-          <span className="text-sm text-foreground">{ipData.city}</span>
+          <span className="text-sm text-muted-foreground">Network type</span>
+          <span className="text-sm text-foreground">{connectionInfo?.effectiveType ?? "Unknown"}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm text-muted-foreground">Region</span>
-          <span className="text-sm text-foreground">{ipData.region}</span>
+          <span className="text-sm text-muted-foreground">Downlink</span>
+          <span className="text-sm text-foreground">{connectionInfo?.downlink ?? "Unknown"}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm text-muted-foreground">Country</span>
-          <span className="text-sm text-foreground">{ipData.country}</span>
+          <span className="text-sm text-muted-foreground">RTT</span>
+          <span className="text-sm text-foreground">{connectionInfo?.rtt ?? "Unknown"}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm text-muted-foreground">ISP</span>
-          <span className="text-sm text-foreground">{ipData.isp}</span>
+          <span className="text-sm text-muted-foreground">Save-Data</span>
+          <span className="text-sm text-foreground">{connectionInfo?.saveData ?? "Unknown"}</span>
         </div>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Location data is approximate and based on IP geolocation databases.
+        This checks your public IP through a lightweight endpoint and shows optional connection hints from your browser. No tracking is added.
       </p>
+      {checkedAt ? (
+        <p className="text-xs text-muted-foreground">Last checked: {new Date(checkedAt).toLocaleTimeString()}</p>
+      ) : null}
     </div>
   )
 }
@@ -141,10 +261,10 @@ export function WhatIsMyIPClient() {
   return (
     <ToolShell
       name="What Is My IP Address"
-      description="View your public IP address and approximate location information"
+      description="View your public IP address and basic browser-provided connection details"
       category={{ name: "Network Tools", href: "/network-tools", type: "network" }}
       tags={["Local", "Edge"]}
-      explanation="This tool detects your public IP address using a lightweight edge function. Your IP is the address assigned to your connection by your ISP and is visible to any website you visit. The location data is derived from IP geolocation databases and is approximate. No data is stored or logged."
+      explanation="This tool fetches your public IP from a simple IP endpoint and displays network details your browser already exposes (if supported). No files are involved and no tracking scripts are added."
       faqs={faqs}
       relatedTools={relatedTools}
       examples={wellKnownIPs.map(i => ({ label: `${i.ip} (${i.name})`, href: `/ip/${i.ip}` }))}

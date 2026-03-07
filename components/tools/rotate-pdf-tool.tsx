@@ -16,6 +16,7 @@ import { ensureSafeLocalFileSize, formatFileSize, isPdfLikeFile } from "@/lib/pd
 import { generatePagePreviews, type PageThumbnail } from "@/lib/page-organiser-engine"
 
 type RotationOption = 0 | 90 | 180 | 270
+type RotationDelta = -90 | 90 | 180
 
 type OutputFile = {
   url: string
@@ -27,6 +28,14 @@ const ROTATION_OPTIONS: RotationOption[] = [0, 90, 180, 270]
 
 const isRotationOption = (value: number): value is RotationOption =>
   value === 0 || value === 90 || value === 180 || value === 270
+
+const normaliseRotation = (value: number): RotationOption => {
+  const normalised = ((value % 360) + 360) % 360
+  if (normalised === 0 || normalised === 90 || normalised === 180 || normalised === 270) {
+    return normalised
+  }
+  return 0
+}
 
 export default function RotatePdfTool() {
   const [file, setFile] = useState<File | null>(null)
@@ -106,13 +115,25 @@ export default function RotatePdfTool() {
     [loadPreviews]
   )
 
-  const setGlobalRotation = (degrees: RotationOption) => {
-    setPageRotations((previous) => previous.map(() => degrees))
+  const setGlobalRotation = (rotation: RotationOption) => {
+    setPageRotations((previous) => previous.map(() => rotation))
   }
 
-  const updatePageRotation = (pageIndex: number, degrees: RotationOption) => {
+  const rotateAllPagesBy = (delta: RotationDelta) => {
+    setPageRotations((previous) => previous.map((rotation) => normaliseRotation(rotation + delta)))
+  }
+
+  const updatePageRotation = (pageIndex: number, rotation: RotationOption) => {
     setPageRotations((previous) =>
-      previous.map((value, index) => (index === pageIndex ? degrees : value))
+      previous.map((value, index) => (index === pageIndex ? rotation : value))
+    )
+  }
+
+  const rotatePageBy = (pageIndex: number, delta: RotationDelta) => {
+    setPageRotations((previous) =>
+      previous.map((value, index) =>
+        index === pageIndex ? normaliseRotation(value + delta) : value
+      )
     )
   }
 
@@ -226,17 +247,15 @@ export default function RotatePdfTool() {
                     Global rotation
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {ROTATION_OPTIONS.filter((option) => option !== 0).map((option) => (
-                      <Button
-                        key={option}
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setGlobalRotation(option)}
-                      >
-                        Rotate all {option}°
-                      </Button>
-                    ))}
+                    <Button type="button" variant="outline" size="sm" onClick={() => rotateAllPagesBy(90)}>
+                      Rotate all 90° CW
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => rotateAllPagesBy(-90)}>
+                      Rotate all 90° CCW
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => rotateAllPagesBy(180)}>
+                      Rotate all 180°
+                    </Button>
                     <Button
                       type="button"
                       variant="ghost"
@@ -264,6 +283,36 @@ export default function RotatePdfTool() {
                         </div>
                         <div className="mt-3 flex items-center justify-between gap-2">
                           <p className="text-xs font-medium text-foreground">Page {index + 1}</p>
+                          <p className="text-xs text-muted-foreground">Rotation: {selectedRotation}°</p>
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onClick={() => rotatePageBy(index, 90)}
+                          >
+                            90° CW
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onClick={() => rotatePageBy(index, -90)}
+                          >
+                            90° CCW
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onClick={() => rotatePageBy(index, 180)}
+                          >
+                            180°
+                          </Button>
                           <select
                             value={selectedRotation}
                             onChange={(event) => {
@@ -272,11 +321,12 @@ export default function RotatePdfTool() {
                                 updatePageRotation(index, next)
                               }
                             }}
-                            className="rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                            className="h-7 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                            aria-label={`Set absolute rotation for page ${index + 1}`}
                           >
                             {ROTATION_OPTIONS.map((option) => (
                               <option key={option} value={option}>
-                                {option}°
+                                Set {option}°
                               </option>
                             ))}
                           </select>
@@ -306,7 +356,7 @@ export default function RotatePdfTool() {
               disabled={!file || pages.length === 0 || isApplying}
             >
               {isApplying ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-              Apply and download
+              Rotate & Download
             </Button>
             <Button
               type="button"

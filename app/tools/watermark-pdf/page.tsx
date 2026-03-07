@@ -10,7 +10,7 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 export const metadata: Metadata = buildPageMetadata({
   title: "Add Watermark to PDF Locally - No Upload",
   description:
-    "Add text or image watermarks to PDF pages locally in your browser. Control opacity, position, size, and colour, then download instantly.",
+    "Add text or image watermarks to PDF pages locally in your browser. Control font size, opacity, position, colour, and rotation angle before download.",
   path: "/tools/watermark-pdf",
   image: "/og/tools.png",
 })
@@ -36,12 +36,13 @@ export default function WatermarkPdfPage() {
             </h1>
             <p className="mx-auto max-w-3xl text-sm text-muted-foreground sm:text-base">
               Apply text or image watermark overlays on every PDF page with configurable opacity,
-              position, size, and colour. Processing runs locally in your browser. Files never leave your device.
+              position, size, colour, and rotation angle. Processing runs locally in your browser.
+              Files never leave your device.
             </p>
           </section>
 
           <ToolHelperPanel
-            uploadHint="Upload one PDF, then choose text or image watermark mode."
+            uploadHint="Upload one PDF, then choose text or image watermark mode and set placement options."
             resultHint="Apply the watermark and download a new PDF with overlays on each page."
             limitationNote="Watermarks are visual overlays and do not add cryptographic protection."
           />

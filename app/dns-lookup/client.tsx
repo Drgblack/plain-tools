@@ -1,10 +1,12 @@
 "use client"
 
-import { Globe, Wifi, Radio, Server } from "lucide-react"
-import { useState } from "react"
+import Link from "next/link"
+import { Globe, Wifi, Radio, Loader2, AlertTriangle, ArrowRight } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
 import { ToolShell } from "@/components/tool-shell"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Surface } from "@/components/surface"
 import {
   Select,
   SelectContent,
@@ -12,6 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  type DnsAnswer,
+  type DnsRecordType,
+  fetchDnsRecords,
+  isValidDnsDomain,
+  normalizeDnsDomain,
+} from "@/lib/network-dns"
 
 const relatedTools = [
   {
@@ -80,19 +89,53 @@ const faqs = [
 ]
 
 function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
-  const [domain, setDomain] = useState(initialDomain)
-  const [recordType, setRecordType] = useState("A")
-  const [results, setResults] = useState<string[] | null>(null)
+  const [domainInput, setDomainInput] = useState(initialDomain)
+  const [recordType, setRecordType] = useState<DnsRecordType>("A")
+  const [resolvedDomain, setResolvedDomain] = useState("")
+  const [results, setResults] = useState<DnsAnswer[] | null>(null)
+  const [resolver, setResolver] = useState<"cloudflare" | "google" | null>(null)
+  const [dnsStatus, setDnsStatus] = useState<number | null>(null)
+  const [errorMessage, setErrorMessage] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleLookup = () => {
-    if (!domain) return
+  const normalizedDomainPreview = useMemo(() => normalizeDnsDomain(domainInput), [domainInput])
+  const hasValidDomain = Boolean(normalizedDomainPreview && isValidDnsDomain(normalizedDomainPreview))
+
+  const handleLookup = useCallback(async () => {
+    const domain = normalizeDnsDomain(domainInput)
+    if (!domain || !isValidDnsDomain(domain)) {
+      setErrorMessage("Enter a valid domain such as example.com.")
+      setResults(null)
+      setResolvedDomain("")
+      setResolver(null)
+      setDnsStatus(null)
+      return
+    }
+
     setLoading(true)
-    // Placeholder - would be replaced with actual DNS lookup
-    setTimeout(() => {
-      setResults(["93.184.216.34", "93.184.216.35"])
+    setErrorMessage("")
+
+    try {
+      const output = await fetchDnsRecords(domain, recordType)
+      setResults(output.answers)
+      setResolvedDomain(domain)
+      setResolver(output.resolver)
+      setDnsStatus(output.status)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "DNS lookup failed."
+      setErrorMessage(message)
+      setResults(null)
+      setResolver(null)
+      setDnsStatus(null)
+      setResolvedDomain(domain)
+    } finally {
       setLoading(false)
-    }, 500)
+    }
+  }, [domainInput, recordType])
+
+  const openDynamicDnsPage = () => {
+    if (!resolvedDomain) return
+    window.location.href = `/dns/${encodeURIComponent(resolvedDomain)}`
   }
 
   return (
@@ -104,10 +147,21 @@ function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
         <Input
           type="text"
           placeholder="example.com"
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
+          value={domainInput}
+          onChange={(e) => setDomainInput(e.target.value)}
           className="bg-secondary"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault()
+              void handleLookup()
+            }
+          }}
         />
+        {normalizedDomainPreview ? (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Canonical domain: <span className="font-medium text-foreground">{normalizedDomainPreview}</span>
+          </p>
+        ) : null}
       </div>
 
       <div>
@@ -130,51 +184,134 @@ function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
       </div>
 
       <Button
-        onClick={handleLookup}
-        disabled={!domain || loading}
+        onClick={() => void handleLookup()}
+        disabled={!hasValidDomain || loading}
         className="w-full"
       >
-        {loading ? "Looking up..." : "Lookup DNS"}
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Looking up...
+          </>
+        ) : (
+          "Lookup DNS"
+        )}
       </Button>
+
+      {errorMessage ? (
+        <Surface className="border-red-400/30 bg-red-500/5 p-4">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="mt-0.5 h-4 w-4 text-red-300" />
+            <p className="text-sm text-red-100">{errorMessage}</p>
+          </div>
+        </Surface>
+      ) : null}
 
       {results && (
         <div className="mt-4 rounded-md border border-border p-4">
-          <p className="mb-2 text-sm font-medium text-foreground">
-            {recordType} Records
-          </p>
-          <div className="space-y-1">
-            {results.map((record, i) => (
-              <code
-                key={i}
-                className="block rounded bg-secondary px-2 py-1 font-mono text-sm text-foreground"
-              >
-                {record}
-              </code>
-            ))}
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium text-foreground">
+              {recordType} records for {resolvedDomain}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Resolver: {resolver ?? "Unknown"} {typeof dnsStatus === "number" ? `· DNS status ${dnsStatus}` : ""}
+            </p>
           </div>
+          {results.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No records returned for this type.</p>
+          ) : (
+            <div className="space-y-2">
+              {results.map((record, i) => (
+                <code
+                  key={`${record.data}-${i}`}
+                  className="block rounded bg-secondary px-2 py-1 font-mono text-sm text-foreground"
+                >
+                  {record.data}
+                </code>
+              ))}
+            </div>
+          )}
+          {resolvedDomain ? (
+            <div className="mt-4">
+              <Button variant="outline" size="sm" onClick={openDynamicDnsPage}>
+                Open detailed domain page
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          ) : null}
         </div>
       )}
+
+      <div className="rounded-md border border-border bg-card/60 p-4">
+        <h3 className="text-sm font-semibold text-foreground">Quick checks</h3>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {popularDomains.slice(0, 6).map((domain) => (
+            <button
+              key={domain.domain}
+              type="button"
+              onClick={() => setDomainInput(domain.domain)}
+              className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+            >
+              {domain.domain}
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          DNS lookups use public DNS-over-HTTPS endpoints in your browser. Plain Tools does not add tracking.
+        </p>
+        <Link
+          href="/network-tools"
+          className="mt-3 inline-flex items-center text-xs font-medium text-[var(--category-accent,var(--accent))] hover:underline"
+        >
+          Back to Network Tools
+          <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+        </Link>
+      </div>
     </div>
   )
 }
 
 interface DNSLookupClientProps {
   initialDomain?: string
+  fixedDomain?: boolean
 }
 
-export function DNSLookupClient({ initialDomain }: DNSLookupClientProps = {}) {
+export function DNSLookupClient({ initialDomain, fixedDomain = false }: DNSLookupClientProps = {}) {
   return (
     <ToolShell
       name="DNS Lookup"
-      description="Query DNS records for any domain including A, AAAA, MX, TXT, NS, and CNAME"
+      description="Query live DNS-over-HTTPS records for A, AAAA, and MX responses"
       category={{ name: "Network Tools", href: "/network-tools", type: "network" }}
-      tags={["Edge", "Worker"]}
-      explanation="This tool queries DNS servers to retrieve records for any domain. The lookup is performed via an edge worker to bypass browser restrictions on DNS queries. No queries are logged. Results are fetched in real-time from authoritative DNS servers."
+      tags={["Browser fetch", "DoH"]}
+      explanation="Enter a domain and this tool queries DNS-over-HTTPS endpoints directly from your browser. Results show current DNS answers without file uploads or tracking scripts."
       faqs={faqs}
       relatedTools={relatedTools}
       examples={popularDomains.map(d => ({ label: d.name, href: `/dns/${d.domain}` }))}
     >
       <DNSToolInterface initialDomain={initialDomain} />
+      {fixedDomain ? (
+        <p className="mt-4 text-xs text-muted-foreground">
+          Viewing a fixed domain result route. Use the DNS Lookup page to run a new query.
+        </p>
+      ) : null}
     </ToolShell>
+  )
+}
+
+export function DNSDynamicHint({ domain }: { domain: string }) {
+  return (
+    <div className="rounded-md border border-border bg-card/50 p-3 text-xs text-muted-foreground">
+      Loaded from canonical route for <span className="font-medium text-foreground">{domain}</span>.
+      Use the record selector above to switch record type.
+    </div>
+  )
+}
+
+export function DNSDynamicClient({ domain }: { domain: string }) {
+  return (
+    <div className="space-y-4">
+      <DNSDynamicHint domain={domain} />
+      <DNSToolInterface initialDomain={domain} />
+    </div>
   )
 }

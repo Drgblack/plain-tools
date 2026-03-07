@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plain Tools Dashboard</title>
+    <link rel="stylesheet" href="newtab.css" />
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="hero">
+        <div class="hero-left">
+          <div class="logo" aria-hidden="true">PT</div>
+          <div>
+            <p class="eyebrow">Plain Tools Dashboard</p>
+            <h1>Offline. Private. Fast.</h1>
+            <p class="subtitle">
+              Launch local PDF tools, utilities, and diagnostics with one click.
+            </p>
+          </div>
+        </div>
+        <button type="button" class="outline-btn" data-url="https://plain.tools/verify-claims">
+          Verify Claims
+        </button>
+      </header>
+
+      <section class="search-panel">
+        <label for="toolSearch">Search tools</label>
+        <div class="search-row">
+          <input
+            id="toolSearch"
+            type="search"
+            placeholder="merge, compress, OCR, hash..."
+            autocomplete="off"
+          />
+          <button type="button" id="searchButton">Search</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Quick links</h2>
+        <div class="card-grid quick-grid">
+          <button type="button" class="card" data-url="https://plain.tools/tools/merge-pdf">
+            <span class="card-title">Merge PDF</span>
+            <span class="card-text">Combine files in your browser</span>
+          </button>
+          <button type="button" class="card" data-url="https://plain.tools/tools/compress-pdf">
+            <span class="card-title">Compress PDF</span>
+            <span class="card-text">Reduce size without uploads</span>
+          </button>
+          <button type="button" class="card" data-url="https://plain.tools/tools/extract-pdf">
+            <span class="card-title">Extract Pages</span>
+            <span class="card-text">Pull out just what you need</span>
+          </button>
+          <button type="button" class="card" data-url="https://plain.tools/site-status">
+            <span class="card-title">Site Status</span>
+            <span class="card-text">Check if a site is up or down</span>
+          </button>
+          <button type="button" class="card" data-url="https://plain.tools/dns-lookup">
+            <span class="card-title">DNS Lookup</span>
+            <span class="card-text">Inspect live DNS records</span>
+          </button>
+          <button type="button" class="card" data-url="https://plain.tools/tools">
+            <span class="card-title">All Tools</span>
+            <span class="card-text">Browse the full catalogue</span>
+          </button>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>Tool directory</h2>
+          <button type="button" id="refreshToolList" class="outline-btn">Refresh list</button>
+        </div>
+        <p id="directoryStatus" class="directory-status">Loading tool list…</p>
+        <div id="toolDirectoryGrid" class="card-grid directory-grid" role="list"></div>
+      </section>
+
+      <section class="pro-teaser">
+        <p class="pro-title">Go Pro</p>
+        <p class="pro-text">
+          Unlock advanced workflows while keeping the same privacy-first approach.
+        </p>
+        <button type="button" class="primary-btn" data-url="https://plain.tools/pricing">
+          See Pricing
+        </button>
+      </section>
+    </main>
+
+    <script src="tools-fallback.js"></script>
+    <script src="newtab.js"></script>
+  </body>
+</html>

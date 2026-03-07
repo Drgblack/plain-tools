@@ -88,7 +88,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "compare-pdf",
     category: "Core",
     description:
-      "Compare two PDFs locally using page-by-page text diff with highlighted changes.",
+      "Compare two PDFs locally with page-by-page text diff highlights, optional visual preview, and downloadable HTML report.",
     badge: "100% Local",
     icon: "FileSearch",
     available: true,
@@ -131,7 +131,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     id: "rotate-pdf",
     name: "Rotate PDF Pages",
     slug: "rotate-pdf",
-    category: "Core",
+    category: "Edit",
     description: "Rotate individual pages or all pages in a PDF locally with thumbnail preview controls.",
     badge: "100% Local",
     icon: "RefreshCw",
@@ -289,6 +289,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "pdf-to-markdown",
+    name: "PDF to Markdown",
+    slug: "pdf-to-markdown",
+    category: "Core",
+    description:
+      "Convert PDF text to structured Markdown locally with best-effort heading and list detection.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
     id: "jpg-to-pdf",
     name: "JPG to PDF",
     slug: "jpg-to-pdf",
@@ -320,6 +331,39 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     available: true,
   },
   {
+    id: "html-to-pdf",
+    name: "HTML to PDF",
+    slug: "html-to-pdf",
+    category: "Core",
+    description:
+      "Convert pasted HTML or URL-fetched web content into PDF locally with best-effort rendering and text fallback.",
+    badge: "100% Local",
+    icon: "FileCode",
+    available: true,
+  },
+  {
+    id: "image-compress",
+    name: "Image Compressor / Optimizer",
+    slug: "image-compress",
+    category: "File Tools",
+    description:
+      "Compress JPG, PNG, and WebP images locally with quality controls, before/after preview, and batch download support.",
+    badge: "100% Local",
+    icon: "FileImage",
+    available: true,
+  },
+  {
+    id: "zip-tool",
+    name: "ZIP Extract & Create",
+    slug: "zip-tool",
+    category: "File Tools",
+    description:
+      "Extract ZIP archives and create ZIP bundles locally in your browser without uploading files.",
+    badge: "100% Local",
+    icon: "Archive",
+    available: true,
+  },
+  {
     id: "base64-encode-decode",
     name: "Base64 Encode / Decode",
     slug: "base64",
@@ -348,6 +392,17 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Utility",
     description:
       "Generate QR codes for links or text locally with size, error correction, and colour controls.",
+    badge: "100% Local",
+    icon: "QrCode",
+    available: true,
+  },
+  {
+    id: "qr-code-scanner",
+    name: "QR Code Scanner",
+    slug: "qr-scanner",
+    category: "Utility",
+    description:
+      "Scan QR codes from camera preview or uploaded images locally in your browser with no uploads.",
     badge: "100% Local",
     icon: "QrCode",
     available: true,

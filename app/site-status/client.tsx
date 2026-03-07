@@ -11,6 +11,7 @@ import {
   normalizeSiteInput,
   STATUS_EXAMPLE_SITES,
   statusPathFor,
+  type SiteStatusCheckResult,
 } from "@/lib/site-status"
 
 const relatedTools = [
@@ -64,18 +65,42 @@ function SiteStatusToolInterface() {
   const router = useRouter()
   const [siteInput, setSiteInput] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
+  const [isChecking, setIsChecking] = useState(false)
+  const [result, setResult] = useState<SiteStatusCheckResult | null>(null)
 
   const normalizedPreview = useMemo(() => normalizeSiteInput(siteInput), [siteInput])
 
-  const handleSubmit = () => {
+  const runCheck = async (site: string) => {
+    setIsChecking(true)
+    setErrorMessage("")
+    try {
+      const response = await fetch(`/api/site-status?site=${encodeURIComponent(site)}`, {
+        method: "GET",
+        cache: "no-store",
+      })
+      const payload = (await response.json()) as SiteStatusCheckResult
+      setResult(payload)
+      if (!response.ok && payload.status === "invalid") {
+        setErrorMessage("Invalid website. Enter a domain such as chatgpt.com")
+      }
+    } catch {
+      setErrorMessage("Status check failed. Try again.")
+      setResult(null)
+    } finally {
+      setIsChecking(false)
+    }
+  }
+
+  const handleSubmit = async () => {
     const normalized = normalizeSiteInput(siteInput)
     if (!normalized) {
       setErrorMessage("Enter a valid website such as chatgpt.com")
+      setResult(null)
       return
     }
 
     setErrorMessage("")
-    router.push(statusPathFor(normalized))
+    await runCheck(normalized)
   }
 
   return (
@@ -109,11 +134,53 @@ function SiteStatusToolInterface() {
       </div>
 
       <Button
-        onClick={handleSubmit}
+        onClick={() => void handleSubmit()}
         className="w-full bg-[var(--category-accent,var(--accent))] text-[var(--accent-foreground)] hover:bg-[var(--category-accent,var(--accent))]/90"
       >
-        Check Status
+        {isChecking ? "Checking..." : "Check Status"}
       </Button>
+
+      {result ? (
+        <div className="rounded-md border border-border bg-card/70 p-4">
+          <h3 className="text-sm font-semibold text-foreground">Latest result</h3>
+          <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+            <div className="rounded-md border border-border/60 bg-card/60 p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Status</p>
+              <p className="mt-1 font-medium text-foreground">
+                {result.status === "up" ? "Up" : result.status === "down" ? "Down" : "Invalid website"}
+              </p>
+            </div>
+            <div className="rounded-md border border-border/60 bg-card/60 p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">HTTP status</p>
+              <p className="mt-1 font-medium text-foreground">{result.httpStatus ?? "N/A"}</p>
+            </div>
+            <div className="rounded-md border border-border/60 bg-card/60 p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Response time</p>
+              <p className="mt-1 font-medium text-foreground">
+                {typeof result.responseTimeMs === "number" ? `${result.responseTimeMs} ms` : "N/A"}
+              </p>
+            </div>
+            <div className="rounded-md border border-border/60 bg-card/60 p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Last checked</p>
+              <p className="mt-1 font-medium text-foreground">
+                {result.checkedAt ? new Date(result.checkedAt).toLocaleTimeString() : "N/A"}
+              </p>
+            </div>
+          </div>
+          {normalizedPreview ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push(statusPathFor(normalizedPreview))}
+              >
+                Open dedicated status page
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="rounded-md border border-border bg-card/60 p-4">
         <h3 className="text-sm font-semibold text-foreground">Popular checks</h3>

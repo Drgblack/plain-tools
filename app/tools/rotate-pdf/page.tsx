@@ -10,7 +10,7 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 export const metadata: Metadata = buildPageMetadata({
   title: "Rotate PDF Pages Locally - No Upload",
   description:
-    "Rotate PDF pages by 90, 180, or 270 degrees locally in your browser. Preview thumbnails, apply global or per-page rotation, and download instantly.",
+    "Rotate PDF pages locally with per-page thumbnails and 90° clockwise, 90° counterclockwise, or 180° controls. Apply globally or per page, then download.",
   path: "/tools/rotate-pdf",
   image: "/og/tools.png",
 })
@@ -34,14 +34,15 @@ export default function RotatePdfPage() {
               Rotate PDF Pages
             </h1>
             <p className="mx-auto max-w-3xl text-sm text-muted-foreground sm:text-base">
-              Rotate pages with per-page controls or a global rotation shortcut. Previews and processing run
-              locally in your browser. Files never leave your device.
+              Rotate pages with per-page thumbnail controls or global apply shortcuts for 90° clockwise,
+              90° counterclockwise, and 180°. Previews and processing run locally in your browser.
+              Files never leave your device.
             </p>
           </section>
 
           <ToolHelperPanel
-            uploadHint="Upload one PDF to render page thumbnails and configure rotation for each page."
-            resultHint="Apply rotation settings and download a new rotated PDF file."
+            uploadHint="Upload one PDF to render page thumbnails and configure per-page or global rotation."
+            resultHint="Use Rotate & Download to export a new rotated PDF."
             limitationNote="Rotation modifies page orientation only. It does not reorder or crop page content."
           />
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   Search,
   Globe,
+  Archive,
   FileText,
   FileType,
   Calculator,
@@ -67,15 +68,20 @@ const commands: CommandItem[] = [
   { id: "pdf-to-excel", name: "PDF to Excel", description: "Extract table-like data to CSV", href: "/tools/pdf-to-excel", icon: <FileSpreadsheet className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-ppt", name: "PDF to PowerPoint", description: "Convert PDF pages into slides", href: "/tools/pdf-to-ppt", icon: <Presentation className="h-4 w-4" />, category: "PDF Tools" },
   { id: "pdf-to-html", name: "PDF to HTML", description: "Export PDF pages as HTML with extracted text", href: "/tools/pdf-to-html", icon: <FileCode className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "html-to-pdf", name: "HTML to PDF", description: "Convert pasted HTML or URLs to PDF locally", href: "/tools/html-to-pdf", icon: <FileCode className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "pdf-to-markdown", name: "PDF to Markdown", description: "Export PDF text as structured Markdown", href: "/tools/pdf-to-markdown", icon: <FileCode className="h-4 w-4" />, category: "PDF Tools" },
   { id: "jpg-to-pdf", name: "JPG to PDF", description: "Combine images into a PDF", href: "/tools/jpg-to-pdf", icon: <FileImage className="h-4 w-4" />, category: "PDF Tools" },
   { id: "word-to-pdf", name: "Word to PDF", description: "Convert .docx to PDF", href: "/tools/word-to-pdf", icon: <FileType className="h-4 w-4" />, category: "PDF Tools" },
   { id: "text-to-pdf", name: "Text to PDF", description: "Convert plain text or Markdown to PDF", href: "/tools/text-to-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },
+  { id: "image-compress", name: "Image Compressor / Optimizer", description: "Compress JPG, PNG, and WebP images locally", href: "/tools/image-compress", icon: <FileImage className="h-4 w-4" />, category: "File Tools" },
   
   // File Tools
   { id: "file-converters", name: "File Converters", description: "Convert between formats", href: "/file-converters", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
+  { id: "zip-tool", name: "ZIP Extract & Create", description: "Extract and create ZIP archives locally", href: "/tools/zip-tool", icon: <Archive className="h-4 w-4" />, category: "File Tools" },
   { id: "base64", name: "Base64 Encode / Decode", description: "Encode or decode text and files locally", href: "/tools/base64", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
   { id: "file-hash", name: "File Hash / Checksum", description: "Compute SHA-256, MD5, SHA-1, or SHA-512 hash values", href: "/tools/file-hash", icon: <FileCode className="h-4 w-4" />, category: "File Tools" },
   { id: "qr-code", name: "QR Code Generator", description: "Generate scannable QR codes for URLs or text", href: "/tools/qr-code", icon: <QrCode className="h-4 w-4" />, category: "Utility" },
+  { id: "qr-scanner", name: "QR Code Scanner", description: "Scan QR codes from camera or uploaded images", href: "/tools/qr-scanner", icon: <QrCode className="h-4 w-4" />, category: "Utility" },
   
   // Company
   { id: "about", name: "About", description: "Learn about plain.tools", href: "/about", icon: <Info className="h-4 w-4" />, category: "Company" },

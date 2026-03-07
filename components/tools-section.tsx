@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import {
+  Archive,
   ArrowRight,
   ArrowUpDown,
   FileOutput,
@@ -58,6 +59,7 @@ const CATEGORY_CONFIG: CategoryConfig[] = [
 ]
 
 const ICON_MAP: Record<string, LucideIcon> = {
+  Archive,
   Merge,
   Split,
   Minimize2,

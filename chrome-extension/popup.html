@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plain Tools</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">PT</div>
+        <div>
+          <h1>Plain Tools</h1>
+          <p>Offline. Private. Fast.</p>
+        </div>
+      </div>
+
+      <div class="search-block">
+        <input id="toolSearchInput" type="search" placeholder="Search tools..." autocomplete="off" />
+      </div>
+
+      <div class="toolbar">
+        <button id="openPlainTools" type="button" class="open-button">
+          Open Plain Tools
+        </button>
+        <button id="refreshTools" type="button" class="refresh-button" title="Refresh tool list">
+          Refresh
+        </button>
+      </div>
+
+      <p id="toolStatus" class="status-text">Loading tools…</p>
+      <div id="toolGrid" class="tool-grid" role="list"></div>
+    </main>
+
+    <script src="tools-fallback.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from "next/link"
-import { Globe, Server, Wifi, Radio, ChevronRight } from "lucide-react"
+import { Globe, Wifi, Radio, ChevronRight } from "lucide-react"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'

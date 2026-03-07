@@ -1,0 +1,166 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 360px;
+  background: #0b1020;
+  color: #eaf1ff;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.popup {
+  padding: 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+p {
+  margin: 4px 0 0;
+  color: #9fb0d6;
+  font-size: 12px;
+}
+
+.search-block {
+  margin-bottom: 10px;
+}
+
+#toolSearchInput {
+  width: 100%;
+  border: 1px solid #2d436d;
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: #0f1730;
+  color: #eaf1ff;
+  font-size: 13px;
+}
+
+#toolSearchInput::placeholder {
+  color: #8ea4d0;
+}
+
+#toolSearchInput:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 1px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.open-button {
+  flex: 1;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.open-button:hover {
+  background: #1d4ed8;
+}
+
+.open-button:focus-visible,
+.refresh-button:focus-visible,
+.tool-card:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.refresh-button {
+  border: 1px solid #31508d;
+  border-radius: 10px;
+  padding: 10px 11px;
+  background: #132141;
+  color: #d6e5ff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refresh-button:hover {
+  background: #1a2d58;
+}
+
+.status-text {
+  margin: 0 0 8px;
+  color: #8ea5d5;
+  font-size: 11px;
+}
+
+.tool-grid {
+  max-height: 320px;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+  padding-right: 2px;
+}
+
+.tool-card {
+  display: block;
+  width: 100%;
+  border: 1px solid #2a3f69;
+  border-radius: 10px;
+  background: #101a34;
+  color: inherit;
+  text-align: left;
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.tool-card:hover {
+  border-color: #3f6fd2;
+  background: #152346;
+}
+
+.tool-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #e9f0ff;
+}
+
+.tool-description {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #9bb2dd;
+}
