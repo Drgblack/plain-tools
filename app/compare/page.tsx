@@ -11,6 +11,7 @@ import {
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
+import { FIRST_WAVE_COMPARE_PAGES } from "@/lib/seo/first-wave-pages"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Compare PDF tools",
@@ -83,6 +84,8 @@ const comparisonToolLinks = [
   { label: "Convert PDF to Word locally", href: "/tools/pdf-to-word" },
   { label: "Sign PDF locally in browser", href: "/tools/sign-pdf" },
 ]
+
+const firstWaveComparisons = FIRST_WAVE_COMPARE_PAGES
 
 const compareHubSchema = combineJsonLd([
   buildWebPageSchema({
@@ -235,6 +238,24 @@ export default function ComparePage() {
                 </p>
               </Link>
             ))}
+          </section>
+
+          <section className="rounded-xl border border-border bg-card/30 p-6 md:p-7">
+            <h2 className="text-lg font-semibold text-foreground">First-wave comparison pages</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              These three pages target the highest-intent alternative queries first.
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {firstWaveComparisons.map((entry) => (
+                <Link
+                  key={entry.href}
+                  href={entry.href}
+                  className="rounded-lg border border-border bg-background/60 px-4 py-3 text-sm font-medium text-accent transition hover:border-accent/40 hover:underline"
+                >
+                  {entry.label}
+                </Link>
+              ))}
+            </div>
           </section>
 
           <section className="rounded-xl border border-border bg-card/30 p-6 md:p-7">

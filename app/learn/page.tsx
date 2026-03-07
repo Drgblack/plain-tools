@@ -32,6 +32,11 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { learnSections, type LearnArticleIconKey } from "@/lib/learn-data"
+import {
+  FIRST_WAVE_COMPARE_PAGES,
+  FIRST_WAVE_GUIDE_PAGES,
+  FIRST_WAVE_TOOL_PAGES,
+} from "@/lib/seo/first-wave-pages"
 
 // Structured data for the Learning Centre collection
 const combinedSchema = combineJsonLd([
@@ -117,6 +122,21 @@ const topicalClusters = [
       { label: "Open workflow guides", href: "/learn/workflows" },
       { label: "How to merge PDFs offline", href: "/learn/how-to-merge-pdfs-offline" },
     ],
+  },
+]
+
+const firstWaveLearningBlocks = [
+  {
+    title: "Priority guides",
+    links: FIRST_WAVE_GUIDE_PAGES,
+  },
+  {
+    title: "High-demand tools",
+    links: FIRST_WAVE_TOOL_PAGES,
+  },
+  {
+    title: "Top comparison pages",
+    links: FIRST_WAVE_COMPARE_PAGES,
   },
 ]
 
@@ -336,6 +356,31 @@ export default function LearnPage() {
           <p className="mt-2 text-xs leading-relaxed text-white/60">{cluster.description}</p>
           <ul className="mt-3 space-y-2">
             {cluster.links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-xs font-medium text-[#7bc3ff] transition hover:text-[#9dd2ff] hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section className="border-t border-border px-4 py-12">
+  <div className="mx-auto max-w-6xl space-y-5">
+    <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">First-wave traffic set</h2>
+    <p className="max-w-3xl text-sm leading-relaxed text-white/60">
+      These pages are prioritised for high-intent utility queries and early long-tail growth.
+    </p>
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {firstWaveLearningBlocks.map((block) => (
+        <article key={block.title} className="rounded-xl border border-[#333] bg-[#111] p-5">
+          <h3 className="text-sm font-semibold text-white">{block.title}</h3>
+          <ul className="mt-3 space-y-2">
+            {block.links.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="text-xs font-medium text-[#7bc3ff] transition hover:text-[#9dd2ff] hover:underline">
                   {link.label}

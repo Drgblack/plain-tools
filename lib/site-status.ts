@@ -1,3 +1,5 @@
+import { FIRST_WAVE_STATUS_SITES } from "@/lib/seo/first-wave-pages"
+
 const DOMAIN_REGEX =
   /^(?=.{1,253}$)(?!-)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/
 const IPV4_REGEX =
@@ -19,14 +21,7 @@ export type SiteStatusCheckResult = {
  * Keep this list intentional for sitemap/index quality and high-demand "is it down" queries.
  */
 export const STATUS_TRAFFIC_SITES = [
-  "chatgpt.com",
-  "google.com",
-  "youtube.com",
-  "reddit.com",
-  "discord.com",
-  "github.com",
-  "netflix.com",
-  "gmail.com",
+  ...FIRST_WAVE_STATUS_SITES,
 ] as const
 
 export const STATUS_EXAMPLE_SITES = [

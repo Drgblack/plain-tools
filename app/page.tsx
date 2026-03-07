@@ -31,6 +31,12 @@ import {
 } from "@/lib/structured-data"
 import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import {
+  FIRST_WAVE_COMPARE_PAGES,
+  FIRST_WAVE_GUIDE_PAGES,
+  FIRST_WAVE_STATUS_PAGES,
+  FIRST_WAVE_TOOL_PAGES,
+} from "@/lib/seo/first-wave-pages"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = buildPageMetadata({
@@ -376,6 +382,25 @@ const trafficClusters = [
   },
 ]
 
+const firstWaveSections = [
+  {
+    title: "High-demand tools",
+    links: FIRST_WAVE_TOOL_PAGES,
+  },
+  {
+    title: "Status checks",
+    links: FIRST_WAVE_STATUS_PAGES,
+  },
+  {
+    title: "Guides",
+    links: FIRST_WAVE_GUIDE_PAGES,
+  },
+  {
+    title: "Comparisons",
+    links: FIRST_WAVE_COMPARE_PAGES,
+  },
+]
+
 export default function HomePage() {
   return (
     <>
@@ -557,6 +582,35 @@ export default function HomePage() {
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cluster.description}</p>
                   <ul className="mt-3 space-y-2">
                     {cluster.links.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href} className="text-xs font-medium text-accent transition hover:underline">
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                First-wave traffic pages
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                These pages are prioritised for high-intent utility queries and early traffic growth.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {firstWaveSections.map((section) => (
+                <article key={section.title} className="rounded-xl border border-border bg-card/35 p-5">
+                  <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
+                  <ul className="mt-3 space-y-2">
+                    {section.links.map((link) => (
                       <li key={link.href}>
                         <Link href={link.href} className="text-xs font-medium text-accent transition hover:underline">
                           {link.label}

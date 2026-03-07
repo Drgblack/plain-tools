@@ -6,9 +6,11 @@ import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { STATUS_TRAFFIC_SITES } from "@/lib/site-status"
+import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 
 const BASE_URL = "https://plain.tools"
 const now = new Date()
+const firstWavePriorityPathSet = new Set(FIRST_WAVE_PRIORITY_PATHS)
 
 /**
  * Sitemap policy:
@@ -139,9 +141,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const entry of entries) {
     const canonical = normalizeCanonicalUrl(entry.url)
     if (!canonical) continue
+    const canonicalPath = canonical.replace(BASE_URL, "") || "/"
+    const boostedPriority = firstWavePriorityPathSet.has(canonicalPath)
+      ? Math.max(entry.priority ?? 0.7, 0.95)
+      : entry.priority
     deduped.set(canonical, {
       ...entry,
       url: canonical,
+      priority: boostedPriority,
     })
   }
 

@@ -15,6 +15,12 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import {
+  FIRST_WAVE_COMPARE_PAGES,
+  FIRST_WAVE_GUIDE_PAGES,
+  FIRST_WAVE_STATUS_PAGES,
+  FIRST_WAVE_TOOL_PAGES,
+} from "@/lib/seo/first-wave-pages"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Utility tools directory",
@@ -26,14 +32,9 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function ToolsPage() {
   const popularTools = [
-    { label: "Merge PDF", href: "/tools/merge-pdf" },
-    { label: "Split PDF", href: "/tools/split-pdf" },
-    { label: "Compare PDF Files", href: "/tools/compare-pdf" },
-    { label: "Compress PDF", href: "/tools/compress-pdf" },
-    { label: "PDF to Word", href: "/tools/pdf-to-word" },
-    { label: "Word to PDF", href: "/tools/word-to-pdf" },
+    ...FIRST_WAVE_TOOL_PAGES.map((entry) => ({ label: entry.label, href: entry.href })),
+    { label: "Split PDF by pages", href: "/tools/split-pdf" },
     { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
-    { label: "Sign PDF", href: "/tools/sign-pdf" },
   ]
 
   const groupedLinks = [
@@ -517,6 +518,65 @@ export default function ToolsPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">First-wave traffic pages</h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              This curated set captures high-intent utility demand across tools, status checks, guides, and comparisons.
+            </p>
+            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">High-demand tools</h3>
+                <ul className="mt-3 space-y-2">
+                  {FIRST_WAVE_TOOL_PAGES.map((entry) => (
+                    <li key={entry.href}>
+                      <Link href={entry.href} className="text-xs font-medium text-accent hover:underline">
+                        {entry.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Status pages</h3>
+                <ul className="mt-3 space-y-2">
+                  {FIRST_WAVE_STATUS_PAGES.map((entry) => (
+                    <li key={entry.href}>
+                      <Link href={entry.href} className="text-xs font-medium text-accent hover:underline">
+                        {entry.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Guides</h3>
+                <ul className="mt-3 space-y-2">
+                  {FIRST_WAVE_GUIDE_PAGES.map((entry) => (
+                    <li key={entry.href}>
+                      <Link href={entry.href} className="text-xs font-medium text-accent hover:underline">
+                        {entry.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Comparisons</h3>
+                <ul className="mt-3 space-y-2">
+                  {FIRST_WAVE_COMPARE_PAGES.map((entry) => (
+                    <li key={entry.href}>
+                      <Link href={entry.href} className="text-xs font-medium text-accent hover:underline">
+                        {entry.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </div>
           </div>
         </section>
 

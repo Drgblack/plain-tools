@@ -12,6 +12,7 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
+import { FIRST_WAVE_GUIDE_PAGES } from "@/lib/seo/first-wave-pages"
 
 import { SiteStatusClient } from "./client"
 
@@ -151,6 +152,31 @@ export default function SiteStatusPage() {
                 className="rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
               >
                 Is {site} down?
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="border-b border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+            Related troubleshooting guides
+          </h2>
+          <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            Use these guides to diagnose outages and resolver issues faster.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            {FIRST_WAVE_GUIDE_PAGES.filter(
+              (entry) =>
+                entry.href === "/learn/is-it-down-for-everyone-or-just-me" ||
+                entry.href === "/learn/how-dns-lookup-works"
+            ).map((entry) => (
+              <Link
+                key={entry.href}
+                href={entry.href}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                {entry.label}
               </Link>
             ))}
           </div>
