@@ -820,6 +820,28 @@ const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
       { feature: "Operational speed profile", plain: "No upload/download round trip for local jobs", competitor: "Can include transfer and queue time" },
       { feature: "Best fit", plain: "Sensitive files and no-upload handling", competitor: "Cloud convenience and account-centric routing" },
     ],
+    faqs: [
+      {
+        question: "Is Plain Tools or Smallpdf better for sensitive PDFs?",
+        answer:
+          "Plain Tools is usually better when your requirement is no-upload handling for core tasks and direct technical verification in the browser.",
+      },
+      {
+        question: "Can I verify local processing on Plain Tools myself?",
+        answer:
+          "Yes. Run one file operation and inspect the Network panel in DevTools to confirm no file payload is sent for local tools.",
+      },
+      {
+        question: "When might Smallpdf still suit better?",
+        answer:
+          "Smallpdf may suit teams that prioritise cloud convenience and account-based workflow routing over local-only handling.",
+      },
+      {
+        question: "Does this comparison claim one tool is always better?",
+        answer:
+          "No. The better option depends on your workflow constraints, especially privacy requirements and collaboration model.",
+      },
+    ],
   },
   "plain-tools-vs-ilovepdf": {
     title: "Plain Tools vs iLovePDF",
@@ -836,6 +858,28 @@ const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
       { feature: "Offline continuity after first load", plain: "Yes for local tools", competitor: "Limited for upload-dependent features" },
       { feature: "Privacy verification path", plain: "Direct DevTools validation", competitor: "Policy and account controls dependent" },
       { feature: "Best fit", plain: "Sensitive-document workflows", competitor: "General hosted conversion workflows" },
+    ],
+    faqs: [
+      {
+        question: "What is the main difference between Plain Tools and iLovePDF?",
+        answer:
+          "The main difference is processing architecture: Plain Tools is local-first for core tools, while iLovePDF commonly uses hosted processing routes.",
+      },
+      {
+        question: "Which option is better for private internal documents?",
+        answer:
+          "Plain Tools is typically the stronger fit when your policy requires no-upload workflows for routine document handling.",
+      },
+      {
+        question: "Can iLovePDF workflows still be useful?",
+        answer:
+          "Yes. Hosted workflows can be practical when cloud accessibility and account-based operations are priorities.",
+      },
+      {
+        question: "How should teams evaluate this fairly?",
+        answer:
+          "Test the same task on both options, compare upload behaviour and turnaround time, then choose based on operational fit.",
+      },
     ],
   },
   "plain-tools-vs-adobe-acrobat-online": {
@@ -854,6 +898,28 @@ const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
       { feature: "Workflow speed", plain: "Local execution, no transfer round trip", competitor: "Can include upload/download latency" },
       { feature: "Best fit", plain: "No-upload handling and sensitive files", competitor: "Cloud ecosystem and account-led administration" },
     ],
+    faqs: [
+      {
+        question: "When is Plain Tools a better fit than Adobe Acrobat Online?",
+        answer:
+          "Plain Tools is often the better fit when you need no-upload handling for core operations and quick local execution.",
+      },
+      {
+        question: "When might Adobe Acrobat Online be the better choice?",
+        answer:
+          "Adobe Acrobat Online may suit organisations that depend on account-based administration and cloud-integrated workflows.",
+      },
+      {
+        question: "Is this comparison a legal or compliance recommendation?",
+        answer:
+          "No. It is a technical workflow comparison and should be combined with your legal and compliance review process.",
+      },
+      {
+        question: "How can I validate privacy claims before rollout?",
+        answer:
+          "Run a controlled pilot with representative files and record network behaviour, output quality, and operational steps.",
+      },
+    ],
   },
   "plain-tools-vs-pdf24": {
     title: "Plain Tools vs PDF24",
@@ -871,6 +937,28 @@ const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
       { feature: "Policy enforcement ease", plain: "Straightforward for mixed-skill teams", competitor: "May need tighter route governance" },
       { feature: "Best fit", plain: "Teams wanting predictable local-first defaults", competitor: "Teams with established route-control practices" },
     ],
+    faqs: [
+      {
+        question: "Is Plain Tools vs PDF24 mostly a feature comparison?",
+        answer:
+          "Not primarily. It is mostly a workflow and verification comparison, especially for teams with privacy-sensitive file handling requirements.",
+      },
+      {
+        question: "Can PDF24 be used in privacy-conscious workflows?",
+        answer:
+          "Yes, depending on route and configuration. Teams should document the exact route they standardise on and verify it regularly.",
+      },
+      {
+        question: "Why does route clarity matter so much?",
+        answer:
+          "Clear routes reduce accidental process drift and make policy enforcement easier for mixed-skill teams.",
+      },
+      {
+        question: "How should we decide between the two?",
+        answer:
+          "Run one representative workflow with two reviewers, compare verification effort, and choose the path that is easiest to execute consistently.",
+      },
+    ],
   },
   "plain-tools-vs-sejda": {
     title: "Plain Tools vs Sejda",
@@ -887,6 +975,28 @@ const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
       { feature: "Offline continuity after first load", plain: "Yes for local tools", competitor: "Task-dependent and often limited" },
       { feature: "Verification path", plain: "Direct local inspection in DevTools", competitor: "Depends on selected flow and provider controls" },
       { feature: "Best fit", plain: "Privacy-first routine operations", competitor: "Users prioritising hosted workflow convenience" },
+    ],
+    faqs: [
+      {
+        question: "What should I compare first between Plain Tools and Sejda?",
+        answer:
+          "Compare processing route, upload requirements, and verification effort before comparing secondary features.",
+      },
+      {
+        question: "Which tool is better for no-upload handling?",
+        answer:
+          "Plain Tools is generally better when you need a strict local-first default for core workflows.",
+      },
+      {
+        question: "Can Sejda still be appropriate for some teams?",
+        answer:
+          "Yes. Sejda may suit teams that prioritise hosted workflow convenience and accept its operational trade-offs.",
+      },
+      {
+        question: "How do I avoid a biased decision?",
+        answer:
+          "Use the same files, same tasks, and same validation checklist for both tools, then compare outcomes objectively.",
+      },
     ],
   },
 }
