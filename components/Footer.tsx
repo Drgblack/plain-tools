@@ -27,6 +27,7 @@ const footerSections: FooterSection[] = [
       { label: "Learn", href: "/learn" },
       { label: "Compare", href: "/compare" },
       { label: "Blog", href: "/blog" },
+      { label: "Status Directory", href: "/status" },
       { label: "Site Status", href: "/site-status" },
       { label: "Trending Checks", href: "/status/trending" },
       { label: "Roadmap", href: "/roadmap" },

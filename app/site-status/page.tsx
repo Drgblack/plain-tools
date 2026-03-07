@@ -126,6 +126,12 @@ export default function SiteStatusPage() {
           </p>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
+              href="/status"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+            >
+              Browse all status checks
+            </Link>
+            <Link
               href="/dns-lookup"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >

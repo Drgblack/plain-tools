@@ -115,7 +115,7 @@ const categories = [
   {
     name: "Check Site Status",
     description: "Check whether a website is down, reachable, and responding in real time",
-    href: "/site-status",
+    href: "/status",
     icon: <Wifi className="h-6 w-6" />,
     toolCount: 1,
   },
@@ -258,7 +258,7 @@ const browseCategories = [
   },
   { 
     name: "Status Checker", 
-    href: "/site-status", 
+    href: "/status", 
     count: 1,
     description: "Quick website uptime checks for operational issues",
     icon: <Wifi className="h-5 w-5" />,
@@ -321,7 +321,7 @@ const visibilityCards = [
   {
     title: "Check if a site is down",
     description: "Use the site status checker to quickly confirm uptime and response behaviour.",
-    href: "/site-status",
+    href: "/status",
   },
   {
     title: "Learn how to use the tools",
@@ -348,7 +348,7 @@ const trafficClusters = [
   {
     title: "Status and uptime cluster",
     description: "Check whether a site is down, degraded, or responding slowly right now.",
-    href: "/site-status",
+    href: "/status",
     links: [
       { label: "Check chatgpt.com status", href: "/status/chatgpt.com" },
       { label: "Check reddit.com status", href: "/status/reddit.com" },
@@ -529,7 +529,7 @@ export default function HomePage() {
                 Compare alternatives
               </Link>
               <Link
-                href="/site-status"
+                href="/status"
                 className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
                 Use site status checker
@@ -608,7 +608,24 @@ export default function HomePage() {
               </p>
             </div>
             <TrendingStatus title="Most checked status pages today" limit={8} />
-            <div className="mt-4">
+            <div className="mt-4 flex flex-wrap gap-2 text-xs">
+              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Is ChatGPT down?
+              </Link>
+              <Link href="/status/discord.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Is Discord down?
+              </Link>
+              <Link href="/status/youtube.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Is YouTube down?
+              </Link>
+              <Link href="/status/github.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Is GitHub down?
+              </Link>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-4">
+              <Link href="/status" className="text-sm font-medium text-accent hover:underline">
+                Open status directory
+              </Link>
               <Link href="/status/trending" className="text-sm font-medium text-accent hover:underline">
                 Open full trending status list
               </Link>

@@ -19,7 +19,7 @@ const navItems: NavItem[] = [
   { label: "Tools", href: "/tools" },
   { label: "Converters", href: "/file-converters" },
   { label: "Network", href: "/network-tools" },
-  { label: "Status", href: "/site-status" },
+  { label: "Status", href: "/status" },
   { label: "Learn", href: "/learn" },
   { label: "Compare", href: "/compare" },
   { label: "Blog", href: "/blog" },

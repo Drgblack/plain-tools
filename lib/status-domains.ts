@@ -334,6 +334,164 @@ const ECOMMERCE_PLATFORMS = [
   "instacart.com", "gopuff.com", "newegg.com", "microcenter.com", "bhphotovideo.com", "overstock.com",
 ] as const
 
+const AI_SERVICES = [
+  "chatgpt.com",
+  "openai.com",
+  "platform.openai.com",
+  "anthropic.com",
+  "claude.ai",
+  "gemini.google.com",
+  "perplexity.ai",
+  "poe.com",
+  "character.ai",
+  "huggingface.co",
+  "stability.ai",
+  "midjourney.com",
+  "runwayml.com",
+  "replicate.com",
+  "cohere.com",
+  "mistral.ai",
+  "groq.com",
+  "you.com",
+  "phind.com",
+  "copy.ai",
+  "jasper.ai",
+  "writesonic.com",
+  "suno.com",
+  "elevenlabs.io",
+  "notebooklm.google.com",
+] as const
+
+const CLOUD_PROVIDERS = [
+  "aws.amazon.com",
+  "console.aws.amazon.com",
+  "status.aws.amazon.com",
+  "cloud.google.com",
+  "console.cloud.google.com",
+  "azure.com",
+  "portal.azure.com",
+  "status.azure.com",
+  "cloudflare.com",
+  "dash.cloudflare.com",
+  "workers.cloudflare.com",
+  "vercel.com",
+  "status.vercel.com",
+  "supabase.com",
+  "status.supabase.com",
+  "render.com",
+  "fly.io",
+  "railway.app",
+  "digitalocean.com",
+  "linode.com",
+  "heroku.com",
+  "netlify.com",
+  "mongodb.com",
+  "planetscale.com",
+  "neon.tech",
+] as const
+
+const GAMING_PLATFORMS = [
+  "steamcommunity.com",
+  "store.steampowered.com",
+  "epicgames.com",
+  "fortnite.com",
+  "xbox.com",
+  "playstation.com",
+  "nintendo.com",
+  "battle.net",
+  "blizzard.com",
+  "ea.com",
+  "origin.com",
+  "ubisoft.com",
+  "riotgames.com",
+  "leagueoflegends.com",
+  "valorant.com",
+  "roblox.com",
+  "minecraft.net",
+  "gog.com",
+  "itch.io",
+  "fandom.com",
+  "ign.com",
+  "gamespot.com",
+  "polygon.com",
+  "metacritic.com",
+  "twitch.tv",
+] as const
+
+const NEWS_SITES = [
+  "bbc.com",
+  "cnn.com",
+  "nytimes.com",
+  "wsj.com",
+  "ft.com",
+  "bloomberg.com",
+  "reuters.com",
+  "theguardian.com",
+  "washingtonpost.com",
+  "forbes.com",
+  "time.com",
+  "economist.com",
+  "nbcnews.com",
+  "abcnews.go.com",
+  "cbsnews.com",
+  "apnews.com",
+  "aljazeera.com",
+  "npr.org",
+  "usatoday.com",
+  "news.ycombinator.com",
+  "techcrunch.com",
+  "theverge.com",
+  "wired.com",
+  "engadget.com",
+  "arstechnica.com",
+] as const
+
+const EDUCATION_PLATFORMS = [
+  "coursera.org",
+  "edx.org",
+  "udemy.com",
+  "udacity.com",
+  "khanacademy.org",
+  "duolingo.com",
+  "quizlet.com",
+  "skillshare.com",
+  "futurelearn.com",
+  "brilliant.org",
+  "academia.edu",
+  "researchgate.net",
+  "canvas.instructure.com",
+  "blackboard.com",
+  "moodle.org",
+  "open.edu",
+  "mit.edu",
+  "stanford.edu",
+  "harvard.edu",
+  "wikipedia.org",
+] as const
+
+const DESIGN_TOOLS = [
+  "figma.com",
+  "canva.com",
+  "adobe.com",
+  "photoshop.adobe.com",
+  "illustrator.adobe.com",
+  "framer.com",
+  "webflow.com",
+  "dribbble.com",
+  "behance.net",
+  "invisionapp.com",
+  "sketch.com",
+  "zeplin.io",
+  "miro.com",
+  "notion.so",
+  "penpot.app",
+  "coolors.co",
+  "fontawesome.com",
+  "unsplash.com",
+  "pexels.com",
+  "freepik.com",
+] as const
+
 const AMAZON_COUNTRY_TLDS = [
   "com", "co.uk", "de", "fr", "it", "es", "nl", "se", "pl", "com.be", "com.tr", "ae", "sa", "eg",
   "co.jp", "com.au", "com.br", "ca", "com.mx", "in", "sg",
@@ -419,7 +577,13 @@ const BASE_STATUS_DOMAIN_GROUPS = [
   DEVELOPER_TOOLS,
   SAAS_PRODUCTS,
   STREAMING_SERVICES,
+  AI_SERVICES,
   FINANCE_TOOLS,
+  CLOUD_PROVIDERS,
+  GAMING_PLATFORMS,
+  NEWS_SITES,
+  EDUCATION_PLATFORMS,
+  DESIGN_TOOLS,
   MESSAGING_APPS_AND_SOCIAL_NETWORKS,
   ECOMMERCE_PLATFORMS,
   AMAZON_REGIONAL_DOMAINS,
@@ -445,22 +609,287 @@ function dedupeDomains(groups: readonly (readonly string[])[]) {
   return ordered
 }
 
-/**
- * Canonical status domain dataset for programmatic SEO.
- * This list is intentionally curated and grouped by high-intent utility categories.
- */
-export const STATUS_DOMAINS = dedupeDomains(BASE_STATUS_DOMAIN_GROUPS)
+export type StatusCategory =
+  | "social"
+  | "messaging"
+  | "streaming"
+  | "developer-tools"
+  | "saas"
+  | "ai"
+  | "finance"
+  | "ecommerce"
+  | "productivity"
+  | "cloud"
+  | "gaming"
+  | "news"
+  | "education"
+  | "design"
+
+export type StatusDomain = {
+  domain: string
+  category: StatusCategory
+  displayName: string
+}
+
+const RAW_STATUS_DOMAINS = dedupeDomains(BASE_STATUS_DOMAIN_GROUPS)
+
+const DISPLAY_NAME_OVERRIDES: Record<string, string> = {
+  "aws.amazon.com": "AWS",
+  "chatgpt.com": "ChatGPT",
+  "claude.ai": "Claude",
+  "x.com": "X",
+  "gmail.com": "Gmail",
+  "github.com": "GitHub",
+  "gitlab.com": "GitLab",
+  "youtube.com": "YouTube",
+  "youtube.tv": "YouTube TV",
+  "primevideo.com": "Prime Video",
+  "disneyplus.com": "Disney+",
+  "hbomax.com": "HBO Max",
+  "tv.apple.com": "Apple TV",
+  "music.apple.com": "Apple Music",
+  "teams.microsoft.com": "Microsoft Teams",
+  "zoom.us": "Zoom",
+  "line.me": "LINE",
+  "kakao.com": "Kakao",
+  "openai.com": "OpenAI",
+  "perplexity.ai": "Perplexity",
+  "character.ai": "Character.AI",
+  "npmjs.com": "npm",
+  "npmjs.org": "npm",
+  "pypi.org": "PyPI",
+  "crates.io": "crates.io",
+  "go.dev": "Go",
+  "react.dev": "React",
+  "nextjs.org": "Next.js",
+  "tailwindcss.com": "Tailwind CSS",
+  "cloudflare.com": "Cloudflare",
+  "digitalocean.com": "DigitalOcean",
+  "microsoft.com": "Microsoft",
+  "apple.com": "Apple",
+  "bbc.com": "BBC",
+  "nytimes.com": "The New York Times",
+  "wsj.com": "The Wall Street Journal",
+  "ft.com": "Financial Times",
+  "reddit.com": "Reddit",
+  "discord.com": "Discord",
+  "notion.so": "Notion",
+  "figma.com": "Figma",
+  "canva.com": "Canva",
+  "adobe.com": "Adobe",
+}
+
+const CATEGORY_RULES: Array<{ category: StatusCategory; pattern: RegExp }> = [
+  {
+    category: "ai",
+    pattern:
+      /(chatgpt|openai|anthropic|claude|gemini|perplexity|poe\.com|character\.ai|jasper|copy\.ai|writesonic|runway|stability|huggingface|midjourney)/,
+  },
+  {
+    category: "cloud",
+    pattern:
+      /(aws|amazonaws|azure|cloud\.google|cloudflare|digitalocean|linode|heroku|render\.com|fly\.io|vercel|supabase|neon\.tech|planetscale|railway|kubernetes|terraform|hashicorp)/,
+  },
+  {
+    category: "developer-tools",
+    pattern:
+      /(github|gitlab|bitbucket|npmjs|pypi|packagist|crates\.io|golang|go\.dev|rust-lang|nodejs|deno|bun\.sh|docker|jenkins|circleci|travis|vitejs|webpack|babeljs|typescriptlang|nextjs|react\.dev|vuejs|nuxt|svelte|astro\.build|tailwindcss|eslint|prettier|vitest|jestjs|playwright|cypress|storybook|postman|insomnia|owasp)/,
+  },
+  {
+    category: "streaming",
+    pattern:
+      /(youtube|netflix|primevideo|disneyplus|hulu|max\.com|hbomax|paramountplus|peacocktv|spotify|soundcloud|deezer|pandora|tidal|bandcamp|twitch|vimeo|dailymotion|crunchyroll|fubo|sling|pluto\.tv|roku)/,
+  },
+  {
+    category: "gaming",
+    pattern:
+      /(steam|epicgames|roblox|xbox|playstation|nintendo|riotgames|ea\.com|ubisoft|battle\.net|minecraft|valorant|fortnite|origin\.com|gog\.com|itch\.io)/,
+  },
+  {
+    category: "finance",
+    pattern:
+      /(stripe|paypal|wise|coinbase|binance|kraken|robinhood|fidelity|vanguard|visa|mastercard|americanexpress|chase|wellsfargo|citi|hsbc|barclays|monzo|revolut|n26|klarna|afterpay|affirm|cash\.app|zelle|moneygram|westernunion|oanda|tradingview|investing\.com)/,
+  },
+  {
+    category: "ecommerce",
+    pattern:
+      /(amazon|ebay|walmart|target|bestbuy|costco|homedepot|lowes|ikea|wayfair|etsy|aliexpress|temu|shein|rakuten|mercadolibre|flipkart|shopify|zalando|asos|zara|uniqlo|nike|adidas|booking|airbnb|doordash|ubereats|grubhub|deliveroo|justeat|instacart|newegg|overstock)/,
+  },
+  {
+    category: "messaging",
+    pattern:
+      /(discord|slack|whatsapp|telegram|signal|viber|line\.me|kakao|wechat|messenger|teams\.microsoft|zoom\.us|skype|webex|clubhouse|twilio|vonage|messagebird)/,
+  },
+  {
+    category: "social",
+    pattern:
+      /(reddit|facebook|instagram|threads|tiktok|snapchat|pinterest|linkedin|x\.com|twitter|quora|tumblr|vk\.com|weibo|mastodon|bluesky)/,
+  },
+  {
+    category: "design",
+    pattern:
+      /(figma|canva|adobe|dribbble|behance|invision|framer|webflow|sketch|zeplin|miro|loom|descript)/,
+  },
+  {
+    category: "education",
+    pattern:
+      /(coursera|edx|khanacademy|udemy|udacity|futurelearn|quizlet|duolingo|blackboard|instructure|canvas|academia|researchgate|wikipedia|mit\.edu|harvard\.edu|stanford\.edu|open\.edu)/,
+  },
+  {
+    category: "news",
+    pattern:
+      /(bbc|cnn|nytimes|wsj|ft\.com|bloomberg|reuters|aljazeera|foxnews|nbcnews|abcnews|theguardian|washingtonpost|economist|forbes|time\.com)/,
+  },
+  {
+    category: "productivity",
+    pattern:
+      /(notion|airtable|asana|trello|monday|clickup|todoist|evernote|dropbox|box\.com|calendly|docusign|hellosign|pandadoc|typeform|jotform|surveymonkey|grammarly|coda\.io|smartsheet|intercom|zendesk|freshdesk|hubspot|salesforce|mailchimp|zapier|atlassian|jira|confluence|onedrive|office\.com|outlook\.com)/,
+  },
+]
+
+function toDisplayName(domain: string) {
+  const normalized = domain.trim().toLowerCase()
+  const override = DISPLAY_NAME_OVERRIDES[normalized]
+  if (override) return override
+
+  const baseLabel = normalized.replace(/^www\./, "").split(".")[0] ?? normalized
+  return baseLabel
+    .split(/[-_]/g)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ")
+}
+
+function inferCategory(domain: string): StatusCategory {
+  for (const rule of CATEGORY_RULES) {
+    if (rule.pattern.test(domain)) return rule.category
+  }
+  return "saas"
+}
 
 /**
- * Pre-rendered status pages. Keep this subset focused on highest-demand routes.
- * Remaining STATUS_DOMAINS resolve via dynamic fallback in /status/[site].
+ * Canonical structured status dataset used by /status/[site], hubs, and sitemaps.
  */
-export const STATUS_STATIC_DOMAINS = STATUS_DOMAINS.slice(0, 320)
+export const STATUS_DOMAINS: StatusDomain[] = RAW_STATUS_DOMAINS.map((domain) => ({
+  domain,
+  category: inferCategory(domain),
+  displayName: toDisplayName(domain),
+}))
+
+export const STATUS_DOMAIN_NAMES = STATUS_DOMAINS.map((entry) => entry.domain)
+export const STATUS_DOMAIN_SET = new Set(STATUS_DOMAIN_NAMES)
+
+export const STATUS_CATEGORIES: StatusCategory[] = [
+  "social",
+  "messaging",
+  "streaming",
+  "developer-tools",
+  "saas",
+  "ai",
+  "finance",
+  "ecommerce",
+  "productivity",
+  "cloud",
+  "gaming",
+  "news",
+  "education",
+  "design",
+]
+
+export const STATUS_CATEGORY_META: Record<
+  StatusCategory,
+  { title: string; description: string }
+> = {
+  social: {
+    title: "Social platform status",
+    description:
+      "Check whether major social platforms are down right now and jump to canonical outage pages.",
+  },
+  messaging: {
+    title: "Messaging service status",
+    description:
+      "Check live availability for chat and messaging platforms with practical troubleshooting guidance.",
+  },
+  streaming: {
+    title: "Streaming service status",
+    description:
+      "Check whether streaming platforms are down, degraded, or responding slowly.",
+  },
+  "developer-tools": {
+    title: "Developer tool status",
+    description:
+      "Monitor status checks for code hosting, package registries, and developer infrastructure.",
+  },
+  saas: {
+    title: "SaaS platform status",
+    description:
+      "Browse uptime checks for common SaaS products and workflow platforms.",
+  },
+  ai: {
+    title: "AI service status",
+    description:
+      "Check whether AI platforms and assistant services are currently down or degraded.",
+  },
+  finance: {
+    title: "Finance platform status",
+    description:
+      "Check live status for payments, banking, and finance services.",
+  },
+  ecommerce: {
+    title: "Ecommerce platform status",
+    description:
+      "Check availability of ecommerce marketplaces, retail platforms, and ordering services.",
+  },
+  productivity: {
+    title: "Productivity app status",
+    description:
+      "Check productivity and collaboration tools for outages and response issues.",
+  },
+  cloud: {
+    title: "Cloud platform status",
+    description:
+      "Check cloud and hosting provider routes for availability and response-time issues.",
+  },
+  gaming: {
+    title: "Gaming platform status",
+    description:
+      "Check gaming platforms and services for outages and login issues.",
+  },
+  news: {
+    title: "News site status",
+    description:
+      "Check status pages for major news publishers and media websites.",
+  },
+  education: {
+    title: "Education platform status",
+    description:
+      "Check learning and education services for current downtime and access issues.",
+  },
+  design: {
+    title: "Design tool status",
+    description:
+      "Check design and creative tool platforms for outages and service degradation.",
+  },
+}
+
+export const STATUS_DOMAINS_BY_CATEGORY: Record<StatusCategory, StatusDomain[]> = STATUS_CATEGORIES
+  .reduce(
+    (accumulator, category) => {
+      accumulator[category] = STATUS_DOMAINS.filter((entry) => entry.category === category)
+      return accumulator
+    },
+    {} as Record<StatusCategory, StatusDomain[]>
+  )
 
 /**
- * Popular domains for hub links, related blocks, and trend defaults.
+ * Pre-render all curated status routes to maximize crawlable coverage.
  */
-export const STATUS_POPULAR_DOMAINS = STATUS_DOMAINS.slice(0, 64)
+export const STATUS_STATIC_DOMAINS = STATUS_DOMAIN_NAMES
+
+/**
+ * Popular domains for internal links and home/status discovery.
+ */
+export const STATUS_POPULAR_DOMAINS = STATUS_DOMAIN_NAMES.slice(0, 120)
 
 export const STATUS_TRENDING_DEFAULT = [
   "chatgpt.com",
@@ -473,11 +902,20 @@ export const STATUS_TRENDING_DEFAULT = [
   "google.com",
 ] as const
 
-export const STATUS_DEVELOPER_DOMAINS = [...DEVELOPER_TOOLS]
-export const STATUS_SOCIAL_DOMAINS = [...MESSAGING_APPS_AND_SOCIAL_NETWORKS]
-export const STATUS_STREAMING_DOMAINS = [...STREAMING_SERVICES]
-export const STATUS_SAAS_DOMAINS = [...SAAS_PRODUCTS]
-export const STATUS_CONSUMER_DOMAINS = [...HIGH_PRIORITY_DOMAINS]
+export const STATUS_DEVELOPER_DOMAINS = STATUS_DOMAINS_BY_CATEGORY["developer-tools"].map(
+  (entry) => entry.domain
+)
+export const STATUS_SOCIAL_DOMAINS = Array.from(
+  new Set([
+    ...STATUS_DOMAINS_BY_CATEGORY.social.map((entry) => entry.domain),
+    ...STATUS_DOMAINS_BY_CATEGORY.messaging.map((entry) => entry.domain),
+  ])
+)
+export const STATUS_STREAMING_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.streaming.map(
+  (entry) => entry.domain
+)
+export const STATUS_SAAS_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.saas.map((entry) => entry.domain)
+export const STATUS_CONSUMER_DOMAINS = STATUS_DOMAIN_NAMES.slice(0, 160)
 
 export type StatusTrendSegment =
   | "all"

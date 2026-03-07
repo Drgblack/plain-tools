@@ -5,6 +5,7 @@ import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { STATUS_CATEGORIES } from "@/lib/status-domains"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 
@@ -44,6 +45,7 @@ const staticCorePages = [
   "/file-tools",
   "/verify-claims",
   "/network-tools",
+  "/status",
   "/site-status",
   "/status/trending",
   "/what-is-my-ip",
@@ -144,6 +146,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticHigh,
     ...staticCore,
     ...curatedLanding,
+    ...statusCategoryPages,
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
@@ -168,3 +171,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return Array.from(deduped.values())
 }
+  const statusCategoryPages = STATUS_CATEGORIES.map((category) => ({
+    url: `${BASE_URL}/status/${category}`,
+    lastModified: now,
+    changeFrequency: "daily" as const,
+    priority: 0.75,
+  }))

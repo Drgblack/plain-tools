@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { getStatusObservabilityStorageInfo, getStatusTrends } from "@/lib/status-trending"
+import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
 import {
   buildBreadcrumbList,
   buildItemListSchema,
@@ -85,6 +86,12 @@ export default async function StatusTrendingPage() {
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Check another website
+            </Link>
+            <Link
+              href="/status"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+            >
+              Open status directory
             </Link>
             <Link
               href="/dns-lookup"
@@ -177,6 +184,25 @@ export default async function StatusTrendingPage() {
               ))}
             </ul>
           </section>
+        </div>
+      </section>
+
+      <section className="px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Browse status categories
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {STATUS_CATEGORIES.map((category) => (
+              <Link
+                key={category}
+                href={`/status/${category}`}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                {STATUS_CATEGORY_META[category].title}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </article>

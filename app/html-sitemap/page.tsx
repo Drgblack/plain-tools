@@ -7,6 +7,7 @@ import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-dat
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
 import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
+import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import {
   buildBreadcrumbList,
@@ -81,7 +82,9 @@ const compareLinks: SitemapLink[] = trancheCompareSlugs.map((slug) => ({
 }))
 
 const networkLinks: SitemapLink[] = [
+  { label: "Status directory", href: "/status" },
   { label: "Site status checker", href: "/site-status" },
+  { label: "Trending status checks", href: "/status/trending" },
   { label: "Network tools hub", href: "/network-tools" },
   { label: "DNS lookup", href: "/dns-lookup" },
   { label: "Ping test", href: "/ping-test" },
@@ -91,6 +94,11 @@ const networkLinks: SitemapLink[] = [
 const popularStatusLinks: SitemapLink[] = STATUS_POPULAR_SITES.slice(0, 12).map((site) => ({
   label: `Check whether ${site} is down`,
   href: statusPathFor(site),
+}))
+
+const statusCategoryLinks: SitemapLink[] = STATUS_CATEGORIES.map((category) => ({
+  label: STATUS_CATEGORY_META[category].title,
+  href: `/status/${category}`,
 }))
 
 const trustLinks: SitemapLink[] = [
@@ -184,6 +192,7 @@ export default function HtmlSitemapPage() {
 
         <SitemapSectionList section={{ title: "Key tools", links: toolLinks }} />
         <SitemapSectionList section={{ title: "Network tools", links: networkLinks }} />
+        <SitemapSectionList section={{ title: "Status categories", links: statusCategoryLinks }} />
         <SitemapSectionList section={{ title: "Popular status checks", links: popularStatusLinks }} />
         <SitemapSectionList section={{ title: "Trust and verification", links: trustLinks }} />
         <SitemapSectionList section={{ title: "Learn guides", links: learnHighlights }} />

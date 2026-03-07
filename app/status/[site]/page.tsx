@@ -34,7 +34,12 @@ import {
   STATUS_TRAFFIC_SITES,
   statusPathFor,
 } from '@/lib/site-status'
-import { STATUS_STATIC_DOMAINS } from "@/lib/status-domains"
+import {
+  STATUS_CATEGORIES,
+  STATUS_CATEGORY_META,
+  STATUS_DOMAINS,
+  STATUS_STATIC_DOMAINS,
+} from "@/lib/status-domains"
 
 interface Props {
   params: Promise<{ site: string }>
@@ -172,6 +177,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
 
   const siteLabel = formatSiteLabel(normalizedSite)
   const siteDisplayName = toSiteDisplayName(normalizedSite)
+  const currentCategory =
+    STATUS_DOMAINS.find((entry) => entry.domain === normalizedSite)?.category ?? null
   const siteContext = getSiteStatusContext(normalizedSite)
   const siteSpecificContext = getSiteSpecificStatusContext(normalizedSite)
   const relatedStatusChecks = Array.from(
@@ -431,6 +438,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 <Link href="/network-tools" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Browse network tools
                 </Link>
+                <Link href="/status" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Browse status directory
+                </Link>
                 <Link href="/dns-lookup" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   DNS lookup
                 </Link>
@@ -440,6 +450,26 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 <Link href="/ping-test" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Ping test
                 </Link>
+              </div>
+            </Surface>
+
+            <Surface>
+              <h3 className="mb-3 font-semibold text-foreground">Browse other categories</h3>
+              <p className="mb-3 text-sm text-muted-foreground">
+                Move across status hubs to check adjacent services quickly.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {STATUS_CATEGORIES.filter((value) => value !== currentCategory)
+                  .slice(0, 8)
+                  .map((value) => (
+                    <Link
+                      key={value}
+                      href={`/status/${value}`}
+                      className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+                    >
+                      {STATUS_CATEGORY_META[value].title}
+                    </Link>
+                  ))}
               </div>
             </Surface>
 

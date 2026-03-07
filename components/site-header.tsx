@@ -14,7 +14,7 @@ const CommandPalette = lazy(() => import("@/components/command-palette").then(mo
 const navItems = [
   { name: "Tools", href: "/tools" },
   { name: "PDF", href: "/tools" },
-  { name: "Status", href: "/site-status" },
+  { name: "Status", href: "/status" },
   { name: "Network", href: "/network-tools" },
   { name: "File", href: "/file-tools" },
   { name: "Learn", href: "/learn" },

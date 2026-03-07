@@ -1,6 +1,6 @@
 import { FIRST_WAVE_STATUS_SITES } from "@/lib/seo/first-wave-pages"
 import {
-  STATUS_DOMAINS,
+  STATUS_DOMAIN_SET,
   STATUS_POPULAR_DOMAINS,
 } from "@/lib/status-domains"
 
@@ -271,7 +271,7 @@ export function statusPathFor(site: string) {
 export function isIndexedStatusDomain(site: string) {
   const normalized = normalizeSiteInput(site)
   if (!normalized) return false
-  return STATUS_DOMAINS.includes(normalized)
+  return STATUS_DOMAIN_SET.has(normalized)
 }
 
 export function getSiteSpecificStatusContext(site: string): SiteSpecificStatusContext {

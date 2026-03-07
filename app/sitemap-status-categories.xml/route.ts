@@ -1,7 +1,6 @@
 import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
-import { STATUS_DOMAIN_NAMES } from "@/lib/status-domains"
-import { statusPathFor } from "@/lib/site-status"
+import { STATUS_CATEGORIES } from "@/lib/status-domains"
 
 export async function GET() {
   const now = new Date()
@@ -13,23 +12,11 @@ export async function GET() {
       changeFrequency: "daily",
       priority: 0.9,
     },
-    {
-      url: `${BASE_URL}/site-status`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/status/trending`,
-      lastModified: now,
-      changeFrequency: "hourly",
-      priority: 0.85,
-    },
-    ...STATUS_DOMAIN_NAMES.map((site, index) => ({
-      url: `${BASE_URL}${statusPathFor(site)}`,
+    ...STATUS_CATEGORIES.map((category) => ({
+      url: `${BASE_URL}/status/${category}`,
       lastModified: now,
       changeFrequency: "daily" as const,
-      priority: index < 100 ? 0.8 : 0.6,
+      priority: 0.8,
     })),
   ]
 
