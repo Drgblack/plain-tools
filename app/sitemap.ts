@@ -10,6 +10,7 @@ import { STATUS_CATEGORIES } from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
+import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 
 const BASE_URL = "https://plain.tools"
 const now = new Date()
@@ -69,6 +70,13 @@ const curatedLandingPages = [
   "/compare/smallpdf-alternative",
   "/learn/compress-pdf-without-upload",
 ]
+
+const pdfIntentPages = PDF_INTENT_PAGES.map((page) => ({
+  url: `${BASE_URL}${pdfIntentPathFor(page.slug)}`,
+  lastModified: now,
+  changeFrequency: "monthly" as const,
+  priority: 0.82,
+}))
 
 const statusCategoryPages = STATUS_CATEGORIES.map((category) => ({
   url: `${BASE_URL}/status/${category}`,
@@ -169,6 +177,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticHigh,
     ...staticCore,
     ...curatedLanding,
+    ...pdfIntentPages,
     ...statusCategoryPages,
     ...statusQueryPages,
     ...outageHistoryPages,

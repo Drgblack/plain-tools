@@ -9,6 +9,7 @@ import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
+import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
@@ -22,6 +23,16 @@ type PageProps = {
 }
 
 type ToolComponent = ComponentType | LazyExoticComponent<ComponentType>
+
+const INTENT_TOOL_SLUGS = new Set([
+  "compress-pdf",
+  "merge-pdf",
+  "pdf-to-word",
+  "word-to-pdf",
+  "split-pdf",
+  "pdf-to-jpg",
+  "jpg-to-pdf",
+])
 
 const toolComponents: Record<string, ToolComponent> = {
   "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
@@ -328,6 +339,20 @@ export default async function ToolPage({ params }: PageProps) {
 
               {profile.faqs.length > 0 ? (
                 <ToolFaqBlock faqs={profile.faqs} className="mt-6" />
+              ) : null}
+
+              {INTENT_TOOL_SLUGS.has(tool.slug) ? (
+                <ToolIntentLinks
+                  toolKey={tool.slug as
+                    | "compress-pdf"
+                    | "merge-pdf"
+                    | "pdf-to-word"
+                    | "word-to-pdf"
+                    | "split-pdf"
+                    | "pdf-to-jpg"
+                    | "jpg-to-pdf"}
+                  className="mt-6"
+                />
               ) : null}
 
               {seo ? (

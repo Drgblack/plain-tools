@@ -5,6 +5,7 @@ import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
+import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 export const metadata: Metadata = buildPageMetadata({
@@ -47,6 +48,8 @@ export default function RotatePdfPage() {
           />
 
           <RotatePdfTool />
+
+          <ToolIntentLinks toolKey="rotate-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="rotate-pdf" className="mt-8" />

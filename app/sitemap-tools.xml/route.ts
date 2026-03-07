@@ -1,6 +1,7 @@
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
+import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 
 export async function GET() {
   const now = new Date()
@@ -11,6 +12,15 @@ export async function GET() {
     changeFrequency: "monthly",
     priority: 0.8,
   }))
+
+  entries.push(
+    ...PDF_INTENT_PAGES.map((page) => ({
+      url: `${BASE_URL}${pdfIntentPathFor(page.slug)}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.82,
+    }))
+  )
 
   return new Response(buildSitemapXml(entries), {
     headers: {
