@@ -21,6 +21,24 @@ export const metadata: Metadata = buildPageMetadata({
   image: "/og/default.png",
 })
 
+const siteStatusFaqs = [
+  {
+    question: "What does this checker verify?",
+    answer:
+      "It runs a live probe and reports whether a host responds as up, down, or invalid.",
+  },
+  {
+    question: "Can I share results for one domain?",
+    answer:
+      "Yes. Each domain has a canonical route such as /status/reddit.com for repeat checks and sharing.",
+  },
+  {
+    question: "Is this a file-processing workflow?",
+    answer:
+      "No. This tool checks network availability only and does not process or upload document files.",
+  },
+] as const
+
 const siteStatusSchema = combineJsonLd([
   buildWebPageSchema({
     name: "Site status checker",
@@ -39,23 +57,7 @@ const siteStatusSchema = combineJsonLd([
       "Canonical status routes for shared checks",
     ],
   }),
-  buildFaqPageSchema([
-    {
-      question: "What does this checker verify?",
-      answer:
-        "It runs a live probe and reports whether a host responds as up, down, or invalid.",
-    },
-    {
-      question: "Can I share results for one domain?",
-      answer:
-        "Yes. Each domain has a canonical route such as /status/reddit.com for repeat checks and sharing.",
-    },
-    {
-      question: "Is this a file-processing workflow?",
-      answer:
-        "No. This tool checks network availability only and does not process or upload document files.",
-    },
-  ]),
+  buildFaqPageSchema(siteStatusFaqs),
   buildBreadcrumbList([
     { name: "Home", url: "https://plain.tools/" },
     { name: "Site Status", url: "https://plain.tools/site-status" },
@@ -120,6 +122,21 @@ export default function SiteStatusPage() {
         </div>
       </section>
       <SiteStatusClient />
+      <section className="border-t border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl space-y-4">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Frequently asked questions
+          </h2>
+          <div className="grid gap-3 md:grid-cols-3">
+            {siteStatusFaqs.map((faq) => (
+              <article key={faq.question} className="rounded-lg border border-border/60 bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       <section className="border-t border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">

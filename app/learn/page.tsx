@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import Script from "next/script"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { FocusedSearch } from "@/components/ui/focused-search"
 import { SummaryBox, KeyTerm } from "@/components/seo"
@@ -24,7 +24,6 @@ import {
   BookOpen,
   Search,
 } from "lucide-react"
-import { serializeJsonLd } from "@/lib/sanitize"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -51,7 +50,7 @@ const combinedSchema = combineJsonLd([
     { name: "Home", url: "https://plain.tools/" },
     { name: "Learn", url: "https://plain.tools/learn" },
   ]),
-]) ?? {}
+])
 
 const learnIconMap: Record<LearnArticleIconKey, typeof Shield> = {
   AlertTriangle,
@@ -103,11 +102,7 @@ export default function LearnPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Script
-        id="structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(combinedSchema) }}
-      />
+      {combinedSchema ? <JsonLd id="learn-hub-schema" schema={combinedSchema} /> : null}
       <main className="flex-1 [&_p]:text-base">
         {/* Hero Section - Compact */}
         <section className="relative border-b border-border px-4 py-16 md:py-20">

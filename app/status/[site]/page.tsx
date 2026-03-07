@@ -5,7 +5,14 @@ import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
+import { JsonLd } from "@/components/seo/json-ld"
 import { generateDynamicToolMetadata } from '@/lib/seo'
+import {
+  buildBreadcrumbList,
+  buildFaqPageSchema,
+  buildWebPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 import {
   Accordion,
   AccordionContent,
@@ -108,9 +115,27 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
 
   const siteLabel = formatSiteLabel(normalizedSite)
   const siteDisplayName = toSiteDisplayName(normalizedSite)
+  const pageUrl = `https://plain.tools/status/${normalizedSite}`
+  const schemaId = normalizedSite.replace(/[^a-z0-9-]/gi, "-").toLowerCase()
+  const statusPageSchema = combineJsonLd([
+    buildWebPageSchema({
+      name: `Is ${siteLabel} down?`,
+      description:
+        `Live availability check for ${siteLabel} with current up/down signal, response-time context, and troubleshooting guidance.`,
+      url: pageUrl,
+    }),
+    buildBreadcrumbList([
+      { name: "Home", url: "https://plain.tools/" },
+      { name: "Network Tools", url: "https://plain.tools/network-tools" },
+      { name: "Site Status", url: "https://plain.tools/site-status" },
+      { name: siteLabel, url: pageUrl },
+    ]),
+    buildFaqPageSchema(faqs),
+  ])
 
   return (
     <article className="category-network">
+      {statusPageSchema ? <JsonLd id={`status-page-schema-${schemaId}`} schema={statusPageSchema} /> : null}
       <nav className="border-b border-border/50" aria-label="Breadcrumb">
         <div className="mx-auto max-w-6xl px-4 py-3">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground">

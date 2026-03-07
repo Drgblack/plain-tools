@@ -11,12 +11,8 @@ import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
-import {
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildSoftwareApplicationSchema,
-} from "@/lib/structured-data"
 import { getToolPageProfile } from "@/lib/tool-page-content"
+import { buildToolSchema } from "@/lib/tool-schema"
 
 type ToolRouteParams = { slug: string }
 
@@ -143,32 +139,15 @@ export default async function ToolPage({ params }: PageProps) {
     : FallbackToolComponent
   const profile = getToolPageProfile(tool)
   const introLead = buildToolLeadParagraph(profile.description, tool.category)
-  const faqSchema = buildFaqPageSchema([
-    {
-      question: `Does ${tool.name} upload my file?`,
-      answer: `No. ${tool.name} processes your PDF entirely in your browser using WebAssembly. Your file never leaves your device and no data is transmitted to any server. You can verify this yourself using your browser's DevTools Network tab.`,
-    },
-    {
-      question: `Does ${tool.name} work offline?`,
-      answer: `Yes. Once the page has loaded, ${tool.name} works without an internet connection. All processing happens locally using WebAssembly compiled into your browser session.`,
-    },
-    {
-      question: `Is ${tool.name} free?`,
-      answer: `Yes. ${tool.name} is completely free to use with no account required, no file size limits beyond your device's available RAM, and no usage caps.`,
-    },
-  ])
-  const webApplicationSchema = buildSoftwareApplicationSchema({
+  const toolSchema = buildToolSchema({
     name: tool.name,
+    slug,
     description: profile.description,
     featureList: profile.featureList,
-    url: `https://plain.tools/tools/${slug}`,
     browserRequirements:
       "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+).",
-  })
-  const howToSchema = buildHowToSchema(
-    `How to use ${tool.name}`,
-    profile.description,
-    [
+    includeHowTo: true,
+    howToSteps: [
       {
         name: "Upload your file",
         text: "Select a file from your device. The file stays local in your browser session.",
@@ -185,14 +164,13 @@ export default async function ToolPage({ params }: PageProps) {
         name: "Download output",
         text: "Download the processed result and verify output quality before sharing.",
       },
-    ]
-  )
+    ],
+    includeFaq: false,
+  })
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
-      <JsonLd id={`tool-webapp-schema-${tool.slug}`} schema={webApplicationSchema} />
-      <JsonLd id={`tool-faq-schema-${tool.slug}`} schema={faqSchema} />
-      <JsonLd id={`tool-howto-schema-${tool.slug}`} schema={howToSchema} />
+      {toolSchema ? <JsonLd id={`tool-schema-${tool.slug}`} schema={toolSchema} /> : null}
       
 
       <main className="flex-1">
