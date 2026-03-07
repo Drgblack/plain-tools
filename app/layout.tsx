@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { AppShellChrome } from '@/components/app-shell-chrome'
 import { JsonLd } from '@/components/seo/json-ld'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
+import { buildSiteVerificationMetadata } from "@/lib/seo-monitoring"
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
 import './globals.css'
 
@@ -34,6 +35,7 @@ const rootSchema = combineJsonLd([
     sameAs: ["https://github.com/Drgblack/plain-tools"],
   }),
 ])
+const siteVerificationMetadata = buildSiteVerificationMetadata()
 
 export const metadata: Metadata = {
   title: "Plain Tools - Local utility hub for PDF, file and network workflows",
@@ -51,6 +53,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Plain Tools" }],
   creator: "Plain Tools",
   metadataBase: new URL("https://plain.tools"),
+  verification: siteVerificationMetadata,
   openGraph: {
     type: "website",
     locale: "en_GB",

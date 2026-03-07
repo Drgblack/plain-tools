@@ -23,5 +23,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Applebot", allow: "/" },
     ],
     sitemap: "https://plain.tools/sitemap.xml",
+    host: "https://plain.tools",
   }
 }
