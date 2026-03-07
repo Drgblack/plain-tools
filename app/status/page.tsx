@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import {
   STATUS_CATEGORIES,
   STATUS_CATEGORY_META,
@@ -108,6 +109,29 @@ export default function StatusDirectoryPage() {
                   className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                 >
                   Is {domain} down?
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold text-foreground">
+            Natural-language status checks
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Quick entry pages optimised for “is [site] down” searches.
+          </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {STATUS_QUERY_PAGES.map((entry) => (
+              <li key={entry.slug}>
+                <Link
+                  href={statusQueryPathForSlug(entry.slug)}
+                  className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                >
+                  Is {entry.name} down?
                 </Link>
               </li>
             ))}

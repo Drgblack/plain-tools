@@ -251,6 +251,11 @@ const nextConfig: NextConfig = {
     return [
       { source: "/pdf-tools/tools", destination: "/tools", permanent: true },
       { source: "/pdf-tools/tools/:path*", destination: "/tools/:path*", permanent: true },
+      {
+        source: "/is/:site",
+        destination: "/is-:site-down",
+        permanent: true,
+      },
       // Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
@@ -530,6 +535,14 @@ const nextConfig: NextConfig = {
         source: "/comparisons/:path*",
         destination: "/compare/:path*",
         permanent: true,
+      },
+    ]
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/is-:site-down",
+        destination: "/is/:site",
       },
     ]
   },

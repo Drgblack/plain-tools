@@ -6,6 +6,7 @@ import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { getStatusObservabilityStorageInfo, getStatusTrends } from "@/lib/status-trending"
 import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
+import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import {
   buildBreadcrumbList,
   buildItemListSchema,
@@ -184,6 +185,25 @@ export default async function StatusTrendingPage() {
               ))}
             </ul>
           </section>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Popular “is site down” pages
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {STATUS_QUERY_PAGES.map((entry) => (
+              <Link
+                key={entry.slug}
+                href={statusQueryPathForSlug(entry.slug)}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                Is {entry.name} down?
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

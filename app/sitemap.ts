@@ -6,6 +6,7 @@ import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { STATUS_CATEGORIES } from "@/lib/status-domains"
+import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 
@@ -67,6 +68,20 @@ const curatedLandingPages = [
   "/compare/smallpdf-alternative",
   "/learn/compress-pdf-without-upload",
 ]
+
+const statusCategoryPages = STATUS_CATEGORIES.map((category) => ({
+  url: `${BASE_URL}/status/${category}`,
+  lastModified: now,
+  changeFrequency: "daily" as const,
+  priority: 0.75,
+}))
+
+const statusQueryPages = STATUS_QUERY_PAGES.map((entry) => ({
+  url: `${BASE_URL}${statusQueryPathForSlug(entry.slug)}`,
+  lastModified: now,
+  changeFrequency: "daily" as const,
+  priority: 0.82,
+}))
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const homepage = {
@@ -147,6 +162,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticCore,
     ...curatedLanding,
     ...statusCategoryPages,
+    ...statusQueryPages,
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
@@ -171,9 +187,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return Array.from(deduped.values())
 }
-  const statusCategoryPages = STATUS_CATEGORIES.map((category) => ({
-    url: `${BASE_URL}/status/${category}`,
-    lastModified: now,
-    changeFrequency: "daily" as const,
-    priority: 0.75,
-  }))

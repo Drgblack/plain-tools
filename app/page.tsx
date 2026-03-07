@@ -609,16 +609,16 @@ export default function HomePage() {
             </div>
             <TrendingStatus title="Most checked status pages today" limit={8} />
             <div className="mt-4 flex flex-wrap gap-2 text-xs">
-              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/is-chatgpt-down" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Is ChatGPT down?
               </Link>
-              <Link href="/status/discord.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/is-discord-down" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Is Discord down?
               </Link>
-              <Link href="/status/youtube.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/is-youtube-down" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Is YouTube down?
               </Link>
-              <Link href="/status/github.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/is-github-down" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Is GitHub down?
               </Link>
             </div>

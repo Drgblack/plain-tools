@@ -13,6 +13,7 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
+import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { FIRST_WAVE_GUIDE_PAGES } from "@/lib/seo/first-wave-pages"
 
 import { SiteStatusClient } from "./client"
@@ -149,6 +150,24 @@ export default function SiteStatusPage() {
             >
               Next: confirm network context
             </Link>
+          </div>
+        </div>
+      </section>
+      <section className="border-b border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+            Popular “is site down” pages
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            {STATUS_QUERY_PAGES.map((entry) => (
+              <Link
+                key={entry.slug}
+                href={statusQueryPathForSlug(entry.slug)}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                Is {entry.name} down?
+              </Link>
+            ))}
           </div>
         </div>
       </section>
