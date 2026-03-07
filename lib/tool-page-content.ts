@@ -1,5 +1,15 @@
 import type { ToolDefinition } from "@/lib/tools-catalogue"
 
+export type ToolAnswerFirstContent = {
+  summary: string
+  whatItDoes: string
+  whatYouProvide: string
+  whatYouGet: string
+  localProcessing: string
+  limitations: string
+  whatToExpect: string[]
+}
+
 type ToolPageProfile = {
   title: string
   description: string
@@ -18,6 +28,256 @@ const DEFAULT_TRUST_POINTS = [
 
 const DEFAULT_LIMITATION =
   "Best-effort output quality depends on file complexity and available device memory."
+
+const TOOL_ANSWER_FIRST_OVERRIDES: Partial<Record<string, ToolAnswerFirstContent>> = {
+  "merge-pdf": {
+    summary:
+      "Merge PDF combines multiple PDF files into one output document in your browser. Files are processed locally and not uploaded for core workflows.",
+    whatItDoes:
+      "It reads each selected PDF, preserves page order based on your list, and writes a single merged PDF.",
+    whatYouProvide:
+      "Two or more PDF files. You can reorder items before running the merge.",
+    whatYouGet:
+      "One merged PDF download.",
+    localProcessing:
+      "All merge operations run in browser memory on your device.",
+    limitations:
+      "Encrypted or corrupted source files can fail to merge.",
+    whatToExpect: [
+      "Large batches can take longer on mobile devices.",
+      "Merged output keeps source page visuals, but file metadata may differ.",
+      "Review the final file before sharing.",
+    ],
+  },
+  "split-pdf": {
+    summary:
+      "Split PDF extracts selected pages or ranges from one source PDF. Processing stays local in your browser.",
+    whatItDoes:
+      "It reads the source PDF and creates new PDFs from selected pages, ranges, or per-page mode.",
+    whatYouProvide:
+      "One PDF and a page selection such as 1,3,5-7.",
+    whatYouGet:
+      "A single extracted PDF or multiple PDFs (often as ZIP).",
+    localProcessing:
+      "Page extraction and export run locally on-device.",
+    limitations:
+      "Invalid ranges or pages outside document length are rejected.",
+    whatToExpect: [
+      "Per-page export can generate many files on long PDFs.",
+      "Input validation prevents out-of-range extraction.",
+      "Output quality matches source pages because no re-render is required.",
+    ],
+  },
+  "compress-pdf": {
+    summary:
+      "Compress PDF reduces file size with light, medium, and strong modes in a local browser workflow.",
+    whatItDoes:
+      "It optimises PDF structure and, in stronger modes, can re-render page content for smaller output.",
+    whatYouProvide:
+      "One PDF and a compression level.",
+    whatYouGet:
+      "One optimised PDF with before/after size information.",
+    localProcessing:
+      "Compression runs inside your browser session with no upload step for core mode paths.",
+    limitations:
+      "Strong mode may reduce visual quality and can flatten selectable text.",
+    whatToExpect: [
+      "Text-heavy PDFs often shrink less than image-heavy files.",
+      "Medium and strong modes can change rendering fidelity.",
+      "Always review readability before distribution.",
+    ],
+  },
+  "pdf-to-word": {
+    summary:
+      "PDF to Word performs best-effort local conversion from PDF text content into DOCX output.",
+    whatItDoes:
+      "It extracts readable text and writes a Word document with basic structure.",
+    whatYouProvide:
+      "One PDF file, ideally text-based rather than scanned images.",
+    whatYouGet:
+      "One `.docx` file for further editing.",
+    localProcessing:
+      "Extraction and DOCX creation run in your browser.",
+    limitations:
+      "Complex layouts, forms, and scanned pages may not convert accurately.",
+    whatToExpect: [
+      "Paragraph flow is preserved better than exact visual layout.",
+      "Tables and multi-column content may need manual cleanup.",
+      "Scanned PDFs may require OCR before useful Word output.",
+    ],
+  },
+  "word-to-pdf": {
+    summary:
+      "Word to PDF converts DOCX files to PDF locally with a best-effort browser rendering path.",
+    whatItDoes:
+      "It parses DOCX content and generates a PDF output document.",
+    whatYouProvide:
+      "One `.docx` file.",
+    whatYouGet:
+      "One converted PDF file.",
+    localProcessing:
+      "DOCX parsing and PDF creation happen on-device in your browser.",
+    limitations:
+      "Advanced Word styling and embedded elements may render differently.",
+    whatToExpect: [
+      "Simple business documents convert most reliably.",
+      "Fonts unavailable in-browser can change appearance.",
+      "Verify page breaks and spacing after conversion.",
+    ],
+  },
+  "pdf-to-excel": {
+    summary:
+      "PDF to Excel extracts table-like text into spreadsheet output in a local browser workflow.",
+    whatItDoes:
+      "It detects row and column patterns from PDF text positions and exports structured data.",
+    whatYouProvide:
+      "One PDF, preferably with clear table structure.",
+    whatYouGet:
+      "Spreadsheet-ready output (CSV/XLSX depending on mode support).",
+    localProcessing:
+      "Text extraction and table heuristics run in your browser.",
+    limitations:
+      "Complex merged cells and heavily stylised tables may need manual edits after export.",
+    whatToExpect: [
+      "Simple invoices and statements convert best.",
+      "Scanned tables without OCR text are harder to parse.",
+      "Run a quick spreadsheet review before downstream use.",
+    ],
+  },
+  "pdf-to-ppt": {
+    summary:
+      "PDF to PowerPoint creates one slide per PDF page using local browser rendering.",
+    whatItDoes:
+      "It renders pages to images and places each image on a presentation slide.",
+    whatYouProvide:
+      "One PDF and a chosen render scale.",
+    whatYouGet:
+      "One `.pptx` file with image-based slides.",
+    localProcessing:
+      "Page rendering and PPT generation run on-device.",
+    limitations:
+      "Slide text is not directly editable because pages are image-based.",
+    whatToExpect: [
+      "Visual fidelity is usually strong for static documents.",
+      "Higher scale improves sharpness but increases file size.",
+      "Complex animations are not reconstructed from PDFs.",
+    ],
+  },
+  "pdf-to-jpg": {
+    summary:
+      "PDF to JPG exports selected PDF pages as JPEG images locally in your browser.",
+    whatItDoes:
+      "It renders pages to canvas and encodes them to JPG with quality controls.",
+    whatYouProvide:
+      "One PDF, quality setting, and page selection.",
+    whatYouGet:
+      "One JPG per page, typically packaged as ZIP for multi-page exports.",
+    localProcessing:
+      "Rendering and image encoding happen in local browser memory.",
+    limitations:
+      "Very large PDFs can be memory-intensive on low-end devices.",
+    whatToExpect: [
+      "Higher quality and scale produce larger image files.",
+      "Selected page mode reduces processing time on long PDFs.",
+      "Image output is visual, not editable PDF text.",
+    ],
+  },
+  "jpg-to-pdf": {
+    summary:
+      "JPG to PDF combines image files into a single PDF in a local browser workflow.",
+    whatItDoes:
+      "It places each selected image on a PDF page using your size and margin options.",
+    whatYouProvide:
+      "One or more JPG/JPEG/PNG images.",
+    whatYouGet:
+      "One combined PDF file.",
+    localProcessing:
+      "Image loading and PDF assembly run entirely in-browser.",
+    limitations:
+      "Image quality and orientation depend on source resolution and chosen page settings.",
+    whatToExpect: [
+      "You can reorder images before conversion.",
+      "Fit-to-image preserves source proportions best.",
+      "Large image batches can increase output size quickly.",
+    ],
+  },
+  "sign-pdf": {
+    summary:
+      "Sign PDF adds a visual signature mark to a chosen page and position using local browser processing.",
+    whatItDoes:
+      "It embeds a drawn or typed signature into the PDF at selected coordinates.",
+    whatYouProvide:
+      "One PDF, a signature (drawn or typed), and placement settings.",
+    whatYouGet:
+      "One signed PDF file.",
+    localProcessing:
+      "Signature capture and PDF stamping run on your device.",
+    limitations:
+      "This is a visual signature workflow, not a cryptographic certificate signature.",
+    whatToExpect: [
+      "Use placement controls to avoid covering key document content.",
+      "Touch signature input is supported for mobile use.",
+      "Review signature size and position before final download.",
+    ],
+  },
+  "protect-pdf": {
+    summary:
+      "Protect PDF applies password protection to a PDF locally in your browser.",
+    whatItDoes:
+      "It encrypts the output PDF so viewers require a password to open it.",
+    whatYouProvide:
+      "One PDF and matching password/confirmation input.",
+    whatYouGet:
+      "One password-protected PDF.",
+    localProcessing:
+      "Encryption runs in-browser with no file upload for processing.",
+    limitations:
+      "Compatibility can vary across older or lightweight PDF viewers.",
+    whatToExpect: [
+      "Use a strong password and store it safely.",
+      "Test opening the protected file in your target viewer.",
+      "If a viewer rejects the file, try a mainstream PDF reader.",
+    ],
+  },
+  "unlock-pdf": {
+    summary:
+      "Unlock PDF removes password protection when you provide the correct password, entirely in local browser processing.",
+    whatItDoes:
+      "It decrypts an encrypted PDF and exports an unlocked copy.",
+    whatYouProvide:
+      "One encrypted PDF and its correct password.",
+    whatYouGet:
+      "One unlocked PDF file.",
+    localProcessing:
+      "Password verification and decryption run on-device in-browser.",
+    limitations:
+      "Without the correct password, unlock cannot proceed.",
+    whatToExpect: [
+      "Incorrect password errors are shown without exposing technical traces.",
+      "Unlocked output should open without a password prompt.",
+      "Re-protect output if you still need controlled access.",
+    ],
+  },
+  "ocr-pdf": {
+    summary:
+      "OCR PDF performs best-effort optical character recognition locally to extract text from scanned documents.",
+    whatItDoes:
+      "It renders pages and runs OCR to produce searchable text output and related exports.",
+    whatYouProvide:
+      "A scanned PDF or image-based document and OCR language selection.",
+    whatYouGet:
+      "Text output and, where supported, searchable PDF-style export.",
+    localProcessing:
+      "OCR processing runs in your browser after required OCR assets are available.",
+    limitations:
+      "Large files and mobile devices may process slowly; recognition quality depends on scan clarity.",
+    whatToExpect: [
+      "Clean, high-contrast scans produce better text accuracy.",
+      "OCR may require additional processing time on long documents.",
+      "Always validate extracted text before compliance-critical use.",
+    ],
+  },
+}
 
 const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
   "merge-pdf": {
@@ -156,6 +416,48 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "No-upload browser processing",
     ],
   },
+  "html-to-pdf": {
+    title: "HTML to PDF Locally - No Upload | Plain Tools",
+    description:
+      "Convert pasted HTML or fetched web content to PDF locally in your browser with best-effort rendering and fallback output.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort conversion only. Complex CSS, scripts, and external assets may not render exactly as source pages.",
+    featureList: [
+      "Paste HTML and export PDF locally",
+      "Best-effort URL fetch for web pages",
+      "Automatic text-only fallback when rendering fails",
+      "No-upload browser conversion workflow",
+    ],
+  },
+  "image-compress": {
+    title: "Image Compressor / Optimizer Locally - No Upload | Plain Tools",
+    description:
+      "Compress JPG, PNG, and WebP images locally in your browser with quality controls and before/after previews.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort optimisation. PNG inputs are exported as WebP for stronger compression in most browsers.",
+    featureList: [
+      "Batch image compression",
+      "Quality and max-dimension controls",
+      "Before/after preview workflow",
+      "ZIP download for multiple outputs",
+    ],
+  },
+  "zip-tool": {
+    title: "ZIP Extract & Create Locally - No Upload | Plain Tools",
+    description:
+      "Extract ZIP archives and create ZIP bundles locally in your browser with no upload step.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort support for common ZIP archives. Password-protected ZIP files are not supported in this basic workflow.",
+    featureList: [
+      "Extract ZIP files locally",
+      "Select entries and re-bundle outputs",
+      "Create ZIP archives from local files",
+      "No-upload browser-only processing",
+    ],
+  },
   "pdf-to-jpg": {
     title: "PDF to JPG Locally - No Upload | Plain Tools",
     description:
@@ -223,6 +525,20 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "No-upload local browser processing",
     ],
   },
+  "pdf-to-markdown": {
+    title: "PDF to Markdown Locally - No Upload | Plain Tools",
+    description:
+      "Convert PDF text to Markdown locally in your browser with best-effort heading and list structure detection.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Best-effort output only. Complex layouts, tables, and scanned image PDFs may need manual Markdown cleanup.",
+    featureList: [
+      "Extract PDF text into Markdown",
+      "Heading and list heuristics",
+      "Inline bold and italic detection",
+      "No-upload local browser conversion",
+    ],
+  },
   "file-hash": {
     title: "File Hash / Checksum Locally - No Upload | Plain Tools",
     description:
@@ -249,6 +565,20 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
       "Configurable size and error correction",
       "Foreground and background colour controls",
       "PNG and SVG downloads",
+    ],
+  },
+  "qr-scanner": {
+    title: "QR Code Scanner Locally - No Upload | Plain Tools",
+    description:
+      "Scan QR codes from camera preview or uploaded images locally in your browser with no file uploads.",
+    trustPoints: DEFAULT_TRUST_POINTS,
+    limitation:
+      "Requires browser Barcode Detection API support. Some browsers may not support camera/image QR decoding.",
+    featureList: [
+      "Camera-based QR scanning",
+      "Uploaded image QR decoding",
+      "Copy decoded text or URL",
+      "No-upload local browser processing",
     ],
   },
   "sign-pdf": {
@@ -324,42 +654,78 @@ const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
 export type ResolvedToolPageProfile = ToolPageProfile & {
   overview: string
   useCases: string[]
+  answerFirst: ToolAnswerFirstContent
+}
+
+function buildDefaultAnswerFirst(
+  tool: ToolDefinition,
+  overview: string,
+  limitation: string
+): ToolAnswerFirstContent {
+  const localText =
+    tool.category === "Network Tools"
+      ? "Network checks query endpoints directly and return results in-browser. No document file uploads are involved."
+      : "Core processing runs in your browser, so file bytes stay on your device for local workflows."
+
+  return {
+    summary: `${tool.name} handles this workflow with a practical browser-first process and clear output download steps.`,
+    whatItDoes: overview,
+    whatYouProvide: "Source file(s) and the tool-specific options shown in the workspace panel.",
+    whatYouGet: "A processed output file ready to download on this page.",
+    localProcessing: localText,
+    limitations: limitation,
+    whatToExpect: [
+      "Processing time depends on file size and device performance.",
+      "Best-effort tools may need manual review on complex layouts.",
+      "Download and verify output before sharing.",
+    ],
+  }
 }
 
 export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfile {
   const profile = TOOL_PAGE_PROFILES[tool.slug]
   if (profile) {
+    const overview =
+      profile.overview ??
+      `${tool.name} runs in your browser for local, private document handling. Process files directly on your device without a server-side upload step for core workflows.`
+    const useCases =
+      profile.useCases ?? [
+        "Prepare documents quickly before sharing or archiving.",
+        "Handle privacy-sensitive files without third-party upload workflows.",
+        "Run practical browser-first tasks on desktop or mobile.",
+      ]
+
     return {
       ...profile,
-      overview:
-        profile.overview ??
-        `${tool.name} runs in your browser for local, private document handling. Process files directly on your device without a server-side upload step for core workflows.`,
-      useCases:
-        profile.useCases ?? [
-          "Prepare documents quickly before sharing or archiving.",
-          "Handle privacy-sensitive files without third-party upload workflows.",
-          "Run practical browser-first tasks on desktop or mobile.",
-        ],
+      overview,
+      useCases,
+      answerFirst:
+        TOOL_ANSWER_FIRST_OVERRIDES[tool.slug] ??
+        buildDefaultAnswerFirst(tool, overview, profile.limitation),
     }
   }
+
+  const overview = `${tool.name} runs locally in your browser. This keeps file handling on your device for faster, private workflow control.`
+  const limitation = DEFAULT_LIMITATION
 
   return {
     title: `${tool.name} Locally - No Upload | Plain Tools`,
     description:
       `${tool.description} Process files locally in your browser with no uploads or server-side handling.`,
     trustPoints: DEFAULT_TRUST_POINTS,
-    limitation: DEFAULT_LIMITATION,
+    limitation,
     featureList: [
       "Local browser processing",
       "No upload workflow",
       "Fast private output",
       "Cross-device compatible",
     ],
-    overview: `${tool.name} runs locally in your browser. This keeps file handling on your device for faster, private workflow control.`,
+    overview,
     useCases: [
       "Quick day-to-day document tasks",
       "Private handling for sensitive files",
       "Simple browser-based processing without extra software",
     ],
+    answerFirst: buildDefaultAnswerFirst(tool, overview, limitation),
   }
 }

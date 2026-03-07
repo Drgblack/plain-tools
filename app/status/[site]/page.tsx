@@ -137,6 +137,58 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
 
         <div className="grid gap-8 lg:grid-cols-[1fr,380px]">
           <div className="space-y-8">
+            <section className="rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+              <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                Quick answer
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                This page reports whether {siteLabel} is currently up or down based on a live HTTP probe, plus response time for the latest successful check.
+              </p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <article className="rounded-lg border border-border/60 bg-background/60 p-3">
+                  <h3 className="text-sm font-semibold text-foreground">Up</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Host responded successfully during the latest probe.
+                  </p>
+                </article>
+                <article className="rounded-lg border border-border/60 bg-background/60 p-3">
+                  <h3 className="text-sm font-semibold text-foreground">Down</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Host timed out or failed to return a usable response.
+                  </p>
+                </article>
+                <article className="rounded-lg border border-border/60 bg-background/60 p-3">
+                  <h3 className="text-sm font-semibold text-foreground">Response time</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Round-trip latency in milliseconds for the latest check.
+                  </p>
+                </article>
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                A site may be up globally but still inaccessible for you if local DNS cache, ISP routing, firewall policy, or regional transit issues block your path.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                <Link
+                  href={`/dns/${encodeURIComponent(normalizedSite)}`}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+                >
+                  Check DNS for {siteLabel}
+                </Link>
+                <Link
+                  href="/ping-test"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+                >
+                  Run latency test
+                </Link>
+                <Link
+                  href="/what-is-my-ip"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+                >
+                  Check local network context
+                </Link>
+              </div>
+            </section>
+
             <Surface as="section">
               <h2 className="mb-4 text-lg font-semibold text-foreground">Current Status</h2>
               <StatusDynamicClient site={normalizedSite} siteName={siteLabel} />

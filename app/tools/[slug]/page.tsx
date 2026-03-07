@@ -7,6 +7,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
@@ -52,8 +53,10 @@ const toolComponents: Record<string, ToolComponent> = {
   "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
   "pdf-to-ppt": lazy(() => import("@/components/tools/pdf-to-ppt-tool")),
   "pdf-to-html": lazy(() => import("@/components/tools/pdf-to-html-tool")),
+  "html-to-pdf": lazy(() => import("@/components/tools/html-to-pdf-tool")),
   "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
   "text-to-pdf": lazy(() => import("@/components/tools/text-to-pdf-tool")),
+  "image-compress": lazy(() => import("@/components/tools/image-compress-tool")),
   "file-hash": lazy(() => import("@/components/tools/file-hash-tool")),
   "qr-code": lazy(() => import("@/components/tools/qr-code-tool")),
 }
@@ -67,8 +70,14 @@ const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
 
 function normaliseToolMetadataTitle(rawTitle: string, fallbackToolName: string) {
   const cleaned = rawTitle.replace("Plain.tools", "Plain Tools")
-  if (cleaned.includes("|") || cleaned.includes(" - ")) return fallbackToolName
-  return cleaned
+  const withoutBrand = cleaned
+    .replace(/\|\s*Plain Tools$/i, "")
+    .replace(/\s+-\s+Plain Tools$/i, "")
+    .trim()
+  if (!withoutBrand) return fallbackToolName
+  if (withoutBrand.length > 70) return fallbackToolName
+  if (/^(plain tools|tool)$/i.test(withoutBrand)) return fallbackToolName
+  return withoutBrand
 }
 
 function buildToolLeadParagraph(description: string, category: string) {
@@ -219,6 +228,8 @@ export default async function ToolPage({ params }: PageProps) {
                 </ul>
                 <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
               </section>
+
+              <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
 
               <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
                 <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
