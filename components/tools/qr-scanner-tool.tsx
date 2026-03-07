@@ -1,5 +1,6 @@
 "use client"
 
+import jsQR from "jsqr"
 import {
   Camera,
   CameraOff,
@@ -92,26 +93,36 @@ export default function QrScannerTool() {
 
   useEffect(() => stopCamera, [stopCamera])
 
-  const decodeFromSource = useCallback(
-    async (source: HTMLCanvasElement | HTMLImageElement) => {
-      const DetectorCtor = getBarcodeDetectorCtor()
-      if (!DetectorCtor) {
-        throw new Error("QR scanning is not supported in this browser. Use a Chromium-based browser.")
-      }
-
-      let detector: BarcodeDetectorLike
+  const decodeFromCanvas = useCallback(async (canvas: HTMLCanvasElement) => {
+    const DetectorCtor = getBarcodeDetectorCtor()
+    if (DetectorCtor) {
       try {
-        detector = new DetectorCtor({ formats: ["qr_code"] })
+        let detector: BarcodeDetectorLike
+        try {
+          detector = new DetectorCtor({ formats: ["qr_code"] })
+        } catch {
+          detector = new DetectorCtor()
+        }
+        const results = await detector.detect(canvas)
+        const first = results.find((result) => Boolean(result.rawValue?.trim()))
+        if (first?.rawValue?.trim()) {
+          return first.rawValue.trim()
+        }
       } catch {
-        detector = new DetectorCtor()
+        // Fall back to jsQR when native detection fails on specific browsers/codecs.
       }
+    }
 
-      const results = await detector.detect(source)
-      const first = results.find((result) => Boolean(result.rawValue?.trim()))
-      return first?.rawValue?.trim() ?? null
-    },
-    []
-  )
+    const context = canvas.getContext("2d")
+    if (!context) {
+      throw new Error("Could not read image data for QR decoding.")
+    }
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+    const decoded = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: "attemptBoth",
+    })
+    return decoded?.data?.trim() || null
+  }, [])
 
   const startCamera = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -173,7 +184,7 @@ export default function QrScannerTool() {
       }
 
       context.drawImage(video, 0, 0, canvas.width, canvas.height)
-      const value = await decodeFromSource(canvas)
+      const value = await decodeFromCanvas(canvas)
 
       if (!value) {
         setStatus("No QR code detected in the current frame. Try adjusting distance or lighting.")
@@ -192,11 +203,12 @@ export default function QrScannerTool() {
     } finally {
       setIsWorking(false)
     }
-  }, [decodeFromSource, isCameraActive])
+  }, [decodeFromCanvas, isCameraActive])
 
   const scanFromImage = useCallback(async () => {
     const image = imageRef.current
-    if (!imagePreviewUrl || !image) {
+    const canvas = canvasRef.current
+    if (!imagePreviewUrl || !image || !canvas) {
       toast.error("Upload a QR image first.")
       return
     }
@@ -210,7 +222,14 @@ export default function QrScannerTool() {
     setStatus("Scanning uploaded image...")
 
     try {
-      const value = await decodeFromSource(image)
+      canvas.width = image.naturalWidth
+      canvas.height = image.naturalHeight
+      const context = canvas.getContext("2d")
+      if (!context) {
+        throw new Error("Could not prepare image canvas.")
+      }
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      const value = await decodeFromCanvas(canvas)
       if (!value) {
         setStatus("No QR code detected in this image.")
         toast.error("No QR code found in uploaded image.")
@@ -228,7 +247,7 @@ export default function QrScannerTool() {
     } finally {
       setIsWorking(false)
     }
-  }, [decodeFromSource, imagePreviewUrl])
+  }, [decodeFromCanvas, imagePreviewUrl])
 
   const copyDecodedValue = useCallback(async () => {
     if (!decodedValue) {
@@ -261,8 +280,8 @@ export default function QrScannerTool() {
       {!hasBarcodeDetector ? (
         <Card className="border-amber-500/30 bg-amber-500/10">
           <CardContent className="pt-5 text-sm text-amber-100">
-            This browser does not support the native Barcode Detection API.
-            Use Chrome, Edge, or another supported browser for QR scanning.
+            Native Barcode Detection API is unavailable. Falling back to local `jsQR` decoding.
+            Camera and image scanning remain fully local in your browser.
           </CardContent>
         </Card>
       ) : null}
@@ -275,7 +294,7 @@ export default function QrScannerTool() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2">
             {!isCameraActive ? (
-              <Button type="button" onClick={() => void startCamera()} disabled={isWorking || !hasBarcodeDetector}>
+              <Button type="button" onClick={() => void startCamera()} disabled={isWorking}>
                 {isWorking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                 Scan with Camera
               </Button>
@@ -341,7 +360,7 @@ export default function QrScannerTool() {
                 />
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button type="button" onClick={() => void scanFromImage()} disabled={isWorking || !hasBarcodeDetector}>
+                <Button type="button" onClick={() => void scanFromImage()} disabled={isWorking}>
                   {isWorking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                   Scan uploaded image
                 </Button>

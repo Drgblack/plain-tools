@@ -40,7 +40,7 @@ const siteVerificationMetadata = buildSiteVerificationMetadata()
 export const metadata: Metadata = {
   title: "Plain Tools - Local utility hub for PDF, file and network workflows",
   description:
-    "Plain Tools offers privacy-first browser utilities for PDF workflows, network diagnostics, and practical file tasks. Local processing where supported, no uploads for core tools.",
+    "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
   generator: "Plain Tools",
   keywords: [
     "offline PDF tools",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     siteName: "Plain Tools",
     title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
     description:
-      "Trust-first utility hub for PDF workflows, file tasks, and network diagnostics. Core local tools run in your browser with no upload step.",
+      "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
     images: [
       {
         url: "/og/default.png",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
     description:
-      "Trust-first utility hub for PDF workflows, file tasks, and network diagnostics. Core local tools run in your browser with no upload step.",
+      "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
     images: ["/og/default.png"],
   },
   robots: {
@@ -128,7 +128,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
         {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="manifest" href="/site.webmanifest" />

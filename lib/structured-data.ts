@@ -80,6 +80,7 @@ type SoftwareApplicationInput = {
   url: string
   featureList: string[]
   browserRequirements?: string
+  sameAs?: string[]
 }
 
 type ItemListElement = {
@@ -213,6 +214,7 @@ export function buildSoftwareApplicationSchema(
     },
     featureList: input.featureList,
     url: input.url,
+    ...(input.sameAs && input.sameAs.length > 0 ? { sameAs: input.sameAs } : {}),
   })
 }
 

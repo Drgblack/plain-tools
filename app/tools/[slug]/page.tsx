@@ -82,6 +82,24 @@ function buildToolLeadParagraph(description: string, category: string) {
   return `${description} Files never leave your device.`
 }
 
+function buildToolMetaDescription(toolName: string, description: string) {
+  const cleanedDescription = description.replace(/\s+/g, " ").trim()
+  const startsWithToolName = cleanedDescription.toLowerCase().startsWith(toolName.toLowerCase())
+
+  const intro = startsWithToolName
+    ? cleanedDescription
+    : `${toolName} on Plain Tools: ${cleanedDescription}`
+
+  let resolved = intro
+  if (!/processed locally|no upload|in your browser/i.test(resolved)) {
+    resolved = `${resolved} Processed locally in your browser with no upload step.`
+  }
+  if (resolved.length < 140) {
+    resolved = `${resolved} Files stay on your device for core local workflows.`
+  }
+  return resolved
+}
+
 export async function generateStaticParams() {
   return TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     slug: tool.slug,
@@ -103,7 +121,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const profile = getToolPageProfile(tool)
-  const description = buildToolLeadParagraph(profile.description, tool.category)
+  const description = buildToolMetaDescription(tool.name, profile.description)
   const title = normaliseToolMetadataTitle(profile.title, tool.name)
   const baseMetadata = buildPageMetadata({
     title,

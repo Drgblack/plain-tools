@@ -4,61 +4,15 @@ import Link from "next/link"
 import { JsonLd } from "@/components/seo/json-ld"
 import { VerifyClaimsContent } from "@/components/verify-claims-content"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import {
-  buildBreadcrumbList,
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildWebPageSchema,
-  combineJsonLd,
-} from "@/lib/structured-data"
+import { verifyClaimsSchema } from "@/lib/verify-claims-schema"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Verify claims",
   description:
-    "Verify Plain Tools no-upload claims using practical DevTools checks. Confirm local processing behaviour and inspect requests yourself, step by step.",
+    "Verify Plain Tools no-upload claims with practical DevTools checks. Confirm local processing behaviour, inspect network requests, and validate results step by step.",
   path: "/verify-claims",
   image: "/og/default.png",
 })
-
-const jsonLd = combineJsonLd([
-  buildWebPageSchema({
-    name: "We Dare You to Catch Us Uploading Your Files",
-    description:
-      "Interactive proof page showing exactly how to verify Plain's no-upload privacy claims in DevTools.",
-    url: "https://plain.tools/verify-claims",
-  }),
-  buildBreadcrumbList([
-    { name: "Home", url: "https://plain.tools/" },
-    { name: "Verify Claims", url: "https://plain.tools/verify-claims" },
-  ]),
-  buildHowToSchema(
-    "How to verify no-upload PDF processing claims",
-    "Use browser DevTools to confirm local processing behaviour and review network traffic.",
-    [
-      { name: "Open DevTools", text: "Open browser DevTools and switch to the Network tab." },
-      { name: "Filter requests", text: "Filter by Fetch and XHR request types while running a tool." },
-      { name: "Run a real workflow", text: "Upload and process a real PDF in a local tool workflow." },
-      { name: "Inspect payloads", text: "Confirm no request payload contains your document bytes." },
-    ]
-  ),
-  buildFaqPageSchema([
-    {
-      question: "Does Plain upload my PDFs?",
-      answer:
-        "No. Plain processes PDFs locally in your browser. Your files are not uploaded for processing.",
-    },
-    {
-      question: "Can I verify this myself?",
-      answer:
-        "Yes. Use your browser's Developer Tools (Network tab) while running a tool. You should not see requests containing your PDF data.",
-    },
-    {
-      question: "Does Plain work offline?",
-      answer:
-        "Plain can work offline after the site has loaded. If you refresh while offline, loading depends on your browser cache.",
-    },
-  ]),
-])
 
 export default function VerifyClaimsPage() {
   const relatedTools = [
@@ -70,7 +24,7 @@ export default function VerifyClaimsPage() {
 
   return (
     <>
-      {jsonLd ? <JsonLd id="verify-claims-schema" schema={jsonLd} /> : null}
+      {verifyClaimsSchema ? <JsonLd id="verify-claims-schema" schema={verifyClaimsSchema} /> : null}
       <main className="overflow-x-hidden">
         <section className="border-b border-border/70 bg-card/20 px-4 py-10">
           <div className="mx-auto max-w-5xl space-y-6">

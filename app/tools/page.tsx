@@ -19,7 +19,7 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 export const metadata: Metadata = buildPageMetadata({
   title: "PDF Tools",
   description:
-    "Browse Plain Tools PDF workflows for merge, split, compress, convert, OCR, and signing. Core tools run in your browser with no upload step.",
+    "Browse 40+ Plain Tools workflows for merge, split, compress, conversion, OCR, and signing. Core PDF tasks run locally in your browser with no upload step.",
   path: "/tools",
   image: "/og/tools.png",
 })

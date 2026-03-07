@@ -4,6 +4,8 @@ import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page
 export const BASE_URL = "https://plain.tools"
 const MIN_DESCRIPTION_LENGTH = 140
 const MAX_DESCRIPTION_LENGTH = 160
+const DEFAULT_PAGE_DESCRIPTION =
+  "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking."
 
 type PageMetadataInput = {
   title: string
@@ -22,11 +24,12 @@ function normalisePageTitle(rawTitle: string): string {
 
 function normaliseDescription(rawDescription: string): string {
   const cleaned = rawDescription.replace(/\s+/g, " ").trim()
-  if (cleaned.length <= MAX_DESCRIPTION_LENGTH) {
-    return cleaned
+  const resolved = cleaned.length > 0 ? cleaned : DEFAULT_PAGE_DESCRIPTION
+  if (resolved.length <= MAX_DESCRIPTION_LENGTH) {
+    return resolved
   }
 
-  const clipped = cleaned.slice(0, MAX_DESCRIPTION_LENGTH)
+  const clipped = resolved.slice(0, MAX_DESCRIPTION_LENGTH)
   const lastWhitespace = clipped.lastIndexOf(" ")
   if (lastWhitespace < MIN_DESCRIPTION_LENGTH) {
     return `${clipped.trimEnd()}…`

@@ -36,7 +36,7 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 export const metadata: Metadata = buildPageMetadata({
   title: "Offline PDF, file and network tools",
   description:
-    "Use Plain Tools for local PDF workflows, file utilities, and network diagnostics with clear privacy behaviour, practical guidance, and no-upload core processing.",
+    "Access 43+ offline PDF tools, file converters, network diagnostics, and more on Plain Tools. Core workflows run locally with no uploads and no tracking.",
   path: "/",
   image: "/og/default.png",
 })

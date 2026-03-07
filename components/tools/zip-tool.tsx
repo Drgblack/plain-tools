@@ -1,6 +1,6 @@
 "use client"
 
-import { unzipSync } from "fflate"
+import JSZip from "jszip"
 import { Archive, CheckSquare, Download, FileArchive, Loader2, Square, Trash2 } from "lucide-react"
 import { useCallback, useMemo, useState } from "react"
 import { Toaster, toast } from "sonner"
@@ -9,10 +9,11 @@ import { PdfFileDropzone } from "@/components/tools/shared/pdf-file-dropzone"
 import { ProcessedLocallyBadge } from "@/components/tools/processed-locally-badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { notifyLocalDownloadSuccess } from "@/lib/local-download-events"
 import { ensureSafeLocalFileSize, formatFileSize } from "@/lib/pdf-client-utils"
-import { blobToUint8Array, downloadZip, makeZip } from "@/lib/zip-download"
+import { downloadZip } from "@/lib/zip-download"
 
 type ZipMode = "extract" | "create"
 
@@ -69,6 +70,7 @@ export default function ZipTool() {
   const [selectedEntryNames, setSelectedEntryNames] = useState<string[]>([])
   const [createFiles, setCreateFiles] = useState<File[]>([])
   const [isWorking, setIsWorking] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState("Choose Extract or Create to process ZIP files locally.")
 
   const selectedEntries = useMemo(() => {
@@ -84,10 +86,12 @@ export default function ZipTool() {
     setExtractArchive(null)
     setExtractedEntries([])
     setSelectedEntryNames([])
+    setProgress(0)
   }, [])
 
   const resetCreate = useCallback(() => {
     setCreateFiles([])
+    setProgress(0)
   }, [])
 
   const handleExtractArchive = useCallback(
@@ -98,22 +102,34 @@ export default function ZipTool() {
       }
 
       setIsWorking(true)
+      setProgress(5)
       setStatus("Reading ZIP archive locally...")
       resetExtract()
 
       try {
         ensureSafeLocalFileSize(candidate, MAX_ZIP_BYTES)
-        const zipBytes = new Uint8Array(await candidate.arrayBuffer())
-        const rawEntries = unzipSync(zipBytes)
+        setProgress(10)
+        const zip = await JSZip.loadAsync(candidate)
+        const files = Object.values(zip.files).filter((entry) => !entry.dir)
+        if (!files.length) {
+          throw new Error("No extractable files were found in this ZIP.")
+        }
 
-        const parsed = Object.entries(rawEntries)
-          .map(([name, bytes]) => ({
-            name: normaliseZipEntryPath(name),
+        const parsed: ZipEntryRecord[] = []
+        for (let index = 0; index < files.length; index += 1) {
+          const file = files[index]
+          const bytes = await file.async("uint8array")
+          parsed.push({
+            name: normaliseZipEntryPath(file.name),
             bytes,
             sizeBytes: bytes.byteLength,
-          }))
-          .filter((entry) => !entry.name.endsWith("/"))
-          .sort((left, right) => left.name.localeCompare(right.name))
+          })
+          const percentage = Math.round(((index + 1) / files.length) * 85)
+          setProgress(10 + percentage)
+          setStatus(`Extracting files (${index + 1}/${files.length})...`)
+        }
+
+        parsed.sort((left, right) => left.name.localeCompare(right.name))
 
         if (!parsed.length) {
           throw new Error("No extractable files were found in this ZIP.")
@@ -122,6 +138,7 @@ export default function ZipTool() {
         setExtractArchive(candidate)
         setExtractedEntries(parsed)
         setSelectedEntryNames(parsed.map((entry) => entry.name))
+        setProgress(100)
         setStatus(`Loaded ${parsed.length} file${parsed.length === 1 ? "" : "s"} from archive.`)
         toast.success("ZIP archive loaded.")
       } catch (error) {
@@ -139,15 +156,44 @@ export default function ZipTool() {
     [resetExtract]
   )
 
-  const downloadEntriesAsZip = useCallback((entries: ZipEntryRecord[], filename: string) => {
+  const downloadEntriesAsZip = useCallback(async (entries: ZipEntryRecord[], filename: string) => {
     if (!entries.length) {
       toast.error("Select at least one file.")
       return
     }
-    const zipBytes = makeZip(entries.map((entry) => ({ name: entry.name, data: entry.bytes })))
-    downloadZip(zipBytes, filename)
-    notifyLocalDownloadSuccess()
-    toast.success(`ZIP ready. ${entries.length} file${entries.length === 1 ? "" : "s"} included.`)
+
+    setIsWorking(true)
+    setProgress(5)
+    setStatus("Preparing ZIP for download...")
+
+    try {
+      const zip = new JSZip()
+      for (const entry of entries) {
+        zip.file(entry.name, entry.bytes)
+      }
+
+      const zipBytes = await zip.generateAsync(
+        {
+          type: "uint8array",
+          compression: "DEFLATE",
+          compressionOptions: { level: 6 },
+        },
+        (metadata) => {
+          setProgress(10 + Math.round(metadata.percent * 0.9))
+        }
+      )
+
+      downloadZip(zipBytes, filename)
+      notifyLocalDownloadSuccess()
+      setStatus(`ZIP ready. ${entries.length} file${entries.length === 1 ? "" : "s"} included.`)
+      toast.success(`ZIP ready. ${entries.length} file${entries.length === 1 ? "" : "s"} included.`)
+    } catch {
+      setStatus("Could not create ZIP archive.")
+      toast.error("Could not create ZIP archive.")
+    } finally {
+      setIsWorking(false)
+      setProgress(100)
+    }
   }, [])
 
   const handleCreateZip = useCallback(async () => {
@@ -157,21 +203,37 @@ export default function ZipTool() {
     }
 
     setIsWorking(true)
+    setProgress(5)
     setStatus("Creating ZIP locally...")
 
     try {
-      const entries = await Promise.all(
-        createFiles.map(async (file) => ({
-          name: normaliseZipEntryPath(file.name),
-          data: await blobToUint8Array(file),
-        }))
+      const zip = new JSZip()
+      for (let index = 0; index < createFiles.length; index += 1) {
+        const file = createFiles[index]
+        const bytes = new Uint8Array(await file.arrayBuffer())
+        zip.file(normaliseZipEntryPath(file.name), bytes)
+        const percentage = Math.round(((index + 1) / createFiles.length) * 45)
+        setProgress(5 + percentage)
+        setStatus(`Adding files (${index + 1}/${createFiles.length})...`)
+      }
+
+      const zipBytes = await zip.generateAsync(
+        {
+          type: "uint8array",
+          compression: "DEFLATE",
+          compressionOptions: { level: 6 },
+        },
+        (metadata) => {
+          setProgress(50 + Math.round(metadata.percent * 0.5))
+        }
       )
-      const zipBytes = makeZip(entries)
+
       downloadZip(zipBytes, "plain-tools-archive.zip")
       notifyLocalDownloadSuccess()
       setStatus(
-        `ZIP created successfully. ${entries.length} file${entries.length === 1 ? "" : "s"} archived.`
+        `ZIP created successfully. ${createFiles.length} file${createFiles.length === 1 ? "" : "s"} archived.`
       )
+      setProgress(100)
       toast.success("ZIP file created.")
     } catch {
       setStatus("Could not create ZIP archive.")
@@ -199,6 +261,16 @@ export default function ZipTool() {
           <TabsTrigger value="extract">Extract</TabsTrigger>
           <TabsTrigger value="create">Create</TabsTrigger>
         </TabsList>
+
+        {(isWorking || progress > 0) ? (
+          <div className="space-y-2 rounded-lg border border-border/70 bg-muted/20 p-3">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>{isWorking ? "Processing locally..." : "Ready"}</span>
+              <span>{progress}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </div>
+        ) : null}
 
         <TabsContent value="extract" className="space-y-4">
           <Card>
@@ -269,9 +341,7 @@ export default function ZipTool() {
                       variant="outline"
                       size="sm"
                       disabled={!selectedEntries.length}
-                      onClick={() =>
-                        downloadEntriesAsZip(selectedEntries, "zip-tool-selected-files.zip")
-                      }
+                      onClick={() => void downloadEntriesAsZip(selectedEntries, "zip-tool-selected-files.zip")}
                     >
                       <Archive className="h-4 w-4" />
                       Download selected ZIP ({selectedEntries.length})
@@ -281,9 +351,7 @@ export default function ZipTool() {
                       type="button"
                       size="sm"
                       disabled={!extractedEntries.length}
-                      onClick={() =>
-                        downloadEntriesAsZip(extractedEntries, "zip-tool-extract-all.zip")
-                      }
+                      onClick={() => void downloadEntriesAsZip(extractedEntries, "zip-tool-extract-all.zip")}
                     >
                       <FileArchive className="h-4 w-4" />
                       Extract all as ZIP
@@ -349,6 +417,7 @@ export default function ZipTool() {
                 onClick={() => {
                   resetExtract()
                   setStatus("Choose Extract or Create to process ZIP files locally.")
+                  setProgress(0)
                 }}
               >
                 <Trash2 className="h-4 w-4" />
