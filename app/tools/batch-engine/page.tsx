@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -39,6 +40,8 @@ export default function BatchEnginePage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="batch-engine" />
+
           <ToolHelperPanel
             uploadHint="Upload multiple PDFs and choose the same operation for the whole batch."
             resultHint="Download processed files per job, with queue-level progress and completion states."
@@ -46,6 +49,8 @@ export default function BatchEnginePage() {
           />
 
           <BatchEngineTool />
+
+          <ToolFaqSectionBySlug toolSlug="batch-engine" className="mt-6" />
         </div>
                 <ToolRelatedLinks toolSlug="batch-engine" className="mt-8" />
       </main>

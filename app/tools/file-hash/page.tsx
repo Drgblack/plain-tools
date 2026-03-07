@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import FileHashTool from "@/components/tools/file-hash-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function FileHashPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="file-hash" />
+
           <ToolHelperPanel
             uploadHint="Upload any file type and choose the checksum algorithm."
             resultHint="Copy the resulting hex digest for integrity checks or file comparison."
@@ -47,6 +50,8 @@ export default function FileHashPage() {
           />
 
           <FileHashTool />
+
+          <ToolFaqSectionBySlug toolSlug="file-hash" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="file-hash" className="mt-8" />

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import QrCodeTool from "@/components/tools/qr-code-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function QrCodePage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="qr-code" />
+
           <ToolHelperPanel
             uploadHint="Paste URL or text content. File upload is not required for this utility."
             resultHint="Preview the QR code, then download it as PNG or SVG."
@@ -47,6 +50,8 @@ export default function QrCodePage() {
           />
 
           <QrCodeTool />
+
+          <ToolFaqSectionBySlug toolSlug="qr-code" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="qr-code" className="mt-8" />

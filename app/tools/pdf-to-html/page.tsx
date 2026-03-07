@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import PdfToHtmlTool from "@/components/tools/pdf-to-html-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function PdfToHtmlPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="pdf-to-html" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF from your device. Large files can take longer to render."
             resultHint="Download a single .html file containing extracted text and optional page preview images."
@@ -47,6 +50,8 @@ export default function PdfToHtmlPage() {
           />
 
           <PdfToHtmlTool />
+
+          <ToolFaqSectionBySlug toolSlug="pdf-to-html" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="pdf-to-html" className="mt-8" />

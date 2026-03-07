@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import Link from "next/link"
@@ -73,6 +74,8 @@ export default async function FillPdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="fill-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload one AcroForm PDF with fillable text fields, checkboxes, radio buttons, or dropdowns."
             resultHint="Download an updated PDF, either flattened for sharing or kept editable for later updates."
@@ -116,6 +119,8 @@ export default async function FillPdfPage() {
               </CardContent>
             </Card>
           )}
+
+          <ToolFaqSectionBySlug toolSlug="fill-pdf" className="mt-6" />
         </div>
                 <ToolRelatedLinks toolSlug="fill-pdf" className="mt-8" />
       </main>

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import PdfToMarkdownTool from "@/components/tools/pdf-to-markdown-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function PdfToMarkdownPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="pdf-to-markdown" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF file from your device. Structured, text-based PDFs produce the best Markdown output."
             resultHint="Preview extracted Markdown in-page and download a .md file for editing or publishing workflows."
@@ -47,6 +50,8 @@ export default function PdfToMarkdownPage() {
           />
 
           <PdfToMarkdownTool />
+
+          <ToolFaqSectionBySlug toolSlug="pdf-to-markdown" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="pdf-to-markdown" className="mt-8" />

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import TextToPdfTool from "@/components/tools/text-to-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function TextToPdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="text-to-pdf" />
+
           <ToolHelperPanel
             uploadHint="Paste content into the editor or load a .txt/.md file from your device."
             resultHint="Generate and download a PDF with wrapped text and simple Markdown styling."
@@ -47,6 +50,8 @@ export default function TextToPdfPage() {
           />
 
           <TextToPdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="text-to-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="text-to-pdf" className="mt-8" />

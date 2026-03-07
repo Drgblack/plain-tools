@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import ImageCompressTool from "@/components/tools/image-compress-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -41,6 +42,8 @@ export default function ImageCompressPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="image-compress" />
+
           <ToolHelperPanel
             uploadHint="Upload one or more JPG, PNG, or WebP images."
             resultHint="Use Compress & Download, review before/after previews, then download files or ZIP."
@@ -48,6 +51,8 @@ export default function ImageCompressPage() {
           />
 
           <ImageCompressTool />
+
+          <ToolFaqSectionBySlug toolSlug="image-compress" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="image-compress" className="mt-8" />

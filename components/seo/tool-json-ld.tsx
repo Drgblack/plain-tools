@@ -19,7 +19,8 @@ export function ToolJsonLd({ toolSlug }: ToolJsonLdProps) {
     description: profile.description,
     featureList: profile.featureList,
     includeHowTo: true,
-    includeFaq: false,
+    includeFaq: profile.faqs.length > 0,
+    faqs: profile.faqs,
   })
 
   if (!schema) return null

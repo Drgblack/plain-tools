@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -39,6 +40,8 @@ export default function ConvertPdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="convert-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF. For long documents, allow extra time while each page is parsed."
             resultHint="Download page images (PNG/JPG) or a TXT export after conversion finishes."
@@ -46,6 +49,8 @@ export default function ConvertPdfPage() {
           />
 
           <ConvertTool />
+
+          <ToolFaqSectionBySlug toolSlug="convert-pdf" className="mt-6" />
         </div>
                 <ToolRelatedLinks toolSlug="convert-pdf" className="mt-8" />
       </main>

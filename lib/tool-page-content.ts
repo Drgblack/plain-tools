@@ -887,6 +887,55 @@ export type ResolvedToolPageProfile = ToolPageProfile & {
   faqs: ToolFaqItem[]
 }
 
+export function buildToolHowToSteps(tool: ToolDefinition): string[] {
+  const noun =
+    tool.category === "Utility"
+      ? "input"
+      : tool.category === "AI Assistant"
+        ? "document"
+        : "file"
+
+  return [
+    `Add the ${noun} or inputs you want to process in the ${tool.name} workspace.`,
+    "Choose the settings that match the output you want before starting the run.",
+    `Run ${tool.name} directly in your browser and wait for the local processing step to finish.`,
+    "Download the result and review it before sharing, archiving, or sending it onward.",
+  ]
+}
+
+export function buildToolSeoDescription(
+  tool: ToolDefinition,
+  profile: Pick<ResolvedToolPageProfile, "overview" | "description" | "useCases" | "answerFirst">
+) {
+  return [
+    `${tool.name} is designed for people who want a practical browser-first workflow instead of uploading files to a third-party service just to complete a routine task. ${profile.overview} ${profile.description}`,
+    `${profile.answerFirst.localProcessing} That matters when you are handling work files, drafts, forms, exported data, or other material that should stay under your control until you decide to share the result. It also removes the usual upload delay, which keeps the workflow lighter and easier to repeat when you need to adjust settings and try again.`,
+    `In most cases, people use ${tool.name} to ${profile.useCases[0].charAt(0).toLowerCase()}${profile.useCases[0].slice(1)} ${profile.useCases[1].charAt(0).toLowerCase()}${profile.useCases[1].slice(1)} Before you publish, archive, or forward the output, do a quick review of the result because ${profile.answerFirst.limitations.charAt(0).toLowerCase()}${profile.answerFirst.limitations.slice(1)}`,
+  ].join("\n\n")
+}
+
+function buildDefaultToolFaqs(tool: ToolDefinition, limitation: string): ToolFaqItem[] {
+  const localProcessingAnswer =
+    tool.category === "AI Assistant"
+      ? "Core extraction starts locally. AI responses only run when you explicitly opt in to server-backed processing for that workflow."
+      : "Core processing runs locally in your browser for this workflow, so the file or input stays on your device during the main operation."
+
+  return [
+    {
+      question: `Does ${tool.name} upload my files?`,
+      answer: localProcessingAnswer,
+    },
+    {
+      question: `How do I use ${tool.name}?`,
+      answer: `Open the tool, add your source file or input, choose the options you need, run the workflow, and download the result from the same page.`,
+    },
+    {
+      question: `What should I check before sharing the output from ${tool.name}?`,
+      answer: `${limitation} Review the generated output once before sharing it so you can confirm formatting, completeness, and file quality.`,
+    },
+  ]
+}
+
 function buildDefaultAnswerFirst(
   tool: ToolDefinition,
   overview: string,
@@ -932,7 +981,7 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       answerFirst:
         TOOL_ANSWER_FIRST_OVERRIDES[tool.slug] ??
         buildDefaultAnswerFirst(tool, overview, profile.limitation),
-      faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? [],
+      faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? buildDefaultToolFaqs(tool, profile.limitation),
     }
   }
 
@@ -958,6 +1007,6 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       "Simple browser-based processing without extra software",
     ],
     answerFirst: buildDefaultAnswerFirst(tool, overview, limitation),
-    faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? [],
+    faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? buildDefaultToolFaqs(tool, limitation),
   }
 }

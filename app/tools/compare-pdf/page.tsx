@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import ComparePdfTool from "@/components/tools/compare-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function ComparePdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="compare-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload two PDF files. The first is treated as the base version and the second as the updated version."
             resultHint="Run comparison to view side-by-side text differences, optional page previews, and download an HTML report."
@@ -47,6 +50,8 @@ export default function ComparePdfPage() {
           />
 
           <ComparePdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="compare-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="compare-pdf" className="mt-8" />

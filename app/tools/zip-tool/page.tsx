@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import ZipTool from "@/components/tools/zip-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -41,6 +42,8 @@ export default function ZipToolPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="zip-tool" />
+
           <ToolHelperPanel
             uploadHint="Extract mode accepts one .zip archive. Create mode accepts multiple files of any type."
             resultHint="Download individual extracted files, a selected ZIP bundle, or a new ZIP archive you create."
@@ -48,6 +51,8 @@ export default function ZipToolPage() {
           />
 
           <ZipTool />
+
+          <ToolFaqSectionBySlug toolSlug="zip-tool" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="zip-tool" className="mt-8" />

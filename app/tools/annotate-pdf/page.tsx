@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import AnnotatePdfTool from "@/components/tools/annotate-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function AnnotatePdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="annotate-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF and select a page to annotate with pen, highlight, or text tools."
             resultHint="Apply annotations to embed them into a new PDF, then download the annotated file."
@@ -47,6 +50,8 @@ export default function AnnotatePdfPage() {
           />
 
           <AnnotatePdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="annotate-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="annotate-pdf" className="mt-8" />
@@ -54,4 +59,3 @@ export default function AnnotatePdfPage() {
     </div>
   )
 }
-

@@ -10,10 +10,12 @@ import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
 import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
+import { ToolSeoContent } from "@/components/tool-seo-content"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { getToolSeoLinks } from "@/lib/seo/tranche1-link-map"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
-import { getToolPageProfile } from "@/lib/tool-page-content"
+import { buildToolHowToSteps, buildToolSeoDescription, getToolPageProfile } from "@/lib/tool-page-content"
 import { buildToolSchema } from "@/lib/tool-schema"
 
 type ToolRouteParams = { slug: string }
@@ -169,6 +171,7 @@ export default async function ToolPage({ params }: PageProps) {
     : FallbackToolComponent
   const profile = getToolPageProfile(tool)
   const introLead = buildToolLeadParagraph(profile.description, tool.category)
+  const seoLinks = getToolSeoLinks(tool.slug)
   const toolSchema = buildToolSchema({
     name: tool.name,
     slug,
@@ -243,62 +246,13 @@ export default async function ToolPage({ params }: PageProps) {
 
               <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
 
-              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
-                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
-                  What this tool does
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {profile.overview}
-                </p>
-                <ul className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-                  {profile.featureList.map((feature) => (
-                    <li key={feature} className="rounded-lg border border-border/60 bg-background/60 px-3 py-2">
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
-                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
-                  When to use {tool.name}
-                </h2>
-                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
-                  {profile.useCases.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="mb-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
-                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
-                  Quick start
-                </h2>
-                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
-                  <li>Upload the file or files you want to process.</li>
-                  <li>Choose options based on your output goal.</li>
-                  <li>Run processing locally in your browser.</li>
-                  <li>Download and review the output before sharing.</li>
-                </ul>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Need a walkthrough? Open{" "}
-                  <Link href="/learn" className="font-medium text-accent hover:underline">
-                    practical guides in Learn
-                  </Link>{" "}
-                  to follow step-by-step workflows,{" "}
-                  <Link href="/compare/offline-vs-online-pdf-tools" className="font-medium text-accent hover:underline">
-                    compare Plain Tools with cloud alternatives
-                  </Link>
-                  , and{" "}
-                  <Link href="/site-status" className="font-medium text-accent hover:underline">
-                    check service status routes
-                  </Link>{" "}
-                  when troubleshooting availability. You can also verify local processing behaviour in{" "}
-                  <Link href="/verify-claims" className="font-medium text-accent hover:underline">
-                    Verify Claims
-                  </Link>.
-                </p>
-              </section>
+              <ToolSeoContent
+                toolName={tool.name}
+                description={buildToolSeoDescription(tool, profile)}
+                steps={buildToolHowToSteps(tool)}
+                faq={profile.faqs}
+                relatedTools={seoLinks?.relatedTools ?? []}
+              />
 
               <section className="mb-3">
                 <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>

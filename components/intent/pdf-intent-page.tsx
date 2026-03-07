@@ -6,6 +6,7 @@ import { FaqBlock } from "@/components/seo/faq-block"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { ToolSeoContent } from "@/components/tool-seo-content"
 import CompressPdfTool from "@/components/tools/compress-pdf-tool"
 import ExtractPdfTool from "@/components/tools/extract-pdf-tool"
 import JpgToPdfTool from "@/components/tools/jpg-to-pdf-tool"
@@ -80,8 +81,17 @@ export function PdfIntentPage({ slug }: PdfIntentPageProps) {
             <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               {page.h1}
             </h1>
-            <p className="mt-4 text-base leading-8 text-muted-foreground">{page.intro}</p>
           </section>
+
+          <div className="mt-8">
+            <ToolSeoContent
+              toolName={page.h1.replace(" (Private, No Uploads)", "")}
+              description={page.intro}
+              steps={page.howItWorks}
+              faq={page.faqs}
+              relatedTools={page.relatedTools}
+            />
+          </div>
 
           <section className="mt-10">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -101,46 +111,9 @@ export function PdfIntentPage({ slug }: PdfIntentPageProps) {
             <ToolComponent />
           </section>
 
-          <section className="mt-10 rounded-2xl border border-border/70 bg-card/40 p-5 md:p-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground">How It Works</h2>
-            <ol className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
-              {page.howItWorks.map((step, index) => (
-                <li key={step} className="rounded-xl border border-border/60 bg-background/60 px-4 py-3">
-                  <span className="font-semibold text-foreground">{index + 1}. </span>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          <section className="mt-10 rounded-2xl border border-border/70 bg-card/40 p-5 md:p-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              Why Use Local PDF Tools
-            </h2>
-            <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
-              <p>
-                Local PDF tools keep the core workflow inside your browser, which reduces exposure for private files and removes the usual upload delay. That matters when you are handling work documents, invoices, forms, statements, or drafts that should stay under your control until you decide to share the output.
-              </p>
-              <p>
-                Browser-based processing is also more direct for many everyday tasks. You open the file, run the operation, and download the result without waiting for remote processing queues or handing the document to a third-party storage layer.
-              </p>
-              <p>
-                If you want to inspect these claims yourself, review{" "}
-                <Link href="/verify-claims" className="font-medium text-accent hover:underline">
-                  Verify Claims
-                </Link>
-                . You can also read{" "}
-                <Link href={page.learnLinks[0].href} className="font-medium text-accent hover:underline">
-                  {page.learnLinks[0].label}
-                </Link>{" "}
-                and{" "}
-                <Link href={page.learnLinks[1].href} className="font-medium text-accent hover:underline">
-                  {page.learnLinks[1].label}
-                </Link>{" "}
-                for deeper technical context.
-              </p>
-            </div>
-          </section>
+          <div className="mt-10">
+            <FaqBlock faqs={page.faqs} />
+          </div>
 
           <section className="mt-10">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">Related Tools</h2>
@@ -166,10 +139,6 @@ export function PdfIntentPage({ slug }: PdfIntentPageProps) {
                 { title: "Canonical tool", links: [{ label: page.canonicalToolLabel, href: page.canonicalToolHref }] },
               ]}
             />
-          </div>
-
-          <div className="mt-10">
-            <FaqBlock faqs={page.faqs} />
           </div>
         </div>
       </main>

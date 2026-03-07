@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import WatermarkPdfTool from "@/components/tools/watermark-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -41,6 +42,8 @@ export default function WatermarkPdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="watermark-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF, then choose text or image watermark mode and set placement options."
             resultHint="Apply the watermark and download a new PDF with overlays on each page."
@@ -48,6 +51,8 @@ export default function WatermarkPdfPage() {
           />
 
           <WatermarkPdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="watermark-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="watermark-pdf" className="mt-8" />

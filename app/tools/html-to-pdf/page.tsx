@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import HtmlToPdfTool from "@/components/tools/html-to-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function HtmlToPdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="html-to-pdf" />
+
           <ToolHelperPanel
             uploadHint="Use pasted HTML or URL fetch mode. URL fetch can fail on sites that block cross-origin requests."
             resultHint="Generate and download a best-effort PDF from rendered HTML content."
@@ -47,6 +50,8 @@ export default function HtmlToPdfPage() {
           />
 
           <HtmlToPdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="html-to-pdf" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="html-to-pdf" className="mt-8" />

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import RotatePdfTool from "@/components/tools/rotate-pdf-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
@@ -41,6 +42,8 @@ export default function RotatePdfPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="rotate-pdf" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF to render page thumbnails and configure per-page or global rotation."
             resultHint="Use Rotate & Download to export a new rotated PDF."
@@ -48,6 +51,8 @@ export default function RotatePdfPage() {
           />
 
           <RotatePdfTool />
+
+          <ToolFaqSectionBySlug toolSlug="rotate-pdf" className="mt-6" />
 
           <ToolIntentLinks toolKey="rotate-pdf" className="mt-6" />
         </div>

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import JsonFormatterTool from "@/components/tools/json-formatter-tool"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -46,6 +47,8 @@ export default function JsonFormatterPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="json-formatter" />
+
           <ToolHelperPanel
             uploadHint="Paste JSON from logs, APIs, or config files. Processing stays local in your browser."
             resultHint="Format for readability, minify for transport, and validate structure before use."
@@ -53,6 +56,8 @@ export default function JsonFormatterPage() {
           />
 
           <JsonFormatterTool />
+
+          <ToolFaqSectionBySlug toolSlug="json-formatter" className="mt-6" />
 
           <section className="rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
             <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">

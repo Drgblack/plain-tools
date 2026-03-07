@@ -3,6 +3,7 @@ import { ShieldCheck } from "lucide-react"
 
 import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import ExtractPdfTool from "@/components/tools/extract-pdf-tool"
 
 export default function ExtractPdfPage() {
@@ -24,8 +25,17 @@ export default function ExtractPdfPage() {
           </div>
         </section>
 
+        <section className="px-4 py-10">
+          <div className="mx-auto max-w-3xl">
+            <ToolSeoContentBySlug toolSlug="extract-pdf" />
+          </div>
+        </section>
+
         <section className="px-4 py-10 md:py-14">
-          <ExtractPdfTool />
+          <div className="mx-auto max-w-3xl">
+            <ExtractPdfTool />
+            <ToolFaqSectionBySlug toolSlug="extract-pdf" className="mt-8" />
+          </div>
         </section>
 
         <section className="px-4 py-12">

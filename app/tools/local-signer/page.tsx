@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function LocalSignerPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="local-signer" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF and choose a signature source (draw, typed, or image)."
             resultHint="Download a signed PDF and keep verification artefacts for audit trails."
@@ -47,6 +50,8 @@ export default function LocalSignerPage() {
           />
 
           <LocalSignerTool />
+
+          <ToolFaqSectionBySlug toolSlug="local-signer" className="mt-6" />
         </div>
                 <ToolRelatedLinks toolSlug="local-signer" className="mt-8" />
       </main>

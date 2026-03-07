@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -39,6 +40,8 @@ export default function MetadataPurgePage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="metadata-purge" />
+
           <ToolHelperPanel
             uploadHint="Upload one PDF to inspect document info, XMP metadata, and embedded metadata fields."
             resultHint="Download a cleaned PDF after removing selected metadata fields."
@@ -46,6 +49,8 @@ export default function MetadataPurgePage() {
           />
 
           <MetadataPurgeTool />
+
+          <ToolFaqSectionBySlug toolSlug="metadata-purge" className="mt-6" />
         </div>
                 <ToolRelatedLinks toolSlug="metadata-purge" className="mt-8" />
       </main>

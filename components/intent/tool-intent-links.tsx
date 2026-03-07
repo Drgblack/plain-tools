@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 
 import { getIntentPagesForTool, type PdfIntentToolKey } from "@/lib/pdf-intent-pages"

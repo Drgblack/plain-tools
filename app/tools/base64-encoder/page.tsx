@@ -4,6 +4,7 @@ import Base64Tool from "@/components/tools/base64-tool"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
@@ -46,6 +47,8 @@ export default function Base64EncoderPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="base64-encoder" />
+
           <ToolHelperPanel
             uploadHint="Use text input or drop a file. File processing uses browser APIs and runs locally."
             resultHint="Copy Base64 output, download it as text, or decode Base64 into a file."
@@ -53,6 +56,8 @@ export default function Base64EncoderPage() {
           />
 
           <Base64Tool />
+
+          <ToolFaqSectionBySlug toolSlug="base64-encoder" className="mt-6" />
 
           <RelatedLinks
             heading="Related developer workflows"

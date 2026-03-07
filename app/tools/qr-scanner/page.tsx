@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import QrScannerTool from "@/components/tools/qr-scanner-tool"
 import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
+import { ToolFaqSectionBySlug, ToolSeoContentBySlug } from "@/components/tool-seo-content"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -40,6 +41,8 @@ export default function QrScannerPage() {
             </p>
           </section>
 
+          <ToolSeoContentBySlug toolSlug="qr-scanner" />
+
           <ToolHelperPanel
             uploadHint="Use camera access for live scanning or upload a QR image from your device."
             resultHint="Decoded text or URL appears immediately, with copy and optional open-link actions."
@@ -47,6 +50,8 @@ export default function QrScannerPage() {
           />
 
           <QrScannerTool />
+
+          <ToolFaqSectionBySlug toolSlug="qr-scanner" className="mt-6" />
         </div>
 
         <ToolRelatedLinks toolSlug="qr-scanner" className="mt-8" />
