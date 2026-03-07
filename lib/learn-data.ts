@@ -160,7 +160,7 @@ export const learnSections: LearnSection[] = [
         title: "Wasm vs. Cloud Security",
         summary:
           "Comparing WebAssembly local processing with traditional cloud-based approaches to document security.",
-        href: "/learn/wasm-vs-cloud-security",
+        href: "/learn/is-offline-pdf-processing-secure",
         category: "Security",
         readTime: "6 min",
         icon: "Shield",
@@ -204,7 +204,7 @@ export const learnSections: LearnSection[] = [
         title: "WebGPU Hardware Acceleration",
         summary:
           "Using WebGPU for local AI. How Plain leverages your device's GPU for document analysis.",
-        href: "/learn/hardware-acceleration",
+        href: "/learn/webassembly-pdf-processing-explained",
         category: "Hardware",
         readTime: "6 min",
         icon: "Zap",
@@ -213,7 +213,7 @@ export const learnSections: LearnSection[] = [
         title: "RAM Management for Large PDFs",
         summary:
           "Techniques for processing 500MB+ documents efficiently without overwhelming system memory.",
-        href: "/learn/ram-optimisation",
+        href: "/learn/why-offline-compression-has-limits",
         category: "Tutorial",
         readTime: "4 min",
         icon: "HardDrive",
@@ -222,7 +222,7 @@ export const learnSections: LearnSection[] = [
         title: "Local AI Processing",
         summary:
           "How WebGPU and WebLLM enable AI-powered features without sending data to external servers.",
-        href: "/learn/local-ai-processing",
+        href: "/learn/ocr-pdf-without-cloud",
         category: "Hardware",
         readTime: "7 min",
         icon: "Sparkles",
@@ -238,7 +238,7 @@ export const learnSections: LearnSection[] = [
         title: "Permanent Redaction Techniques",
         summary:
           "Ensuring permanent data removal. A comprehensive guide to securely redacting sensitive information.",
-        href: "/learn/redaction-guide",
+        href: "/learn/how-pdf-redaction-really-works",
         category: "Security",
         readTime: "7 min",
         icon: "EyeOff",
@@ -247,7 +247,7 @@ export const learnSections: LearnSection[] = [
         title: "Offline Workflows",
         summary:
           "Using Plain in high-security environments. Best practices for air-gapped systems and secure facilities.",
-        href: "/learn/offline-workflows",
+        href: "/learn/no-uploads-explained",
         category: "Security",
         readTime: "5 min",
         icon: "WifiOff",
@@ -265,7 +265,7 @@ export const learnSections: LearnSection[] = [
         title: "Encryption Best Practices",
         summary:
           "Understanding AES-256 local encryption and how to protect sensitive documents on-device.",
-        href: "/learn/encryption-best-practices",
+        href: "/learn/is-offline-pdf-processing-secure",
         category: "Security",
         readTime: "5 min",
         icon: "Shield",

@@ -268,6 +268,41 @@ const nextConfig: NextConfig = {
         destination: "/compare/plain-vs-adobe-acrobat-online",
         permanent: true,
       },
+      {
+        source: "/learn/wasm-vs-cloud-security",
+        destination: "/learn/is-offline-pdf-processing-secure",
+        permanent: true,
+      },
+      {
+        source: "/learn/hardware-acceleration",
+        destination: "/learn/webassembly-pdf-processing-explained",
+        permanent: true,
+      },
+      {
+        source: "/learn/ram-optimisation",
+        destination: "/learn/why-offline-compression-has-limits",
+        permanent: true,
+      },
+      {
+        source: "/learn/local-ai-processing",
+        destination: "/learn/ocr-pdf-without-cloud",
+        permanent: true,
+      },
+      {
+        source: "/learn/redaction-guide",
+        destination: "/learn/how-pdf-redaction-really-works",
+        permanent: true,
+      },
+      {
+        source: "/learn/offline-workflows",
+        destination: "/learn/no-uploads-explained",
+        permanent: true,
+      },
+      {
+        source: "/learn/encryption-best-practices",
+        destination: "/learn/is-offline-pdf-processing-secure",
+        permanent: true,
+      },
 
       // Canonical root SEO routes.
       {
