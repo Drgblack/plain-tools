@@ -10,6 +10,7 @@ import { generateDynamicToolMetadata } from '@/lib/seo'
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
+  buildHowToSchema,
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
@@ -22,6 +23,7 @@ import {
 import { StatusDynamicClient } from './client'
 import {
   formatSiteLabel,
+  getSiteStatusContext,
   normalizeSiteInput,
   STATUS_EXAMPLE_SITES,
   statusPathFor,
@@ -66,6 +68,10 @@ const faqs = [
   {
     question: "Can I check a URL path?",
     answer: "Use a domain or hostname. Paths are normalized away, so /status/google.com and /status/google.com/docs check the same host.",
+  },
+  {
+    question: "Is it down for everyone or just me?",
+    answer: "Use this result as a global signal, then compare DNS, latency, and a second network to confirm whether your issue is local.",
   },
 ]
 
@@ -115,6 +121,16 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
 
   const siteLabel = formatSiteLabel(normalizedSite)
   const siteDisplayName = toSiteDisplayName(normalizedSite)
+  const siteContext = getSiteStatusContext(normalizedSite)
+  const relatedStatusChecks = Array.from(
+    new Set([...siteContext.relatedExamples, ...STATUS_EXAMPLE_SITES])
+  )
+    .filter((value) => value !== normalizedSite)
+    .slice(0, 6)
+  const troubleshootingSteps = siteContext.troubleshootingSteps.map((step, index) => ({
+    name: `Step ${index + 1}`,
+    text: step,
+  }))
   const pageUrl = `https://plain.tools/status/${normalizedSite}`
   const schemaId = normalizedSite.replace(/[^a-z0-9-]/gi, "-").toLowerCase()
   const statusPageSchema = combineJsonLd([
@@ -130,6 +146,11 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       { name: "Site Status", url: "https://plain.tools/site-status" },
       { name: siteLabel, url: pageUrl },
     ]),
+    buildHowToSchema(
+      `How to troubleshoot ${siteLabel} availability`,
+      `Practical steps to decide whether ${siteLabel} is down globally or inaccessible from your local connection.`,
+      troubleshootingSteps
+    ),
     buildFaqPageSchema(faqs),
   ])
 
@@ -156,7 +177,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             Is {siteLabel} down?
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
-            Live availability check for {siteDisplayName}. Status, response time, and the latest check timestamp are shown below.
+            Live availability check for {siteDisplayName}. Status, response time, and the latest check timestamp are shown below for this {siteContext.segmentLabel.toLowerCase()} route.
           </p>
         </header>
 
@@ -167,7 +188,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 Quick answer
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                This page reports whether {siteLabel} is currently up or down based on a live HTTP probe, plus response time for the latest successful check.
+                This page answers “is {siteLabel} down for everyone or just me?” using a live HTTP probe, plus response time for the latest successful check.
               </p>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 <article className="rounded-lg border border-border/60 bg-background/60 p-3">
@@ -227,9 +248,23 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                   it is marked as <strong className="text-foreground">Up</strong>. If the host does not respond or times out, it is marked as <strong className="text-foreground">Down</strong>.
                 </p>
                 <p className="mt-3 leading-relaxed text-muted-foreground">
-                  Status can differ from your local experience. Regional routing, ISP filtering, or temporary edge failures can affect what you see from a specific location.
+                  {siteContext.segmentNote}
+                </p>
+                <p className="mt-3 leading-relaxed text-muted-foreground">
+                  {siteContext.localIssueNote}
                 </p>
               </div>
+            </section>
+
+            <section>
+              <h2 className="mb-4 text-xl font-semibold text-foreground">
+                Troubleshooting steps
+              </h2>
+              <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                {siteContext.troubleshootingSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
             </section>
 
             <section>
@@ -253,7 +288,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             <Surface>
               <h3 className="mb-3 font-semibold text-foreground">Check Other Sites</h3>
               <div className="space-y-2">
-                {STATUS_EXAMPLE_SITES.filter((value) => value !== normalizedSite).slice(0, 5).map((value) => (
+                {relatedStatusChecks.map((value) => (
                   <Link
                     key={value}
                     href={statusPathFor(value)}

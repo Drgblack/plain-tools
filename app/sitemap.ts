@@ -5,6 +5,7 @@ import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { STATUS_POPULAR_SITES } from "@/lib/site-status"
 
 const BASE_URL = "https://plain.tools"
 const now = new Date()
@@ -19,6 +20,11 @@ const staticHighPriority = [
 const staticCorePages = [
   "/blog",
   "/verify-claims",
+  "/network-tools",
+  "/site-status",
+  "/what-is-my-ip",
+  "/dns-lookup",
+  "/ping-test",
   "/about",
   "/privacy",
   "/terms",
@@ -95,6 +101,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  // Curated canonical status URLs only - avoids sitemap pollution from arbitrary user-entered domains.
+  const curatedStatusPages = STATUS_POPULAR_SITES.map((site) => ({
+    url: `${BASE_URL}/status/${encodeURIComponent(site)}`,
+    lastModified: now,
+    changeFrequency: "daily" as const,
+    priority: 0.75,
+  }))
+
   const entries = [
     homepage,
     ...staticHigh,
@@ -103,6 +117,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
+    ...curatedStatusPages,
     ...tranchePages,
   ]
 

@@ -6,10 +6,12 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
+  buildItemListSchema,
   buildSoftwareApplicationSchema,
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
+import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
 
 import { SiteStatusClient } from "./client"
 
@@ -62,6 +64,18 @@ const siteStatusSchema = combineJsonLd([
     { name: "Home", url: "https://plain.tools/" },
     { name: "Site Status", url: "https://plain.tools/site-status" },
   ]),
+  buildItemListSchema(
+    "Popular site status pages",
+    STATUS_POPULAR_SITES.slice(0, 12).map((site, index) => ({
+      name: `Is ${site} down?`,
+      description:
+        index < 6
+          ? "Live status route with response-time context and troubleshooting guidance."
+          : "Canonical domain status check route.",
+      url: `https://plain.tools${statusPathFor(site)}`,
+    })),
+    "https://plain.tools/site-status"
+  ),
 ])
 
 export default function SiteStatusPage() {
@@ -74,7 +88,7 @@ export default function SiteStatusPage() {
             Site status checker
           </h2>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            Quick answer: this tool checks whether a domain currently responds, how quickly it responds, and whether the result is usable for first-line troubleshooting.
+            Quick answer: this tool helps answer whether a site is down for everyone or just you, using a live domain probe, response timing, and practical next checks.
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
             <article className="rounded-lg border border-border/60 bg-card/40 p-3">
@@ -118,6 +132,27 @@ export default function SiteStatusPage() {
             >
               Next: confirm network context
             </Link>
+          </div>
+        </div>
+      </section>
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl space-y-4">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Popular status pages
+          </h2>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            Start with common checks below. Each route uses a canonical format to avoid duplicate variants and keep results easy to share.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {STATUS_POPULAR_SITES.slice(0, 12).map((site) => (
+              <Link
+                key={site}
+                href={statusPathFor(site)}
+                className="rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                Is {site} down?
+              </Link>
+            ))}
           </div>
         </div>
       </section>

@@ -134,7 +134,7 @@ export function generateDynamicToolMetadata({ toolName, param, paramType, isVali
   const descriptionMap = {
     domain: `View DNS records for ${param}, including A, AAAA, MX, TXT, NS, and CNAME results for practical troubleshooting.`,
     ip: `View information about IP address ${param}, including approximate geolocation, ISP details, and network context.`,
-    site: `Is ${param} down? Check current status, response time, and simple troubleshooting steps.`,
+    site: `Is ${param} down for everyone or just you? Check current status, response time, and practical troubleshooting steps.`,
   }
   
   const slug = slugMap[paramType]
