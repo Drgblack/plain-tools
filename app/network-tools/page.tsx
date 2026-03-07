@@ -145,13 +145,13 @@ export default function NetworkToolsPage() {
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Common status checks</h2>
             <div className="mt-4 flex flex-wrap gap-2 text-xs">
-              <Link href="/status/chatgpt" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Check whether chatgpt.com is down
               </Link>
-              <Link href="/status/reddit" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/status/reddit.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Check whether reddit.com is down
               </Link>
-              <Link href="/status/discord" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              <Link href="/status/discord.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Check whether discord.com is down
               </Link>
               <Link href="/tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
@@ -164,3 +164,4 @@ export default function NetworkToolsPage() {
     </div>
   )
 }
+

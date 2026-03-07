@@ -750,7 +750,7 @@ export const learnPages: TrancheLearnArticle[] = [
     },
     nextSteps: [
       { label: "Open site status checker", href: "/site-status" },
-      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt" },
+      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
       { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
       { label: "What is my IP", href: "/what-is-my-ip" },
       { label: "Verify Claims", href: "/verify-claims" },
@@ -1393,3 +1393,4 @@ export const trancheSitemapUrls = [
   ...trancheLearnSlugs.map((slug) => `/learn/${slug}`),
   ...trancheCompareSlugs.map((slug) => `/compare/${slug}`),
 ]
+

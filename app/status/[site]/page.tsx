@@ -5,6 +5,7 @@ import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
+import { TrendingStatus } from "@/components/trending-status"
 import { JsonLd } from "@/components/seo/json-ld"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
@@ -28,17 +29,34 @@ import {
   getSiteStatusContext,
   normalizeSiteInput,
   STATUS_EXAMPLE_SITES,
+  STATUS_POPULAR_SITES,
   STATUS_TRAFFIC_SITES,
   statusPathFor,
 } from '@/lib/site-status'
+import { STATUS_STATIC_DOMAINS } from "@/lib/status-domains"
 
 interface Props {
   params: Promise<{ site: string }>
 }
 
+const BRAND_NAME_OVERRIDES: Record<string, string> = {
+  "chatgpt.com": "ChatGPT",
+  "discord.com": "Discord",
+  "youtube.com": "YouTube",
+  "reddit.com": "Reddit",
+  "github.com": "GitHub",
+  "stripe.com": "Stripe",
+  "gmail.com": "Gmail",
+  "google.com": "Google",
+}
+
 function toSiteDisplayName(site: string) {
   const base = formatSiteLabel(site)
-  const host = base.split('.')[0] ?? base
+  const normalized = base.toLowerCase()
+  if (BRAND_NAME_OVERRIDES[normalized]) {
+    return BRAND_NAME_OVERRIDES[normalized]
+  }
+  const host = base.split(".")[0] ?? base
   return host.charAt(0).toUpperCase() + host.slice(1)
 }
 
@@ -66,15 +84,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return buildPageMetadata({
-    title: `Is ${normalizedSite} down?`,
-    description: `Check whether ${normalizedSite} is up or down right now with live response time, last checked timestamp, and practical troubleshooting steps.`,
+    title: `Is ${toSiteDisplayName(normalizedSite)} Down Right Now?`,
+    description: `Check whether ${toSiteDisplayName(normalizedSite)} is currently down or experiencing issues. Fast website availability check with troubleshooting steps.`,
     path: statusPathFor(normalizedSite),
     image: "/og/default.png",
   })
 }
 
 export function generateStaticParams() {
-  return STATUS_TRAFFIC_SITES.map((site) => ({
+  return STATUS_STATIC_DOMAINS.map((site) => ({
     site: encodeURIComponent(site),
   }))
 }
@@ -145,8 +163,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   const canonicalStatusPath = statusPathFor(normalizedSite)
   const directStatusPath = `/status/${encodeURIComponent(normalizedSite)}`
 
-  // Root-canonical status routes for selected high-demand domains live at short slugs.
-  // Example: /status/chatgpt.com -> /status/chatgpt
+  // Canonical status format is domain-based.
+  // Example: /status/chatgpt -> /status/chatgpt.com
   if (decodedSite !== normalizedSite || canonicalStatusPath !== directStatusPath) {
     permanentRedirect(canonicalStatusPath)
   }
@@ -156,7 +174,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   const siteContext = getSiteStatusContext(normalizedSite)
   const siteSpecificContext = getSiteSpecificStatusContext(normalizedSite)
   const relatedStatusChecks = Array.from(
-    new Set([...siteContext.relatedExamples, ...STATUS_TRAFFIC_SITES, ...STATUS_EXAMPLE_SITES])
+    new Set([...siteContext.relatedExamples, ...STATUS_POPULAR_SITES, ...STATUS_EXAMPLE_SITES, ...STATUS_TRAFFIC_SITES])
   )
     .filter((value) => value !== normalizedSite)
     .slice(0, 8)
@@ -176,9 +194,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   const schemaId = normalizedSite.replace(/[^a-z0-9-]/gi, "-").toLowerCase()
   const statusPageSchema = combineJsonLd([
     buildWebPageSchema({
-      name: `Is ${siteLabel} down?`,
+      name: `Is ${siteDisplayName} Down Right Now?`,
       description:
-        `Live availability check for ${siteLabel} with current up/down signal, response-time context, and practical checks for local versus global outage diagnosis.`,
+        `Live availability check for ${siteDisplayName} with current up/down signal, response-time context, and practical checks for local versus global outage diagnosis.`,
       url: pageUrl,
     }),
     buildBreadcrumbList([
@@ -223,7 +241,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       <div className="mx-auto max-w-6xl px-4 py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-            Is {siteLabel} down?
+            Is {siteDisplayName} Down Right Now?
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
             Live availability check for {siteDisplayName}. Status, response time, and the latest check timestamp are shown below for this {siteContext.segmentLabel.toLowerCase()} route.
@@ -367,6 +385,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </Surface>
+
+            <TrendingStatus title="Trending checks today" limit={6} />
 
             <Surface>
               <h3 className="mb-3 font-semibold text-foreground">Related network tools</h3>

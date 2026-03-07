@@ -44,7 +44,7 @@ function getAdjacentClusterLink(toolSlug: string) {
   if (toolSlug === "compare-pdf") {
     return {
       label: "Check whether chatgpt.com is down",
-      href: "/status/chatgpt",
+      href: "/status/chatgpt.com",
     }
   }
 
@@ -73,3 +73,4 @@ export function ToolRelatedLinks({ toolSlug, className }: ToolRelatedLinksProps)
     </div>
   )
 }
+

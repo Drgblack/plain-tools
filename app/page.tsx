@@ -349,8 +349,8 @@ const trafficClusters = [
     description: "Check whether a site is down, degraded, or responding slowly right now.",
     href: "/site-status",
     links: [
-      { label: "Check chatgpt.com status", href: "/status/chatgpt" },
-      { label: "Check reddit.com status", href: "/status/reddit" },
+      { label: "Check chatgpt.com status", href: "/status/chatgpt.com" },
+      { label: "Check reddit.com status", href: "/status/reddit.com" },
     ],
   },
   {
@@ -890,4 +890,5 @@ export default function HomePage() {
     </>
   )
 }
+
 

@@ -86,7 +86,7 @@ export default function RegexTesterPage() {
               },
               {
                 title: "Related status pages",
-                links: [{ label: "Check whether reddit.com is down", href: "/status/reddit" }],
+                links: [{ label: "Check whether reddit.com is down", href: "/status/reddit.com" }],
               },
             ]}
           />
@@ -95,3 +95,4 @@ export default function RegexTesterPage() {
     </div>
   )
 }
+

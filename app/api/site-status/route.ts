@@ -4,6 +4,7 @@ import {
   normalizeSiteInput,
   type SiteStatusCheckResult,
 } from "@/lib/site-status"
+import { incrementStatusTrend } from "@/lib/status-trending-store"
 
 const REQUEST_TIMEOUT_MS = 8000
 
@@ -87,6 +88,8 @@ export async function GET(request: NextRequest) {
     httpStatus,
     errorMessage,
   }
+
+  incrementStatusTrend(normalized)
 
   return NextResponse.json(result, { status: 200 })
 }

@@ -84,7 +84,7 @@ export default function UuidGeneratorPage() {
               },
               {
                 title: "Related status pages",
-                links: [{ label: "Check whether discord.com is down", href: "/status/discord" }],
+                links: [{ label: "Check whether discord.com is down", href: "/status/discord.com" }],
               },
             ]}
           />
@@ -93,3 +93,4 @@ export default function UuidGeneratorPage() {
     </div>
   )
 }
+

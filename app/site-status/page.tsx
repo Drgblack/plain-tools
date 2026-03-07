@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { JsonLd } from "@/components/seo/json-ld"
+import { TrendingStatus } from "@/components/trending-status"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
@@ -33,13 +34,22 @@ const siteStatusFaqs = [
   {
     question: "Can I share results for one domain?",
     answer:
-      "Yes. High-demand domains use short canonical routes such as /status/reddit, and other domains use canonical host routes.",
+      "Yes. Each domain has a canonical route such as /status/reddit.com for repeat checks and sharing.",
   },
   {
     question: "Is this a file-processing workflow?",
     answer:
       "No. This tool checks network availability only and does not process or upload document files.",
   },
+] as const
+
+const developerServiceChecks = [
+  "github.com",
+  "stripe.com",
+  "cloudflare.com",
+  "vercel.com",
+  "supabase.com",
+  "npmjs.com",
 ] as const
 
 const siteStatusSchema = combineJsonLd([
@@ -52,7 +62,7 @@ const siteStatusSchema = combineJsonLd([
   buildSoftwareApplicationSchema({
     name: "Site status checker",
     description:
-      "Browser-based status checks for domains, with canonical result routes such as /status/chatgpt.",
+      "Browser-based status checks for domains, with canonical result routes such as /status/chatgpt.com.",
     url: "https://plain.tools/site-status",
     featureList: [
       "Live domain status checks",
@@ -85,9 +95,9 @@ export default function SiteStatusPage() {
       {siteStatusSchema ? <JsonLd id="site-status-page-schema" schema={siteStatusSchema} /> : null}
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Site status checker
-          </h2>
+          </h1>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
             Quick answer: this tool helps answer whether a site is down for everyone or just you, using a live domain probe, response timing, and practical next checks.
           </p>
@@ -137,6 +147,11 @@ export default function SiteStatusPage() {
         </div>
       </section>
       <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
+          <TrendingStatus title="Trending outages and checks" limit={10} />
+        </div>
+      </section>
+      <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
             High-demand status pages
@@ -146,6 +161,27 @@ export default function SiteStatusPage() {
           </p>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {STATUS_TRAFFIC_SITES.map((site) => (
+              <Link
+                key={site}
+                href={statusPathFor(site)}
+                className="rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                Is {site} down?
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl space-y-4">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Developer service checks
+          </h2>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            Monitor high-impact developer infrastructure domains for release and incident triage.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {developerServiceChecks.map((site) => (
               <Link
                 key={site}
                 href={statusPathFor(site)}
@@ -240,13 +276,13 @@ export default function SiteStatusPage() {
               Example: gmail.com
             </Link>
             <Link
-              href="/status/youtube"
+              href="/status/youtube.com"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Example: youtube.com
             </Link>
             <Link
-              href="/status/chatgpt"
+              href="/status/chatgpt.com"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Example: chatgpt.com
@@ -269,3 +305,4 @@ export default function SiteStatusPage() {
     </>
   )
 }
+

@@ -1,4 +1,8 @@
 import { FIRST_WAVE_STATUS_SITES } from "@/lib/seo/first-wave-pages"
+import {
+  STATUS_DOMAINS,
+  STATUS_POPULAR_DOMAINS,
+} from "@/lib/status-domains"
 
 const DOMAIN_REGEX =
   /^(?=.{1,253}$)(?!-)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/
@@ -22,14 +26,8 @@ export type SiteStatusCheckResult = {
  */
 export const STATUS_TRAFFIC_SITES = [
   ...FIRST_WAVE_STATUS_SITES,
-] as const
-
-const STATUS_CANONICAL_SLUG_BY_DOMAIN: Partial<Record<(typeof STATUS_TRAFFIC_SITES)[number], string>> = {
-  "chatgpt.com": "chatgpt",
-  "discord.com": "discord",
-  "youtube.com": "youtube",
-  "reddit.com": "reddit",
-}
+  ...STATUS_POPULAR_DOMAINS.filter((domain) => !FIRST_WAVE_STATUS_SITES.includes(domain as (typeof FIRST_WAVE_STATUS_SITES)[number])),
+]
 
 export const STATUS_EXAMPLE_SITES = [
   "chatgpt.com",
@@ -41,16 +39,8 @@ export const STATUS_EXAMPLE_SITES = [
 ] as const
 
 export const STATUS_POPULAR_SITES = [
-  ...STATUS_TRAFFIC_SITES,
-  "openai.com",
-  "claude.ai",
-  "x.com",
-  "instagram.com",
-  "whatsapp.com",
-  "cloudflare.com",
-  "spotify.com",
-  "amazon.com",
-] as const
+  ...STATUS_POPULAR_DOMAINS,
+]
 
 type StatusSegmentRule = {
   segmentLabel: string
@@ -274,12 +264,14 @@ export function formatSiteLabel(site: string) {
 }
 
 export function statusPathFor(site: string) {
-  const normalized = formatSiteLabel(site).toLowerCase() as (typeof STATUS_TRAFFIC_SITES)[number]
-  const canonicalSlug = STATUS_CANONICAL_SLUG_BY_DOMAIN[normalized]
-  if (canonicalSlug) {
-    return `/status/${canonicalSlug}`
-  }
+  const normalized = normalizeSiteInput(site) ?? formatSiteLabel(site).toLowerCase()
   return `/status/${encodeURIComponent(normalized)}`
+}
+
+export function isIndexedStatusDomain(site: string) {
+  const normalized = normalizeSiteInput(site)
+  if (!normalized) return false
+  return STATUS_DOMAINS.includes(normalized)
 }
 
 export function getSiteSpecificStatusContext(site: string): SiteSpecificStatusContext {

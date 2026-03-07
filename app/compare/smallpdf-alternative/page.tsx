@@ -197,7 +197,7 @@ export default function SmallpdfAlternativePage() {
             },
             {
               title: "Related status pages",
-              links: [{ label: "Check whether chatgpt.com is down", href: "/status/chatgpt" }],
+              links: [{ label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" }],
             },
           ]}
         />
@@ -213,3 +213,4 @@ export default function SmallpdfAlternativePage() {
     </main>
   )
 }
+

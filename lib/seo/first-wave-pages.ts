@@ -62,13 +62,13 @@ export const FIRST_WAVE_STATUS_PAGES: PriorityPageLink[] = FIRST_WAVE_STATUS_SIT
   label: `Check whether ${site} is down`,
   href:
     site === "chatgpt.com"
-      ? "/status/chatgpt"
+      ? "/status/chatgpt.com"
       : site === "discord.com"
-        ? "/status/discord"
+        ? "/status/discord.com"
         : site === "youtube.com"
-          ? "/status/youtube"
+          ? "/status/youtube.com"
           : site === "reddit.com"
-            ? "/status/reddit"
+            ? "/status/reddit.com"
             : `/status/${encodeURIComponent(site)}`,
   description: `Live status route for ${site} with response-time context and troubleshooting guidance.`,
 }))
@@ -130,3 +130,4 @@ export const FIRST_WAVE_PRIORITY_PATHS = [
   ...FIRST_WAVE_GUIDE_PAGES.map((entry) => entry.href),
   ...FIRST_WAVE_COMPARE_PAGES.map((entry) => entry.href),
 ]
+

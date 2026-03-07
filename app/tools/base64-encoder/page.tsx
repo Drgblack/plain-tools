@@ -74,7 +74,7 @@ export default function Base64EncoderPage() {
               },
               {
                 title: "Status checks",
-                links: [{ label: "Check whether chatgpt.com is down", href: "/status/chatgpt" }],
+                links: [{ label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" }],
               },
             ]}
           />
@@ -83,3 +83,4 @@ export default function Base64EncoderPage() {
     </div>
   )
 }
+

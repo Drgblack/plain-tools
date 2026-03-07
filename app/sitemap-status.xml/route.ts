@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
-import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
+import { STATUS_DOMAINS } from "@/lib/status-domains"
+import { statusPathFor } from "@/lib/site-status"
 
 export async function GET() {
   const now = new Date()
@@ -12,11 +13,11 @@ export async function GET() {
       changeFrequency: "daily",
       priority: 0.9,
     },
-    ...STATUS_TRAFFIC_SITES.map((site) => ({
+    ...STATUS_DOMAINS.map((site, index) => ({
       url: `${BASE_URL}${statusPathFor(site)}`,
       lastModified: now,
       changeFrequency: "daily" as const,
-      priority: 0.8,
+      priority: index < 100 ? 0.8 : 0.6,
     })),
   ]
 

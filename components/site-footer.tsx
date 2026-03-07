@@ -15,8 +15,8 @@ const footerSections = [
     title: "Popular",
     links: [
       { name: "Site Status Checker", href: "/site-status" },
-      { name: "Is chatgpt.com down?", href: "/status/chatgpt" },
-      { name: "Is reddit.com down?", href: "/status/reddit" },
+      { name: "Is chatgpt.com down?", href: "/status/chatgpt.com" },
+      { name: "Is reddit.com down?", href: "/status/reddit.com" },
       { name: "What is My IP", href: "/what-is-my-ip" },
       { name: "DNS Lookup", href: "/dns-lookup" },
       { name: "Compress PDF", href: "/tools/compress-pdf" },
@@ -128,3 +128,4 @@ export function SiteFooter() {
     </footer>
   )
 }
+

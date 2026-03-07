@@ -171,7 +171,7 @@ export default function CompressPdfWithoutUploadPage() {
             },
             {
               title: "Related status pages",
-              links: [{ label: "Check whether youtube.com is down", href: "/status/youtube" }],
+              links: [{ label: "Check whether youtube.com is down", href: "/status/youtube.com" }],
             },
           ]}
         />
@@ -179,3 +179,4 @@ export default function CompressPdfWithoutUploadPage() {
     </main>
   )
 }
+

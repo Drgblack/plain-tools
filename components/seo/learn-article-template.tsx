@@ -229,7 +229,7 @@ export function LearnArticleTemplate({
             {
               title: "Status and network checks",
               links: [
-                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt" },
+                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
                 { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
               ],
             },
@@ -247,3 +247,4 @@ export function LearnArticleTemplate({
     />
   )
 }
+
