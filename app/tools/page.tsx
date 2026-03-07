@@ -17,9 +17,9 @@ import {
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "PDF Tools",
+  title: "Utility tools directory",
   description:
-    "Browse 40+ Plain Tools workflows for merge, split, compress, conversion, OCR, and signing. Core PDF tasks run locally in your browser with no upload step.",
+    "Browse utility clusters on Plain Tools: PDF workflows, status checks, network diagnostics, guides, and comparisons. Core local workflows avoid uploads.",
   path: "/tools",
   image: "/og/tools.png",
 })
@@ -215,6 +215,54 @@ export default function ToolsPage() {
     },
   ]
 
+  const clusterEntrypoints = [
+    {
+      title: "PDF tools cluster",
+      description: "Document workflows for merge, split, compress, convert, OCR, and signing.",
+      href: "/tools",
+      links: [
+        { label: "Merge PDF", href: "/tools/merge-pdf" },
+        { label: "Compress PDF", href: "/tools/compress-pdf" },
+      ],
+    },
+    {
+      title: "Status and uptime cluster",
+      description: "Check website availability and response behaviour.",
+      href: "/site-status",
+      links: [
+        { label: "Is chatgpt.com down?", href: "/status/chatgpt.com" },
+        { label: "Is reddit.com down?", href: "/status/reddit.com" },
+      ],
+    },
+    {
+      title: "Network diagnostics cluster",
+      description: "DNS, IP, and latency checks for troubleshooting.",
+      href: "/network-tools",
+      links: [
+        { label: "DNS lookup", href: "/dns-lookup" },
+        { label: "Ping test", href: "/ping-test" },
+      ],
+    },
+    {
+      title: "Learn guides cluster",
+      description: "Practical guides for private workflows and repeatable checks.",
+      href: "/learn",
+      links: [
+        { label: "No uploads explained", href: "/learn/no-uploads-explained" },
+        { label: "Verify processing claims", href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" },
+      ],
+    },
+    {
+      title: "Compare alternatives cluster",
+      description: "Neutral comparisons for privacy and workflow fit.",
+      href: "/compare",
+      links: [
+        { label: "Plain Tools vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+        { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+      ],
+    },
+  ]
+
   const toolsHubSchema = combineJsonLd([
     buildWebPageSchema({
       name: "Plain Tools PDF hub",
@@ -264,12 +312,12 @@ export default function ToolsPage() {
           <div className="mx-auto max-w-6xl space-y-4">
             <PageBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools" }]} />
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              PDF tools for sensitive workflows
+              Utility tools directory
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              This is the PDF category inside Plain Tools. Use practical workflows for conversion,
-              organisation, signing, and privacy checks. Core local tools process files in-browser
-              with no upload step.
+              Plain Tools brings together multiple traffic-driving utility clusters: PDF workflows,
+              site status checks, network diagnostics, guides, and comparison pages. Core local workflows
+              process in-browser with no upload step.
             </p>
             <div className="max-w-3xl rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
               43+ tools - all core features free forever. Privacy-first, no uploads.
@@ -318,6 +366,34 @@ export default function ToolsPage() {
         <section className="border-b border-border px-4 py-6 md:py-8">
           <div className="mx-auto max-w-6xl">
             <ProofStrip points={toolsProofPoints} />
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Cluster entry points</h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              Start with the cluster that matches your task, then follow linked tools and guides.
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {clusterEntrypoints.map((cluster) => (
+                <article key={cluster.title} className="rounded-lg border border-border bg-card/40 p-4">
+                  <Link href={cluster.href} className="text-sm font-semibold text-foreground transition hover:text-accent hover:underline">
+                    {cluster.title}
+                  </Link>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{cluster.description}</p>
+                  <ul className="mt-3 space-y-2">
+                    {cluster.links.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href} className="text-xs font-medium text-accent transition hover:underline">
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 

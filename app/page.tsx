@@ -34,9 +34,9 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = buildPageMetadata({
-  title: "Offline PDF, file and network tools",
+  title: "Utility platform for PDF, status and network tools",
   description:
-    "Access 43+ offline PDF tools, file converters, network diagnostics, and more on Plain Tools. Core workflows run locally with no uploads and no tracking.",
+    "Explore Plain Tools as a utility platform for PDF workflows, uptime checks, network diagnostics, guides, and comparisons. Core local workflows avoid uploads.",
   path: "/",
   image: "/og/default.png",
 })
@@ -328,6 +328,54 @@ const visibilityCards = [
   },
 ]
 
+const trafficClusters = [
+  {
+    title: "PDF tools cluster",
+    description: "Merge, split, compress, convert, sign, OCR, and secure document workflows.",
+    href: "/tools",
+    links: [
+      { label: "Merge PDF locally", href: "/tools/merge-pdf" },
+      { label: "Split PDF by pages", href: "/tools/split-pdf" },
+    ],
+  },
+  {
+    title: "Status and uptime cluster",
+    description: "Check whether a site is down, degraded, or responding slowly right now.",
+    href: "/site-status",
+    links: [
+      { label: "Check chatgpt.com status", href: "/status/chatgpt.com" },
+      { label: "Check reddit.com status", href: "/status/reddit.com" },
+    ],
+  },
+  {
+    title: "Network diagnostics cluster",
+    description: "Run DNS lookup, IP checks, and latency tests for troubleshooting.",
+    href: "/network-tools",
+    links: [
+      { label: "Run DNS lookup", href: "/dns-lookup" },
+      { label: "Measure latency with ping test", href: "/ping-test" },
+    ],
+  },
+  {
+    title: "Learn guides cluster",
+    description: "Find step-by-step guides for private workflows and practical settings.",
+    href: "/learn",
+    links: [
+      { label: "No uploads explained", href: "/learn/no-uploads-explained" },
+      { label: "How to merge PDFs offline", href: "/learn/how-to-merge-pdfs-offline" },
+    ],
+  },
+  {
+    title: "Compare alternatives cluster",
+    description: "Compare Plain Tools with cloud-first alternatives and workflow trade-offs.",
+    href: "/compare",
+    links: [
+      { label: "Plain Tools vs Smallpdf", href: "/compare/plain-vs-smallpdf" },
+      { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+    ],
+  },
+]
+
 export default function HomePage() {
   return (
     <>
@@ -341,10 +389,10 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-24">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              Trust-first utility tools for documents, files, networks, and uptime checks.
+              Utility platform for PDF workflows, uptime checks, and network diagnostics.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Plain Tools combines practical PDF workflows with network diagnostics and status tools. Privacy-first handling where relevant, with verifiable behaviour.
+              Plain Tools is built for practical, repeat-use utility tasks: document workflows, site-status checks, DNS and IP diagnostics, and trust-focused guides.
             </p>
             <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
               All core PDF &amp; utility tools 100% free forever - no sign-up, no limits on basic use
@@ -368,7 +416,7 @@ export default function HomePage() {
                   "transition-all duration-300 hover:shadow-[0_6px_30px_rgba(100,200,180,0.35)] hover:-translate-y-0.5"
                 )}
               >
-                Explore PDF tools
+                Explore tools directory
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -383,7 +431,7 @@ export default function HomePage() {
                 Check site status
               </Link>
               <Link
-                href="/learn"
+                href="/network-tools"
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full px-6 py-3",
                   "bg-card border border-white/[0.12] text-foreground font-semibold",
@@ -391,7 +439,7 @@ export default function HomePage() {
                   "transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5"
                 )}
               >
-                Read practical guides
+                Open network tools
               </Link>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -487,6 +535,38 @@ export default function HomePage() {
         <section className="border-b border-border/50 px-4 py-6 md:py-8">
           <div className="mx-auto max-w-6xl">
             <ProofStrip points={homepageProofPoints} />
+          </div>
+        </section>
+
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                Start with a high-demand cluster
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Use these entry points to reach high-traffic utility workflows quickly and move between related pages.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {trafficClusters.map((cluster) => (
+                <article key={cluster.title} className="rounded-xl border border-border bg-card/35 p-5">
+                  <Link href={cluster.href} className="text-base font-semibold text-foreground hover:text-accent hover:underline">
+                    {cluster.title}
+                  </Link>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cluster.description}</p>
+                  <ul className="mt-3 space-y-2">
+                    {cluster.links.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href} className="text-xs font-medium text-accent transition hover:underline">
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
