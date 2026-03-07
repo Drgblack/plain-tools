@@ -568,6 +568,107 @@ export const learnPages: TrancheLearnArticle[] = [
     disclaimer:
       "Informational only. This page is not medical advice and does not replace professional guidance.",
   },
+  buildTrust(
+    "private-pdf-tools",
+    "Private PDF Tools: How to Choose a No-Upload Workflow",
+    "private pdf tools",
+    ["private pdf editor", "no upload pdf tools", "offline pdf tools for sensitive documents"],
+    "/tools/merge-pdf",
+    ["no-uploads-explained", "how-to-verify-a-pdf-tool-doesnt-upload-your-files"]
+  ),
+  {
+    slug: "is-it-down-for-everyone-or-just-me",
+    title: "Is It Down for Everyone or Just Me: Status Checks Explained",
+    metaTitle: "Is It Down for Everyone or Just Me: Status Checks Explained | Plain Tools",
+    metaDescription:
+      "Learn how to check whether a website is down globally or only for your connection, with practical local diagnostics and clear next steps.",
+    primaryQuery: "is it down for everyone or just me",
+    secondaryQueries: [
+      "site status check explained",
+      "website down troubleshooting steps",
+      "check if a site is down globally",
+    ],
+    intent: "trust",
+    intro: [
+      "Use this guide when a site does not load and you need to separate local connectivity issues from broader outages. Runs locally in your browser. No uploads.",
+      "The process below gives a practical status-check workflow with DNS and response-time context.",
+    ],
+    sections: [
+      {
+        id: "quick-answer",
+        heading: "Quick answer",
+        paragraphs: [
+          "A single failed load does not prove a global outage. Start with a status check, then validate DNS and local network conditions.",
+          "Check at least one other network before escalating an incident.",
+        ],
+      },
+      {
+        id: "step-by-step",
+        heading: "Step-by-step status workflow",
+        paragraphs: [
+          "Run checks in sequence so you can rule out local causes before reporting a platform outage.",
+        ],
+        bullets: [
+          "Check the domain status page and note response state and timing.",
+          "Run DNS lookup to confirm resolver behaviour for the same hostname.",
+          "Retry from another network or device to distinguish local versus broad failure.",
+        ],
+      },
+      {
+        id: "limitations",
+        heading: "Limitations and caveats",
+        paragraphs: [
+          "One probe point cannot represent all regions at once.",
+          "Corporate firewalls, DNS overrides, and captive portals can create false down signals.",
+        ],
+      },
+      {
+        id: "privacy-note",
+        heading: "Privacy note",
+        paragraphs: [
+          "Status checks in this workflow do not require uploading personal files. Keep diagnostics focused on domain availability and timing only.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why can a site be up for others but down for me?",
+        answer:
+          "Local DNS, ISP routing, firewalls, or browser state can fail while the service is healthy elsewhere.",
+      },
+      {
+        question: "What does response time mean in a status check?",
+        answer:
+          "It indicates how long the target took to reply to the probe request, not full page render performance.",
+      },
+      {
+        question: "Should I clear DNS cache before concluding a global outage?",
+        answer:
+          "Yes. Clearing local DNS and retrying can rule out stale resolver entries.",
+      },
+      {
+        question: "Is this a full monitoring service?",
+        answer:
+          "No. This is a practical on-demand check, not multi-region synthetic monitoring.",
+      },
+    ],
+    trustBox: {
+      localProcessing: "Status checks run in-browser and use direct request probes from your session.",
+      noUploads: REQUIRED_LOCAL_LINE,
+      noTracking: "No behavioural tracking is required for status checks.",
+      verifyHref: "/verify-claims",
+    },
+    nextSteps: [
+      { label: "Open site status checker", href: "/site-status" },
+      { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+      { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
+      { label: "What is my IP", href: "/what-is-my-ip" },
+      { label: "Verify Claims", href: "/verify-claims" },
+    ],
+    toolHref: "/site-status",
+    relatedLearn: ["how-to-verify-a-pdf-tool-doesnt-upload-your-files", "no-uploads-explained"],
+    verifyHref: "/verify-claims",
+  },
   buildEvergreen(
     "what-is-a-pdf",
     "What Is a PDF",
@@ -662,6 +763,57 @@ export const comparePages: TrancheComparePage[] = [
       "Informational comparison only and not legal advice on signature enforceability.",
   },
 ]
+
+const priorityLearnOverrides: Record<string, Partial<TrancheLearnArticle>> = {
+  "how-to-merge-pdfs-offline": {
+    title: "How to Merge PDFs Offline",
+    intro: [
+      "Need one clean PDF from multiple files without handing your documents to a hosted processor? Runs locally in your browser. No uploads.",
+      "This guide covers a practical merge workflow, validation steps, and caveats for sensitive document handling.",
+    ],
+  },
+  "compress-pdf-without-losing-quality": {
+    title: "Compress PDF Without Losing Quality",
+    intro: [
+      "Compression is a quality trade-off, not a single setting. Runs locally in your browser. No uploads.",
+      "Start with light optimisation, check output readability, and escalate only when you still need further size reduction.",
+    ],
+  },
+  "how-to-sign-a-pdf-without-uploading-it": {
+    toolHref: "/tools/sign-pdf",
+    intro: [
+      "Sign a PDF without sending the file to an external signing service. Runs locally in your browser. No uploads.",
+      "Use this guide for practical visual signing workflows, plus limits you should know before external submission.",
+    ],
+  },
+}
+
+for (const article of learnPages) {
+  const override = priorityLearnOverrides[article.slug]
+  if (!override) continue
+  Object.assign(article, override)
+}
+
+const priorityCompareOverrides: Record<string, Partial<TrancheComparePage>> = {
+  "plain-vs-smallpdf": {
+    title: "Plain Tools vs Smallpdf",
+    metaTitle: "Plain Tools vs Smallpdf | Plain Tools",
+  },
+  "plain-vs-ilovepdf": {
+    title: "Plain Tools vs iLovePDF",
+    metaTitle: "Plain Tools vs iLovePDF | Plain Tools",
+  },
+  "plain-vs-adobe-acrobat-online": {
+    title: "Plain Tools vs Adobe Acrobat Online",
+    metaTitle: "Plain Tools vs Adobe Acrobat Online | Plain Tools",
+  },
+}
+
+for (const page of comparePages) {
+  const override = priorityCompareOverrides[page.slug]
+  if (!override) continue
+  Object.assign(page, override)
+}
 
 const learnMap = new Map(learnPages.map((entry) => [entry.slug, entry]))
 const compareMap = new Map(comparePages.map((entry) => [entry.slug, entry]))

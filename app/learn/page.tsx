@@ -80,6 +80,7 @@ const topicalClusters = [
     title: "Status and network cluster",
     description: "Diagnose uptime, DNS, IP, and latency issues in one place.",
     links: [
+      { label: "Is it down for everyone or just me?", href: "/learn/is-it-down-for-everyone-or-just-me" },
       { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
       { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
       { label: "Open network tools hub", href: "/network-tools" },

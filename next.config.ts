@@ -253,6 +253,21 @@ const nextConfig: NextConfig = {
         destination: "/compare/plain-vs-adobe-acrobat-online",
         permanent: true,
       },
+      {
+        source: "/compare/plain-tools-vs-smallpdf",
+        destination: "/compare/plain-vs-smallpdf",
+        permanent: true,
+      },
+      {
+        source: "/compare/plain-tools-vs-ilovepdf",
+        destination: "/compare/plain-vs-ilovepdf",
+        permanent: true,
+      },
+      {
+        source: "/compare/plain-tools-vs-adobe-online",
+        destination: "/compare/plain-vs-adobe-acrobat-online",
+        permanent: true,
+      },
 
       // Canonical root SEO routes.
       {

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ShieldCheck, Gauge, Users } from "lucide-react"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
+import { CompareFrameworkBlock } from "@/components/seo/compare-framework-block"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { TrustBox } from "@/components/seo/trust-box"
@@ -148,6 +149,8 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
       }
       topContent={
         <section className="space-y-4">
+          <CompareFrameworkBlock page={page} toolLinks={toolLinks} />
+
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">Quick comparison</h2>
             <span className="rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">

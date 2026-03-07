@@ -3,6 +3,10 @@ import Link from "next/link"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
 import { FaqBlock } from "@/components/seo/faq-block"
+import {
+  LearnHowToFramework,
+  LearnTrustExplainerFramework,
+} from "@/components/seo/learn-intent-framework"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { TrustBox } from "@/components/seo/trust-box"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
@@ -155,24 +159,40 @@ export function LearnArticleTemplate({
         />
       }
       topContent={
-        <section className="rounded-xl border border-border/70 bg-card/45 p-4 md:p-5">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">Contextual links</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Apply this guide directly:{" "}
-            <Link href={primaryToolLink.href} className="font-medium text-accent hover:underline">
-              {primaryToolLink.label}
-            </Link>
-            , then{" "}
-            <Link href={compareLink.href} className="font-medium text-accent hover:underline">
-              {compareLink.label}
-            </Link>{" "}
-            and{" "}
-            <Link href="/verify-claims" className="font-medium text-accent hover:underline">
-              verify no-upload claims yourself
-            </Link>
-            .
-          </p>
-        </section>
+        <div className="space-y-4">
+          {article.intent === "how-to" ? (
+            <LearnHowToFramework
+              article={article}
+              primaryToolLink={primaryToolLink}
+              compareLink={compareLink}
+            />
+          ) : (
+            <LearnTrustExplainerFramework
+              article={article}
+              primaryToolLink={primaryToolLink}
+              compareLink={compareLink}
+            />
+          )}
+
+          <section className="rounded-xl border border-border/70 bg-card/45 p-4 md:p-5">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">Contextual links</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Apply this guide directly:{" "}
+              <Link href={primaryToolLink.href} className="font-medium text-accent hover:underline">
+                {primaryToolLink.label}
+              </Link>
+              , then{" "}
+              <Link href={compareLink.href} className="font-medium text-accent hover:underline">
+                {compareLink.label}
+              </Link>{" "}
+              and{" "}
+              <Link href="/verify-claims" className="font-medium text-accent hover:underline">
+                verify no-upload claims yourself
+              </Link>
+              .
+            </p>
+          </section>
+        </div>
       }
       faq={<FaqBlock faqs={article.faqs} />}
       relatedLinks={

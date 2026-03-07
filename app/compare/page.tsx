@@ -22,32 +22,32 @@ export const metadata: Metadata = buildPageMetadata({
 const comparisonLinks = [
   {
     href: "/compare/plain-vs-smallpdf",
-    title: "Plain.tools vs Smallpdf",
+    title: "Plain Tools vs Smallpdf",
     summary: "Compare upload workflow, privacy model, and day-to-day handling for common PDF tasks.",
   },
   {
     href: "/compare/plain-vs-ilovepdf",
-    title: "Plain.tools vs iLovePDF",
+    title: "Plain Tools vs iLovePDF",
     summary: "Compare local processing against cloud processing for practical privacy-sensitive work.",
   },
   {
     href: "/compare/plain-vs-adobe-acrobat-online",
-    title: "Plain.tools vs Adobe Acrobat Online",
+    title: "Plain Tools vs Adobe Acrobat Online",
     summary: "Compare document-control trade-offs when handling sensitive internal or client files.",
   },
   {
     href: "/compare/plain-vs-pdf24",
-    title: "Plain.tools vs PDF24",
+    title: "Plain Tools vs PDF24",
     summary: "A practical side-by-side focused on workflow clarity, upload risk, and portability.",
   },
   {
     href: "/compare/plain-vs-sejda",
-    title: "Plain.tools vs Sejda",
+    title: "Plain Tools vs Sejda",
     summary: "Evaluate processing model, operational controls, and suitability for private workflows.",
   },
   {
     href: "/compare/plain-vs-docusign",
-    title: "Plain.tools vs DocuSign",
+    title: "Plain Tools vs DocuSign",
     summary: "Compare local visual signing workflows with hosted signing models and account requirements.",
   },
 ]

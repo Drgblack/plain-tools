@@ -104,6 +104,15 @@ export const learnSections: LearnSection[] = [
         icon: "Lock",
       },
       {
+        title: "Private PDF Tools",
+        summary:
+          "How to choose no-upload PDF workflows with practical verification steps and trade-off checks.",
+        href: "/learn/private-pdf-tools",
+        category: "Security",
+        readTime: "8 min",
+        icon: "Shield",
+      },
+      {
         title: "GDPR and PDF Tools",
         summary:
           "Controller/processor exposure and why client-side workflows reduce compliance burden.",
@@ -164,6 +173,15 @@ export const learnSections: LearnSection[] = [
         category: "Comparison",
         readTime: "5 min",
         icon: "FileText",
+      },
+      {
+        title: "Is It Down for Everyone or Just Me?",
+        summary:
+          "A practical status-check explainer for separating local connectivity issues from real outages.",
+        href: "/learn/is-it-down-for-everyone-or-just-me",
+        category: "Tutorial",
+        readTime: "6 min",
+        icon: "WifiOff",
       },
     ],
   },
