@@ -10,6 +10,11 @@ export type ToolAnswerFirstContent = {
   whatToExpect: string[]
 }
 
+export type ToolFaqItem = {
+  question: string
+  answer: string
+}
+
 type ToolPageProfile = {
   title: string
   description: string
@@ -277,6 +282,230 @@ const TOOL_ANSWER_FIRST_OVERRIDES: Partial<Record<string, ToolAnswerFirstContent
       "Always validate extracted text before compliance-critical use.",
     ],
   },
+}
+
+const TOOL_FAQ_OVERRIDES: Partial<Record<string, ToolFaqItem[]>> = {
+  "merge-pdf": [
+    {
+      question: "Does merging change PDF quality?",
+      answer:
+        "Merged output keeps source page visuals. It combines pages into one file rather than re-rendering content.",
+    },
+    {
+      question: "Can I merge many files at once?",
+      answer:
+        "Yes, but very large batches may be slower on lower-memory devices.",
+    },
+    {
+      question: "Will encrypted PDFs merge?",
+      answer:
+        "Password-protected or corrupted files can fail. Unlock protected files first where permitted.",
+    },
+  ],
+  "split-pdf": [
+    {
+      question: "How do page ranges work?",
+      answer:
+        "Use values such as 1,3,5-7. Invalid or out-of-range pages are rejected before export.",
+    },
+    {
+      question: "Does split output keep original quality?",
+      answer:
+        "Yes. Page extraction keeps the source page visuals because it copies pages rather than re-rendering.",
+    },
+    {
+      question: "Can I split every page into separate PDFs?",
+      answer:
+        "Yes. Per-page mode creates one output per page, typically packaged as ZIP for convenience.",
+    },
+  ],
+  "compress-pdf": [
+    {
+      question: "Which compression mode should I start with?",
+      answer:
+        "Start with Light for readable documents. Move to Medium or Strong when file size matters more than fidelity.",
+    },
+    {
+      question: "Can Strong mode affect selectable text?",
+      answer:
+        "Yes. Strong compression may flatten text into image-like output for smaller files.",
+    },
+    {
+      question: "Why does size reduction vary by file?",
+      answer:
+        "Text-heavy PDFs often shrink less. Image-heavy PDFs usually benefit more from Medium or Strong modes.",
+    },
+  ],
+  "pdf-to-word": [
+    {
+      question: "Will scanned PDFs convert well?",
+      answer:
+        "Scanned documents usually need OCR first. Text-based PDFs convert more reliably to editable DOCX.",
+    },
+    {
+      question: "Is layout preserved exactly?",
+      answer:
+        "No. This is best-effort conversion, so tables and complex multi-column layouts may need manual cleanup.",
+    },
+    {
+      question: "Are files uploaded during conversion?",
+      answer:
+        "Core conversion runs locally in your browser for this workflow.",
+    },
+  ],
+  "word-to-pdf": [
+    {
+      question: "Which Word formats are supported?",
+      answer:
+        "DOCX is the primary supported format for this browser workflow.",
+    },
+    {
+      question: "Why do fonts look different sometimes?",
+      answer:
+        "If the original font is unavailable in-browser, fallback fonts can change spacing and line breaks.",
+    },
+    {
+      question: "Does the conversion happen locally?",
+      answer:
+        "Yes. Parsing and PDF generation run on your device in-browser.",
+    },
+  ],
+  "pdf-to-excel": [
+    {
+      question: "Can it extract every table perfectly?",
+      answer:
+        "No. It uses best-effort heuristics. Complex merged cells and styled grids may need manual edits.",
+    },
+    {
+      question: "What output format is generated?",
+      answer:
+        "Spreadsheet-ready output is produced in CSV/XLSX mode depending on the tool option and workflow path.",
+    },
+    {
+      question: "Do scanned table PDFs work?",
+      answer:
+        "Scanned tables without OCR text are harder to parse and may require OCR first.",
+    },
+  ],
+  "pdf-to-ppt": [
+    {
+      question: "Are slide texts editable after conversion?",
+      answer:
+        "Usually no. Slides are image-based representations of PDF pages.",
+    },
+    {
+      question: "How many slides are created?",
+      answer:
+        "One slide is generated per PDF page in this workflow.",
+    },
+    {
+      question: "How does scale affect output?",
+      answer:
+        "Higher scale improves sharpness but increases export size and processing time.",
+    },
+  ],
+  "pdf-to-jpg": [
+    {
+      question: "Can I export only selected pages?",
+      answer:
+        "Yes. Use page selection syntax such as 1,3,5-7 to export specific pages.",
+    },
+    {
+      question: "How should I choose image quality?",
+      answer:
+        "Higher quality improves clarity and increases file size. Lower quality reduces size for sharing.",
+    },
+    {
+      question: "How are multi-page outputs downloaded?",
+      answer:
+        "Each page becomes a JPG file. Multi-page exports are typically bundled as ZIP.",
+    },
+  ],
+  "jpg-to-pdf": [
+    {
+      question: "Can I reorder images before conversion?",
+      answer:
+        "Yes. Reorder the image list before generating the final PDF.",
+    },
+    {
+      question: "Which image types are accepted?",
+      answer:
+        "JPG, JPEG, and PNG are supported in this workflow.",
+    },
+    {
+      question: "Will image quality be preserved?",
+      answer:
+        "Source quality is retained as much as possible, but page-size and margin settings can affect visual scaling.",
+    },
+  ],
+  "sign-pdf": [
+    {
+      question: "Is this a cryptographic digital signature?",
+      answer:
+        "No. This tool places a visual signature mark. It does not issue certificate-based digital signatures.",
+    },
+    {
+      question: "Can I control signature position and size?",
+      answer:
+        "Yes. Choose page, coordinates, and size before exporting the signed PDF.",
+    },
+    {
+      question: "Does it work on mobile touch screens?",
+      answer:
+        "Yes. Draw mode supports touch input for mobile signature capture.",
+    },
+  ],
+  "protect-pdf": [
+    {
+      question: "Will every PDF viewer open protected files?",
+      answer:
+        "Most modern viewers work, but compatibility can vary on older or lightweight readers.",
+    },
+    {
+      question: "What if I forget the password?",
+      answer:
+        "You will need the password to open the protected file. Store it safely before sharing.",
+    },
+    {
+      question: "Is protection applied locally?",
+      answer:
+        "Yes. Password protection runs in your browser for this workflow.",
+    },
+  ],
+  "unlock-pdf": [
+    {
+      question: "Do I need the existing password?",
+      answer:
+        "Yes. Unlock requires the correct password for the source PDF.",
+    },
+    {
+      question: "Does this modify the original file?",
+      answer:
+        "No. You download a new unlocked copy and keep the original unchanged.",
+    },
+    {
+      question: "What happens if the password is wrong?",
+      answer:
+        "The tool returns a clear error and does not produce unlocked output.",
+    },
+  ],
+  "ocr-pdf": [
+    {
+      question: "Can OCR run without uploads?",
+      answer:
+        "Yes. OCR processing runs locally in your browser after required OCR assets are available.",
+    },
+    {
+      question: "What affects OCR accuracy?",
+      answer:
+        "Scan quality, contrast, skew, language choice, and document complexity all influence recognition quality.",
+    },
+    {
+      question: "What outputs are available?",
+      answer:
+        "You can export text output and, where supported, searchable PDF-style output.",
+    },
+  ],
 }
 
 const TOOL_PAGE_PROFILES: Record<string, ToolPageProfile> = {
@@ -655,6 +884,7 @@ export type ResolvedToolPageProfile = ToolPageProfile & {
   overview: string
   useCases: string[]
   answerFirst: ToolAnswerFirstContent
+  faqs: ToolFaqItem[]
 }
 
 function buildDefaultAnswerFirst(
@@ -702,6 +932,7 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       answerFirst:
         TOOL_ANSWER_FIRST_OVERRIDES[tool.slug] ??
         buildDefaultAnswerFirst(tool, overview, profile.limitation),
+      faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? [],
     }
   }
 
@@ -727,5 +958,6 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       "Simple browser-based processing without extra software",
     ],
     answerFirst: buildDefaultAnswerFirst(tool, overview, limitation),
+    faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? [],
   }
 }

@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { JsonLd } from "@/components/seo/json-ld"
+import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
@@ -183,7 +184,11 @@ export default async function ToolPage({ params }: PageProps) {
         text: "Download the processed result and verify output quality before sharing.",
       },
     ],
-    includeFaq: false,
+    includeFaq: profile.faqs.length > 0,
+    faqs: profile.faqs.map((faq) => ({
+      question: faq.question,
+      answer: faq.answer,
+    })),
   })
 
   return (
@@ -320,6 +325,10 @@ export default async function ToolPage({ params }: PageProps) {
                   {profile.limitation} For complex files, run a quick output check before sharing or archiving.
                 </p>
               </section>
+
+              {profile.faqs.length > 0 ? (
+                <ToolFaqBlock faqs={profile.faqs} className="mt-6" />
+              ) : null}
 
               {seo ? (
                 <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
