@@ -14,30 +14,39 @@ export type SiteStatusCheckResult = {
   errorMessage?: string
 }
 
+/**
+ * Curated traffic-focused status routes.
+ * Keep this list intentional for sitemap/index quality and high-demand "is it down" queries.
+ */
+export const STATUS_TRAFFIC_SITES = [
+  "chatgpt.com",
+  "google.com",
+  "youtube.com",
+  "reddit.com",
+  "discord.com",
+  "github.com",
+  "netflix.com",
+  "gmail.com",
+] as const
+
 export const STATUS_EXAMPLE_SITES = [
   "chatgpt.com",
   "reddit.com",
   "discord.com",
-  "github.com",
   "youtube.com",
-  "spotify.com",
+  "google.com",
+  "gmail.com",
 ] as const
 
 export const STATUS_POPULAR_SITES = [
-  "chatgpt.com",
-  "reddit.com",
-  "discord.com",
-  "github.com",
-  "youtube.com",
-  "spotify.com",
-  "google.com",
+  ...STATUS_TRAFFIC_SITES,
   "openai.com",
   "claude.ai",
   "x.com",
   "instagram.com",
   "whatsapp.com",
   "cloudflare.com",
-  "netflix.com",
+  "spotify.com",
   "amazon.com",
 ] as const
 
@@ -56,6 +65,103 @@ export type SiteStatusContext = {
   localIssueNote: string
   troubleshootingSteps: [string, string, string]
   relatedExamples: string[]
+}
+
+type SiteSpecificStatusContext = {
+  answerIntro: string
+  meaningNote: string
+  likelyIssues: [string, string, string]
+}
+
+const SITE_SPECIFIC_CONTEXT: Record<string, SiteSpecificStatusContext> = {
+  "chatgpt.com": {
+    answerIntro:
+      "ChatGPT relies on multiple model and session endpoints, so partial incidents can look like intermittent availability.",
+    meaningNote:
+      "A status of Up confirms the main host responded, but model requests can still fail during regional or account-level incidents.",
+    likelyIssues: [
+      "Retry with a fresh session to rule out auth-token expiry.",
+      "Check response time changes across two to three refreshes.",
+      "Compare with another network profile to isolate local restrictions.",
+    ],
+  },
+  "google.com": {
+    answerIntro:
+      "Google can appear up while specific products or regions experience separate service degradation.",
+    meaningNote:
+      "An Up result means the main domain responded, not that every Google product path is healthy globally.",
+    likelyIssues: [
+      "Check whether only one Google product is affected.",
+      "Run DNS lookup to verify resolver responses on your network.",
+      "Test from another connection to rule out ISP routing issues.",
+    ],
+  },
+  "youtube.com": {
+    answerIntro:
+      "YouTube may be reachable while playback quality or video delivery degrades at CDN edges.",
+    meaningNote:
+      "Up confirms host responsiveness, but buffering and playback errors can still occur due to regional delivery load.",
+    likelyIssues: [
+      "Compare homepage access versus playback behaviour.",
+      "Run a latency check to detect local congestion.",
+      "Retry on a second network to confirm whether the issue is local.",
+    ],
+  },
+  "reddit.com": {
+    answerIntro:
+      "Reddit incidents often affect API and media paths differently from the main website.",
+    meaningNote:
+      "A positive status means the main host responded, but posting and feed APIs may still be degraded.",
+    likelyIssues: [
+      "Refresh and compare response time across checks.",
+      "Test on web and app to see if failure is channel-specific.",
+      "Verify DNS results before assuming a full outage.",
+    ],
+  },
+  "discord.com": {
+    answerIntro:
+      "Discord can show mixed incidents where chat, media, and auth services degrade independently.",
+    meaningNote:
+      "Up indicates core host reachability; voice or messaging paths may still fail during partial incidents.",
+    likelyIssues: [
+      "Check if login works but messaging or voice fails.",
+      "Run latency and compare with a second network.",
+      "Repeat the status check after a short interval for trend context.",
+    ],
+  },
+  "github.com": {
+    answerIntro:
+      "GitHub availability can differ between web UI, API, Actions, and package registry routes.",
+    meaningNote:
+      "An Up result confirms host response, but CI or package endpoints can still be degraded.",
+    likelyIssues: [
+      "Confirm whether only Actions or packages are affected.",
+      "Run DNS lookup and latency checks for local path quality.",
+      "Retry from a different network if failures remain inconsistent.",
+    ],
+  },
+  "netflix.com": {
+    answerIntro:
+      "Netflix may respond as up while account, playback, or regional CDN delivery paths are unstable.",
+    meaningNote:
+      "Up confirms site reachability, not guaranteed stream quality for every region and ISP route.",
+    likelyIssues: [
+      "Check whether browse works but playback fails.",
+      "Test latency to rule out local congestion.",
+      "Retry from another network profile for comparison.",
+    ],
+  },
+  "gmail.com": {
+    answerIntro:
+      "Gmail can show mailbox-specific or regional delays even when the main route is reachable.",
+    meaningNote:
+      "A status of Up confirms host response, but sync and delivery delays may still affect individual accounts.",
+    likelyIssues: [
+      "Check whether delays affect web and mobile clients equally.",
+      "Run DNS checks to confirm resolver health.",
+      "Retry from a second network if access remains inconsistent.",
+    ],
+  },
 }
 
 const STATUS_SEGMENT_RULES: StatusSegmentRule[] = [
@@ -167,6 +273,27 @@ export function formatSiteLabel(site: string) {
 
 export function statusPathFor(site: string) {
   return `/status/${encodeURIComponent(site)}`
+}
+
+export function getSiteSpecificStatusContext(site: string): SiteSpecificStatusContext {
+  const normalizedSite = formatSiteLabel(site).toLowerCase()
+  const matched = SITE_SPECIFIC_CONTEXT[normalizedSite]
+
+  if (matched) {
+    return matched
+  }
+
+  return {
+    answerIntro:
+      "This route checks current host responsiveness and gives a practical first signal for outage triage.",
+    meaningNote:
+      "A host can be up globally while still failing locally due to resolver, routing, or policy constraints.",
+    likelyIssues: [
+      "Re-run the check and compare response-time trend.",
+      "Verify DNS and latency for the same host.",
+      "Test from another network to isolate local-only issues.",
+    ],
+  }
 }
 
 export function getSiteStatusContext(site: string): SiteStatusContext {

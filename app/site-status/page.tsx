@@ -11,14 +11,14 @@ import {
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
-import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
+import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 
 import { SiteStatusClient } from "./client"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Site status checker",
+  title: "Is it down? Site status checker",
   description:
-    "Check whether a website is up or down with response timing, canonical status URLs, and practical diagnostics for day-to-day outage triage.",
+    "Check whether a site is up or down with live response timing, canonical status URLs, and practical troubleshooting for high-demand outage queries.",
   path: "/site-status",
   image: "/og/default.png",
 })
@@ -66,7 +66,7 @@ const siteStatusSchema = combineJsonLd([
   ]),
   buildItemListSchema(
     "Popular site status pages",
-    STATUS_POPULAR_SITES.slice(0, 12).map((site, index) => ({
+    STATUS_TRAFFIC_SITES.map((site, index) => ({
       name: `Is ${site} down?`,
       description:
         index < 6
@@ -138,13 +138,13 @@ export default function SiteStatusPage() {
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
-            Popular status pages
+            High-demand status pages
           </h2>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
-            Start with common checks below. Each route uses a canonical format to avoid duplicate variants and keep results easy to share.
+            Start with high-demand checks below. Each route uses one canonical format so results are easier to share, cite, and revisit.
           </p>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {STATUS_POPULAR_SITES.slice(0, 12).map((site) => (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {STATUS_TRAFFIC_SITES.map((site) => (
               <Link
                 key={site}
                 href={statusPathFor(site)}
@@ -207,6 +207,18 @@ export default function SiteStatusPage() {
             latency checks to isolate routing or resolver issues.
           </p>
           <div className="flex flex-wrap gap-2 text-xs">
+            <Link
+              href="/status/gmail.com"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+            >
+              Example: gmail.com
+            </Link>
+            <Link
+              href="/status/youtube.com"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+            >
+              Example: youtube.com
+            </Link>
             <Link
               href="/status/chatgpt.com"
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"

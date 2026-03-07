@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import {
   normalizeSiteInput,
   STATUS_EXAMPLE_SITES,
+  STATUS_TRAFFIC_SITES,
   statusPathFor,
   type SiteStatusCheckResult,
 } from "@/lib/site-status"
@@ -183,6 +184,24 @@ function SiteStatusToolInterface() {
       ) : null}
 
       <div className="rounded-md border border-border bg-card/60 p-4">
+        <h3 className="text-sm font-semibold text-foreground">How to read the result</h3>
+        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">Up</span>: the host responded to the latest probe.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Down</span>: timeout or unavailable response at check time.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Response time</span>: latest round-trip latency in milliseconds.
+          </li>
+        </ul>
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          A site can be up globally but still fail locally due to resolver, ISP routing, or firewall conditions.
+        </p>
+      </div>
+
+      <div className="rounded-md border border-border bg-card/60 p-4">
         <h3 className="text-sm font-semibold text-foreground">Popular checks</h3>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {STATUS_EXAMPLE_SITES.map((site) => (
@@ -193,6 +212,21 @@ function SiteStatusToolInterface() {
             >
               <span>Is {site} down?</span>
               <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-md border border-border bg-card/60 p-4">
+        <h3 className="text-sm font-semibold text-foreground">High-demand status pages</h3>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {STATUS_TRAFFIC_SITES.map((site) => (
+            <Link
+              key={site}
+              href={statusPathFor(site)}
+              className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-[var(--category-accent,var(--accent))]/40 hover:text-foreground"
+            >
+              Is {site} down?
             </Link>
           ))}
         </div>

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from "next/link"
-import { redirect } from "next/navigation"
+import { permanentRedirect } from "next/navigation"
 import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
 import { JsonLd } from "@/components/seo/json-ld"
-import { generateDynamicToolMetadata } from '@/lib/seo'
+import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
@@ -23,9 +23,11 @@ import {
 import { StatusDynamicClient } from './client'
 import {
   formatSiteLabel,
+  getSiteSpecificStatusContext,
   getSiteStatusContext,
   normalizeSiteInput,
   STATUS_EXAMPLE_SITES,
+  STATUS_TRAFFIC_SITES,
   statusPathFor,
 } from '@/lib/site-status'
 
@@ -44,12 +46,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const decodedSite = decodeURIComponent(site)
   const normalizedSite = normalizeSiteInput(decodedSite)
 
-  return generateDynamicToolMetadata({
-    toolName: 'Site Status',
-    param: normalizedSite ?? decodedSite,
-    paramType: 'site',
-    isValid: Boolean(normalizedSite),
+  if (!normalizedSite) {
+    const invalid = buildPageMetadata({
+      title: "Invalid website status route",
+      description:
+        "The requested status route is not valid. Use a hostname such as chatgpt.com or reddit.com for a canonical availability check.",
+      path: `/status/${encodeURIComponent(decodedSite)}`,
+      image: "/og/default.png",
+    })
+
+    return {
+      ...invalid,
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }
+  }
+
+  return buildPageMetadata({
+    title: `Is ${normalizedSite} down?`,
+    description: `Check whether ${normalizedSite} is up or down right now with live response time, last checked timestamp, and practical troubleshooting steps.`,
+    path: statusPathFor(normalizedSite),
+    image: "/og/default.png",
   })
+}
+
+export function generateStaticParams() {
+  return STATUS_TRAFFIC_SITES.map((site) => ({
+    site: encodeURIComponent(site),
+  }))
 }
 
 const faqs = [
@@ -116,17 +142,18 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   }
 
   if (decodedSite !== normalizedSite) {
-    redirect(statusPathFor(normalizedSite))
+    permanentRedirect(statusPathFor(normalizedSite))
   }
 
   const siteLabel = formatSiteLabel(normalizedSite)
   const siteDisplayName = toSiteDisplayName(normalizedSite)
   const siteContext = getSiteStatusContext(normalizedSite)
+  const siteSpecificContext = getSiteSpecificStatusContext(normalizedSite)
   const relatedStatusChecks = Array.from(
-    new Set([...siteContext.relatedExamples, ...STATUS_EXAMPLE_SITES])
+    new Set([...siteContext.relatedExamples, ...STATUS_TRAFFIC_SITES, ...STATUS_EXAMPLE_SITES])
   )
     .filter((value) => value !== normalizedSite)
-    .slice(0, 6)
+    .slice(0, 8)
   const troubleshootingSteps = siteContext.troubleshootingSteps.map((step, index) => ({
     name: `Step ${index + 1}`,
     text: step,
@@ -179,6 +206,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
           <p className="mt-3 text-lg text-muted-foreground">
             Live availability check for {siteDisplayName}. Status, response time, and the latest check timestamp are shown below for this {siteContext.segmentLabel.toLowerCase()} route.
           </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Quick answer: this page checks whether {siteLabel} is currently up or down, then helps you separate global outages from local connection issues.
+          </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[1fr,380px]">
@@ -189,6 +219,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 This page answers “is {siteLabel} down for everyone or just me?” using a live HTTP probe, plus response time for the latest successful check.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {siteSpecificContext.answerIntro}
               </p>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 <article className="rounded-lg border border-border/60 bg-background/60 p-3">
@@ -253,6 +286,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 <p className="mt-3 leading-relaxed text-muted-foreground">
                   {siteContext.localIssueNote}
                 </p>
+                <p className="mt-3 leading-relaxed text-muted-foreground">
+                  {siteSpecificContext.meaningNote}
+                </p>
               </div>
             </section>
 
@@ -261,8 +297,11 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 Troubleshooting steps
               </h2>
               <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
-                {siteContext.troubleshootingSteps.map((step) => (
-                  <li key={step}>{step}</li>
+                {siteContext.troubleshootingSteps.map((step, index) => (
+                  <li key={`segment-${index}-${step}`}>{step}</li>
+                ))}
+                {siteSpecificContext.likelyIssues.map((step, index) => (
+                  <li key={`specific-${index}-${step}`}>{step}</li>
                 ))}
               </ol>
             </section>

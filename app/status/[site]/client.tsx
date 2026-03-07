@@ -112,6 +112,29 @@ export function StatusDynamicClient({ site, siteName }: StatusDynamicClientProps
     <div className="space-y-4">
       {statusBlock}
 
+      {result ? (
+        <div className="grid gap-2 text-sm sm:grid-cols-3">
+          <div className="rounded-md border border-border/60 bg-card/60 p-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">HTTP status</p>
+            <p className="mt-1 font-medium text-foreground">{result.httpStatus ?? "N/A"}</p>
+          </div>
+          <div className="rounded-md border border-border/60 bg-card/60 p-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Response time</p>
+            <p className="mt-1 font-medium text-foreground">
+              {typeof result.responseTimeMs === "number" ? `${result.responseTimeMs} ms` : "N/A"}
+            </p>
+          </div>
+          <div className="rounded-md border border-border/60 bg-card/60 p-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Checked at</p>
+            <p className="mt-1 font-medium text-foreground">{checkedAtLabel || "N/A"}</p>
+          </div>
+        </div>
+      ) : null}
+
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        Status is a practical signal, not a global guarantee. A host can appear up here while local DNS, ISP routing, or firewall rules still block your path.
+      </p>
+
       <div className="flex items-center justify-between border-t border-border pt-4">
         <p className="text-xs text-muted-foreground">
           {result?.checkedAt ? `Last checked: ${checkedAtLabel}` : "Checking..."}
