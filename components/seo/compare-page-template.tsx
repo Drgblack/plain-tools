@@ -261,8 +261,13 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
           heading="Next steps"
           sections={[
             {
-              title: "Verify",
-              links: links ? [links.verify] : [{ label: "Verify Claims", href: "/verify-claims" }],
+              title: "Trust and privacy",
+              links: links
+                ? [links.verify, { label: "No uploads explained", href: "/learn/no-uploads-explained" }]
+                : [
+                    { label: "Verify Claims", href: "/verify-claims" },
+                    { label: "No uploads explained", href: "/learn/no-uploads-explained" },
+                  ],
             },
             {
               title: "Relevant tools",
@@ -271,6 +276,13 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
             {
               title: "Learn",
               links: links ? links.relatedLearn : page.nextSteps.filter((step) => step.href.startsWith("/learn/")).slice(0, 2),
+            },
+            {
+              title: "Status and network checks",
+              links: [
+                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+                { label: "Browse network diagnostics", href: "/network-tools" },
+              ],
             },
           ]}
         />

@@ -189,7 +189,11 @@ export function LearnArticleTemplate({
               <Link href="/verify-claims" className="font-medium text-accent hover:underline">
                 verify no-upload claims yourself
               </Link>
-              .
+              . If your issue is service availability,{" "}
+              <Link href="/site-status" className="font-medium text-accent hover:underline">
+                run a quick site-status check
+              </Link>{" "}
+              before deeper troubleshooting.
             </p>
           </section>
         </div>
@@ -221,6 +225,13 @@ export function LearnArticleTemplate({
             {
               title: "Compare",
               links: [compareLink],
+            },
+            {
+              title: "Status and network checks",
+              links: [
+                { label: "Check whether chatgpt.com is down", href: "/status/chatgpt.com" },
+                { label: "Run DNS lookup for a domain", href: "/dns-lookup" },
+              ],
             },
             {
               title: "PDF tools hub",

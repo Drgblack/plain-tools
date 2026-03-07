@@ -368,13 +368,19 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
             </Surface>
 
             <Surface>
-              <h3 className="mb-3 font-semibold text-foreground">Trust and guidance</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Trust and troubleshooting guides</h3>
               <div className="space-y-2">
                 <Link href="/verify-claims" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Verify local-processing claims
                 </Link>
                 <Link href="/learn/how-to-audit-pdf-tool-network-requests" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Learn to audit network requests in DevTools
+                </Link>
+                <Link href="/learn/is-it-down-for-everyone-or-just-me" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Learn how to tell global outages from local issues
+                </Link>
+                <Link href="/learn/what-response-time-means-in-uptime-check" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Understand response time in uptime checks
                 </Link>
                 <Link href="/compare/offline-vs-online-pdf-tools" className="block text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Compare local and upload-based tools
