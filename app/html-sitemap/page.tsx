@@ -35,7 +35,6 @@ const mainSections: SitemapSection[] = [
       { label: "Learn", href: "/learn" },
       { label: "Compare", href: "/compare" },
       { label: "Blog", href: "/blog" },
-      { label: "Pricing", href: "/pricing" },
       { label: "Verify Claims", href: "/verify-claims" },
       { label: "Roadmap", href: "/roadmap" },
       { label: "Changelog", href: "/changelog" },

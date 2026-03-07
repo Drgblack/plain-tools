@@ -23,7 +23,6 @@ const navItems: NavItem[] = [
   { label: "Learn", href: "/learn" },
   { label: "Compare", href: "/compare" },
   { label: "Blog", href: "/blog" },
-  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Verify", href: "/verify-claims" },
   {

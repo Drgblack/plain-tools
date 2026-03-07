@@ -52,7 +52,6 @@ const staticCorePages = [
   "/privacy",
   "/terms",
   "/support",
-  "/pricing",
   "/labs",
   "/roadmap",
   "/changelog",

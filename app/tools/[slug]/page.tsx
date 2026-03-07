@@ -303,6 +303,10 @@ export default async function ToolPage({ params }: PageProps) {
                 </ErrorBoundary>
               </Suspense>
 
+              <section className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
+                This tool is completely free. Enjoy unlimited basic use - no account needed.
+              </section>
+
               <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
                 <p className="font-medium text-foreground">Result experience</p>
                 <p className="mt-1 text-muted-foreground">

@@ -30,7 +30,6 @@ const footerSections = [
       { name: "Learn", href: "/learn" },
       { name: "Compare", href: "/compare" },
       { name: "Blog", href: "/blog" },
-      { name: "Pricing", href: "/pricing" },
       { name: "Support", href: "/support" },
       { name: "Roadmap", href: "/roadmap" },
       { name: "Changelog", href: "/changelog" },

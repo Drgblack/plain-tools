@@ -299,11 +299,6 @@ const richSections = [
     description: "Opinionated but factual writing on privacy, architecture, and PDF handling.",
   },
   {
-    name: "Pricing",
-    href: "/pricing",
-    description: "Core local tools are free. See pricing for advanced and upcoming Pro features.",
-  },
-  {
     name: "Support",
     href: "/support",
     description: "Email-first support and practical help routes for tools and workflows.",
@@ -351,6 +346,9 @@ export default function HomePage() {
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Plain Tools combines practical PDF workflows with network diagnostics and status tools. Privacy-first handling where relevant, with verifiable behaviour.
             </p>
+            <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
+              All core PDF &amp; utility tools 100% free forever - no sign-up, no limits on basic use
+            </div>
             
             {/* Intro paragraph for SEO/GEO */}
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
@@ -397,11 +395,7 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              Core PDF tools stay free. See{" "}
-              <Link href="/pricing" className="font-medium text-accent hover:underline">
-                pricing
-              </Link>{" "}
-              for advanced and upcoming Pro features.
+              Core PDF tools stay free and are designed for practical day-to-day workflows.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link
@@ -619,11 +613,7 @@ export default function HomePage() {
                 Most used utilities across the platform
               </p>
               <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
-                Core local tools are free to use. See{" "}
-                <Link href="/pricing" className="text-accent hover:underline">
-                  pricing
-                </Link>{" "}
-                for advanced and upcoming Pro capabilities.
+                Core local tools are free to use for everyday PDF, file, and network tasks.
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

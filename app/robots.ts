@@ -4,6 +4,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
+        // AdSense readiness: keep content routes crawlable and do not block Mediapartners-Google.
         userAgent: "*",
         allow: ["/", "/.well-known/", "/api/health"],
         disallow: [

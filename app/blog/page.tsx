@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react"
 import Link from "next/link"
 import { Search, Clock, Share2, X, ChevronRight, ExternalLink } from "lucide-react"
+import { AdsensePlaceholder } from "@/components/ads/adsense-placeholder"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { SummaryBox, KeyTerm } from "@/components/seo"
 import { sanitizeInlineHtml } from "@/lib/sanitize"
@@ -711,6 +712,12 @@ export default function BlogPage() {
             </SummaryBox>
           </div>
         </section>
+
+        <div className="px-4 py-6 md:py-8">
+          <div className="mx-auto max-w-6xl">
+            <AdsensePlaceholder slot="1100000004" />
+          </div>
+        </div>
 
         {/* Sticky Filter Navigation */}
         <section className="sticky top-[57px] z-40 border-b border-[#222] bg-[#0a0a0a]/95 backdrop-blur-md">

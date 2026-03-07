@@ -134,7 +134,7 @@ const throwIfMonthlyLimitReached = (payload: MonthlyAiLimitPayload | null) => {
   throw new MonthlyAiLimitReachedError(
     payload.message || "You've used your 5 free AI requests this month.",
     payload.reset_date || "",
-    payload.upgrade_url || "https://plain.tools/pricing"
+    payload.upgrade_url || "https://plain.tools/support"
   )
 }
 

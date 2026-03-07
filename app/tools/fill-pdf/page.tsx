@@ -5,7 +5,7 @@ import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolHelperPanel } from "@/components/tools/tool-helper-panel"
 import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
-import { Lock, Sparkles } from "lucide-react"
+import { Lock } from "lucide-react"
 
 import FillPdfTool from "@/components/tools/fill-pdf-tool"
 import { Button } from "@/components/ui/button"
@@ -84,23 +84,20 @@ export default async function FillPdfPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <Lock className="h-5 w-5 text-amber-300" />
-                  Plain Pro Feature
+                  Currently unavailable
                 </CardTitle>
                 <CardDescription className="text-amber-100/90">
-                  PDF form filling is available with Plain Pro.
+                  PDF form filling is not publicly available right now.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-amber-100/90">
                   Fill text inputs, checkboxes, radio groups, dropdowns, and signature placeholders
-                  in standard AcroForm PDFs with local-first processing.
+                  in standard AcroForm PDFs with local-first processing. Contact support for access updates.
                 </p>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <Button asChild className="w-full sm:w-auto">
-                    <Link href="/pricing">
-                      <Sparkles className="h-4 w-4" />
-                      Upgrade To Plain Pro
-                    </Link>
+                    <Link href="/support">Contact support</Link>
                   </Button>
                   {!userId ? (
                     <Button asChild variant="outline" className="w-full sm:w-auto">

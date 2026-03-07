@@ -7,7 +7,6 @@ const helpfulLinks = [
   { label: "Tools", href: "/tools", icon: Wrench },
   { label: "Learn", href: "/learn", icon: BookOpen },
   { label: "Compare", href: "/compare", icon: Scale },
-  { label: "Pricing", href: "/pricing", icon: ShieldCheck },
   { label: "Verify claims", href: "/verify-claims", icon: SearchCheck },
   { label: "Privacy", href: "/privacy", icon: ShieldCheck },
 ]

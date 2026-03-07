@@ -336,11 +336,11 @@ export default function QaTool() {
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-amber-100/90">
-              Plain Pro gives you unlimited AI access for €7/month.
+              AI request limits reset monthly. If you need more capacity, contact support.
             </p>
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/pricing">See Plain Pro →</Link>
+                <Link href="/support">Contact support</Link>
               </Button>
             </div>
             <p className="text-xs text-amber-100/90">

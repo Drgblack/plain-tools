@@ -127,6 +127,7 @@ export default function RootLayout({
     <html lang="en-GB" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
+        <script defer data-domain="plain.tools" src="https://plausible.io/js/script.js" />
         {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />

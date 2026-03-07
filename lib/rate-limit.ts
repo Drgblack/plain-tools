@@ -16,7 +16,7 @@ const AI_MEMORY_FALLBACK_WINDOW_MS = 24 * 60 * 60 * 1000
 export const RATE_LIMIT_ERROR_MESSAGE = "Rate limit exceeded. Try again shortly."
 export const AI_MONTHLY_LIMIT_ERROR = "monthly_ai_limit_reached"
 export const AI_MONTHLY_LIMIT_MESSAGE = "You've used your 5 free AI requests this month."
-export const AI_MONTHLY_LIMIT_UPGRADE_URL = "https://plain.tools/pricing"
+export const AI_MONTHLY_LIMIT_UPGRADE_URL = "https://plain.tools/support"
 
 type RateLimitResult = { success: true } | { success: false; retryAfter: number }
 type AiProvider = "upstash" | "memory"

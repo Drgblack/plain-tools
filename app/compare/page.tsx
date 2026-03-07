@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight, Gauge, ShieldCheck, Users } from "lucide-react"
+import { AdsensePlaceholder } from "@/components/ads/adsense-placeholder"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -154,6 +155,8 @@ export default function ComparePage() {
               </div>
             </div>
           </section>
+
+          <AdsensePlaceholder slot="1100000002" />
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">Comparison framework</h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Rss } from "lucide-react"
+import { AdsensePlaceholder } from "@/components/ads/adsense-placeholder"
 
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { CHANGELOG_ITEMS } from "@/lib/changelog-data"
@@ -39,6 +40,8 @@ export default function ChangelogPage() {
             View roadmap
           </Link>
         </div>
+
+        <AdsensePlaceholder slot="1100000003" className="mt-8" />
 
         <div className="mt-10 space-y-6">
           {CHANGELOG_ITEMS.map((update) => (

@@ -316,9 +316,6 @@ export function Header() {
                         >
                           {isPortalLoading ? "Opening..." : "Manage Subscription"}
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/pricing">View Plans</Link>
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

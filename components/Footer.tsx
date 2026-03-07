@@ -18,7 +18,6 @@ const footerSections: FooterSection[] = [
     links: [
       { label: "Tools", href: "/tools" },
       { label: "Converters", href: "/file-converters" },
-      { label: "Pricing", href: "/pricing" },
       { label: "Verify Claims", href: "/verify-claims" },
     ],
   },

@@ -271,6 +271,9 @@ export default function ToolsPage() {
               organisation, signing, and privacy checks. Core local tools process files in-browser
               with no upload step.
             </p>
+            <div className="max-w-3xl rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
+              43+ tools - all core features free forever. Privacy-first, no uploads.
+            </div>
             <div className="flex flex-wrap gap-2 text-xs">
               <Link href="/network-tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Network tools

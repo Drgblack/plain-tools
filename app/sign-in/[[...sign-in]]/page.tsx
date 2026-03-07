@@ -12,8 +12,8 @@ export default function SignInPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             Clerk is not configured in this environment.
           </p>
-          <Link href="/pricing" className="mt-4 inline-flex text-sm text-primary underline">
-            Back to pricing
+          <Link href="/" className="mt-4 inline-flex text-sm text-primary underline">
+            Back to home
           </Link>
         </div>
       </div>

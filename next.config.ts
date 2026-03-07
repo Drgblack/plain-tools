@@ -341,6 +341,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/pricing",
+        destination: "/",
+        permanent: true,
+      },
+      {
         source: "/privacy-policy",
         destination: "/privacy",
         permanent: true,

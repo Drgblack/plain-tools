@@ -18,7 +18,6 @@ const navItems = [
   { name: "File", href: "/file-tools" },
   { name: "Learn", href: "/learn" },
   { name: "Compare", href: "/compare" },
-  { name: "Pricing", href: "/pricing" },
   { name: "Verify", href: "/verify-claims" },
   { name: "About", href: "/about" },
 ]
