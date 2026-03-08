@@ -122,6 +122,42 @@ export const learnSections: LearnSection[] = [
         icon: "Shield",
       },
       {
+        title: "Offline PDF Tools for Law Firms",
+        summary:
+          "A practical local-first handling model for matter files, redaction, and metadata hygiene.",
+        href: "/learn/offline-pdf-tools-for-law-firms",
+        category: "Security",
+        readTime: "9 min",
+        icon: "Shield",
+      },
+      {
+        title: "Offline PDF Tools for Healthcare Teams",
+        summary:
+          "How to reduce patient-document exposure during OCR, redaction, and portal uploads.",
+        href: "/learn/offline-pdf-tools-for-healthcare-teams",
+        category: "Security",
+        readTime: "9 min",
+        icon: "Shield",
+      },
+      {
+        title: "PDF Redaction Checklist",
+        summary:
+          "A repeatable compliance-oriented checklist for irreversible redaction and post-export review.",
+        href: "/learn/pdf-redaction-checklist-for-compliance",
+        category: "Tutorial",
+        readTime: "8 min",
+        icon: "EyeOff",
+      },
+      {
+        title: "Local vs Cloud OCR Privacy",
+        summary:
+          "Compare OCR data-flow trade-offs for scanned PDFs and decide when local should be the default.",
+        href: "/learn/local-vs-cloud-ocr-privacy",
+        category: "Comparison",
+        readTime: "8 min",
+        icon: "Sparkles",
+      },
+      {
         title: "WebAssembly PDF Explained",
         summary:
           "A plain-language guide to WASM-powered local processing and offline capability.",
@@ -234,6 +270,15 @@ export const learnSections: LearnSection[] = [
         href: "/learn/why-offline-compression-has-limits",
         category: "Tutorial",
         readTime: "4 min",
+        icon: "HardDrive",
+      },
+      {
+        title: "Browser Memory Limits for PDF Tools",
+        summary:
+          "Why local PDF jobs hit memory pressure and how to recover with smaller, more predictable batches.",
+        href: "/learn/browser-memory-limits-for-pdf-tools",
+        category: "Tutorial",
+        readTime: "8 min",
         icon: "HardDrive",
       },
       {

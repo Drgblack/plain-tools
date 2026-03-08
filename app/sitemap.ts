@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next"
 
 import { seoMdxSitemapUrls } from "@/lib/seo/mdx-page-registry"
+import { expansionSitemapUrls } from "@/lib/seo/expansion-content"
 import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
@@ -140,6 +141,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const tranchePages = [
     ...trancheSitemapUrls,
+    ...expansionSitemapUrls,
     ...workflowSitemapUrls,
     ...seoMdxSitemapUrls,
   ].map((path) => ({

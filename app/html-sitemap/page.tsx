@@ -4,6 +4,11 @@ import Link from "next/link"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { JsonLd } from "@/components/seo/json-ld"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
+import {
+  expansionCompareSlugs,
+  expansionGlossarySlugs,
+  expansionLearnSlugs,
+} from "@/lib/seo/expansion-content"
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
 import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
@@ -67,9 +72,16 @@ const toolLinks: SitemapLink[] = TOOL_CATALOGUE.filter((tool) => tool.available)
   href: `/tools/${tool.slug}`,
 }))
 
-const learnHighlights: SitemapLink[] = trancheLearnSlugs.slice(0, 16).map((slug) => ({
+const learnHighlights: SitemapLink[] = [...trancheLearnSlugs, ...expansionLearnSlugs]
+  .slice(0, 24)
+  .map((slug) => ({
   label: slug.replace(/-/g, " "),
   href: `/learn/${slug}`,
+}))
+
+const glossaryLinks: SitemapLink[] = expansionGlossarySlugs.map((slug) => ({
+  label: slug.replace(/-/g, " "),
+  href: `/learn/glossary/${slug}`,
 }))
 
 const workflowLinks: SitemapLink[] = workflowRouteSlugs.map((slug) => ({
@@ -77,7 +89,7 @@ const workflowLinks: SitemapLink[] = workflowRouteSlugs.map((slug) => ({
   href: `/learn/workflows/${slug}`,
 }))
 
-const compareLinks: SitemapLink[] = trancheCompareSlugs.map((slug) => ({
+const compareLinks: SitemapLink[] = [...trancheCompareSlugs, ...expansionCompareSlugs].map((slug) => ({
   label: slug.replace(/-/g, " "),
   href: `/compare/${slug}`,
 }))
@@ -203,6 +215,7 @@ export default function HtmlSitemapPage() {
         <SitemapSectionList section={{ title: "Status query pages", links: statusQueryLinks }} />
         <SitemapSectionList section={{ title: "Trust and verification", links: trustLinks }} />
         <SitemapSectionList section={{ title: "Learn guides", links: learnHighlights }} />
+        <SitemapSectionList section={{ title: "Glossary guides", links: glossaryLinks }} />
         <SitemapSectionList section={{ title: "Workflow guides", links: workflowLinks }} />
         <SitemapSectionList section={{ title: "Compare pages", links: compareLinks }} />
         <SitemapSectionList section={{ title: "Blog links", links: blogLinks }} />

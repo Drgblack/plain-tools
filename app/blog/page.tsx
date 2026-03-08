@@ -63,6 +63,30 @@ interface Article {
 // 20 placeholder articles across four pillars (UK English)
 const articles: Article[] = [
   {
+    slug: "how-we-verify-no-upload-claims",
+    title: "How We Verify No-Upload Claims",
+    summary: "The practical method we use to validate no-upload statements with DevTools, offline checks, and route-level review.",
+    pillar: "privacy-ethics",
+    density: "Foundation",
+    readingTime: 7,
+    aiTakeaway: "No-upload claims should be tested through route-level observation, not accepted as marketing copy. A real file operation plus network inspection is the useful baseline.",
+    industryTag: "Tech",
+    isRecommended: true,
+    linkedTools: ["merge-pdf", "compress-pdf", "pdf-qa"],
+  },
+  {
+    slug: "pdf-privacy-checklist-for-small-teams",
+    title: "PDF Privacy Checklist for Small Teams",
+    summary: "A lightweight operational checklist for choosing safer PDF routes, reducing oversharing, and keeping handling consistent under pressure.",
+    pillar: "industry-use-cases",
+    density: "Foundation",
+    readingTime: 7,
+    aiTakeaway: "Small-team PDF privacy failures usually come from route drift and rushed handling. A short checklist outperforms a long unread policy.",
+    industryTag: "Legal",
+    isRecommended: true,
+    linkedTools: ["metadata-purge", "redact-pdf", "compress-pdf"],
+  },
+  {
     slug: "the-pdf-tools-that-betrayed-you",
     title: "The PDF Tools That Betrayed You",
     summary: "A factual timeline of trust breaks across major PDF platforms, with cited policy sources and practical verification steps.",

@@ -375,6 +375,24 @@ export default function GlossaryPage() {
         
         <section className="px-4 py-12 md:py-16">
           <div className="mx-auto max-w-4xl">
+            <div className="mb-10 rounded-xl border border-[#333] bg-[#111] p-5">
+              <h2 className="text-[16px] font-semibold text-white">Featured glossary guides</h2>
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                <Link
+                  href="/learn/glossary/what-is-xmp-in-pdf"
+                  className="rounded-lg border border-[#333] bg-[#0a0a0a] px-4 py-3 text-[13px] text-white/70 transition hover:border-[#0070f3]/50 hover:text-[#0070f3]"
+                >
+                  What Is XMP in PDF?
+                </Link>
+                <Link
+                  href="/learn/glossary/what-is-pdf-info-dictionary"
+                  className="rounded-lg border border-[#333] bg-[#0a0a0a] px-4 py-3 text-[13px] text-white/70 transition hover:border-[#0070f3]/50 hover:text-[#0070f3]"
+                >
+                  What Is the PDF Info Dictionary?
+                </Link>
+              </div>
+            </div>
+
             {Object.keys(groupedTerms).length === 0 ? (
               <div className="rounded-xl border border-[#333] bg-[#111] p-12 text-center">
                 <p className="text-[15px] text-white/60">

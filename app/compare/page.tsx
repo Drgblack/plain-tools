@@ -48,6 +48,26 @@ const comparisonLinks = [
     summary: "A practical side-by-side focused on workflow clarity, upload risk, and portability.",
   },
   {
+    href: "/compare/plain-vs-pdfcandy",
+    title: "Plain vs PDFCandy",
+    summary: "Compare hosted conversion convenience with a clearer local-first route for sensitive files.",
+  },
+  {
+    href: "/compare/plain-vs-lightpdf",
+    title: "Plain vs LightPDF",
+    summary: "A route-level comparison focused on verification effort, upload handling, and workflow clarity.",
+  },
+  {
+    href: "/compare/plain-vs-sodapdf",
+    title: "Plain vs SodaPDF",
+    summary: "Practical guidance for teams deciding between hosted document workflows and local-first handling.",
+  },
+  {
+    href: "/compare/plain-vs-pdfgear",
+    title: "Plain vs PDFgear",
+    summary: "Compare route predictability and no-upload defaults instead of relying on feature lists alone.",
+  },
+  {
     href: "/compare/plain-tools-vs-sejda",
     title: "Plain Tools vs Sejda",
     summary: "Evaluate processing model, operational controls, and suitability for private workflows.",

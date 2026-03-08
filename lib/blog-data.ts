@@ -177,6 +177,24 @@ export type CategoryId = (typeof categories)[number]["id"]
 
 export const posts = [
   {
+    slug: "how-we-verify-no-upload-claims",
+    title: "How We Verify No-Upload Claims",
+    description:
+      "The practical method Plain uses to evaluate no-upload claims with DevTools, offline checks, and route-level verification.",
+    date: "2026-03-08",
+    readingTime: 7,
+    category: "privacy-security" as CategoryId,
+  },
+  {
+    slug: "pdf-privacy-checklist-for-small-teams",
+    title: "PDF Privacy Checklist for Small Teams",
+    description:
+      "A lightweight operating checklist for teams that need safer PDF handling without dedicated security staff.",
+    date: "2026-03-08",
+    readingTime: 7,
+    category: "practical-guides" as CategoryId,
+  },
+  {
     slug: "the-pdf-tools-that-betrayed-you",
     title: "The PDF Tools That Betrayed You",
     description:
