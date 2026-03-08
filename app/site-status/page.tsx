@@ -172,7 +172,6 @@ export default function SiteStatusPage() {
           </div>
         </div>
       </section>
-      <AdLayout placement="status_hub_intro_below" />
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <TrendingStatus title="Trending outages and checks" limit={10} />
@@ -296,7 +295,7 @@ export default function SiteStatusPage() {
         </div>
       </section>
       <SiteStatusClient />
-      <AdLayout placement="status_result_below" />
+      <AdLayout placement="status_result_after" />
       <section className="border-t border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
@@ -312,7 +311,7 @@ export default function SiteStatusPage() {
           </div>
         </div>
       </section>
-      <AdLayout placement="status_mid" />
+      <AdLayout placement="status_content_mid" />
       <section className="border-t border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">

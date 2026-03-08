@@ -184,7 +184,7 @@ export default function ComparePage() {
             </div>
           </section>
 
-          <AdLayout placement="compare_hub_intro_below" className="px-0 py-0" innerClassName="max-w-none" />
+          <AdLayout placement="compare_hub_content_top" className="px-0 py-0" innerClassName="max-w-none" />
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">Comparison framework</h2>
@@ -248,8 +248,6 @@ export default function ComparePage() {
             </div>
           </section>
 
-          <AdLayout placement="compare_hub_mid" className="px-0 py-0" innerClassName="max-w-none" />
-
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {comparisonLinks.map((item) => (
               <Link
@@ -284,6 +282,8 @@ export default function ComparePage() {
               ))}
             </div>
           </section>
+
+          <AdLayout placement="compare_hub_content_bottom" className="px-0 py-0" innerClassName="max-w-none" />
 
           <section className="rounded-xl border border-border bg-card/30 p-6 md:p-7">
             <h2 className="text-lg font-semibold text-foreground">How to evaluate fairly</h2>

@@ -29,6 +29,7 @@ type ArticleLayoutProps = {
   topContent?: React.ReactNode
   introAdPlacement?: AdPlacement
   midAdPlacement?: AdPlacement
+  bottomAdPlacement?: AdPlacement
 }
 
 export function ArticleLayout({
@@ -44,6 +45,7 @@ export function ArticleLayout({
   topContent,
   introAdPlacement,
   midAdPlacement,
+  bottomAdPlacement,
 }: ArticleLayoutProps) {
   const schemas = Array.isArray(jsonLd) ? jsonLd : [jsonLd]
   const midpointIndex =
@@ -83,9 +85,9 @@ export function ArticleLayout({
           ))}
         </header>
 
-        {trustBox}
-
         {introAdPlacement ? <AdSlot placement={introAdPlacement} /> : null}
+
+        {trustBox}
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">Table of contents</h2>
@@ -129,6 +131,8 @@ export function ArticleLayout({
             {midAdPlacement && index === midpointIndex ? <AdSlot placement={midAdPlacement} /> : null}
           </div>
         ))}
+
+        {bottomAdPlacement ? <AdSlot placement={bottomAdPlacement} /> : null}
 
         {faq}
         {relatedLinks}

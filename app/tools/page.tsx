@@ -373,7 +373,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <AdLayout placement="tools_hub_intro_below" />
+        <AdLayout placement="tools_hub_content_top" />
 
         <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">
@@ -506,7 +506,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        <AdLayout placement="tools_hub_mid" />
+        <AdLayout placement="tools_hub_content_bottom" />
 
         <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">

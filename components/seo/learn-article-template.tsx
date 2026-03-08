@@ -198,8 +198,9 @@ export function LearnArticleTemplate({
           </section>
         </div>
       }
-      introAdPlacement="guide_intro_below"
-      midAdPlacement="guide_mid"
+      introAdPlacement="guide_content_top"
+      midAdPlacement="guide_content_mid"
+      bottomAdPlacement="guide_content_bottom"
       faq={<FaqBlock faqs={article.faqs} />}
       relatedLinks={
         <RelatedLinks

@@ -328,7 +328,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               <StatusDynamicClient site={normalizedSite} siteName={siteLabel} />
             </Surface>
 
-            <AdSlot placement="status_result_below" />
+            <AdSlot placement="status_result_after" />
 
             <StatusHistory domain={normalizedSite} />
 
@@ -365,7 +365,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               </ol>
             </section>
 
-            <AdSlot placement="status_mid" />
+            <AdSlot placement="status_content_mid" />
 
             <section>
               <h2 className="mb-4 text-xl font-semibold text-foreground">Frequently Asked Questions</h2>

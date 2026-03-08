@@ -249,7 +249,7 @@ export default function LearnPage() {
 
         <div className="px-4 py-6 md:py-8">
           <div className="mx-auto max-w-6xl">
-            <AdLayout placement="guide_intro_below" className="px-0 py-0" />
+            <AdLayout placement="guide_hub_content_top" className="px-0 py-0" />
           </div>
         </div>
 
@@ -343,8 +343,6 @@ export default function LearnPage() {
           </div>
         </div>
 
-        <AdLayout placement="guide_mid" />
-
 <section className="border-t border-border px-4 py-12">
   <div className="mx-auto max-w-6xl space-y-5">
     <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Topic clusters</h2>
@@ -418,6 +416,8 @@ export default function LearnPage() {
       </Link>
     </div>
   </section>
+
+        <AdLayout placement="guide_hub_content_bottom" />
 
   {/* Quick Links Footer */}
   <nav aria-label="Related pages" className="border-t border-border bg-card/30 px-4 py-12">

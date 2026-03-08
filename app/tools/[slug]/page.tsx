@@ -255,6 +255,8 @@ export default async function ToolPage({ params }: PageProps) {
             <>
               <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
                 <div>
+                  <AdSlot placement="tool_content_top" className="mb-8" />
+
                   <section className="mb-8 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
                       Privacy and trust
@@ -271,8 +273,6 @@ export default async function ToolPage({ params }: PageProps) {
                     </ul>
                     <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
                   </section>
-
-                  <AdSlot placement="tools_header_below" className="mb-8" />
 
                   <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
 
@@ -314,7 +314,7 @@ export default async function ToolPage({ params }: PageProps) {
                     </p>
                   </section>
 
-                  <AdSlot placement="tools_after_result" className="mt-6" />
+                  <AdSlot placement="tool_result_after" className="mt-6" />
 
                   <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
                     <p className="font-medium text-foreground">Known limitations</p>
@@ -373,7 +373,7 @@ export default async function ToolPage({ params }: PageProps) {
                 </div>
 
                 <aside className="hidden xl:block xl:sticky xl:top-24">
-                  <AdSlot placement="tools_sidebar" />
+                  <AdSlot placement="tool_sidebar" />
                   <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
                     <p className="font-medium text-foreground">Before you share the output</p>
                     <p className="mt-2">

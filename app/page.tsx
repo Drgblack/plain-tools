@@ -580,7 +580,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <AdLayout placement="homepage_hero_below" />
+        <AdLayout placement="homepage_content_top" />
 
         <section className="border-b border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
@@ -701,7 +701,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <AdLayout placement="homepage_mid" />
+        <AdLayout placement="homepage_content_bottom" />
 
         <section className="border-b border-border/50 px-4 py-8">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 rounded-xl border border-border bg-card/35 p-5 sm:flex-row sm:items-center sm:justify-between">

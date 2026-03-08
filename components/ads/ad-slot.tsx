@@ -6,6 +6,7 @@ import { AdPlaceholder } from "@/components/ads/ad-placeholder"
 import {
   adsConfig,
   getAdPlacementConfig,
+  getAdSlotConfigForPlacement,
   shouldRenderLiveAd,
   shouldShowAdPlacement,
   type AdPlacement,
@@ -27,9 +28,12 @@ type AdSlotProps = {
 
 export function AdSlot({ placement, className }: AdSlotProps) {
   const config = getAdPlacementConfig(placement)
+  const slot = getAdSlotConfigForPlacement(placement)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const insRef = useRef<HTMLElement | null>(null)
+  const adBlockTimerRef = useRef<number | null>(null)
   const [isVisible, setIsVisible] = useState(config.priority === "eager")
+  const [showAdBlockNotice, setShowAdBlockNotice] = useState(false)
   const isLiveAd = shouldRenderLiveAd(placement)
 
   useEffect(() => {
@@ -77,11 +81,29 @@ export function AdSlot({ placement, className }: AdSlotProps) {
     }
   }, [isLiveAd, isVisible])
 
+  useEffect(() => {
+    if (!isLiveAd || !isVisible || !adsConfig.showAdBlockSupportNotice || !insRef.current) {
+      return
+    }
+
+    adBlockTimerRef.current = window.setTimeout(() => {
+      if (insRef.current?.dataset.adsbygoogleStatus !== "done") {
+        setShowAdBlockNotice(true)
+      }
+    }, 3500)
+
+    return () => {
+      if (adBlockTimerRef.current !== null) {
+        window.clearTimeout(adBlockTimerRef.current)
+      }
+    }
+  }, [isLiveAd, isVisible])
+
   if (!shouldShowAdPlacement(placement)) {
     return null
   }
 
-  const desktopOnlyClass = config.desktopOnly ? "hidden xl:block" : undefined
+  const desktopOnlyClass = config.desktopOnly || slot.desktopOnly ? "hidden xl:block" : undefined
 
   if (!isLiveAd) {
     return <AdPlaceholder placement={placement} className={cn(desktopOnlyClass, className)} />
@@ -95,8 +117,9 @@ export function AdSlot({ placement, className }: AdSlotProps) {
         desktopOnlyClass,
         className
       )}
-      style={{ minHeight: `${config.minHeight}px` }}
+      style={{ minHeight: `${slot.minHeight}px` }}
       data-ad-placement={placement}
+      data-ad-slot-type={config.slotType}
       data-ad-mode="live"
     >
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -107,7 +130,7 @@ export function AdSlot({ placement, className }: AdSlotProps) {
           <ins
             ref={insRef}
             className="adsbygoogle block min-h-[inherit] w-full overflow-hidden rounded-lg"
-            style={{ display: "block", minHeight: `${Math.max(config.minHeight - 32, 90)}px` }}
+            style={{ display: "block", minHeight: `${Math.max(slot.minHeight - 32, 90)}px` }}
             data-ad-client={adsConfig.clientId}
             data-ad-slot={config.slotId}
             data-ad-format="auto"
@@ -119,6 +142,12 @@ export function AdSlot({ placement, className }: AdSlotProps) {
           </div>
         )}
       </div>
+      {showAdBlockNotice ? (
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          Plain.tools is supported by ads. Consider disabling your ad blocker if you find these
+          tools useful.
+        </p>
+      ) : null}
     </div>
   )
 }

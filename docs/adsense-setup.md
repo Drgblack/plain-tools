@@ -6,6 +6,8 @@
   Contains the site-level AdSense publisher declaration and is served at `/ads.txt`.
 - `lib/ads.ts`
   Central ad configuration, placement registry, environment gating, and mode switching.
+- `lib/ad-slots.ts`
+  Standard slot type definitions used across the site for consistent size and responsive behaviour.
 - `components/ads/adsense-script.tsx`
   Loads the AdSense runtime once in the shared layout and exposes the consent/CMP integration point.
 - `components/ads/ad-slot.tsx`
@@ -35,6 +37,8 @@
   Show safe placeholders when live slots are not configured.
 - `NEXT_PUBLIC_ADS_CMP_READY=true|false`
   Signals whether a proper CMP integration is in place.
+- `NEXT_PUBLIC_ADS_SHOW_ADBLOCK_NOTICE=true|false`
+  Enables a subtle ad-block support message when a live ad does not load.
 
 ## Consent and CMP readiness
 
@@ -45,53 +49,87 @@
   - `components/ads/adsense-script.tsx`
   - replace the temporary non-personalized bootstrap with your CMP callback once consent collection is implemented
 
+## Standard slot types
+
+- `TOP_LEADERBOARD`
+  Recommended size: `728x90`
+  Responsive behaviour: desktop leaderboard with smaller-screen fallback.
+- `CONTENT_TOP`
+  Recommended size: responsive rectangle
+  Responsive behaviour: full-width in-content unit for early page placement.
+- `CONTENT_MID`
+  Recommended size: responsive rectangle
+  Responsive behaviour: below-the-fold in-content unit with lazy rendering.
+- `CONTENT_BOTTOM`
+  Recommended size: responsive rectangle
+  Responsive behaviour: late-page in-content unit before footer or final CTA.
+- `SIDEBAR`
+  Recommended size: `300x250`
+  Responsive behaviour: desktop only.
+- `RESULT_AFTER`
+  Recommended size: responsive rectangle
+  Responsive behaviour: in-content unit after the answer or output block.
+- `FOOTER_TOP`
+  Recommended size: `728x90`
+  Responsive behaviour: reserved for late-page monetisation if needed later.
+
 ## Manual slot mapping
 
 Configure slot IDs with these environment variables:
 
-- `NEXT_PUBLIC_AD_SLOT_HOMEPAGE_HERO_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_HOMEPAGE_MID`
-- `NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_INTRO_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_MID`
-- `NEXT_PUBLIC_AD_SLOT_TOOLS_HEADER_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_TOOLS_AFTER_RESULT`
-- `NEXT_PUBLIC_AD_SLOT_TOOLS_SIDEBAR`
-- `NEXT_PUBLIC_AD_SLOT_GUIDE_INTRO_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_GUIDE_MID`
-- `NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_INTRO_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_MID`
-- `NEXT_PUBLIC_AD_SLOT_COMPARE_TABLE_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_STATUS_HUB_INTRO_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_STATUS_HUB_MID`
-- `NEXT_PUBLIC_AD_SLOT_STATUS_RESULT_BELOW`
-- `NEXT_PUBLIC_AD_SLOT_STATUS_MID`
+- `NEXT_PUBLIC_AD_SLOT_HOMEPAGE_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_HOMEPAGE_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_TOOL_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_TOOL_RESULT_AFTER`
+- `NEXT_PUBLIC_AD_SLOT_TOOL_SIDEBAR`
+- `NEXT_PUBLIC_AD_SLOT_GUIDE_HUB_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_GUIDE_HUB_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_MID`
+- `NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_MID`
+- `NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_BOTTOM`
+- `NEXT_PUBLIC_AD_SLOT_STATUS_HUB_CONTENT_TOP`
+- `NEXT_PUBLIC_AD_SLOT_STATUS_HUB_CONTENT_MID`
+- `NEXT_PUBLIC_AD_SLOT_STATUS_RESULT_AFTER`
+- `NEXT_PUBLIC_AD_SLOT_STATUS_CONTENT_MID`
 - `NEXT_PUBLIC_AD_SLOT_FOOTER_TOP`
 
 ## Placements intentionally used
 
 - Homepage:
-  - `homepage_hero_below`
-  - `homepage_mid`
+  - `homepage_content_top`
+  - `homepage_content_bottom`
 - Tools hub:
-  - `tools_hub_intro_below`
-  - `tools_hub_mid`
+  - `tools_hub_content_top`
+  - `tools_hub_content_bottom`
 - Tool pages:
-  - `tools_header_below`
-  - `tools_after_result`
-  - `tools_sidebar`
-- Learn and guide pages:
-  - `guide_intro_below`
-  - `guide_mid`
+  - `tool_content_top`
+  - `tool_result_after`
+  - `tool_sidebar`
+- Learn hub and guide pages:
+  - `guide_hub_content_top`
+  - `guide_hub_content_bottom`
+  - `guide_content_top`
+  - `guide_content_mid`
+  - `guide_content_bottom`
 - Compare hub and compare pages:
-  - `compare_hub_intro_below`
-  - `compare_hub_mid`
-  - `compare_table_below`
+  - `compare_hub_content_top`
+  - `compare_hub_content_bottom`
+  - `compare_content_top`
+  - `compare_content_mid`
+  - `compare_content_bottom`
 - Status surfaces:
-  - `status_hub_intro_below`
-  - `status_hub_mid`
-  - `status_result_below`
-  - `status_mid`
-- Global:
+  - `status_hub_content_top`
+  - `status_hub_content_mid`
+  - `status_result_after`
+  - `status_content_mid`
+- Reserved:
   - `footer_top`
 
 ## Placements intentionally avoided
@@ -101,6 +139,8 @@ Configure slot IDs with these environment variables:
 - Between a core upload CTA and the result area
 - Directly beside primary tool action buttons
 - Above the main status answer on status pages
+- More than 2 ads on the homepage
+- More than 3 ads on guide or comparison pages
 
 ## Production checklist
 

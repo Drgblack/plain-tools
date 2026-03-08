@@ -11,7 +11,7 @@ type AdsensePlaceholderProps = {
 export function AdsensePlaceholder({ className }: AdsensePlaceholderProps) {
   return (
     <div className={cn(className)}>
-      <AdPlaceholder placement="guide_intro_below" />
+      <AdPlaceholder placement="guide_content_top" />
     </div>
   )
 }

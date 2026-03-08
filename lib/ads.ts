@@ -1,3 +1,5 @@
+import { getAdSlotDefinition, type AdSlotType } from "@/lib/ad-slots"
+
 export type AdMode = "manual" | "auto"
 
 export type AdPageType =
@@ -9,31 +11,44 @@ export type AdPageType =
   | "compare"
 
 export type AdPlacement =
-  | "homepage_hero_below"
-  | "homepage_mid"
-  | "tools_hub_intro_below"
-  | "tools_hub_mid"
-  | "tools_header_below"
-  | "tools_after_result"
-  | "tools_sidebar"
-  | "guide_intro_below"
-  | "guide_mid"
-  | "compare_hub_intro_below"
-  | "compare_hub_mid"
-  | "compare_table_below"
-  | "status_hub_intro_below"
-  | "status_hub_mid"
-  | "status_result_below"
-  | "status_mid"
+  | "homepage_content_top"
+  | "homepage_content_bottom"
+  | "tools_hub_content_top"
+  | "tools_hub_content_bottom"
+  | "tool_content_top"
+  | "tool_result_after"
+  | "tool_sidebar"
+  | "guide_hub_content_top"
+  | "guide_hub_content_bottom"
+  | "guide_content_top"
+  | "guide_content_mid"
+  | "guide_content_bottom"
+  | "compare_hub_content_top"
+  | "compare_hub_content_bottom"
+  | "compare_content_top"
+  | "compare_content_mid"
+  | "compare_content_bottom"
+  | "status_hub_content_top"
+  | "status_hub_content_mid"
+  | "status_result_after"
+  | "status_content_mid"
   | "footer_top"
 
 type AdPlacementConfig = {
   label: string
   pageType: AdPageType
-  minHeight: number
+  slotType: AdSlotType
   slotId?: string
   priority?: "eager" | "lazy"
   desktopOnly?: boolean
+}
+
+function readEnv(...keys: string[]) {
+  for (const key of keys) {
+    const value = process.env[key]?.trim()
+    if (value) return value
+  }
+  return undefined
 }
 
 function normalizePublisherId(value: string | undefined) {
@@ -49,25 +64,80 @@ const showPlaceholders =
   (process.env.NEXT_PUBLIC_ADS_SHOW_PLACEHOLDERS ?? "").trim() === "true" ||
   process.env.NODE_ENV !== "production"
 const cmpReady = (process.env.NEXT_PUBLIC_ADS_CMP_READY ?? "").trim() === "true"
+const showAdBlockSupportNotice =
+  (process.env.NEXT_PUBLIC_ADS_SHOW_ADBLOCK_NOTICE ?? "").trim() === "true"
 
 const adSlotIds: Partial<Record<AdPlacement, string>> = {
-  homepage_hero_below: process.env.NEXT_PUBLIC_AD_SLOT_HOMEPAGE_HERO_BELOW?.trim(),
-  homepage_mid: process.env.NEXT_PUBLIC_AD_SLOT_HOMEPAGE_MID?.trim(),
-  tools_hub_intro_below: process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_INTRO_BELOW?.trim(),
-  tools_hub_mid: process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_MID?.trim(),
-  tools_header_below: process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_HEADER_BELOW?.trim(),
-  tools_after_result: process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_AFTER_RESULT?.trim(),
-  tools_sidebar: process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_SIDEBAR?.trim(),
-  guide_intro_below: process.env.NEXT_PUBLIC_AD_SLOT_GUIDE_INTRO_BELOW?.trim(),
-  guide_mid: process.env.NEXT_PUBLIC_AD_SLOT_GUIDE_MID?.trim(),
-  compare_hub_intro_below: process.env.NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_INTRO_BELOW?.trim(),
-  compare_hub_mid: process.env.NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_MID?.trim(),
-  compare_table_below: process.env.NEXT_PUBLIC_AD_SLOT_COMPARE_TABLE_BELOW?.trim(),
-  status_hub_intro_below: process.env.NEXT_PUBLIC_AD_SLOT_STATUS_HUB_INTRO_BELOW?.trim(),
-  status_hub_mid: process.env.NEXT_PUBLIC_AD_SLOT_STATUS_HUB_MID?.trim(),
-  status_result_below: process.env.NEXT_PUBLIC_AD_SLOT_STATUS_RESULT_BELOW?.trim(),
-  status_mid: process.env.NEXT_PUBLIC_AD_SLOT_STATUS_MID?.trim(),
-  footer_top: process.env.NEXT_PUBLIC_AD_SLOT_FOOTER_TOP?.trim(),
+  homepage_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_HOMEPAGE_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_HOMEPAGE_HERO_BELOW"
+  ),
+  homepage_content_bottom: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_HOMEPAGE_CONTENT_BOTTOM",
+    "NEXT_PUBLIC_AD_SLOT_HOMEPAGE_MID"
+  ),
+  tools_hub_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_INTRO_BELOW"
+  ),
+  tools_hub_content_bottom: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_CONTENT_BOTTOM",
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_HUB_MID"
+  ),
+  tool_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_TOOL_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_HEADER_BELOW"
+  ),
+  tool_result_after: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_TOOL_RESULT_AFTER",
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_AFTER_RESULT"
+  ),
+  tool_sidebar: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_TOOL_SIDEBAR",
+    "NEXT_PUBLIC_AD_SLOT_TOOLS_SIDEBAR"
+  ),
+  guide_hub_content_top: readEnv("NEXT_PUBLIC_AD_SLOT_GUIDE_HUB_CONTENT_TOP"),
+  guide_hub_content_bottom: readEnv("NEXT_PUBLIC_AD_SLOT_GUIDE_HUB_CONTENT_BOTTOM"),
+  guide_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_GUIDE_INTRO_BELOW"
+  ),
+  guide_content_mid: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_MID",
+    "NEXT_PUBLIC_AD_SLOT_GUIDE_MID"
+  ),
+  guide_content_bottom: readEnv("NEXT_PUBLIC_AD_SLOT_GUIDE_CONTENT_BOTTOM"),
+  compare_hub_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_INTRO_BELOW"
+  ),
+  compare_hub_content_bottom: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_CONTENT_BOTTOM",
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_HUB_MID"
+  ),
+  compare_content_top: readEnv("NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_TOP"),
+  compare_content_mid: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_MID",
+    "NEXT_PUBLIC_AD_SLOT_COMPARE_TABLE_BELOW"
+  ),
+  compare_content_bottom: readEnv("NEXT_PUBLIC_AD_SLOT_COMPARE_CONTENT_BOTTOM"),
+  status_hub_content_top: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_STATUS_HUB_CONTENT_TOP",
+    "NEXT_PUBLIC_AD_SLOT_STATUS_HUB_INTRO_BELOW"
+  ),
+  status_hub_content_mid: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_STATUS_HUB_CONTENT_MID",
+    "NEXT_PUBLIC_AD_SLOT_STATUS_HUB_MID"
+  ),
+  status_result_after: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_STATUS_RESULT_AFTER",
+    "NEXT_PUBLIC_AD_SLOT_STATUS_RESULT_BELOW"
+  ),
+  status_content_mid: readEnv(
+    "NEXT_PUBLIC_AD_SLOT_STATUS_CONTENT_MID",
+    "NEXT_PUBLIC_AD_SLOT_STATUS_MID"
+  ),
+  footer_top: readEnv("NEXT_PUBLIC_AD_SLOT_FOOTER_TOP"),
 }
 
 export const adsConfig = {
@@ -77,128 +147,164 @@ export const adsConfig = {
   mode: adsMode as AdMode,
   showPlaceholders,
   cmpReady,
+  showAdBlockSupportNotice,
   consentMode: cmpReady ? "cmp-ready" : "non-personalized-until-cmp",
   renderLiveAds: adsEnabled && process.env.NODE_ENV === "production",
 } as const
 
 export const AD_PLACEMENTS: Record<AdPlacement, AdPlacementConfig> = {
-  homepage_hero_below: {
-    label: "Homepage hero below",
+  homepage_content_top: {
+    label: "Homepage content top",
     pageType: "homepage",
-    minHeight: 280,
-    slotId: adSlotIds.homepage_hero_below,
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.homepage_content_top,
     priority: "eager",
   },
-  homepage_mid: {
-    label: "Homepage mid-page",
+  homepage_content_bottom: {
+    label: "Homepage content bottom",
     pageType: "homepage",
-    minHeight: 280,
-    slotId: adSlotIds.homepage_mid,
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.homepage_content_bottom,
     priority: "lazy",
   },
-  tools_hub_intro_below: {
-    label: "Tools hub intro below",
+  tools_hub_content_top: {
+    label: "Tools hub content top",
     pageType: "tools",
-    minHeight: 280,
-    slotId: adSlotIds.tools_hub_intro_below,
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.tools_hub_content_top,
     priority: "eager",
   },
-  tools_hub_mid: {
-    label: "Tools hub lower listing ad",
+  tools_hub_content_bottom: {
+    label: "Tools hub content bottom",
     pageType: "tools",
-    minHeight: 280,
-    slotId: adSlotIds.tools_hub_mid,
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.tools_hub_content_bottom,
     priority: "lazy",
   },
-  tools_header_below: {
-    label: "Tool header below",
+  tool_content_top: {
+    label: "Tool content top",
     pageType: "tools",
-    minHeight: 280,
-    slotId: adSlotIds.tools_header_below,
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.tool_content_top,
     priority: "eager",
   },
-  tools_after_result: {
-    label: "Tool result below",
+  tool_result_after: {
+    label: "Tool result after",
     pageType: "tools",
-    minHeight: 280,
-    slotId: adSlotIds.tools_after_result,
+    slotType: "RESULT_AFTER",
+    slotId: adSlotIds.tool_result_after,
     priority: "lazy",
   },
-  tools_sidebar: {
+  tool_sidebar: {
     label: "Tool sidebar",
     pageType: "tools",
-    minHeight: 600,
-    slotId: adSlotIds.tools_sidebar,
+    slotType: "SIDEBAR",
+    slotId: adSlotIds.tool_sidebar,
     priority: "lazy",
     desktopOnly: true,
   },
-  guide_intro_below: {
-    label: "Guide intro below",
+  guide_hub_content_top: {
+    label: "Guide hub content top",
     pageType: "guide",
-    minHeight: 280,
-    slotId: adSlotIds.guide_intro_below,
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.guide_hub_content_top,
     priority: "eager",
   },
-  guide_mid: {
-    label: "Guide mid-article",
+  guide_hub_content_bottom: {
+    label: "Guide hub content bottom",
     pageType: "guide",
-    minHeight: 280,
-    slotId: adSlotIds.guide_mid,
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.guide_hub_content_bottom,
     priority: "lazy",
   },
-  compare_hub_intro_below: {
-    label: "Compare hub intro below",
-    pageType: "compare",
-    minHeight: 280,
-    slotId: adSlotIds.compare_hub_intro_below,
+  guide_content_top: {
+    label: "Guide content top",
+    pageType: "guide",
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.guide_content_top,
     priority: "eager",
   },
-  compare_hub_mid: {
-    label: "Compare hub mid-page",
-    pageType: "compare",
-    minHeight: 280,
-    slotId: adSlotIds.compare_hub_mid,
+  guide_content_mid: {
+    label: "Guide content mid",
+    pageType: "guide",
+    slotType: "CONTENT_MID",
+    slotId: adSlotIds.guide_content_mid,
     priority: "lazy",
   },
-  compare_table_below: {
-    label: "Compare table below",
-    pageType: "compare",
-    minHeight: 280,
-    slotId: adSlotIds.compare_table_below,
+  guide_content_bottom: {
+    label: "Guide content bottom",
+    pageType: "guide",
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.guide_content_bottom,
     priority: "lazy",
   },
-  status_hub_intro_below: {
-    label: "Status hub intro below",
-    pageType: "status",
-    minHeight: 280,
-    slotId: adSlotIds.status_hub_intro_below,
+  compare_hub_content_top: {
+    label: "Compare hub content top",
+    pageType: "compare",
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.compare_hub_content_top,
     priority: "eager",
   },
-  status_hub_mid: {
-    label: "Status hub mid-page",
-    pageType: "status",
-    minHeight: 280,
-    slotId: adSlotIds.status_hub_mid,
+  compare_hub_content_bottom: {
+    label: "Compare hub content bottom",
+    pageType: "compare",
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.compare_hub_content_bottom,
     priority: "lazy",
   },
-  status_result_below: {
-    label: "Status result below",
-    pageType: "status",
-    minHeight: 280,
-    slotId: adSlotIds.status_result_below,
+  compare_content_top: {
+    label: "Compare content top",
+    pageType: "compare",
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.compare_content_top,
+    priority: "eager",
+  },
+  compare_content_mid: {
+    label: "Compare content mid",
+    pageType: "compare",
+    slotType: "CONTENT_MID",
+    slotId: adSlotIds.compare_content_mid,
     priority: "lazy",
   },
-  status_mid: {
-    label: "Status mid-page",
+  compare_content_bottom: {
+    label: "Compare content bottom",
+    pageType: "compare",
+    slotType: "CONTENT_BOTTOM",
+    slotId: adSlotIds.compare_content_bottom,
+    priority: "lazy",
+  },
+  status_hub_content_top: {
+    label: "Status hub content top",
     pageType: "status",
-    minHeight: 280,
-    slotId: adSlotIds.status_mid,
+    slotType: "CONTENT_TOP",
+    slotId: adSlotIds.status_hub_content_top,
+    priority: "eager",
+  },
+  status_hub_content_mid: {
+    label: "Status hub content mid",
+    pageType: "status",
+    slotType: "CONTENT_MID",
+    slotId: adSlotIds.status_hub_content_mid,
+    priority: "lazy",
+  },
+  status_result_after: {
+    label: "Status result after",
+    pageType: "status",
+    slotType: "RESULT_AFTER",
+    slotId: adSlotIds.status_result_after,
+    priority: "lazy",
+  },
+  status_content_mid: {
+    label: "Status content mid",
+    pageType: "status",
+    slotType: "CONTENT_MID",
+    slotId: adSlotIds.status_content_mid,
     priority: "lazy",
   },
   footer_top: {
     label: "Footer top",
     pageType: "global",
-    minHeight: 250,
+    slotType: "FOOTER_TOP",
     slotId: adSlotIds.footer_top,
     priority: "lazy",
   },
@@ -206,6 +312,10 @@ export const AD_PLACEMENTS: Record<AdPlacement, AdPlacementConfig> = {
 
 export function getAdPlacementConfig(placement: AdPlacement) {
   return AD_PLACEMENTS[placement]
+}
+
+export function getAdSlotConfigForPlacement(placement: AdPlacement) {
+  return getAdSlotDefinition(AD_PLACEMENTS[placement].slotType)
 }
 
 export function hasConfiguredManualAdSlot(placement: AdPlacement) {

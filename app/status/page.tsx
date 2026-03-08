@@ -97,7 +97,7 @@ export default function StatusDirectoryPage() {
         </div>
       </section>
 
-      <AdLayout placement="status_hub_intro_below" />
+      <AdLayout placement="status_hub_content_top" />
 
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl">
@@ -194,7 +194,7 @@ export default function StatusDirectoryPage() {
         </div>
       </section>
 
-      <AdLayout placement="status_hub_mid" />
+      <AdLayout placement="status_hub_content_mid" />
 
       <section className="px-4 py-10">
         <div className="mx-auto max-w-6xl">

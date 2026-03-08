@@ -222,7 +222,7 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
             </table>
           </div>
 
-          <AdSlot placement="compare_table_below" />
+          <AdSlot placement="compare_content_mid" />
 
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card/45 p-3">
@@ -258,8 +258,8 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
           </div>
         </section>
       }
-      introAdPlacement="guide_intro_below"
-      midAdPlacement="guide_mid"
+      introAdPlacement="compare_content_top"
+      bottomAdPlacement="compare_content_bottom"
       faq={<FaqBlock faqs={page.faqs} />}
       relatedLinks={
         <RelatedLinks
