@@ -4,7 +4,7 @@ import { useState, useMemo } from "react"
 import Link from "next/link"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
-import { AdsensePlaceholder } from "@/components/ads/adsense-placeholder"
+import { AdLayout } from "@/components/ads/ad-layout"
 import { TiltCard } from "@/components/ui/tilt-card"
 import { FocusedSearch } from "@/components/ui/focused-search"
 import { SummaryBox, KeyTerm } from "@/components/seo"
@@ -249,7 +249,7 @@ export default function LearnPage() {
 
         <div className="px-4 py-6 md:py-8">
           <div className="mx-auto max-w-6xl">
-            <AdsensePlaceholder slot="1100000001" />
+            <AdLayout placement="guide_intro_below" className="px-0 py-0" />
           </div>
         </div>
 
@@ -342,6 +342,8 @@ export default function LearnPage() {
             )}
           </div>
         </div>
+
+        <AdLayout placement="guide_mid" />
 
 <section className="border-t border-border px-4 py-12">
   <div className="mx-auto max-w-6xl space-y-5">

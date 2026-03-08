@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 
+import { AdSlot } from "@/components/ads/ad-slot"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
@@ -252,117 +253,139 @@ export default async function ToolPage({ params }: PageProps) {
 
           {tool.available ? (
             <>
-              <section className="mb-8 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
-                  Privacy and trust
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">
-                  {tool.category !== "AI Assistant"
-                    ? "Processed locally in your browser. Files never leave your device."
-                    : "Text is extracted locally first. AI response requires explicit opt-in."}
-                </p>
-                <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs text-muted-foreground">
-                  {profile.trustPoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
-              </section>
+              <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
+                <div>
+                  <section className="mb-8 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
+                      Privacy and trust
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-foreground">
+                      {tool.category !== "AI Assistant"
+                        ? "Processed locally in your browser. Files never leave your device."
+                        : "Text is extracted locally first. AI response requires explicit opt-in."}
+                    </p>
+                    <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs text-muted-foreground">
+                      {profile.trustPoints.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                    <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
+                  </section>
 
-              <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
+                  <AdSlot placement="tools_header_below" className="mb-8" />
 
-              <ToolSeoContent
-                toolName={tool.name}
-                description={buildToolSeoDescription(tool, profile)}
-                steps={buildToolHowToSteps(tool)}
-                faq={profile.faqs}
-                relatedTools={seoLinks?.relatedTools ?? []}
-              />
+                  <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
 
-              <section className="mb-3">
-                <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Upload your file, choose options, and download the processed output in the result area.
-                </p>
-              </section>
+                  <ToolSeoContent
+                    toolName={tool.name}
+                    description={buildToolSeoDescription(tool, profile)}
+                    steps={buildToolHowToSteps(tool)}
+                    faq={profile.faqs}
+                    relatedTools={seoLinks?.relatedTools ?? []}
+                  />
 
-              <Suspense
-                fallback={
-                  <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
-                    Loading tool workspace...
-                  </div>
-                }
-              >
-                <ErrorBoundary context={`tool:${tool.slug}`}>
-                  <ToolComponent />
-                </ErrorBoundary>
-              </Suspense>
+                  <section className="mb-3">
+                    <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Upload your file, choose options, and download the processed output in the result area.
+                    </p>
+                  </section>
 
-              <section className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
-                This tool is completely free. Enjoy unlimited basic use - no account needed.
-              </section>
-
-              <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
-                <p className="font-medium text-foreground">Result experience</p>
-                <p className="mt-1 text-muted-foreground">
-                  When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.
-                </p>
-              </section>
-
-              <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
-                <p className="font-medium text-foreground">Known limitations</p>
-                <p className="mt-1 text-muted-foreground">
-                  {profile.limitation} For complex files, run a quick output check before sharing or archiving.
-                </p>
-              </section>
-
-              {profile.faqs.length > 0 ? (
-                <ToolFaqBlock faqs={profile.faqs} className="mt-6" />
-              ) : null}
-
-              {INTENT_TOOL_SLUGS.has(tool.slug) ? (
-                <ToolIntentLinks
-                  toolKey={tool.slug as
-                    | "compress-pdf"
-                    | "merge-pdf"
-                    | "pdf-to-word"
-                    | "word-to-pdf"
-                    | "split-pdf"
-                    | "pdf-to-jpg"
-                    | "jpg-to-pdf"
-                    | "watermark-pdf"
-                    | "sign-pdf"
-                    | "protect-pdf"
-                    | "unlock-pdf"
-                    | "fill-pdf"
-                    | "reorder-pdf"
-                    | "annotate-pdf"
-                    | "compare-pdf"
-                    | "ocr-pdf"
-                    | "offline-ocr"
-                    | "pdf-to-excel"
-                    | "pdf-to-ppt"
-                    | "html-to-pdf"
-                    | "pdf-to-html"
-                    | "pdf-to-markdown"
-                    | "text-to-pdf"}
-                  className="mt-6"
-                />
-              ) : null}
-
-              {seo ? (
-                <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
-                  Learn more about this workflow:{" "}
-                  <a
-                    href={seo.learnHref}
-                    className="font-medium text-accent hover:underline"
+                  <Suspense
+                    fallback={
+                      <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                        Loading tool workspace...
+                      </div>
+                    }
                   >
-                    {seo.learnLabel}
-                  </a>
-                </div>
-              ) : null}
+                    <ErrorBoundary context={`tool:${tool.slug}`}>
+                      <ToolComponent />
+                    </ErrorBoundary>
+                  </Suspense>
 
-              <ToolRelatedLinks toolSlug={tool.slug} className="mt-6" />
+                  <section className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
+                    This tool is completely free. Enjoy unlimited basic use - no account needed.
+                  </section>
+
+                  <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
+                    <p className="font-medium text-foreground">Result experience</p>
+                    <p className="mt-1 text-muted-foreground">
+                      When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.
+                    </p>
+                  </section>
+
+                  <AdSlot placement="tools_after_result" className="mt-6" />
+
+                  <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
+                    <p className="font-medium text-foreground">Known limitations</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {profile.limitation} For complex files, run a quick output check before sharing or archiving.
+                    </p>
+                  </section>
+
+                  {profile.faqs.length > 0 ? (
+                    <ToolFaqBlock faqs={profile.faqs} className="mt-6" />
+                  ) : null}
+
+                  {INTENT_TOOL_SLUGS.has(tool.slug) ? (
+                    <ToolIntentLinks
+                      toolKey={tool.slug as
+                        | "compress-pdf"
+                        | "merge-pdf"
+                        | "pdf-to-word"
+                        | "word-to-pdf"
+                        | "split-pdf"
+                        | "pdf-to-jpg"
+                        | "jpg-to-pdf"
+                        | "watermark-pdf"
+                        | "sign-pdf"
+                        | "protect-pdf"
+                        | "unlock-pdf"
+                        | "fill-pdf"
+                        | "reorder-pdf"
+                        | "annotate-pdf"
+                        | "compare-pdf"
+                        | "ocr-pdf"
+                        | "offline-ocr"
+                        | "pdf-to-excel"
+                        | "pdf-to-ppt"
+                        | "html-to-pdf"
+                        | "pdf-to-html"
+                        | "pdf-to-markdown"
+                        | "text-to-pdf"}
+                      className="mt-6"
+                    />
+                  ) : null}
+
+                  {seo ? (
+                    <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                      Learn more about this workflow:{" "}
+                      <a
+                        href={seo.learnHref}
+                        className="font-medium text-accent hover:underline"
+                      >
+                        {seo.learnLabel}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  <ToolRelatedLinks toolSlug={tool.slug} className="mt-6" />
+                </div>
+
+                <aside className="hidden xl:block xl:sticky xl:top-24">
+                  <AdSlot placement="tools_sidebar" />
+                  <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                    <p className="font-medium text-foreground">Before you share the output</p>
+                    <p className="mt-2">
+                      Check the result, confirm formatting, and use{" "}
+                      <a href="/verify-claims" className="font-medium text-accent hover:underline">
+                        verify claims
+                      </a>{" "}
+                      if you need a repeatable privacy check for local processing.
+                    </p>
+                  </div>
+                </aside>
+              </div>
             </>
           ) : (
             <div className="rounded-xl border border-border bg-card p-6">

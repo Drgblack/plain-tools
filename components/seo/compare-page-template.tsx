@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ShieldCheck, Gauge, Users } from "lucide-react"
 
+import { AdSlot } from "@/components/ads/ad-slot"
 import { ArticleLayout } from "@/components/seo/article-layout"
 import { CompareFrameworkBlock } from "@/components/seo/compare-framework-block"
 import { FaqBlock } from "@/components/seo/faq-block"
@@ -221,6 +222,8 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
             </table>
           </div>
 
+          <AdSlot placement="compare_table_below" />
+
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card/45 p-3">
               <ShieldCheck className="h-4 w-4 text-accent" />
@@ -255,6 +258,8 @@ export function ComparePageTemplate({ page }: ComparePageTemplateProps) {
           </div>
         </section>
       }
+      introAdPlacement="guide_intro_below"
+      midAdPlacement="guide_mid"
       faq={<FaqBlock faqs={page.faqs} />}
       relatedLinks={
         <RelatedLinks

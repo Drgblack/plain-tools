@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Gauge, HardDrive, Lock, Radio, SearchCheck, Server, Shield, Wifi, Globe } from "lucide-react"
+import { AdLayout } from "@/components/ads/ad-layout"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ToolsSection } from "@/components/tools-section"
 import { ProofStrip } from "@/components/proof-strip"
@@ -372,6 +373,8 @@ export default function ToolsPage() {
           </div>
         </section>
 
+        <AdLayout placement="tools_hub_intro_below" />
+
         <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Cluster entry points</h2>
@@ -502,6 +505,8 @@ export default function ToolsPage() {
             </ul>
           </div>
         </section>
+
+        <AdLayout placement="tools_hub_mid" />
 
         <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">

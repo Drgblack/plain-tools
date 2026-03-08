@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
+import { AdLayout } from "@/components/ads/ad-layout"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
@@ -96,6 +97,8 @@ export default function StatusDirectoryPage() {
         </div>
       </section>
 
+      <AdLayout placement="status_hub_intro_below" />
+
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl">
           <TrendingStatus title="Trending checks today" limit={10} />
@@ -190,6 +193,8 @@ export default function StatusDirectoryPage() {
           </div>
         </div>
       </section>
+
+      <AdLayout placement="status_hub_mid" />
 
       <section className="px-4 py-10">
         <div className="mx-auto max-w-6xl">

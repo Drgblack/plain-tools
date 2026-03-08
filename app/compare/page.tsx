@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight, Gauge, ShieldCheck, Users } from "lucide-react"
-import { AdsensePlaceholder } from "@/components/ads/adsense-placeholder"
+import { AdLayout } from "@/components/ads/ad-layout"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import { buildPageMetadata } from "@/lib/page-metadata"
@@ -184,7 +184,7 @@ export default function ComparePage() {
             </div>
           </section>
 
-          <AdsensePlaceholder slot="1100000002" />
+          <AdLayout placement="compare_hub_intro_below" className="px-0 py-0" innerClassName="max-w-none" />
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold tracking-tight text-foreground">Comparison framework</h2>
@@ -247,6 +247,8 @@ export default function ComparePage() {
               </table>
             </div>
           </section>
+
+          <AdLayout placement="compare_hub_mid" className="px-0 py-0" innerClassName="max-w-none" />
 
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {comparisonLinks.map((item) => (

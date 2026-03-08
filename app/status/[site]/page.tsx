@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from "next/link"
 import { permanentRedirect } from "next/navigation"
 import { Globe, Server, Radio, ChevronRight } from "lucide-react"
+import { AdSlot } from "@/components/ads/ad-slot"
 import { InvalidParam } from '@/components/invalid-param'
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
@@ -327,6 +328,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               <StatusDynamicClient site={normalizedSite} siteName={siteLabel} />
             </Surface>
 
+            <AdSlot placement="status_result_below" />
+
             <StatusHistory domain={normalizedSite} />
 
             <section>
@@ -361,6 +364,8 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 ))}
               </ol>
             </section>
+
+            <AdSlot placement="status_mid" />
 
             <section>
               <h2 className="mb-4 text-xl font-semibold text-foreground">Frequently Asked Questions</h2>

@@ -15,6 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
+import { AdLayout } from "@/components/ads/ad-layout"
 import { CategoryTile } from "@/components/category-tile"
 import { ProofStrip } from "@/components/proof-strip"
 import { TrendingStatus } from "@/components/trending-status"
@@ -579,6 +580,8 @@ export default function HomePage() {
           </div>
         </section>
 
+        <AdLayout placement="homepage_hero_below" />
+
         <section className="border-b border-border/50">
           <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
             <div className="mb-6">
@@ -697,6 +700,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <AdLayout placement="homepage_mid" />
 
         <section className="border-b border-border/50 px-4 py-8">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 rounded-xl border border-border bg-card/35 p-5 sm:flex-row sm:items-center sm:justify-between">

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { AdsenseScript } from '@/components/ads/adsense-script'
 import { AppShellChrome } from '@/components/app-shell-chrome'
 import { JsonLd } from '@/components/seo/json-ld'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
@@ -110,6 +111,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
         <script defer data-domain="plain.tools" src="https://plausible.io/js/script.js" />
+        <AdsenseScript />
         {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

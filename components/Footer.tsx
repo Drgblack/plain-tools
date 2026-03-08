@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 
+import { AdSlot } from "@/components/ads/ad-slot"
+
 type FooterLink = {
   label: string
   href: string
@@ -75,6 +77,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border/60 bg-background/95">
       <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
+        <AdSlot placement="footer_top" className="mb-10 md:mb-12" />
         <div className="mb-10 md:mb-12">
           <Link href="/" className="text-lg font-semibold tracking-tight text-foreground">
             Plain Tools
