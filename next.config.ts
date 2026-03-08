@@ -8,7 +8,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://translate.googleapis.com https://www.gstatic.com https://*.clerk.accounts.dev https://*.clerk.com",
-  "connect-src 'self' https://api.anthropic.com https://translate.googleapis.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://plausible.io https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com",
+  "connect-src 'self' https: wss: https://api.anthropic.com https://translate.googleapis.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://plausible.io https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.clerk.accounts.dev https://*.clerk.com https://api.stripe.com",
   "worker-src 'self' blob:",
   "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://js.stripe.com https://hooks.stripe.com",
   "object-src 'none'",

@@ -26,7 +26,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Utility tools directory",
   description:
-    "Browse utility clusters on Plain Tools: PDF workflows, status checks, network diagnostics, guides, and comparisons. Core local workflows avoid uploads.",
+    "Browse 43+ local PDF tools, converters, and utilities on Plain Tools. Private browser processing, no uploads, no tracking, and verifiable behaviour.",
   path: "/tools",
   image: "/og/tools.png",
 })
@@ -101,29 +101,29 @@ export default function ToolsPage() {
   const networkDiagnostics = [
     {
       label: "Site Status Checker",
-      description: "Check if a domain is currently up or down with live response timing.",
-      href: "/site-status",
+      description: "Run a direct browser HEAD check and review status code plus response timing.",
+      href: "/tools/site-status-checker",
       icon: Wifi,
       group: "Status",
     },
     {
       label: "DNS Lookup",
-      description: "Inspect A, AAAA, MX, TXT, NS, and CNAME records for any domain.",
-      href: "/dns-lookup",
+      description: "Inspect A, AAAA, and MX records through Cloudflare DNS-over-HTTPS.",
+      href: "/tools/dns-lookup",
       icon: Server,
       group: "DNS",
     },
     {
       label: "What is My IP",
-      description: "View your current public IP and basic routing context.",
-      href: "/what-is-my-ip",
+      description: "View your current public IP and browser-reported connection context.",
+      href: "/tools/what-is-my-ip",
       icon: Globe,
       group: "IP",
     },
     {
       label: "Ping Test",
-      description: "Measure endpoint latency to troubleshoot reachability and speed.",
-      href: "/ping-test",
+      description: "Measure WebSocket connect and echo timing through public echo endpoints.",
+      href: "/tools/ping-test",
       icon: Radio,
       group: "Latency",
     },
@@ -242,8 +242,8 @@ export default function ToolsPage() {
       description: "DNS, IP, and latency checks for troubleshooting.",
       href: "/network-tools",
       links: [
-        { label: "DNS lookup", href: "/dns-lookup" },
-        { label: "Ping test", href: "/ping-test" },
+        { label: "DNS lookup", href: "/tools/dns-lookup" },
+        { label: "Ping test", href: "/tools/ping-test" },
       ],
     },
     {

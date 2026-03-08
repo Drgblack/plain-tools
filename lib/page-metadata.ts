@@ -22,7 +22,7 @@ function normalisePageTitle(rawTitle: string): string {
   return buildStandardPageTitle(cleaned)
 }
 
-function normaliseDescription(rawDescription: string): string {
+export function buildMetaDescription(rawDescription: string): string {
   const cleaned = rawDescription.replace(/\s+/g, " ").trim()
   const resolved = cleaned.length > 0 ? cleaned : DEFAULT_PAGE_DESCRIPTION
   if (resolved.length <= MAX_DESCRIPTION_LENGTH) {
@@ -51,7 +51,7 @@ export function buildPageMetadata({
 }: PageMetadataInput): Metadata {
   const canonical = buildCanonicalUrl(path)
   const resolvedTitle = normalisePageTitle(title)
-  const resolvedDescription = normaliseDescription(description)
+  const resolvedDescription = buildMetaDescription(description)
 
   return {
     title: resolvedTitle,

@@ -4,12 +4,12 @@ import Link from "next/link"
 import { JsonLd } from "@/components/seo/json-ld"
 import { VerifyClaimsContent } from "@/components/verify-claims-content"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import { verifyClaimsSchema } from "@/lib/verify-claims-schema"
+import { verifyClaimsFaqs, verifyClaimsSchema } from "@/lib/verify-claims-schema"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Verify claims",
   description:
-    "Verify Plain Tools no-upload claims with practical DevTools checks. Confirm local processing behaviour, inspect network requests, and validate results step by step.",
+    "Verify Plain Tools claims with DevTools checks, network inspection, and repeatable local-processing tests. Confirm what runs locally before you trust it.",
   path: "/verify-claims",
   image: "/og/default.png",
 })
@@ -55,10 +55,20 @@ export default function VerifyClaimsPage() {
                   <li>Confirm no request payload contains your PDF content.</li>
                 </ol>
               </article>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Want deeper technical context? See{" "}
-              <Link href="/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" className="font-medium text-accent hover:underline">
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {verifyClaimsFaqs.slice(0, 4).map((faq) => (
+              <article key={faq.question} className="rounded-xl border border-border/70 bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {faq.answer}
+                </p>
+              </article>
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Want deeper technical context? See{" "}
+            <Link href="/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" className="font-medium text-accent hover:underline">
                 verification guidance
               </Link>{" "}
               or inspect the public repository on{" "}

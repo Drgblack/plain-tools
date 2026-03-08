@@ -43,7 +43,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Utility platform for PDF, status and network tools",
   description:
-    "Explore Plain Tools as a utility platform for PDF workflows, uptime checks, network diagnostics, guides, and comparisons. Core local workflows avoid uploads.",
+    "43+ offline PDF tools, network diagnostics, converters and utilities - 100% local processing, no uploads, no tracking, with privacy by design.",
   path: "/",
   image: "/og/default.png",
 })

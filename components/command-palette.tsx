@@ -46,10 +46,10 @@ const commands: CommandItem[] = [
   { id: "pdf-tools", name: "PDF Tools", description: "Compress, merge, split PDFs", href: "/pdf-tools", icon: <FileType className="h-4 w-4" />, category: "Navigation" },
   
   // Network Tools
-  { id: "what-is-my-ip", name: "What is My IP", description: "See your public IP address", href: "/what-is-my-ip", icon: <Network className="h-4 w-4" />, category: "Network Tools" },
-  { id: "dns-lookup", name: "DNS Lookup", description: "Query DNS records for any domain", href: "/dns-lookup", icon: <Globe className="h-4 w-4" />, category: "Network Tools" },
-  { id: "site-status", name: "Site Status", description: "Check if a website is up", href: "/site-status", icon: <CheckCircle className="h-4 w-4" />, category: "Network Tools" },
-  { id: "ping-test", name: "Ping Test", description: "Test latency to any host", href: "/ping-test", icon: <Wifi className="h-4 w-4" />, category: "Network Tools" },
+  { id: "what-is-my-ip", name: "What is My IP", description: "See your public IP address", href: "/tools/what-is-my-ip", icon: <Network className="h-4 w-4" />, category: "Network Tools" },
+  { id: "dns-lookup", name: "DNS Lookup", description: "Query DNS records for any domain", href: "/tools/dns-lookup", icon: <Globe className="h-4 w-4" />, category: "Network Tools" },
+  { id: "site-status", name: "Site Status", description: "Check if a website is up", href: "/tools/site-status-checker", icon: <CheckCircle className="h-4 w-4" />, category: "Network Tools" },
+  { id: "ping-test", name: "Ping Test", description: "Test latency to any host", href: "/tools/ping-test", icon: <Wifi className="h-4 w-4" />, category: "Network Tools" },
   
   // PDF Tools
   { id: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDFs into one file", href: "/tools/merge-pdf", icon: <FileText className="h-4 w-4" />, category: "PDF Tools" },

@@ -9,43 +9,49 @@ import {
 
 export const verifyClaimsFaqs = [
   {
-    question: "How do I verify files are not uploaded?",
+    question: "How do I verify no upload?",
     answer:
-      "Open your browser DevTools, switch to the Network tab, run a PDF workflow, and confirm no request contains your file bytes.",
+      "Open DevTools, switch to the Network tab, run a local PDF workflow, and inspect Fetch and XHR requests to confirm no file bytes are being sent.",
   },
   {
-    question: "Does Plain upload my PDFs?",
+    question: "What should I look for in the Network tab?",
     answer:
-      "No. Core local PDF tools process files directly in your browser. File bytes are not uploaded for those workflows.",
+      "Look for outgoing requests, request payloads, and multipart form uploads while the tool runs. Local workflows should not send your PDF content to a remote endpoint.",
   },
   {
-    question: "Can I inspect this myself?",
+    question: "Does Plain Tools upload my PDFs?",
     answer:
-      "Yes. Filter DevTools requests by Fetch and XHR while running a tool and inspect payloads for file-content transfer.",
+      "No for core local PDF tools. Those workflows process files directly in your browser without uploading document bytes to a Plain Tools server.",
   },
   {
-    question: "Does this page guarantee absolute security?",
+    question: "Can I inspect the implementation on GitHub?",
     answer:
-      "No. It provides practical verification steps so you can validate behaviour yourself in your own browser environment.",
+      "Yes. The public repository shows how the product is built, and you can compare that code with what you observe in your own browser during a live test.",
+  },
+  {
+    question: "Are AI features included in the no-upload claim?",
+    answer:
+      "No. AI features are opt-in and may send extracted text for processing. The no-upload verification on this page applies to the core local workflows.",
   },
 ] as const
 
 export const verifyClaimsSchema = combineJsonLd([
   buildWebPageSchema({
-    name: "We Dare You to Catch Us Uploading Your Files",
+    name: "Verify Plain Tools no-upload claims",
     description:
-      "Interactive proof page showing how to verify Plain Tools no-upload claims in browser DevTools.",
+      "Verification page showing how to inspect Plain Tools network behaviour, confirm no-upload workflows, and validate claims in DevTools.",
     url: "https://plain.tools/verify-claims",
   }),
   buildSoftwareApplicationSchema({
     name: "Plain Tools",
     description:
-      "Privacy-first browser utility platform for local PDF workflows, file processing, and diagnostics with verifiable no-upload behaviour.",
+      "Privacy-first browser utility platform for local PDF workflows, file tasks, and diagnostics with a free tier and verifiable no-upload behaviour.",
     url: "https://plain.tools",
     featureList: [
       "Core PDF workflows run locally in your browser",
       "No upload step for core local PDF processing",
       "Verification guidance using browser network inspection",
+      "Free access to core browser-based utilities",
     ],
     sameAs: ["https://github.com/Drgblack/plain-tools"],
   }),
@@ -65,4 +71,3 @@ export const verifyClaimsSchema = combineJsonLd([
   ),
   buildFaqPageSchema(verifyClaimsFaqs),
 ])
-

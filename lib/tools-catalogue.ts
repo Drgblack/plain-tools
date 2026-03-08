@@ -11,6 +11,7 @@ export type ToolCategory =
   | "Edit"
   | "File Tools"
   | "Utility"
+  | "Network Tools"
   | "Security & Privacy"
   | "Performance & Edit"
   | "AI Assistant"
@@ -51,6 +52,50 @@ const requireSingleFile = (files: File[], toolName: string) => {
 }
 
 export const TOOL_CATALOGUE: ToolDefinition[] = [
+  {
+    id: "what-is-my-ip",
+    name: "What Is My IP",
+    slug: "what-is-my-ip",
+    category: "Network Tools",
+    description:
+      "Check the public IP your browser exposes and review connection hints without a Plain Tools proxy.",
+    badge: "Client-side",
+    icon: "Globe",
+    available: true,
+  },
+  {
+    id: "dns-lookup",
+    name: "DNS Lookup",
+    slug: "dns-lookup",
+    category: "Network Tools",
+    description:
+      "Query A, AAAA, and MX records through Cloudflare DNS-over-HTTPS directly from your browser.",
+    badge: "DoH",
+    icon: "Server",
+    available: true,
+  },
+  {
+    id: "site-status-checker",
+    name: "Site Status Checker",
+    slug: "site-status-checker",
+    category: "Network Tools",
+    description:
+      "Run a direct browser HEAD request to inspect status code and response timing for a URL.",
+    badge: "HEAD",
+    icon: "Wifi",
+    available: true,
+  },
+  {
+    id: "ping-test",
+    name: "Ping Test",
+    slug: "ping-test",
+    category: "Network Tools",
+    description:
+      "Measure browser-side WebSocket connect time and echo latency with public endpoints.",
+    badge: "WebSocket",
+    icon: "Radio",
+    available: true,
+  },
   {
     id: "merge-pdf",
     name: "Merge PDFs",

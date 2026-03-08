@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Network tools",
   description:
-    "Run practical network diagnostics for IP lookup, DNS records, uptime checks, and latency testing. Fast browser workflows with clear results on Plain Tools.",
+    "Browser-run network diagnostics for IP, DNS, site status, and latency. Requests go directly to the target endpoint or public API you choose.",
   path: "/network-tools",
   image: "/og/default.png",
 })
@@ -25,30 +25,30 @@ export const metadata: Metadata = buildPageMetadata({
 const networkTools = [
   {
     name: "What is My IP",
-    description: "View your public IP and basic browser-reported connection context instantly.",
-    href: "/what-is-my-ip",
-    tags: ["IP", "Diagnostics"],
+    description: "View your public IP and browser-reported connection context with a direct public endpoint request.",
+    href: "/tools/what-is-my-ip",
+    tags: ["IP", "Client-side"],
     icon: <Globe className="h-4 w-4" />,
   },
   {
     name: "DNS Lookup",
-    description: "Query A, AAAA, MX, TXT, NS, and CNAME records for a domain in seconds.",
-    href: "/dns-lookup",
-    tags: ["DNS", "Records"],
+    description: "Query Cloudflare DNS-over-HTTPS for A, AAAA, and MX records without a Plain Tools proxy.",
+    href: "/tools/dns-lookup",
+    tags: ["DNS", "DoH"],
     icon: <Server className="h-4 w-4" />,
   },
   {
     name: "Site Status Checker",
-    description: "Check if a website is up or down with response code, response time, and retry checks.",
-    href: "/site-status",
-    tags: ["Status", "Uptime"],
+    description: "Run a direct browser HEAD check and review status code plus response timing.",
+    href: "/tools/site-status-checker",
+    tags: ["Status", "HEAD"],
     icon: <Wifi className="h-4 w-4" />,
   },
   {
     name: "Ping Test / Latency",
-    description: "Measure endpoint latency to troubleshoot connectivity and performance issues quickly.",
-    href: "/ping-test",
-    tags: ["Latency", "RTT"],
+    description: "Measure WebSocket connect and echo timing through public echo endpoints from your browser.",
+    href: "/tools/ping-test",
+    tags: ["Latency", "WebSocket"],
     icon: <Radio className="h-4 w-4" />,
   },
 ]
@@ -93,12 +93,15 @@ export default function NetworkToolsPage() {
               Network Tools
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Client-side network diagnostics - no data sent to servers. Use this hub to check
-              public IP, inspect DNS records, test website availability, and measure latency.
+              Use this hub to reach the network checks that sit alongside the PDF catalogue:
+              public IP lookup, DNS-over-HTTPS inspection, browser-side status checks, and
+              WebSocket latency measurement. These tools do not upload documents or require an
+              account, but they do contact the target endpoint or public API needed for the check.
             </p>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              These tools are built for practical troubleshooting: confirm if a site is down,
-              inspect domain records, and gather fast network context without signing in.
+              Start here when you need quick diagnostics before escalating: verify resolver output,
+              confirm what public IP is exposed, test whether a URL answers a HEAD request, or
+              compare WebSocket latency across public echo endpoints.
             </p>
           </div>
         </section>
@@ -131,13 +134,39 @@ export default function NetworkToolsPage() {
               </li>
               <li className="rounded-lg border border-border bg-card/40 p-4">
                 <span className="block font-medium text-foreground">2. Enter your domain or host</span>
-                Use a clean hostname like <code>example.com</code> for clearer and more stable results.
+                Use a clean hostname like <code>example.com</code>, a full URL for HEAD checks, or a WebSocket endpoint for latency tests.
               </li>
               <li className="rounded-lg border border-border bg-card/40 p-4">
                 <span className="block font-medium text-foreground">3. Verify and retry</span>
                 Run checks again to confirm transient failures and compare against a known healthy site.
               </li>
             </ol>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Privacy model for network checks</h2>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">No document uploads</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  These are network diagnostics, not file tools. Nothing here uploads PDFs or local files.
+                </p>
+              </article>
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Direct endpoint requests</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Checks run from your browser against the public IP, DNS, HTTP, or WebSocket endpoint required for the result.
+                </p>
+              </article>
+              <article className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Honest limitations</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Browser CORS rules and endpoint policies can block some checks. When that happens, the tool reports the limitation instead of inventing a result.
+                </p>
+              </article>
+            </div>
           </div>
         </section>
 
@@ -153,6 +182,9 @@ export default function NetworkToolsPage() {
               </Link>
               <Link href="/status/discord.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Check whether discord.com is down
+              </Link>
+              <Link href="/tools/site-status-checker" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Open browser HEAD checker
               </Link>
               <Link href="/tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Browse PDF and file tools

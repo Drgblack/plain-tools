@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/seo/json-ld'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
 import { buildSiteVerificationMetadata } from "@/lib/seo-monitoring"
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
+import { buildPageMetadata } from '@/lib/page-metadata'
 import './globals.css'
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
@@ -36,11 +37,16 @@ const rootSchema = combineJsonLd([
   }),
 ])
 const siteVerificationMetadata = buildSiteVerificationMetadata()
-
-export const metadata: Metadata = {
+const baseMetadata = buildPageMetadata({
   title: "Plain Tools - Local utility hub for PDF, file and network workflows",
   description:
-    "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
+    "Browse Plain Tools for offline PDF workflows, network diagnostics, converters and utility pages. Local processing, no uploads, no tracking by design.",
+  path: "/",
+  image: "/og/default.png",
+})
+
+export const metadata: Metadata = {
+  ...baseMetadata,
   generator: "Plain Tools",
   keywords: [
     "offline PDF tools",
@@ -54,30 +60,6 @@ export const metadata: Metadata = {
   creator: "Plain Tools",
   metadataBase: new URL("https://plain.tools"),
   verification: siteVerificationMetadata,
-  openGraph: {
-    type: "website",
-    locale: "en_GB",
-    url: "https://plain.tools",
-    siteName: "Plain Tools",
-    title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
-    description:
-      "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
-    images: [
-      {
-        url: "/og/default.png",
-        width: 1200,
-        height: 630,
-        alt: "Plain Tools",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Plain Tools - Local Utility Hub for PDF, File and Network Workflows",
-    description:
-      "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking.",
-    images: ["/og/default.png"],
-  },
   robots: {
     index: true,
     follow: true,
@@ -130,8 +112,7 @@ export default function RootLayout({
         <script defer data-domain="plain.tools" src="https://plausible.io/js/script.js" />
         {rootSchema ? <JsonLd id="global-website-schema" schema={rootSchema} /> : null}
         <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>

@@ -10,7 +10,7 @@ import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
 import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
 import { ToolSeoContent } from "@/components/tool-seo-content"
-import { buildPageMetadata } from "@/lib/page-metadata"
+import { buildMetaDescription, buildPageMetadata } from "@/lib/page-metadata"
 import { getToolSeoLinks } from "@/lib/seo/tranche1-link-map"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
@@ -114,22 +114,29 @@ function buildToolLeadParagraph(description: string, category: string) {
   return `${description} Files never leave your device.`
 }
 
-function buildToolMetaDescription(toolName: string, description: string) {
+const TOOL_META_INTROS: Record<string, string> = {
+  "merge-pdf": "Merge multiple PDFs entirely in your browser with Plain Tools.",
+  "compress-pdf": "Compress PDF files entirely in your browser with Plain Tools.",
+  "split-pdf": "Split PDF pages entirely in your browser with Plain Tools.",
+  "pdf-to-word": "Convert PDF to Word entirely in your browser with Plain Tools.",
+  "word-to-pdf": "Convert Word to PDF entirely in your browser with Plain Tools.",
+  "sign-pdf": "Sign PDF files entirely in your browser with Plain Tools.",
+  "protect-pdf": "Protect PDF files with a password entirely in your browser with Plain Tools.",
+  "unlock-pdf": "Unlock PDF files entirely in your browser with Plain Tools.",
+  "merge": "Use this tool entirely in your browser with Plain Tools.",
+}
+
+function buildToolMetaDescription(slug: string, toolName: string, description: string) {
   const cleanedDescription = description.replace(/\s+/g, " ").trim()
-  const startsWithToolName = cleanedDescription.toLowerCase().startsWith(toolName.toLowerCase())
+  const intro =
+    TOOL_META_INTROS[slug] ??
+    `${toolName} runs entirely in your browser with Plain Tools.`
+  const body =
+    /no upload|local|browser/i.test(cleanedDescription)
+      ? cleanedDescription
+      : `${cleanedDescription} Fast, private local processing with no upload step.`
 
-  const intro = startsWithToolName
-    ? cleanedDescription
-    : `${toolName} on Plain Tools: ${cleanedDescription}`
-
-  let resolved = intro
-  if (!/processed locally|no upload|in your browser/i.test(resolved)) {
-    resolved = `${resolved} Processed locally in your browser with no upload step.`
-  }
-  if (resolved.length < 140) {
-    resolved = `${resolved} Files stay on your device for core local workflows.`
-  }
-  return resolved
+  return buildMetaDescription(`${intro} No upload, no account, and verifiable local processing. ${body}`)
 }
 
 export async function generateStaticParams() {
@@ -153,7 +160,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const profile = getToolPageProfile(tool)
-  const description = buildToolMetaDescription(tool.name, profile.description)
+  const description = buildToolMetaDescription(slug, tool.name, profile.description)
   const title = normaliseToolMetadataTitle(profile.title, tool.name)
   const baseMetadata = buildPageMetadata({
     title,
