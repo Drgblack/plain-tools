@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
-import Link from "next/link"
 
 import { ErrorBoundary } from "@/components/error-boundary"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -34,6 +33,22 @@ const INTENT_TOOL_SLUGS = new Set([
   "split-pdf",
   "pdf-to-jpg",
   "jpg-to-pdf",
+  "watermark-pdf",
+  "sign-pdf",
+  "protect-pdf",
+  "unlock-pdf",
+  "fill-pdf",
+  "reorder-pdf",
+  "annotate-pdf",
+  "compare-pdf",
+  "ocr-pdf",
+  "offline-ocr",
+  "pdf-to-excel",
+  "pdf-to-ppt",
+  "html-to-pdf",
+  "pdf-to-html",
+  "pdf-to-markdown",
+  "text-to-pdf",
 ])
 
 const toolComponents: Record<string, ToolComponent> = {
@@ -43,6 +58,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "rotate-pdf": lazy(() => import("@/components/tools/rotate-pdf-tool")),
   "annotate-pdf": lazy(() => import("@/components/tools/annotate-pdf-tool")),
   "watermark-pdf": lazy(() => import("@/components/tools/watermark-pdf-tool")),
+  "fill-pdf": lazy(() => import("@/components/tools/fill-pdf-tool")),
   "compress-pdf": lazy(() => import("@/components/tools/compress-pdf-tool")),
   "irreversible-redactor": lazy(() => import("@/components/tools/redact-tool")),
   "redact-pdf": lazy(() => import("@/components/tools/redact-tool")),
@@ -58,6 +74,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "protect-pdf": lazy(() => import("@/components/tools/protect-pdf-tool")),
   "unlock-pdf": lazy(() => import("@/components/tools/unlock-pdf-tool")),
   "sign-pdf": lazy(() => import("@/components/tools/sign-pdf-tool")),
+  "local-signer": lazy(() => import("@/components/tools/local-signer-tool")),
   "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
   "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
   "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
@@ -66,6 +83,7 @@ const toolComponents: Record<string, ToolComponent> = {
   "html-to-pdf": lazy(() => import("@/components/tools/html-to-pdf-tool")),
   "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
   "text-to-pdf": lazy(() => import("@/components/tools/text-to-pdf-tool")),
+  "reorder-pdf": lazy(() => import("@/components/tools/webgpu-organiser-tool")),
   "image-compress": lazy(() => import("@/components/tools/image-compress-tool")),
   "file-hash": lazy(() => import("@/components/tools/file-hash-tool")),
   "qr-code": lazy(() => import("@/components/tools/qr-code-tool")),
@@ -304,7 +322,23 @@ export default async function ToolPage({ params }: PageProps) {
                     | "word-to-pdf"
                     | "split-pdf"
                     | "pdf-to-jpg"
-                    | "jpg-to-pdf"}
+                    | "jpg-to-pdf"
+                    | "watermark-pdf"
+                    | "sign-pdf"
+                    | "protect-pdf"
+                    | "unlock-pdf"
+                    | "fill-pdf"
+                    | "reorder-pdf"
+                    | "annotate-pdf"
+                    | "compare-pdf"
+                    | "ocr-pdf"
+                    | "offline-ocr"
+                    | "pdf-to-excel"
+                    | "pdf-to-ppt"
+                    | "html-to-pdf"
+                    | "pdf-to-html"
+                    | "pdf-to-markdown"
+                    | "text-to-pdf"}
                   className="mt-6"
                 />
               ) : null}

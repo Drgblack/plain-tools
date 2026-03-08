@@ -509,6 +509,21 @@ export default function HomePage() {
               ))}
             </div>
 
+            <div className="mt-4 flex flex-wrap gap-2 text-xs">
+              <Link href="/sign-pdf-online" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Sign PDF online
+              </Link>
+              <Link href="/protect-pdf-with-password" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Protect PDF with password
+              </Link>
+              <Link href="/compare-pdf-files" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Compare PDF files
+              </Link>
+              <Link href="/ocr-pdf-online" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                OCR PDF online
+              </Link>
+            </div>
+
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm">
               <Link
                 href="/verify-claims"

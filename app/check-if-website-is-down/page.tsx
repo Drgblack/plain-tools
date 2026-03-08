@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 import { SiteStatusClient } from "@/app/site-status/client"
 import { FaqBlock } from "@/components/seo/faq-block"
@@ -132,18 +133,18 @@ export default function CheckIfWebsiteIsDownPage() {
         <section className="mt-10">
           <h2 className="text-2xl font-semibold tracking-tight text-foreground">Related tools</h2>
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <a href="/dns-lookup" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+            <Link href="/dns-lookup" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               DNS Lookup
-            </a>
-            <a href="/ping-test" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+            </Link>
+            <Link href="/ping-test" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               Ping Test
-            </a>
-            <a href="/what-is-my-ip" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+            </Link>
+            <Link href="/what-is-my-ip" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               What Is My IP
-            </a>
-            <a href="/status/trending" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+            </Link>
+            <Link href="/status/trending" className="rounded-full border border-border bg-card px-4 py-2 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               Trending status checks
-            </a>
+            </Link>
           </div>
         </section>
 

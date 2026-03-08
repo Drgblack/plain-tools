@@ -15,6 +15,7 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
 import {
   FIRST_WAVE_COMPARE_PAGES,
   FIRST_WAVE_GUIDE_PAGES,
@@ -189,7 +190,33 @@ export default function ToolsPage() {
       href: "/learn/how-to-merge-pdfs-offline",
       description: "A straightforward merge workflow for sensitive document handling.",
     },
+    {
+      label: "Password-protect PDF before emailing",
+      href: "/learn/workflows/password-protect-pdf-before-emailing",
+      description: "Protect the share copy locally, then hand off the password through a separate route.",
+    },
+    {
+      label: "Make scanned PDF searchable for records",
+      href: "/learn/workflows/make-scanned-pdf-searchable-for-records",
+      description: "Turn scanned records into searchable working copies while preserving the original scan.",
+    },
   ]
+
+  const searchIntentLinks = PDF_INTENT_PAGES.filter((page) =>
+    [
+      "sign-pdf-online",
+      "protect-pdf-with-password",
+      "add-watermark-to-pdf",
+      "fill-pdf-form-online",
+      "ocr-pdf-online",
+      "make-pdf-searchable",
+      "compare-pdf-files",
+      "pdf-to-excel",
+    ].includes(page.slug)
+  ).map((page) => ({
+    label: page.h1.replace(" (Private, No Uploads)", ""),
+    href: `/${page.slug}`,
+  }))
 
   const clusterEntrypoints = [
     {
@@ -473,6 +500,27 @@ export default function ToolsPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Popular search landing pages</h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              These high-intent routes match common search queries directly while still using the same
+              local tool workflows underneath.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {searchIntentLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 

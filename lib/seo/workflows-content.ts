@@ -439,6 +439,351 @@ const workflowConfigs: WorkflowConfig[] = [
       },
     ],
   },
+  {
+    slug: "add-watermark-before-client-review",
+    title: "Add Watermark Before Client Review",
+    primaryQuery: "add watermark before client review",
+    secondaryQueries: [
+      "watermark draft pdf for client review",
+      "mark pdf as draft before sending",
+      "review watermark workflow pdf",
+    ],
+    toolHref: "/tools/watermark-pdf",
+    relatedWorkflowSlugs: ["compare-contract-versions-as-pdf", "password-protect-pdf-before-emailing"],
+    intro: [
+      `A review copy should be clearly marked before it leaves your team. ${NO_UPLOADS_LINE}`,
+      "Use this workflow to apply a visible draft or review watermark, then confirm it does not hide important content before the file is shared.",
+    ],
+    sections: [
+      {
+        id: "review-purpose",
+        heading: "Decide what the watermark needs to communicate",
+        paragraphs: [
+          "A good review watermark tells the recipient what the file is: draft, internal review, client comments, or not for execution.",
+          "Set the wording before you apply the mark so the export process stays consistent across reviewers.",
+        ],
+      },
+      {
+        id: "apply-watermark",
+        heading: "Apply the watermark to a separate review copy",
+        paragraphs: [
+          "Work on a copy, not the final release document. That keeps the clean source version available for later issue or signing.",
+          "Use enough opacity to stay visible without covering signatures, tables, or page numbers.",
+        ],
+        bullets: [
+          "keep the clean master separate",
+          "use wording the recipient will understand immediately",
+          "check a dense page and a signature page before export",
+        ],
+      },
+      {
+        id: "send-review-copy",
+        heading: "Check the review copy before sending",
+        paragraphs: [
+          "Open the watermarked file in a separate viewer and confirm the mark is visible on mobile and desktop.",
+          "If the file is sensitive, combine the watermark step with password protection or a limited-distribution workflow.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why watermark a PDF before client review?",
+        answer:
+          "It makes the document status obvious and reduces the chance that a draft is mistaken for a final or executable version.",
+      },
+      {
+        question: "Should I watermark the only copy I have?",
+        answer:
+          "No. Create a separate review copy so the clean source document remains available for final release.",
+      },
+      {
+        question: "How strong should the watermark be?",
+        answer:
+          "Visible enough to signal review status, but not so strong that it hides signatures, totals, or small print.",
+      },
+      {
+        question: "Does this workflow upload the PDF?",
+        answer:
+          "No. The watermark step runs locally in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "fill-and-sign-pdf-for-hr-onboarding",
+    title: "Fill and Sign PDF for HR Onboarding",
+    primaryQuery: "fill and sign pdf for hr onboarding",
+    secondaryQueries: [
+      "complete onboarding pdf locally",
+      "fill and sign employee forms pdf",
+      "private hr form workflow pdf",
+    ],
+    toolHref: "/tools/fill-pdf",
+    relatedWorkflowSlugs: ["password-protect-pdf-before-emailing", "add-watermark-before-client-review"],
+    intro: [
+      `HR onboarding packets often contain personal details that should be handled carefully from the first draft to the signed copy. ${NO_UPLOADS_LINE}`,
+      "Use this workflow to fill fields, apply the signature step, and create a clean share copy without introducing an avoidable upload route.",
+    ],
+    sections: [
+      {
+        id: "prepare-packet",
+        heading: "Prepare the onboarding packet first",
+        paragraphs: [
+          "Confirm which pages need form fields completed and which pages only need a signature or initials.",
+          "Work from a copy of the packet so the original template remains unchanged for future use.",
+        ],
+      },
+      {
+        id: "fill-then-sign",
+        heading: "Fill first, then apply the signature step",
+        paragraphs: [
+          "Complete the text fields before signing so the final review matches the actual submitted version.",
+          "Once the fields are correct, place the signature and export the completed packet.",
+        ],
+        bullets: [
+          "check names, dates, and addresses carefully",
+          "flatten a share copy when editable fields are no longer needed",
+          "keep the source template outside the final employee packet",
+        ],
+      },
+      {
+        id: "handoff",
+        heading: "Protect the handoff if the file leaves HR",
+        paragraphs: [
+          "If the completed packet is being emailed or uploaded, review whether password protection or portal upload is required by policy.",
+          "Check the final packet in a separate viewer so no field is cut off or left blank by mistake.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Should I fill the fields before signing the PDF?",
+        answer:
+          "Yes. Fill the packet first so the signature is applied to the exact version that will be shared or stored.",
+      },
+      {
+        question: "Should the final file stay editable?",
+        answer:
+          "Usually only if the workflow requires it. A flattened share copy is often cleaner once the onboarding packet is complete.",
+      },
+      {
+        question: "Is this suitable for sensitive employee data?",
+        answer:
+          "It is a strong local-first approach for sensitive forms, but you still need the right HR handling and retention controls around the file.",
+      },
+      {
+        question: "Does this workflow upload the packet?",
+        answer:
+          "No. The filling and signing steps run locally in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "compare-contract-versions-as-pdf",
+    title: "Compare Contract Versions as PDF",
+    primaryQuery: "compare contract versions as pdf",
+    secondaryQueries: [
+      "compare two contract pdfs",
+      "pdf contract diff workflow",
+      "review contract revisions locally",
+    ],
+    toolHref: "/tools/compare-pdf",
+    relatedWorkflowSlugs: ["add-watermark-before-client-review", "remove-metadata-before-sharing-pdf"],
+    intro: [
+      `Contract review is usually faster when the diff is obvious before legal or client review begins. ${NO_UPLOADS_LINE}`,
+      "Use this workflow to compare two PDF versions locally, confirm material changes, and then prepare the review copy that actually needs to leave your team.",
+    ],
+    sections: [
+      {
+        id: "version-control",
+        heading: "Make sure you are comparing the right versions",
+        paragraphs: [
+          "Name the files clearly before running the comparison. Ambiguous names create review errors before the diff even starts.",
+          "Keep the baseline and revised copies untouched so the report always points back to a stable source pair.",
+        ],
+      },
+      {
+        id: "review-diff",
+        heading: "Review the diff with a legal or commercial lens",
+        paragraphs: [
+          "Focus first on changed clauses, schedules, signatures, defined terms, and any page where formatting shifts could hide a meaningful change.",
+          "Use an annotated or watermarked review copy only after the version comparison is complete.",
+        ],
+        bullets: [
+          "check definitions and payment clauses first",
+          "confirm page numbers and annexes still line up",
+          "export the diff report for the review file",
+        ],
+      },
+      {
+        id: "next-step",
+        heading: "Decide what the recipient actually needs",
+        paragraphs: [
+          "Sometimes the next step is a marked-up review draft. Other times it is only a clean revised contract and an internal comparison record.",
+          "Choose the smallest distribution set that still supports the review process.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why compare contract versions locally?",
+        answer:
+          "It keeps draft agreements and negotiation history on-device during the comparison step, which is often preferable for confidentiality-sensitive work.",
+      },
+      {
+        question: "What should I review first in the diff?",
+        answer:
+          "Start with the clauses that change obligations, money, dates, termination rights, and defined terms, then check schedules and signature areas.",
+      },
+      {
+        question: "Should I add comments before or after the comparison?",
+        answer:
+          "Usually after. Compare the clean versions first, then create the review copy that needs comments or watermarks.",
+      },
+      {
+        question: "Does the comparison step upload the contracts?",
+        answer:
+          "No. The comparison runs locally in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "make-scanned-pdf-searchable-for-records",
+    title: "Make Scanned PDF Searchable for Records",
+    primaryQuery: "make scanned pdf searchable for records",
+    secondaryQueries: [
+      "searchable records pdf workflow",
+      "ocr scanned records locally",
+      "make record scans searchable pdf",
+    ],
+    toolHref: "/tools/offline-ocr",
+    relatedWorkflowSlugs: ["extract-passport-pages-for-visa-upload", "split-pdf-for-email-attachments"],
+    intro: [
+      `Record archives are much easier to work with when a scan becomes searchable, but the OCR step should still match the sensitivity of the file. ${NO_UPLOADS_LINE}`,
+      "Use this workflow to run local OCR on scanned records, validate the output, and keep the original scan alongside the searchable copy.",
+    ],
+    sections: [
+      {
+        id: "source-quality",
+        heading: "Check scan quality before you run OCR",
+        paragraphs: [
+          "OCR works best when the source scan is upright, readable, and not overly compressed.",
+          "If the record set is mixed quality, split problem pages out first instead of forcing one pass over everything.",
+        ],
+      },
+      {
+        id: "run-local-ocr",
+        heading: "Generate the searchable copy locally",
+        paragraphs: [
+          "Run OCR on the pages that need searchability and then test a few names, dates, or reference numbers in the output.",
+          "Keep the original scan untouched as the source record while the searchable version becomes the working copy.",
+        ],
+        bullets: [
+          "test search on a few known terms",
+          "copy and paste from key pages to spot OCR issues",
+          "split oversized records into smaller batches when needed",
+        ],
+      },
+      {
+        id: "records-management",
+        heading: "Store the result in a way records staff can trust",
+        paragraphs: [
+          "Use a naming convention that distinguishes the original scan from the searchable working copy.",
+          "If the record is sensitive, minimise how many intermediate exports you keep after validation.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why keep the original scan after OCR?",
+        answer:
+          "Because the OCR copy is a processed working version. The original scan remains the safer source record if anything needs to be regenerated or rechecked.",
+      },
+      {
+        question: "How do I confirm that the PDF is searchable?",
+        answer:
+          "Use search, text selection, and copy-and-paste on a few important terms before treating the OCR output as complete.",
+      },
+      {
+        question: "What if the scanned record set is very large?",
+        answer:
+          "Split it into smaller batches first. That is usually more reliable than running one oversized OCR job in the browser.",
+      },
+      {
+        question: "Does this workflow upload the scanned records?",
+        answer:
+          "No. The OCR step runs locally in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "password-protect-pdf-before-emailing",
+    title: "Password-Protect PDF Before Emailing",
+    primaryQuery: "password protect pdf before emailing",
+    secondaryQueries: [
+      "protect pdf for email attachment",
+      "send password protected pdf by email",
+      "email pdf securely with password",
+    ],
+    toolHref: "/tools/protect-pdf",
+    relatedWorkflowSlugs: ["split-pdf-for-email-attachments", "compress-pdf-for-email"],
+    intro: [
+      `If a PDF has to be emailed, password protection can reduce exposure before the attachment leaves your inbox. ${NO_UPLOADS_LINE}`,
+      "Use this workflow to protect the file locally, validate the export, and then share the password through a separate route.",
+    ],
+    sections: [
+      {
+        id: "decide-if-email-is-right",
+        heading: "Confirm that email is the right route first",
+        paragraphs: [
+          "Password protection helps, but it does not make every document safe for email by default.",
+          "Check whether a portal, secure transfer route, or internal system is the required path before you send the attachment.",
+        ],
+      },
+      {
+        id: "protect-the-copy",
+        heading: "Protect the share copy, not the source file",
+        paragraphs: [
+          "Keep the original untouched and create a separate protected version for the email workflow.",
+          "Once the password is applied, open the file and test it before composing the message.",
+        ],
+        bullets: [
+          "protect the final share copy only",
+          "test the password before sending",
+          "send the password in a different channel",
+        ],
+      },
+      {
+        id: "email-handoff",
+        heading: "Make the recipient handoff clear",
+        paragraphs: [
+          "Tell the recipient what file to expect and how the password will arrive.",
+          "If the PDF is large, combine protection with splitting or compression only after you verify readability.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Should I send the PDF password in the same email?",
+        answer:
+          "Usually no. Send the password through a different channel so the attachment and the access key are not bundled together.",
+      },
+      {
+        question: "Should I protect the original file?",
+        answer:
+          "No. Protect a share copy and keep the clean source file unchanged for internal records.",
+      },
+      {
+        question: "Does password protection make email fully secure?",
+        answer:
+          "It helps, but it does not replace broader judgement about whether email is the right delivery route for the document.",
+      },
+      {
+        question: "Does this workflow upload the PDF?",
+        answer:
+          "No. The protection step runs locally in your browser.",
+      },
+    ],
+  },
 ]
 
 const byToolLabel: Record<string, string> = {

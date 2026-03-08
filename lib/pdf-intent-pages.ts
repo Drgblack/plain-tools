@@ -12,6 +12,22 @@ export type PdfIntentToolKey =
   | "extract-pdf"
   | "pdf-to-jpg"
   | "jpg-to-pdf"
+  | "watermark-pdf"
+  | "sign-pdf"
+  | "protect-pdf"
+  | "unlock-pdf"
+  | "fill-pdf"
+  | "reorder-pdf"
+  | "annotate-pdf"
+  | "compare-pdf"
+  | "ocr-pdf"
+  | "offline-ocr"
+  | "pdf-to-excel"
+  | "pdf-to-ppt"
+  | "html-to-pdf"
+  | "pdf-to-html"
+  | "pdf-to-markdown"
+  | "text-to-pdf"
 
 type IntentLink = {
   label: string
@@ -32,10 +48,11 @@ export type PdfIntentPage = {
   toolKey: PdfIntentToolKey
   canonicalToolHref: string
   canonicalToolLabel: string
-  howItWorks: [string, string, string]
-  relatedTools: [IntentLink, IntentLink, IntentLink]
-  learnLinks: [IntentLink, IntentLink]
-  faqs: [IntentFaq, IntentFaq, IntentFaq]
+  howItWorks: string[]
+  relatedTools: IntentLink[]
+  learnLinks: IntentLink[]
+  faqs: IntentFaq[]
+  limitations?: string[]
 }
 
 export const PDF_INTENT_PAGES: PdfIntentPage[] = [
@@ -527,6 +544,870 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
         answer:
           "Yes. The existing Plain.tools image-to-PDF workflow accepts JPG, JPEG, and PNG inputs on this page.",
       },
+    ],
+  },
+  {
+    slug: "add-watermark-to-pdf",
+    h1: "Add Watermark to PDF",
+    title: "Add Watermark to PDF Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Add a text or image watermark to PDF files directly in your browser. Private local processing keeps documents on your device with no upload step.",
+    intro:
+      "Add Watermark to PDF is built for people who need a visible review mark, draft label, or ownership stamp without sending the document to a hosted watermark service. The same local Plain Tools watermark workflow runs here, so you can place text or image watermarks, adjust opacity and position, and review the result before download.",
+    toolKey: "watermark-pdf",
+    canonicalToolHref: "/tools/watermark-pdf",
+    canonicalToolLabel: "Add Watermark to PDF",
+    howItWorks: [
+      "Upload the PDF and choose whether you want a text watermark or an image watermark.",
+      "Adjust opacity, size, placement, and repeat settings until the preview matches your intended output.",
+      "Export the finished PDF locally and review a few pages before sending it onward.",
+    ],
+    relatedTools: [
+      { label: "Sign PDF", href: "/sign-pdf-online" },
+      { label: "Protect PDF with Password", href: "/protect-pdf-with-password" },
+      { label: "Annotate PDF", href: "/annotate-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Add watermark before client review",
+        href: "/learn/workflows/add-watermark-before-client-review",
+      },
+      {
+        label: "Why PDF uploads are risky",
+        href: "/learn/why-pdf-uploads-are-risky",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I add a watermark to PDF files without uploading them?",
+        answer:
+          "Yes. This page uses the local watermark workflow, so the PDF stays on your device during the core processing step.",
+      },
+      {
+        question: "Can I use an image as the watermark?",
+        answer:
+          "Yes. You can apply either text or image watermarks and adjust their scale, opacity, and placement.",
+      },
+      {
+        question: "Should I watermark the final release copy?",
+        answer:
+          "Usually only if the recipient actually needs the watermark. Draft, review, and internal versions are the most common cases.",
+      },
+    ],
+    limitations: [
+      "Check a few pages after export to confirm the watermark does not cover signatures, page numbers, or fine print.",
+      "Large PDFs can take longer because every page needs a local watermark pass before download.",
+      "If the watermark is only for review, keep an unmarked source copy for the final release workflow.",
+    ],
+  },
+  {
+    slug: "sign-pdf-online",
+    h1: "Sign PDF Online",
+    title: "Sign PDF Online Privately (No Uploads) | Plain Tools",
+    metaDescription:
+      "Sign PDF files online in your browser without uploading them. Create a private local signature workflow and download the signed PDF directly.",
+    intro:
+      "Sign PDF Online is for people who need a quick visual signing workflow without handing the document to a hosted signing service. It uses the local Plain Tools signing interface, so you can draw, type, or place a signature and export the result directly from the same browser session.",
+    toolKey: "sign-pdf",
+    canonicalToolHref: "/tools/sign-pdf",
+    canonicalToolLabel: "Sign PDF",
+    howItWorks: [
+      "Upload the PDF and choose a visual signature method such as draw, type, or image placement.",
+      "Position the signature where it belongs and review page alignment before final export.",
+      "Download the signed PDF locally and keep the original copy unchanged for recordkeeping.",
+    ],
+    relatedTools: [
+      { label: "Protect PDF with Password", href: "/protect-pdf-with-password" },
+      { label: "Fill PDF Form", href: "/fill-pdf-form-online" },
+      { label: "Add Watermark to PDF", href: "/add-watermark-to-pdf" },
+    ],
+    learnLinks: [
+      {
+        label: "How to sign a PDF without uploading it",
+        href: "/learn/how-to-sign-a-pdf-without-uploading-it",
+      },
+      {
+        label: "Fill and sign PDF for HR onboarding",
+        href: "/learn/workflows/fill-and-sign-pdf-for-hr-onboarding",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I sign a PDF online without uploading it?",
+        answer:
+          "Yes. The signing step runs locally in your browser, so the PDF stays on your device during the core workflow.",
+      },
+      {
+        question: "Does this create a hosted e-signature workflow?",
+        answer:
+          "No. This page is for local PDF signing in the browser, not a hosted account-based signature routing service.",
+      },
+      {
+        question: "Should I keep the unsigned source file?",
+        answer:
+          "Yes. Keep the original version and create a separate signed output for the document you actually plan to share.",
+      },
+    ],
+    limitations: [
+      "Review the signature placement and page scaling carefully before sharing the signed output.",
+      "If the recipient needs a specific signing standard or hosted audit trail, check those requirements before relying on a local visual signature alone.",
+      "Keep the original unsigned file so you can rebuild the signed copy if the first export needs changes.",
+    ],
+  },
+  {
+    slug: "protect-pdf-with-password",
+    h1: "Protect PDF with Password",
+    title: "Protect PDF with Password Locally | Plain Tools",
+    metaDescription:
+      "Protect a PDF with a password directly in your browser. Private local processing lets you encrypt the file without an upload step.",
+    intro:
+      "Protect PDF with Password matches the common query behind people who need to restrict access before emailing or archiving a document. The same local Plain Tools protection workflow runs here, so you can set the password on-device and download the protected copy without sending the file to a hosted service.",
+    toolKey: "protect-pdf",
+    canonicalToolHref: "/tools/protect-pdf",
+    canonicalToolLabel: "Protect PDF",
+    howItWorks: [
+      "Upload the PDF and choose the password you want to require for opening the file.",
+      "Run the local protection step and create a separate password-protected output copy.",
+      "Test the protected file before sending it and share the password through a different channel.",
+    ],
+    relatedTools: [
+      { label: "Unlock PDF", href: "/unlock-pdf-online" },
+      { label: "Sign PDF", href: "/sign-pdf-online" },
+      { label: "Fill PDF Form", href: "/fill-pdf-form-online" },
+    ],
+    learnLinks: [
+      {
+        label: "How to protect a PDF with a password",
+        href: "/learn/how-to-protect-a-pdf-with-a-password",
+      },
+      {
+        label: "Password-protect PDF before emailing",
+        href: "/learn/workflows/password-protect-pdf-before-emailing",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I password-protect a PDF without uploading it?",
+        answer:
+          "Yes. The protection step runs locally in your browser, so the PDF does not need to leave your device.",
+      },
+      {
+        question: "Should I protect the source file or a copy?",
+        answer:
+          "Protect a copy. Keep the original unchanged so you still have a clean source version for internal use.",
+      },
+      {
+        question: "Is email still safe after password protection?",
+        answer:
+          "Password protection helps, but you should still send the password through a separate channel and check whether email is appropriate for the document class.",
+      },
+    ],
+    limitations: [
+      "Test the protected file before sending it so you know the password was applied correctly.",
+      "Password protection does not replace broader document-handling controls, especially for highly sensitive files.",
+      "Share the password separately from the document to avoid weakening the protection model.",
+    ],
+  },
+  {
+    slug: "unlock-pdf-online",
+    h1: "Unlock PDF Online",
+    title: "Unlock PDF Online Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Unlock a password-protected PDF in your browser when you have the correct password. Private local processing avoids the upload step entirely.",
+    intro:
+      "Unlock PDF Online is for users who need access to a protected PDF but do not want to send the file to a hosted unlock service. This page uses the local Plain Tools unlock workflow, so you can provide the correct password on-device and export the accessible copy in the same browser session.",
+    toolKey: "unlock-pdf",
+    canonicalToolHref: "/tools/unlock-pdf",
+    canonicalToolLabel: "Unlock PDF",
+    howItWorks: [
+      "Upload the protected PDF and enter the correct password when prompted.",
+      "Run the local unlock workflow to create an accessible output copy in the browser.",
+      "Download the unlocked copy and store it carefully if the document remains sensitive.",
+    ],
+    relatedTools: [
+      { label: "Protect PDF with Password", href: "/protect-pdf-with-password" },
+      { label: "Fill PDF Form", href: "/fill-pdf-form-online" },
+      { label: "Sign PDF", href: "/sign-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Password-protect PDF before emailing",
+        href: "/learn/workflows/password-protect-pdf-before-emailing",
+      },
+      {
+        label: "No uploads explained",
+        href: "/learn/no-uploads-explained",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I unlock a PDF without uploading it?",
+        answer:
+          "Yes. The unlock step runs locally in your browser, so the PDF stays on your device during processing.",
+      },
+      {
+        question: "Do I still need the correct password?",
+        answer:
+          "Yes. This workflow is for files you are authorised to open and where you already have the needed access details.",
+      },
+      {
+        question: "Should I keep the unlocked output permanently?",
+        answer:
+          "Only if the workflow requires it. If the file is still sensitive, minimise how many unlocked copies you keep around.",
+      },
+    ],
+    limitations: [
+      "Use this only when you are authorised to access the document and have the correct password.",
+      "Unlocked copies can be easier to mishandle, so store or delete them deliberately after use.",
+      "Review whether the downstream workflow actually needs an unlocked file or only temporary access for one task.",
+    ],
+  },
+  {
+    slug: "fill-pdf-form-online",
+    h1: "Fill PDF Form Online",
+    title: "Fill PDF Form Online Privately (No Uploads) | Plain Tools",
+    metaDescription:
+      "Fill PDF forms online in your browser without uploading them. Private local processing lets you complete fields and export the result directly.",
+    intro:
+      "Fill PDF Form Online is for people who need to complete AcroForm fields without pushing the document through a hosted form service. This page uses the local Plain Tools form-filling workflow, so you can enter values, review the output, and export the finished PDF directly from the browser.",
+    toolKey: "fill-pdf",
+    canonicalToolHref: "/tools/fill-pdf",
+    canonicalToolLabel: "Fill PDF Forms",
+    howItWorks: [
+      "Upload the form PDF and fill the available fields directly in the browser workspace.",
+      "Choose whether to export a flattened share copy or keep the form fields editable where needed.",
+      "Download the completed PDF locally and review key fields before sending it onward.",
+    ],
+    relatedTools: [
+      { label: "Sign PDF", href: "/sign-pdf-online" },
+      { label: "Protect PDF with Password", href: "/protect-pdf-with-password" },
+      { label: "Annotate PDF", href: "/annotate-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Fill and sign PDF for HR onboarding",
+        href: "/learn/workflows/fill-and-sign-pdf-for-hr-onboarding",
+      },
+      {
+        label: "No uploads explained",
+        href: "/learn/no-uploads-explained",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I fill a PDF form online without uploading it?",
+        answer:
+          "Yes. The form-filling step runs locally in your browser, so the PDF stays on your device during processing.",
+      },
+      {
+        question: "Can I export a flattened copy?",
+        answer:
+          "Yes. You can export a flattened output when you want the filled values locked into the final share copy.",
+      },
+      {
+        question: "Should I review the form after export?",
+        answer:
+          "Yes. Open the final PDF and check important fields, dates, names, and page breaks before sending it.",
+      },
+    ],
+    limitations: [
+      "Some complex or highly customised form layouts may need a quick output check before final submission.",
+      "Flatten a copy for sharing when you do not want recipients to edit the fields afterward.",
+      "If the next step is external submission, confirm the file size and field appearance in a separate viewer first.",
+    ],
+  },
+  {
+    slug: "reorder-pdf-pages",
+    h1: "Reorder PDF Pages",
+    title: "Reorder PDF Pages Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Reorder PDF pages directly in your browser with no uploads. Private local processing lets you drag pages into the right sequence and export fast.",
+    intro:
+      "Reorder PDF Pages is built for people who need to fix the sequence of a document before sharing, submission, or archiving. This page uses the local Plain Tools page organiser, so you can drag pages into the correct order, review the sequence visually, and download the adjusted PDF without sending it anywhere.",
+    toolKey: "reorder-pdf",
+    canonicalToolHref: "/tools/reorder-pdf",
+    canonicalToolLabel: "Reorder PDF",
+    howItWorks: [
+      "Upload one PDF and let the browser render local page thumbnails for review.",
+      "Drag pages into the correct order, then check transitions and numbering before export.",
+      "Save the reordered PDF locally and keep the original source copy unchanged.",
+    ],
+    relatedTools: [
+      { label: "Rotate PDF Pages", href: "/rotate-pdf-pages" },
+      { label: "Extract PDF Pages", href: "/extract-pdf-pages" },
+      { label: "Merge PDF Files", href: "/merge-pdf-files" },
+    ],
+    learnLinks: [
+      {
+        label: "Compare contract versions as PDF",
+        href: "/learn/workflows/compare-contract-versions-as-pdf",
+      },
+      {
+        label: "How PDFs work",
+        href: "/learn/how-pdfs-work",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I reorder PDF pages without uploading the file?",
+        answer:
+          "Yes. The page organiser runs locally in your browser, so the PDF stays on your device during the workflow.",
+      },
+      {
+        question: "Can I preview the page order before exporting?",
+        answer:
+          "Yes. The organiser shows local thumbnails so you can review the sequence before saving the final PDF.",
+      },
+      {
+        question: "Should I overwrite the original file?",
+        answer:
+          "No. Keep the source version unchanged and export a new reordered copy for the workflow that actually needs it.",
+      },
+    ],
+    limitations: [
+      "Thumbnail-heavy PDFs can take longer to load because the browser must render page previews locally first.",
+      "Check page order and section boundaries before export so the final PDF matches the intended reading flow.",
+      "Keep the original untouched in case you need to rebuild the reordered copy differently later.",
+    ],
+  },
+  {
+    slug: "annotate-pdf-online",
+    h1: "Annotate PDF Online",
+    title: "Annotate PDF Online Privately (No Uploads) | Plain Tools",
+    metaDescription:
+      "Annotate PDF files online in your browser without uploading them. Add notes, highlights, and mark-up locally before downloading the result.",
+    intro:
+      "Annotate PDF Online serves the common need to mark up a document for review without pushing it through a hosted annotation service. This route uses the local Plain Tools annotation workspace, so you can highlight, draw, or add text notes and then export the review copy directly from the browser.",
+    toolKey: "annotate-pdf",
+    canonicalToolHref: "/tools/annotate-pdf",
+    canonicalToolLabel: "Annotate PDF",
+    howItWorks: [
+      "Upload the PDF and open it in the local annotation workspace.",
+      "Add highlights, notes, or pen marks where reviewers need context or decisions.",
+      "Export the annotated copy locally and keep the clean source file separate from review output.",
+    ],
+    relatedTools: [
+      { label: "Compare PDF Files", href: "/compare-pdf-files" },
+      { label: "Add Watermark to PDF", href: "/add-watermark-to-pdf" },
+      { label: "Sign PDF", href: "/sign-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Add watermark before client review",
+        href: "/learn/workflows/add-watermark-before-client-review",
+      },
+      {
+        label: "Compare contract versions as PDF",
+        href: "/learn/workflows/compare-contract-versions-as-pdf",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I annotate a PDF online without uploading it?",
+        answer:
+          "Yes. The annotation workspace runs locally in your browser, so the document stays on your device during the core workflow.",
+      },
+      {
+        question: "Should I annotate the only copy I have?",
+        answer:
+          "No. Keep a clean source version and export a separate annotated copy for review or collaboration.",
+      },
+      {
+        question: "Is annotation the same as redaction?",
+        answer:
+          "No. Annotation adds marks for review. It does not remove underlying content the way real redaction should.",
+      },
+    ],
+    limitations: [
+      "Annotations are for review and collaboration, not for irreversible data removal.",
+      "Keep a separate clean source file so comments and highlights do not become your only master copy.",
+      "Review the exported file in another viewer if the annotated copy will be sent outside your team.",
+    ],
+  },
+  {
+    slug: "compare-pdf-files",
+    h1: "Compare PDF Files",
+    title: "Compare PDF Files Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Compare PDF files directly in your browser with no uploads. Review text changes, visual differences, and export a local comparison report.",
+    intro:
+      "Compare PDF Files is for users who need to review differences between two documents without sending drafts or contracts through a hosted comparison service. This page uses the local Plain Tools comparison workflow, so you can inspect text changes, page-level differences, and download the report directly after review.",
+    toolKey: "compare-pdf",
+    canonicalToolHref: "/tools/compare-pdf",
+    canonicalToolLabel: "Compare PDF Files",
+    howItWorks: [
+      "Upload both PDFs and let the browser analyse the differences locally.",
+      "Review text-level and page-level changes to confirm what actually moved, changed, or disappeared.",
+      "Export the comparison report locally and use it for the review workflow that follows.",
+    ],
+    relatedTools: [
+      { label: "Annotate PDF", href: "/annotate-pdf-online" },
+      { label: "Reorder PDF Pages", href: "/reorder-pdf-pages" },
+      { label: "PDF to Word", href: "/convert-pdf-to-word" },
+    ],
+    learnLinks: [
+      {
+        label: "Compare contract versions as PDF",
+        href: "/learn/workflows/compare-contract-versions-as-pdf",
+      },
+      {
+        label: "Browser memory limits for PDF tools",
+        href: "/learn/browser-memory-limits-for-pdf-tools",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I compare two PDF files without uploading them?",
+        answer:
+          "Yes. The comparison step runs locally in your browser, so the PDFs stay on your device during processing.",
+      },
+      {
+        question: "What should I check after the diff finishes?",
+        answer:
+          "Review changed pages, major text edits, and any sections where formatting shifts may affect interpretation.",
+      },
+      {
+        question: "Is this useful for contracts and policy drafts?",
+        answer:
+          "Yes. It is especially useful when you need a quick local comparison before sending documents for legal, HR, or client review.",
+      },
+    ],
+    limitations: [
+      "Large or heavily formatted PDFs can take longer because the browser must inspect more content locally.",
+      "Always confirm key changed sections manually when the document has legal, financial, or contractual importance.",
+      "Keep the source versions alongside the diff report so the review trail stays clear.",
+    ],
+  },
+  {
+    slug: "ocr-pdf-online",
+    h1: "OCR PDF Online",
+    title: "OCR PDF Online Privately (No Uploads) | Plain Tools",
+    metaDescription:
+      "Run OCR on PDFs online in your browser without uploading them. Private local processing helps turn scans into searchable text safely.",
+    intro:
+      "OCR PDF Online is for people who need searchable text from scanned pages but do not want to pass the document through a cloud OCR service. This route uses the local Plain Tools OCR workflow, so page images and extracted text stay on-device during the core process.",
+    toolKey: "ocr-pdf",
+    canonicalToolHref: "/tools/ocr-pdf",
+    canonicalToolLabel: "OCR PDF",
+    howItWorks: [
+      "Upload the scanned PDF and start the browser-based OCR pass on the pages you need.",
+      "Let the tool extract text locally and review the output where accuracy matters most.",
+      "Download the OCR result and verify searchability or copied text before wider sharing.",
+    ],
+    relatedTools: [
+      { label: "Make PDF Searchable", href: "/make-pdf-searchable" },
+      { label: "PDF to Word", href: "/convert-pdf-to-word" },
+      { label: "Compress PDF Online", href: "/compress-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Local vs cloud OCR privacy",
+        href: "/learn/local-vs-cloud-ocr-privacy",
+      },
+      {
+        label: "How OCR works on scanned PDFs",
+        href: "/learn/how-ocr-works-on-scanned-pdfs",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I OCR a PDF online without uploading it?",
+        answer:
+          "Yes. This page runs OCR in your browser, so the document stays on your device during the core workflow.",
+      },
+      {
+        question: "Will OCR always be perfectly accurate?",
+        answer:
+          "No. Accuracy depends on scan quality, page contrast, skew, and the source language, so review important sections after export.",
+      },
+      {
+        question: "When should I prefer local OCR?",
+        answer:
+          "Local OCR is a strong default when the PDF contains personal, legal, or medical information that should not be sent to a third-party OCR service.",
+      },
+    ],
+    limitations: [
+      "OCR quality depends heavily on the scan itself, so blurred or low-contrast pages may still need manual review.",
+      "Check searchability and copied text on the most important pages before using the output in a downstream workflow.",
+      "Large scanned PDFs may need to be split or processed in batches if the browser runs short on memory.",
+    ],
+  },
+  {
+    slug: "make-pdf-searchable",
+    h1: "Make PDF Searchable",
+    title: "Make PDF Searchable Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Make scanned PDFs searchable directly in your browser. Private local OCR processing avoids cloud uploads and keeps document bytes on-device.",
+    intro:
+      "Make PDF Searchable is a query-focused landing page for people who want a scanned document to behave like real text without sending it to a hosted OCR service. This route uses the local Plain Tools offline OCR pipeline, which is better suited to privacy-sensitive records and repeatable internal workflows.",
+    toolKey: "offline-ocr",
+    canonicalToolHref: "/tools/offline-ocr",
+    canonicalToolLabel: "Offline OCR",
+    howItWorks: [
+      "Upload the scanned PDF and run the local OCR pipeline in your browser.",
+      "Let the tool rebuild the file with searchable text while the source pages stay on your device.",
+      "Download the searchable PDF and check a few pages with search or copy-and-paste before using it elsewhere.",
+    ],
+    relatedTools: [
+      { label: "OCR PDF Online", href: "/ocr-pdf-online" },
+      { label: "Split PDF Pages", href: "/split-pdf-pages" },
+      { label: "Compress PDF Online", href: "/compress-pdf-online" },
+    ],
+    learnLinks: [
+      {
+        label: "Make scanned PDF searchable for records",
+        href: "/learn/workflows/make-scanned-pdf-searchable-for-records",
+      },
+      {
+        label: "OCR PDF without cloud",
+        href: "/learn/ocr-pdf-without-cloud",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I make a PDF searchable without uploading it?",
+        answer:
+          "Yes. The OCR step runs locally in your browser, so the scanned file stays on your device during processing.",
+      },
+      {
+        question: "What is the difference between OCR PDF and make PDF searchable?",
+        answer:
+          "They are closely related. This page focuses on the searchable-output intent, while the canonical tool route centres on the OCR workflow itself.",
+      },
+      {
+        question: "Should I verify the searchable output afterward?",
+        answer:
+          "Yes. Test search, select text, and copy a few important passages before relying on the result.",
+      },
+    ],
+    limitations: [
+      "Poor scan quality can still produce imperfect text recognition, so review key pages after export.",
+      "Large scanned records may need splitting or batching if your browser runs into memory pressure.",
+      "Keep the original scan as the source record in case the searchable copy needs to be regenerated later.",
+    ],
+  },
+  {
+    slug: "pdf-to-excel",
+    h1: "PDF to Excel",
+    title: "PDF to Excel Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert PDF data to Excel-ready output directly in your browser. Private local processing keeps the source document on your device throughout.",
+    intro:
+      "PDF to Excel is aimed at people who need spreadsheet-ready output from a PDF without passing the file through a hosted converter. This page uses the local Plain Tools extraction workflow for table-like content, which is useful when the goal is analysis, cleanup, or finance-side review rather than perfect visual fidelity.",
+    toolKey: "pdf-to-excel",
+    canonicalToolHref: "/tools/pdf-to-excel",
+    canonicalToolLabel: "PDF to Excel",
+    howItWorks: [
+      "Upload the PDF and run the local extraction workflow for table-like or structured data.",
+      "Review the spreadsheet-ready output for column alignment, headers, and row grouping before use.",
+      "Download the result locally and clean it up in Excel if the source layout was complex.",
+    ],
+    relatedTools: [
+      { label: "PDF to Word", href: "/convert-pdf-to-word" },
+      { label: "PDF to Markdown", href: "/pdf-to-markdown" },
+      { label: "Compare PDF Files", href: "/compare-pdf-files" },
+    ],
+    learnLinks: [
+      {
+        label: "Browser memory limits for PDF tools",
+        href: "/learn/browser-memory-limits-for-pdf-tools",
+      },
+      {
+        label: "Why PDF uploads are risky",
+        href: "/learn/why-pdf-uploads-are-risky",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to Excel without uploading the file?",
+        answer:
+          "Yes. The extraction workflow runs locally in your browser, so the PDF stays on your device during the core operation.",
+      },
+      {
+        question: "Will the spreadsheet always look perfect?",
+        answer:
+          "Not always. Complex layouts may still need cleanup, especially when the source PDF was not built around clean table structure.",
+      },
+      {
+        question: "What kind of PDFs work best?",
+        answer:
+          "Structured, text-based PDFs with clear rows and columns usually convert better than scanned images or highly styled layouts.",
+      },
+    ],
+    limitations: [
+      "Table extraction is best-effort, so expect some cleanup when the source PDF uses complex layout tricks.",
+      "Check headers, dates, number formatting, and merged cells before using the output for reporting or analysis.",
+      "If the source file is a scan, OCR may be required before spreadsheet extraction becomes useful.",
+    ],
+  },
+  {
+    slug: "pdf-to-powerpoint",
+    h1: "PDF to PowerPoint",
+    title: "PDF to PowerPoint Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert PDF pages to PowerPoint slides directly in your browser. Private local processing keeps slide source files on your device throughout.",
+    intro:
+      "PDF to PowerPoint is for people who need a presentation-friendly export without sending slide decks or reports to a hosted converter. This route uses the local Plain Tools page-to-slide workflow, which is useful for internal review decks, simple presentations, and repurposing page visuals quickly.",
+    toolKey: "pdf-to-ppt",
+    canonicalToolHref: "/tools/pdf-to-ppt",
+    canonicalToolLabel: "PDF to PowerPoint",
+    howItWorks: [
+      "Upload the PDF and let the browser convert each page into a slide-based output locally.",
+      "Review the generated presentation to confirm slide order, visual readability, and page scaling.",
+      "Download the PowerPoint file and make any final edits in your presentation software if needed.",
+    ],
+    relatedTools: [
+      { label: "PDF to JPG", href: "/pdf-to-jpg" },
+      { label: "PDF to HTML", href: "/pdf-to-html" },
+      { label: "Reorder PDF Pages", href: "/reorder-pdf-pages" },
+    ],
+    learnLinks: [
+      {
+        label: "How PDFs work",
+        href: "/learn/how-pdfs-work",
+      },
+      {
+        label: "Why PDF uploads are risky",
+        href: "/learn/why-pdf-uploads-are-risky",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to PowerPoint without uploading it?",
+        answer:
+          "Yes. The conversion runs locally in your browser, so the PDF stays on your device during the core workflow.",
+      },
+      {
+        question: "Will the PowerPoint be fully editable?",
+        answer:
+          "This workflow is best for slide-style reuse and visual portability. Some files will still need edits after export.",
+      },
+      {
+        question: "What should I review first?",
+        answer:
+          "Check slide order, readability, and any pages that contain dense charts, speaker notes, or margins that do not translate cleanly.",
+      },
+    ],
+    limitations: [
+      "Complex page layouts may still need manual cleanup in PowerPoint after export.",
+      "Review dense graphics and charts closely because presentation readability can shift after conversion.",
+      "If only some pages belong in the deck, reorder or extract them before conversion for a cleaner result.",
+    ],
+  },
+  {
+    slug: "html-to-pdf",
+    h1: "HTML to PDF",
+    title: "HTML to PDF Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert HTML to PDF directly in your browser with no uploads. Private local processing keeps pasted content and rendered output on your device.",
+    intro:
+      "HTML to PDF is a useful route for users who need a quick local print-style export from HTML without posting content to a hosted converter. This page reuses the Plain Tools HTML-to-PDF workflow, making it a practical fit for internal snippets, generated markup, and simple web content exports.",
+    toolKey: "html-to-pdf",
+    canonicalToolHref: "/tools/html-to-pdf",
+    canonicalToolLabel: "HTML to PDF",
+    howItWorks: [
+      "Paste or load the HTML you want to convert into the local browser workspace.",
+      "Review the rendered preview and adjust any simple settings before final export.",
+      "Download the generated PDF locally and confirm the visual result in a separate viewer if needed.",
+    ],
+    relatedTools: [
+      { label: "PDF to HTML", href: "/pdf-to-html" },
+      { label: "Text to PDF", href: "/text-to-pdf" },
+      { label: "PDF to Markdown", href: "/pdf-to-markdown" },
+    ],
+    learnLinks: [
+      {
+        label: "No uploads explained",
+        href: "/learn/no-uploads-explained",
+      },
+      {
+        label: "Browser memory limits for PDF tools",
+        href: "/learn/browser-memory-limits-for-pdf-tools",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert HTML to PDF without uploading content?",
+        answer:
+          "Yes. The conversion runs locally in your browser, so the HTML content stays on your device during the core workflow.",
+      },
+      {
+        question: "Will all CSS render perfectly?",
+        answer:
+          "Not always. Simple layouts usually translate better than highly interactive or heavily styled pages.",
+      },
+      {
+        question: "What should I check before sharing the PDF?",
+        answer:
+          "Check page breaks, fonts, and whether key sections render in the correct order on the final PDF pages.",
+      },
+    ],
+    limitations: [
+      "Complex web layouts and advanced CSS can still render differently from a full browser print pipeline.",
+      "Check page breaks and overflow behaviour on the exported PDF before you treat it as final.",
+      "If the HTML came from sensitive internal content, keep the source locally and minimise extra copies.",
+    ],
+  },
+  {
+    slug: "pdf-to-html",
+    h1: "PDF to HTML",
+    title: "PDF to HTML Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert PDF files to HTML directly in your browser with no uploads. Private local processing keeps document content on your device throughout.",
+    intro:
+      "PDF to HTML is for users who need a browser-friendly version of PDF content without relying on a hosted converter. This route uses the local Plain Tools conversion workflow, making it useful for republishing, inspection, or extracting readable content from text-based PDFs.",
+    toolKey: "pdf-to-html",
+    canonicalToolHref: "/tools/pdf-to-html",
+    canonicalToolLabel: "PDF to HTML",
+    howItWorks: [
+      "Upload the PDF and let the browser extract text and structure into an HTML-oriented output locally.",
+      "Review the generated HTML for reading order, formatting, and any pages that need cleanup.",
+      "Download the HTML locally and refine it further if the source PDF used complex layout.",
+    ],
+    relatedTools: [
+      { label: "HTML to PDF", href: "/html-to-pdf" },
+      { label: "PDF to Markdown", href: "/pdf-to-markdown" },
+      { label: "PDF to Word", href: "/convert-pdf-to-word" },
+    ],
+    learnLinks: [
+      {
+        label: "How PDFs work",
+        href: "/learn/how-pdfs-work",
+      },
+      {
+        label: "No uploads explained",
+        href: "/learn/no-uploads-explained",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to HTML without uploading it?",
+        answer:
+          "Yes. The conversion runs locally in your browser, so the source PDF stays on your device during the workflow.",
+      },
+      {
+        question: "Which PDFs work best?",
+        answer:
+          "Text-based PDFs with simpler layout usually convert better than scans or highly designed print layouts.",
+      },
+      {
+        question: "Should I expect cleanup afterward?",
+        answer:
+          "Yes, especially when the original PDF used columns, floating elements, or tightly controlled print positioning.",
+      },
+    ],
+    limitations: [
+      "PDF-to-HTML conversion is best-effort and often needs cleanup when the source file was designed for print, not reflow.",
+      "Review reading order, headings, and line breaks before publishing or reusing the HTML output.",
+      "If the source is image-based, OCR may be necessary before HTML output becomes meaningfully searchable.",
+    ],
+  },
+  {
+    slug: "pdf-to-markdown",
+    h1: "PDF to Markdown",
+    title: "PDF to Markdown Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert PDF text to Markdown directly in your browser with no uploads. Private local processing keeps source files on your device during extraction.",
+    intro:
+      "PDF to Markdown is built for users who want editable, lightweight text output without sending the PDF to a hosted converter. This page uses the local Plain Tools Markdown conversion workflow, which is especially helpful for notes, drafts, internal docs, and content repurposing.",
+    toolKey: "pdf-to-markdown",
+    canonicalToolHref: "/tools/pdf-to-markdown",
+    canonicalToolLabel: "PDF to Markdown",
+    howItWorks: [
+      "Upload the PDF and let the browser extract text into a Markdown-oriented structure locally.",
+      "Review the output for headings, lists, and reading order before treating it as final.",
+      "Download the Markdown and clean up any sections where the original PDF used complex layout.",
+    ],
+    relatedTools: [
+      { label: "PDF to HTML", href: "/pdf-to-html" },
+      { label: "Text to PDF", href: "/text-to-pdf" },
+      { label: "PDF to Word", href: "/convert-pdf-to-word" },
+    ],
+    learnLinks: [
+      {
+        label: "How PDFs work",
+        href: "/learn/how-pdfs-work",
+      },
+      {
+        label: "Browser memory limits for PDF tools",
+        href: "/learn/browser-memory-limits-for-pdf-tools",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to Markdown without uploading it?",
+        answer:
+          "Yes. The conversion runs locally in your browser, so the PDF stays on your device during the main workflow.",
+      },
+      {
+        question: "Will the Markdown keep the original layout?",
+        answer:
+          "Not exactly. Markdown is designed for structured text, so complex print layout usually becomes a simpler text representation.",
+      },
+      {
+        question: "What should I check after export?",
+        answer:
+          "Check heading levels, list formatting, code-style blocks, and any tables or columns that may need manual cleanup.",
+      },
+    ],
+    limitations: [
+      "Markdown output is intentionally simpler than PDF layout, so expect cleanup when the source relied on design-heavy formatting.",
+      "Tables, columns, and callout boxes may need manual restructuring after conversion.",
+      "If the PDF is scanned rather than text-based, OCR is usually the first step before Markdown extraction becomes useful.",
+    ],
+  },
+  {
+    slug: "text-to-pdf",
+    h1: "Text to PDF",
+    title: "Text to PDF Locally (No Uploads) | Plain Tools",
+    metaDescription:
+      "Convert plain text or Markdown to PDF directly in your browser. Private local processing keeps your content on-device with no upload step.",
+    intro:
+      "Text to PDF is for users who need a quick printable or shareable PDF from plain text or Markdown without relying on a hosted document service. This route uses the local Plain Tools text-to-PDF workflow, so drafts, notes, and simple content can be turned into a PDF directly in the browser.",
+    toolKey: "text-to-pdf",
+    canonicalToolHref: "/tools/text-to-pdf",
+    canonicalToolLabel: "Text to PDF",
+    howItWorks: [
+      "Paste plain text or Markdown into the local editor and choose the output settings you need.",
+      "Preview the layout locally and adjust spacing or page settings before export.",
+      "Download the generated PDF directly and check the final page flow in a separate viewer if needed.",
+    ],
+    relatedTools: [
+      { label: "PDF to Markdown", href: "/pdf-to-markdown" },
+      { label: "HTML to PDF", href: "/html-to-pdf" },
+      { label: "Protect PDF with Password", href: "/protect-pdf-with-password" },
+    ],
+    learnLinks: [
+      {
+        label: "No uploads explained",
+        href: "/learn/no-uploads-explained",
+      },
+      {
+        label: "How PDFs work",
+        href: "/learn/how-pdfs-work",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I convert text to PDF without uploading it?",
+        answer:
+          "Yes. The conversion runs locally in your browser, so the text stays on your device during the core workflow.",
+      },
+      {
+        question: "Does Markdown formatting work too?",
+        answer:
+          "Yes. The tool supports simple Markdown-style structure as well as plain text input.",
+      },
+      {
+        question: "What should I check before sharing the PDF?",
+        answer:
+          "Check headings, spacing, and page breaks so the output reads cleanly in the final PDF.",
+      },
+    ],
+    limitations: [
+      "This workflow is best for text-first documents rather than complex desktop-publishing layouts.",
+      "Check page breaks and whitespace if the document will be printed or shared externally.",
+      "If the final PDF is sensitive, apply password protection or other controls after you confirm the layout looks correct.",
     ],
   },
 ]
