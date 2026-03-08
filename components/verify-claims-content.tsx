@@ -98,13 +98,13 @@ export function VerifyClaimsContent() {
           <div className="absolute left-1/2 top-0 h-44 w-[28rem] -translate-x-1/2 rounded-full bg-accent/20 blur-3xl" />
 
           <div className="relative space-y-5 text-center">
-            <Badge variant="outline" className="border-accent/45 bg-accent/10 text-accent">
+            <Badge variant="outline" className="border-accent/45 bg-accent/10 text-white">
               Verification First
             </Badge>
-            <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-5xl">
+            <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
               We Dare You to Catch Us Uploading Your Files.
             </h1>
-            <p className="mx-auto max-w-3xl text-base text-muted-foreground sm:text-lg">
+            <p className="mx-auto max-w-3xl text-base text-white/80 sm:text-lg">
               Every privacy claim we make is technically verifiable. Here&apos;s exactly how to
               check.
             </p>
