@@ -1,4 +1,3 @@
-Contact: https://plain.tools/support
-Preferred-Languages: en, de
-Canonical: https://plain.tools/.well-known/security.txt
-Policy: https://plain.tools/privacy
+Contact: mailto:security@plain.tools
+Expires: 2027-03-09T00:00:00Z
+Preferred-Languages: en

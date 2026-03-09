@@ -568,6 +568,19 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/.well-known/security.txt",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/plain",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400",
+          },
+        ],
+      },
+      {
         source: "/robots.txt",
         headers: [
           {
