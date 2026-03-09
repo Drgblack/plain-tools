@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { PdfToolsSubnav } from "@/components/pdf-tools-subnav"
+import { GlobalPageBreadcrumbs } from "@/components/seo/global-page-breadcrumbs"
 import { RouteStructuredData } from "@/components/seo/route-structured-data"
 
 type AppShellChromeProps = {
@@ -23,6 +24,7 @@ export function AppShellChrome({ children }: AppShellChromeProps) {
     <>
       <RouteStructuredData />
       <Navigation />
+      <GlobalPageBreadcrumbs />
       {showCanonicalHubSubnav ? <PdfToolsSubnav /> : null}
       <main className="flex-1">{children}</main>
       <Footer />

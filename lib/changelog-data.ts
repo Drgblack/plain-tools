@@ -8,6 +8,22 @@ export type ChangelogItem = {
 
 export const CHANGELOG_ITEMS: ChangelogItem[] = [
   {
+    date: "2026-03-09",
+    title: "Network tool pages and tool-page clarity updates",
+    summary:
+      "Shipped dedicated public IP, DNS, site status, and ping pages, while tightening tool-page intros and breadcrumb consistency.",
+    notes: [
+      "Added individual network tool pages with crawlable explanations around the live browser checks.",
+      "Standardised tool-page lead descriptions into a clearer two-sentence intro pattern across shared tool routes.",
+      "Expanded reusable breadcrumb coverage for key trust and company pages so navigation stays clearer outside the main tool hubs.",
+    ],
+    links: [
+      { label: "Network Tools", href: "/network-tools" },
+      { label: "What Is My IP", href: "/tools/what-is-my-ip" },
+      { label: "Changelog RSS", href: "/changelog/rss.xml" },
+    ],
+  },
+  {
     date: "2026-03-06",
     title: "Homepage and tools discoverability polish",
     summary:

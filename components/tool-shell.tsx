@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
 import { ToolCard, type ToolCardProps } from "@/components/tool-card"
 import { JsonLd } from "@/components/seo/json-ld"
 import { Surface } from "@/components/surface"
@@ -15,6 +14,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { buildStandardToolIntro } from "@/lib/tool-intro"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 
 interface FAQ {
   question: string
@@ -136,31 +137,31 @@ export function ToolShell({
     faqs,
   })
   const categoryClass = category.type ? categoryClasses[category.type] : ''
+  const introText = buildStandardToolIntro(
+    description,
+    category.type === "network" ? "network" : category.type === "developer" ? "local" : "local"
+  )
   
   return (
     <>
       {schema ? <JsonLd id={`${name.toLowerCase().replace(/\s+/g, "-")}-schema`} schema={schema} /> : null}
       
       <article className={cn("mx-auto max-w-6xl px-4 py-8", categoryClass)}>
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">
-            Home
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <Link href={category.href} className="hover:text-foreground">
-            {category.name}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="text-foreground" aria-current="page">{name}</span>
-        </nav>
+        <PageBreadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: category.name, href: category.href },
+            { label: name },
+          ]}
+          className="mb-6"
+        />
 
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             {name}
           </h1>
-          <p className="mt-2 text-muted-foreground">{description}</p>
+          <p className="mt-2 text-muted-foreground">{introText}</p>
 
           {tags && tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2" aria-label="Tool features">
