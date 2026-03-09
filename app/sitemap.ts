@@ -7,9 +7,9 @@ import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
-import { STATUS_CATEGORIES } from "@/lib/status-domains"
+import { STATUS_CATEGORIES, STATUS_STATIC_DOMAINS } from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
-import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
+import { statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 
@@ -45,6 +45,7 @@ const staticHighPriority = [
 
 const staticCorePages = [
   "/blog",
+  "/pricing",
   "/pdf-tools",
   "/file-converters",
   "/image-tools",
@@ -169,8 +170,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
-  // Curated canonical status URLs only - keeps index coverage focused on high-demand queries.
-  const curatedStatusPages = STATUS_TRAFFIC_SITES.map((site) => ({
+  const staticStatusPages = STATUS_STATIC_DOMAINS.map((site) => ({
     url: `${BASE_URL}${statusPathFor(site)}`,
     lastModified: now,
     changeFrequency: "daily" as const,
@@ -189,7 +189,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogCategoryPages,
     ...blogPostPages,
     ...toolPages,
-    ...curatedStatusPages,
+    ...staticStatusPages,
     ...tranchePages,
   ]
 
