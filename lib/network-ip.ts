@@ -1,5 +1,7 @@
 import { isIP } from "node:net"
 
+import { getSampleIps } from "@/lib/network-utils"
+
 export type IpVersion = "ipv4" | "ipv6"
 
 export type IpScope =
@@ -19,8 +21,10 @@ export type IpInfo = {
   isp: string
   latitude: number | null
   longitude: number | null
+  networkType: string
   org: string
   region: string
+  source: "ipapi.is" | "ipwho.is"
 }
 
 export type IpLookupResult =
@@ -35,16 +39,7 @@ export type IpLookupResult =
       version: IpVersion
     }
 
-export const IP_SITEMAP_ADDRESSES = [
-  "1.1.1.1",
-  "1.0.0.1",
-  "8.8.8.8",
-  "8.8.4.4",
-  "9.9.9.9",
-  "208.67.222.222",
-  "2606:4700:4700::1111",
-  "2001:4860:4860::8888",
-] as const
+export const IP_SITEMAP_ADDRESSES = getSampleIps(22)
 
 function normalizeIpInput(value: string) {
   return decodeURIComponent(value).trim().toLowerCase()
@@ -137,6 +132,96 @@ export function getIpScope(ip: string, version: IpVersion): IpScope {
   return "public"
 }
 
+type IpApiIsPayload = {
+  asn?: {
+    asn?: number
+    org?: string
+  }
+  company?: {
+    name?: string
+    type?: string
+  }
+  ip?: string
+  location?: {
+    city?: string
+    country?: string
+    latitude?: number
+    longitude?: number
+    state?: string
+  }
+}
+
+type IpWhoIsPayload = {
+  asn?: number
+  city?: string
+  connection?: {
+    isp?: string
+    org?: string
+    type?: string
+  }
+  country?: string
+  ip?: string
+  latitude?: number
+  longitude?: number
+  region?: string
+  success?: boolean
+}
+
+function mapIpApiIsPayload(
+  payload: IpApiIsPayload,
+  fallbackIp: string
+): IpLookupResult & { kind: "public" } {
+  const organization = payload.company?.name ?? payload.asn?.org ?? "Unknown"
+  const asn = payload.asn?.asn ? `AS${payload.asn.asn}` : "Unknown"
+
+  return {
+    info: {
+      asn,
+      city: payload.location?.city ?? "Unknown",
+      country: payload.location?.country ?? "Unknown",
+      ip: payload.ip ?? fallbackIp,
+      isp: organization,
+      latitude:
+        typeof payload.location?.latitude === "number" ? payload.location.latitude : null,
+      longitude:
+        typeof payload.location?.longitude === "number" ? payload.location.longitude : null,
+      networkType: payload.company?.type ?? "Unknown",
+      org: organization,
+      region: payload.location?.state ?? "Unknown",
+      source: "ipapi.is",
+    },
+    kind: "public",
+    version: fallbackIp.includes(":") ? "ipv6" : "ipv4",
+  }
+}
+
+function mapIpWhoIsPayload(
+  payload: IpWhoIsPayload,
+  fallbackIp: string,
+  version: IpVersion
+): IpLookupResult & { kind: "public" } {
+  const organization = payload.connection?.org ?? payload.connection?.isp ?? "Unknown"
+  const asn = payload.asn ? `AS${payload.asn}` : "Unknown"
+
+  return {
+    info: {
+      asn,
+      city: payload.city ?? "Unknown",
+      country: payload.country ?? "Unknown",
+      ip: payload.ip ?? fallbackIp,
+      isp: payload.connection?.isp ?? organization,
+      latitude: typeof payload.latitude === "number" ? payload.latitude : null,
+      longitude: typeof payload.longitude === "number" ? payload.longitude : null,
+      networkType: payload.connection?.type ?? "Unknown",
+      org: organization,
+      region: payload.region ?? "Unknown",
+      source: "ipwho.is",
+    },
+    kind: "public",
+    version,
+  }
+}
+
 export async function fetchIpInfo(ip: string, revalidateSeconds = 3600): Promise<IpLookupResult> {
   const validation = validateIpAddress(ip)
   if (!validation.isValid) {
@@ -155,55 +240,49 @@ export async function fetchIpInfo(ip: string, revalidateSeconds = 3600): Promise
   // Rate limiting hint:
   // If /ip/[ip] becomes a high-volume crawl target, front this API call with a cached server-side
   // store and apply per-IP or per-path throttling before calling the upstream free-tier endpoint.
-  const response = await fetch(
-    `https://api.ipapi.is/?q=${encodeURIComponent(validation.normalized)}`,
+  const providers = [
     {
-      cache: "force-cache",
-      next: { revalidate: revalidateSeconds },
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error(`IP info request failed with ${response.status}`)
-  }
-
-  const payload = (await response.json()) as {
-    company?: {
-      name?: string
-    }
-    ip?: string
-    asn?: {
-      asn?: number
-      org?: string
-    }
-    location?: {
-      city?: string
-      country?: string
-      latitude?: number
-      longitude?: number
-      state?: string
-    }
-  }
-  const organization = payload.company?.name ?? payload.asn?.org ?? "Unknown"
-  const asn = payload.asn?.asn ? `AS${payload.asn.asn}` : "Unknown"
-
-  return {
-    info: {
-      asn,
-      city: payload.location?.city ?? "Unknown",
-      country: payload.location?.country ?? "Unknown",
-      ip: payload.ip ?? validation.normalized,
-      isp: organization,
-      latitude:
-        typeof payload.location?.latitude === "number" ? payload.location.latitude : null,
-      longitude:
-        typeof payload.location?.longitude === "number" ? payload.location.longitude : null,
-      org: organization,
-      region: payload.location?.state ?? "Unknown",
+      name: "ipapi.is" as const,
+      url: `https://api.ipapi.is/?q=${encodeURIComponent(validation.normalized)}`,
+      map: async (response: Response) =>
+        mapIpApiIsPayload((await response.json()) as IpApiIsPayload, validation.normalized),
     },
-    kind: "public",
-    version: validation.version,
+    {
+      name: "ipwho.is" as const,
+      url: `https://ipwho.is/${encodeURIComponent(validation.normalized)}`,
+      map: async (response: Response) => {
+        const payload = (await response.json()) as IpWhoIsPayload
+        if (payload.success === false) {
+          throw new Error("Fallback provider returned an unsuccessful lookup response")
+        }
+        return mapIpWhoIsPayload(payload, validation.normalized, validation.version)
+      },
+    },
+  ]
+
+  let lastError: Error | null = null
+
+  for (const provider of providers) {
+    try {
+      const response = await fetch(provider.url, {
+        cache: "force-cache",
+        headers: {
+          accept: "application/json",
+        },
+        next: { revalidate: revalidateSeconds },
+      })
+
+      if (!response.ok) {
+        throw new Error(`${provider.name} request failed with ${response.status}`)
+      }
+
+      return await provider.map(response)
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error("IP lookup failed.")
+    }
   }
+
+  throw lastError ?? new Error("IP lookup failed.")
 }
 
 export function describeIpScope(scope: Exclude<IpScope, "public">) {

@@ -1,126 +1,283 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { Globe, Radio, Server, Wifi } from "lucide-react"
 import { permanentRedirect } from "next/navigation"
 
 import { InvalidParam } from "@/components/invalid-param"
-import { CanonicalSelf } from "@/components/seo/canonical-self"
-import { JsonLd } from "@/components/seo/json-ld"
-import { RelatedLinks } from "@/components/seo/related-links"
-import { Surface } from "@/components/surface"
-import { ToolCard } from "@/components/tool-card"
+import { ProgrammaticLayout } from "@/components/ProgrammaticLayout"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
   DNS_RECORD_DEFINITIONS,
-  DNS_RECORD_TYPES,
   DNS_SITEMAP_DOMAINS,
   fetchDnsRecordsForPage,
   formatDnsRecordValue,
   isValidDnsDomain,
   normalizeDnsDomain,
   parseSoaRecord,
+  type DnsRecordResult,
   type DnsRecordType,
 } from "@/lib/network-dns"
+import type { ProgrammaticPageData } from "@/lib/programmatic-content"
 import {
-  buildBreadcrumbList,
-  buildFaqPageSchema,
   buildWebPageSchema,
-  combineJsonLd,
+  type JsonLdObject,
 } from "@/lib/structured-data"
+import { getToolBySlug } from "@/lib/tools-catalogue"
+
+import { DNSDynamicClient } from "./client"
 
 type Props = {
   params: Promise<{ domain: string }>
 }
 
 export const revalidate = 1800
+export const dynamicParams = true
 
-const relatedTools = [
-  {
-    name: "What Is My IP",
-    description: "View the public IP your browser exposes and compare local network context.",
-    href: "/what-is-my-ip",
-    tags: ["Local", "Edge"] as const,
-    icon: <Globe className="h-4 w-4" />,
-  },
-  {
-    name: "Site Status",
-    description: "Check whether the domain is reachable or whether the issue sits above DNS.",
-    href: "/site-status",
-    tags: ["Edge"] as const,
-    icon: <Wifi className="h-4 w-4" />,
-  },
-  {
-    name: "Ping Test",
-    description: "Measure latency after DNS resolves so you can separate resolution from transport issues.",
-    href: "/ping-test",
-    tags: ["Edge", "Worker"] as const,
-    icon: <Radio className="h-4 w-4" />,
-  },
-]
+const dnsTool = getToolBySlug("dns-lookup")
+
+if (!dnsTool) {
+  throw new Error("DNS lookup tool definition is missing from the catalogue.")
+}
+
+function countWords(values: string[]) {
+  return values
+    .join(" ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length
+}
+
+function buildDnsTitle(domain: string) {
+  return `DNS Lookup for ${domain} – A, MX, NS, TXT Records | Plain Tools`
+}
+
+function buildDnsDescription(domain: string) {
+  return `Check DNS records for ${domain} including A, AAAA, MX, NS, TXT, SOA, and CNAME answers. Review TTL values, nameservers for ${domain}, mail-routing clues, and privacy-first DNS diagnostics.`
+}
 
 function buildDnsFaq(domain: string) {
   return [
     {
       question: `What DNS records should I check first for ${domain}?`,
       answer:
-        "Start with A and AAAA for web reachability, MX for email delivery, NS for delegation, and TXT when you are troubleshooting verification or mail authentication.",
+        "Start with A and AAAA if the website is not loading, MX if mail is bouncing, NS if you suspect a delegation problem, and TXT when verification, SPF, DKIM, or DMARC checks are failing.",
     },
     {
-      question: `Why do DNS answers for ${domain} sometimes change between checks?`,
+      question: `Why do DNS results for ${domain} sometimes change between checks?`,
       answer:
-        "Resolvers can return different answers because of load balancing, geographic routing, DNS propagation, or multiple valid records with the same name.",
+        "Resolvers can answer differently because of caching, load balancing, geographic routing, or because one resolver has not refreshed the record yet. TTL values help explain how long stale answers can persist.",
     },
     {
       question: "What does TTL mean in a DNS lookup?",
       answer:
-        "TTL is the cache lifetime for the answer in seconds. Lower TTL values allow faster changes but make resolvers re-query more often.",
+        "TTL is the cache lifetime in seconds. A higher TTL means resolvers can keep an answer longer, which is good for stability but slower for rollbacks and record changes.",
     },
     {
-      question: `Why can ${domain} look normal in DNS but still fail for users?`,
+      question: `Can ${domain} have valid DNS and still be down?`,
       answer:
-        "A domain can resolve correctly while the origin server, CDN, TLS configuration, or network path still has problems. That is why DNS should be checked alongside site status and latency.",
+        "Yes. DNS only proves where traffic should go. The origin, CDN, TLS configuration, firewall, or application can still fail after resolution, which is why DNS checks should be paired with status and latency tools.",
+    },
+    {
+      question: `Why do nameservers for ${domain} matter?`,
+      answer:
+        "The NS records show which provider is authoritative for the zone. If the wrong nameservers are delegated at the registry, every other record can appear inconsistent depending on which resolver you query.",
+    },
+    {
+      question: "Does Plain Tools store the lookup target?",
+      answer:
+        "Plain Tools does not ask for uploads or account data here. The page runs the minimum public DNS query needed to return the records and present them with TTL and record-type explanations.",
     },
   ]
 }
 
-function buildDnsDescription(domain: string) {
-  return `Check A, AAAA, MX, NS, TXT, SOA, and CNAME records for ${domain}. View TTL values, nameserver delegation, email routing, and DNS propagation clues with a privacy-first DNS lookup and strong follow-up links for IP, ping, and status checks.`
-}
+function buildDnsPageData(domain: string): ProgrammaticPageData {
+  const canonicalPath = `/dns/${encodeURIComponent(domain)}`
+  const intro = [
+    `${domain} DNS lookups usually happen when something already feels wrong. A website may be loading for one person and failing for another, mail may be bouncing without a clear reason, or a recent DNS change may not be visible yet on every network. This route is designed to answer that specific debugging intent instead of acting like a thin doorway. You get the live records for ${domain}, the TTL values that explain cache behaviour, and enough context to decide whether the issue is delegation, propagation, mail routing, or something above DNS entirely.`,
+    `The page is also built to be operationally safe. There is no file upload, no account step, and no need to bounce through multiple tabs to understand what the record set means. The lookup runs securely against public resolver infrastructure, Plain Tools only requests the data needed for the response, and the surrounding content stays focused on what engineers, operators, and non-specialists actually need when they search phrases like "dns records ${domain}" or "nameservers for ${domain}".`,
+  ]
+  const whyUsersNeedThis = [
+    `DNS issues are deceptively expensive because they often look like application failures at first. If A or AAAA records point to the wrong origin, a site can appear down even though the server is healthy. If MX records are missing or misprioritized, email delivery fails while the website still looks normal. If TXT values are malformed, ownership verification and mail authentication break even though the rest of the zone is intact. This page narrows all of that into one route for ${domain} so users do not need to mentally reconstruct the zone from scattered command outputs.`,
+    `Variant intent matters here. Someone searching for a DNS lookup page is rarely doing general education. They normally need to answer a production question, compare current answers with expected infrastructure, or explain to another teammate why a change has not propagated yet. That is why the content below spends time on TTL, delegation, and next-step diagnosis instead of just listing records in a raw table.`,
+  ]
+  const howItWorks = [
+    `The record tables below are rendered on the server with cached DNS-over-HTTPS responses so the page remains indexable and shareable. Each record group shows the raw answer value, the TTL, the resolver that returned it, and the DNS status code where available. That gives you one stable reference page for ${domain} instead of a transient browser-only debug panel.`,
+    `When you need a fresh manual check, use the live lookup widget in the sidebar. That widget lets you run a new DNS query, switch record types, and move straight into a new canonical /dns/[domain] route. The result is a workflow that supports both search intent and active troubleshooting without forcing users back to a generic tool homepage.`,
+  ]
+  const howToSteps = [
+    {
+      name: "Confirm the hostname you actually mean to inspect",
+      text: `Check whether the issue sits on ${domain}, a www subdomain, a mail hostname, or a service-specific subdomain. Debugging the wrong host is a common source of wasted time, especially after provider migrations.`,
+    },
+    {
+      name: "Read the A and AAAA answers first for web reachability",
+      text: "These records tell you which IPv4 and IPv6 targets browsers should contact. If the origin or CDN looks wrong, fix that first before spending time deeper in the stack.",
+    },
+    {
+      name: "Check MX, TXT, and NS when the problem is email or verification",
+      text: "Mail delivery and domain verification usually fail because of missing or malformed MX and TXT entries, while NS issues can point to a delegation problem at the zone level.",
+    },
+    {
+      name: "Use TTL values to judge propagation risk",
+      text: "A low TTL suggests resolvers should refresh soon. A high TTL means old answers can remain visible longer, which explains why two networks can disagree after a change.",
+    },
+    {
+      name: "Continue into IP, ping, or status checks if DNS looks correct",
+      text: "Once the records match the expected infrastructure, the next question is whether the target IP is owned by the right provider, whether the host responds, and whether the site is actually healthy.",
+    },
+  ]
+  const explanationBlocks = [
+    {
+      title: "Why record type coverage matters",
+      paragraphs: [
+        `A DNS lookup page becomes much more useful when it includes A, AAAA, MX, NS, TXT, SOA, and CNAME together. Web, mail, verification, and zone-authority issues often overlap, so isolating only one record type can hide the real cause of the incident.`,
+        `That is especially true for ${domain} when teams are migrating providers, rotating infrastructure, or investigating partial failures that only affect one region, resolver, or delivery path.`,
+      ],
+    },
+    {
+      title: "How TTL changes the interpretation",
+      paragraphs: [
+        "A DNS answer is not just a value. The TTL tells you how long a resolver may continue serving that answer from cache before it asks again. During a migration or rollback, that one number often explains why one observer sees the new state while another still sees the old state.",
+        "Engineers often skip this and jump straight to blaming the upstream service. A page that exposes TTL next to the answer shortens that loop and makes the route useful for real troubleshooting, not just curiosity clicks.",
+      ],
+    },
+    {
+      title: "Why this route links into adjacent diagnostics",
+      paragraphs: [
+        "DNS is only the first layer. Once resolution looks healthy, users usually need to inspect IP ownership, run a ping or reachability check, or verify whether the service itself is degraded. Strong internal links keep that path inside the same intent cluster instead of sending users back to search.",
+        "That internal-link structure is important for indexing and useful for people. It helps search engines understand the network-tool silo and helps users continue the diagnosis from the same context.",
+      ],
+    },
+  ]
+  const privacyNote = [
+    `This route does not ask you to upload files, paste secrets, or create an account. The page only requests the public DNS data needed to answer the lookup. In practical terms that means the query target is the domain you asked for, and the result is returned with no extra workflow baggage.`,
+    `Plain Tools stays explicit about the trade-off: DNS data lives on the public internet, so the page has to query a public resolver to retrieve it. The privacy-first part is that the request stays narrow, the route does not collect extra document data, and the page immediately gives you the next diagnostic step without pushing you through ad-heavy intermediaries.`,
+  ]
+  const relatedTools = [
+    {
+      href: "/dns-lookup",
+      name: "DNS Lookup Tool",
+      description: "Run a fresh DNS query for another hostname or record type.",
+    },
+    {
+      href: "/what-is-my-ip",
+      name: "What Is My IP",
+      description: "Compare your own network edge with the DNS answers you are investigating.",
+    },
+    {
+      href: "/ping-test",
+      name: "Ping Test",
+      description: "Measure latency after resolution to separate DNS issues from transport issues.",
+    },
+    {
+      href: "/site-status",
+      name: "Site Status Checker",
+      description: "Confirm whether the service is up after the domain resolves.",
+    },
+    {
+      href: `/status/${encodeURIComponent(domain)}`,
+      name: `Status for ${domain}`,
+      description: "Open the matching status page to compare resolution with service health.",
+    },
+    {
+      href: "/dns/google.com",
+      name: "DNS lookup for google.com",
+      description: "Use a well-known reference domain to compare expected record patterns.",
+    },
+  ]
+  const faq = buildDnsFaq(domain)
+  const wordCount = countWords([
+    buildDnsTitle(domain),
+    buildDnsDescription(domain),
+    ...intro,
+    ...whyUsersNeedThis,
+    ...howItWorks,
+    ...howToSteps.flatMap((step) => [step.name, step.text]),
+    ...explanationBlocks.flatMap((block) => [block.title, ...block.paragraphs]),
+    ...privacyNote,
+    ...faq.flatMap((item) => [item.question, item.answer]),
+  ])
 
-export async function generateStaticParams() {
-  return DNS_SITEMAP_DOMAINS.map((domain) => ({ domain }))
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { domain } = await params
-  const normalizedDomain = normalizeDnsDomain(domain)
-
-  if (!normalizedDomain || !isValidDnsDomain(normalizedDomain)) {
-    const invalid = buildPageMetadata({
-      title: "Invalid DNS Lookup Domain | Plain Tools",
-      description:
-        "The requested domain is not valid for DNS lookup. Enter a hostname such as example.com to inspect A, MX, NS, TXT, SOA, and CNAME records.",
-      path: `/dns/${encodeURIComponent(domain)}`,
-      image: "/og/default.png",
-      googleNotranslate: true,
-    })
-
-    return {
-      ...invalid,
-      robots: {
-        index: false,
-        follow: false,
-      },
-    }
+  return {
+    canonicalPath,
+    description: buildDnsDescription(domain),
+    explanationBlocks,
+    faq,
+    howItWorks,
+    howToSteps,
+    intro,
+    paramLabel: domain,
+    paramSlug: domain,
+    privacyNote,
+    relatedTools,
+    title: buildDnsTitle(domain),
+    tool: dnsTool,
+    whyUsersNeedThis,
+    wordCount,
   }
+}
 
-  return buildPageMetadata({
-    title: `DNS Lookup for ${normalizedDomain} - A/MX/NS/TXT Records | Plain Tools`,
-    description: buildDnsDescription(normalizedDomain),
-    path: `/dns/${encodeURIComponent(normalizedDomain)}`,
-    image: "/og/default.png",
-    googleNotranslate: true,
-  })
+function DnsResultsSection({
+  domain,
+  records,
+}: {
+  domain: string
+  records: DnsRecordResult[]
+}) {
+  const totalAnswers = records.reduce((sum, record) => sum + record.answers.length, 0)
+
+  return (
+    <section className="space-y-6 notranslate" translate="no">
+      <section className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+          Live DNS records for {domain}
+        </h2>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
+          This section shows live answers for A, AAAA, MX, NS, TXT, SOA, and CNAME. Use the answer
+          values together with TTL to decide whether the zone is correct, stale, or only partly
+          propagated.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent/90">
+              Record groups
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{records.length}</p>
+          </div>
+          <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent/90">
+              Answers returned
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{totalAnswers}</p>
+          </div>
+          <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent/90">
+              Coverage
+            </p>
+            <p className="mt-2 text-sm text-foreground">
+              A, AAAA, MX, NS, TXT, SOA, CNAME
+            </p>
+          </div>
+          <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent/90">
+              Lookup model
+            </p>
+            <p className="mt-2 text-sm text-foreground">Secure public resolver query</p>
+          </div>
+        </div>
+      </section>
+
+      {records.map((record) => (
+        <RecordTable
+          key={record.type}
+          answers={record.answers}
+          domain={domain}
+          error={record.error}
+          resolver={record.resolver}
+          status={record.status}
+          type={record.type}
+        />
+      ))}
+    </section>
+  )
 }
 
 function RecordTable({
@@ -131,7 +288,7 @@ function RecordTable({
   status,
   error,
 }: {
-  answers: Awaited<ReturnType<typeof fetchDnsRecordsForPage>>[number]["answers"]
+  answers: DnsRecordResult["answers"]
   domain: string
   error: string | null
   resolver: string | null
@@ -144,9 +301,9 @@ function RecordTable({
     <article className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">
             {definition.label}
-          </h2>
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             {definition.explanation}
           </p>
@@ -206,7 +363,7 @@ function RecordTable({
                             <dd>{parsedSoa.primaryNs}</dd>
                           </div>
                           <div>
-                            <dt className="font-medium text-foreground">Admin Mailbox</dt>
+                            <dt className="font-medium text-foreground">Admin mailbox</dt>
                             <dd>{parsedSoa.adminEmail}</dd>
                           </div>
                           <div>
@@ -244,6 +401,80 @@ function RecordTable({
   )
 }
 
+function DnsCommonIssuesSection({ domain }: { domain: string }) {
+  return (
+    <section className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
+      <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+        Common DNS issues to watch for on {domain}
+      </h2>
+      <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground md:text-base">
+        <p>
+          The most common production mistake is a mismatch between the expected provider and the
+          actual record target. A records might still point at an old server after a migration, or
+          NS records might show that the domain is delegated to a different provider than the team
+          assumes. That usually creates confusing partial failures where one network works while
+          another still sees stale answers.
+        </p>
+        <p>
+          Email problems often come from MX and TXT, not the website records. If mail routing,
+          SPF, DKIM, or DMARC entries are missing or malformed, the website can remain fully
+          healthy while customer emails fail. This is why the route shows all major record types
+          together rather than only the web-facing ones.
+        </p>
+        <p>
+          Finally, remember that correct DNS does not prove end-to-end availability. Once the
+          records for {domain} look right, move to IP ownership, ping, and status checks to confirm
+          that the resolved target actually responds and belongs to the provider you expect.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+export async function generateStaticParams() {
+  return DNS_SITEMAP_DOMAINS.map((domain) => ({ domain }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { domain } = await params
+  const normalizedDomain = normalizeDnsDomain(domain)
+
+  if (!normalizedDomain || !isValidDnsDomain(normalizedDomain)) {
+    const invalid = buildPageMetadata({
+      title: "Invalid DNS Lookup Domain | Plain Tools",
+      description:
+        "The requested domain is not valid for DNS lookup. Enter a hostname such as example.com to inspect A, AAAA, MX, NS, TXT, SOA, and CNAME records.",
+      path: `/dns/${encodeURIComponent(domain)}`,
+      image: "/og/default.png",
+      googleNotranslate: true,
+    })
+
+    return {
+      ...invalid,
+      robots: {
+        follow: false,
+        index: false,
+      },
+    }
+  }
+
+  return buildPageMetadata({
+    title: buildDnsTitle(normalizedDomain),
+    description: buildDnsDescription(normalizedDomain),
+    path: `/dns/${encodeURIComponent(normalizedDomain)}`,
+    image: "/og/default.png",
+    googleNotranslate: true,
+  })
+}
+
+function buildDnsSchema(domain: string): JsonLdObject {
+  return buildWebPageSchema({
+    description: buildDnsDescription(domain),
+    name: `DNS Lookup for ${domain}`,
+    url: buildCanonicalUrl(`/dns/${encodeURIComponent(domain)}`),
+  })
+}
+
 export default async function DNSDomainPage({ params }: Props) {
   const { domain } = await params
   const normalizedDomain = normalizeDnsDomain(domain)
@@ -252,9 +483,9 @@ export default async function DNSDomainPage({ params }: Props) {
     return (
       <InvalidParam
         paramType="domain"
-        value={domain}
         toolHref="/dns-lookup"
         toolName="DNS Lookup"
+        value={domain}
       />
     )
   }
@@ -263,248 +494,41 @@ export default async function DNSDomainPage({ params }: Props) {
     permanentRedirect(`/dns/${encodeURIComponent(normalizedDomain)}`)
   }
 
-  const faq = buildDnsFaq(normalizedDomain)
   const records = await fetchDnsRecordsForPage(normalizedDomain, revalidate)
-  const currentPath = `/dns/${encodeURIComponent(normalizedDomain)}`
-  const schema = combineJsonLd([
-    buildWebPageSchema({
-      name: `DNS Lookup for ${normalizedDomain}`,
-      description: buildDnsDescription(normalizedDomain),
-      url: buildCanonicalUrl(currentPath),
-    }),
-    buildFaqPageSchema(faq),
-    buildBreadcrumbList([
-      { name: "Home", url: buildCanonicalUrl("/") },
-      { name: "Network Tools", url: buildCanonicalUrl("/network-tools") },
-      { name: "DNS Lookup", url: buildCanonicalUrl("/dns-lookup") },
-      {
-        name: normalizedDomain,
-        url: buildCanonicalUrl(currentPath),
-      },
-    ]),
-  ])
+  const page = buildDnsPageData(normalizedDomain)
 
   return (
-    <article className="category-network">
-      <CanonicalSelf pathname={currentPath} />
-      {schema ? <JsonLd id={`dns-lookup-${normalizedDomain}-schema`} schema={schema} /> : null}
-
-      <div className="border-b border-border/50">
-        <div className="mx-auto max-w-6xl px-4 py-3">
-          <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
-            <ol className="flex flex-wrap items-center gap-2">
-              <li><Link href="/" className="hover:text-foreground">Home</Link></li>
-              <li>/</li>
-              <li><Link href="/network-tools" className="hover:text-foreground">Network Tools</Link></li>
-              <li>/</li>
-              <li><Link href="/dns-lookup" className="hover:text-foreground">DNS Lookup</Link></li>
-              <li>/</li>
-              <li className="text-foreground">{normalizedDomain}</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <header className="max-w-4xl">
-          <div className="inline-flex items-center rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-            DNS Records with TTL
-          </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-            DNS Lookup for {normalizedDomain}
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-            Check real A, AAAA, MX, NS, TXT, SOA, and CNAME records for{" "}
-            <span className="font-medium text-foreground">{normalizedDomain}</span>. This page
-            fetches live DNS answers, shows TTL values, and explains what each record means so you
-            can diagnose propagation, mail routing, nameserver delegation, and web-resolution
-            issues without guessing.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
-            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1">
-              Long-tail DNS diagnostics
-            </span>
-            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1">
-              TTL visibility
-            </span>
-            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1">
-              Email and nameserver checks
-            </span>
-          </div>
-        </header>
-
-        <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="space-y-8">
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                DNS record summary for {normalizedDomain}
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Each record type below answers a different troubleshooting question. Web access
-                usually starts with A or AAAA, email depends on MX, delegation depends on NS and
-                SOA, and TXT often explains why verification or SPF checks are failing.
-              </p>
-            </Surface>
-
-            {records.map((record) => (
-              <RecordTable
-                key={record.type}
-                answers={record.answers}
-                domain={normalizedDomain}
-                error={record.error}
-                resolver={record.resolver}
-                status={record.status}
-                type={record.type}
-              />
-            ))}
-
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                What these DNS records mean
-              </h2>
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
-                {DNS_RECORD_TYPES.map((type) => (
-                  <div key={type} className="rounded-xl border border-border/70 bg-background/60 p-4">
-                    <h3 className="font-semibold text-foreground">
-                      {DNS_RECORD_DEFINITIONS[type].label}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {DNS_RECORD_DEFINITIONS[type].description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </Surface>
-
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                Why DNS matters for {normalizedDomain}
-              </h2>
-              <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
-                <p>
-                  DNS is the control plane that tells browsers, mail servers, and other services
-                  where the domain should point. When users report that a website is down, email is
-                  bouncing, or a verification token is failing, DNS is often the first place to
-                  check because it can break before the application itself changes.
-                </p>
-                <p>
-                  For {normalizedDomain}, the important question is not only whether a record
-                  exists. It is whether the answer matches the infrastructure you expect and
-                  whether the TTL values explain why one resolver still shows an older result.
-                  That makes this route useful for propagation checks, SaaS onboarding, domain
-                  verification, and routine production troubleshooting.
-                </p>
-              </div>
-            </Surface>
-
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                Privacy and lookup method
-              </h2>
-              <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
-                <p>
-                  This page performs server-side DNS resolution against public resolvers so the live
-                  record tables can be indexed and shared as a stable reference. The lookup target
-                  is the domain you requested, not a file or private document, and Plain Tools does
-                  not ask you to upload anything to inspect these DNS answers.
-                </p>
-                <p>
-                  For visitors moving between network tools, the privacy model stays consistent:
-                  browser-first flows stay in your browser where possible, and remote lookups are
-                  limited to the minimum public query needed to return DNS, IP, or status data. Use
-                  the related links below to continue the diagnosis without leaving the main
-                  troubleshooting path.
-                </p>
-              </div>
-            </Surface>
-
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                Common DNS issues
-              </h2>
-              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                <li className="rounded-xl border border-border/70 bg-background/60 p-4">
-                  Wrong A or AAAA values can send traffic to the wrong host or leave one protocol
-                  path broken while another still works.
-                </li>
-                <li className="rounded-xl border border-border/70 bg-background/60 p-4">
-                  Missing or incorrect MX records can break mail delivery even when the website is
-                  healthy.
-                </li>
-                <li className="rounded-xl border border-border/70 bg-background/60 p-4">
-                  TXT records are often the cause of failed SPF, DKIM, DMARC, and domain
-                  verification checks because one typo or missing quote invalidates the entry.
-                </li>
-                <li className="rounded-xl border border-border/70 bg-background/60 p-4">
-                  Delegation problems show up in NS and SOA first. If nameservers are wrong, every
-                  other record can look inconsistent depending on which resolver you ask.
-                </li>
-              </ul>
-            </Surface>
-
-            <RelatedLinks
-              currentPath={currentPath}
-              heading={`You might also need for ${normalizedDomain}`}
-            />
-
-            <Surface as="section">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                Frequently asked questions
-              </h2>
-              <div className="mt-4 space-y-4">
-                {faq.map((item) => (
-                  <div key={item.question} className="rounded-xl border border-border/70 bg-background/60 p-4">
-                    <h3 className="font-semibold text-foreground">{item.question}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {item.answer}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </Surface>
-          </div>
-
-          <aside className="space-y-6">
-            <Surface>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                Run another lookup
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Need a fresh hostname or a browser-side query flow? Open the main DNS lookup tool.
-              </p>
-              <Link
-                href="/dns-lookup"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[var(--category-accent,var(--accent))] hover:underline"
-              >
-                Open DNS Lookup Tool
-                <Server className="h-4 w-4" />
-              </Link>
-            </Surface>
-
-            <div>
-              <h2 className="mb-4 text-lg font-semibold tracking-tight text-foreground">
-                Related tools
-              </h2>
-              <div className="space-y-3">
-                {relatedTools.map((tool) => (
-                  <ToolCard key={tool.href} {...tool} />
-                ))}
-              </div>
-            </div>
-
-            <Surface>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                Next troubleshooting step
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                If DNS looks correct but the service still fails, continue with a status or
-                latency check. DNS tells you where traffic should go. It does not prove that the
-                origin is healthy after resolution.
-              </p>
-            </Surface>
-          </aside>
-        </div>
-      </div>
-    </article>
+    <ProgrammaticLayout
+      beforeStructuredContent={
+        <DnsResultsSection domain={normalizedDomain} records={records} />
+      }
+      breadcrumbs={[
+        { href: "/", label: "Home" },
+        { href: "/network-tools", label: "Network Tools" },
+        { href: "/dns-lookup", label: "DNS Lookup" },
+        { label: normalizedDomain },
+      ]}
+      featureList={[
+        "Check A, AAAA, MX, NS, TXT, SOA, and CNAME answers",
+        "Review TTL values and nameserver delegation for the domain",
+        "Continue into IP lookup, ping, and status diagnostics",
+      ]}
+      heroBadges={["secure lookup", "ttl aware", "privacy-first", "no uploads"]}
+      liveTool={<DNSDynamicClient domain={normalizedDomain} />}
+      liveToolDescription="Run a fresh browser-side DNS query, switch record types, and open the canonical detail page for the next hostname without uploading anything."
+      liveToolTitle="Run another DNS lookup"
+      page={page}
+      relatedSectionTitle={`You might also need after checking ${normalizedDomain}`}
+      schema={buildDnsSchema(normalizedDomain)}
+      showVerifyLocalProcessing={false}
+      siloLinks={[
+        { href: "/dns-lookup", label: "DNS lookup tool" },
+        { href: "/what-is-my-ip", label: "What is my IP" },
+        { href: "/ping-test", label: "Ping test" },
+        { href: `/status/${encodeURIComponent(normalizedDomain)}`, label: `Status for ${normalizedDomain}` },
+      ]}
+      titleOverride={`DNS Lookup for ${normalizedDomain}`}
+      afterStructuredContent={<DnsCommonIssuesSection domain={normalizedDomain} />}
+    />
   )
 }

@@ -30,10 +30,15 @@ type ProgrammaticLayoutProps = {
   afterStructuredContent?: ReactNode
   beforeStructuredContent?: ReactNode
   breadcrumbs?: Array<{ href?: string; label: string }>
+  featureList?: string[]
+  heroBadges?: string[]
   liveTool?: ReactNode
+  liveToolDescription?: string
+  liveToolTitle?: string
   page: ProgrammaticPageData
   relatedSectionTitle?: string
   schema?: JsonLdObject | null
+  showVerifyLocalProcessing?: boolean
   sidebarSilo?: ReactNode
   siloLinks?: Array<{ href: string; label: string }>
   titleOverride?: string
@@ -67,10 +72,15 @@ export function ProgrammaticLayout({
   afterStructuredContent,
   beforeStructuredContent,
   breadcrumbs,
+  featureList,
+  heroBadges,
   liveTool,
+  liveToolDescription,
+  liveToolTitle,
   page,
   relatedSectionTitle = "Related Tools",
   schema,
+  showVerifyLocalProcessing = true,
   sidebarSilo,
   siloLinks,
   titleOverride,
@@ -99,12 +109,14 @@ export function ProgrammaticLayout({
       name: resolvedTitle,
       description: page.description,
       url: canonicalUrl,
-      featureList: [
-        "100% local browser processing for the core workflow",
-        "No upload step for the main task",
-        "Privacy-first explanations and review guidance",
-        "Related internal tool cluster for the next constraint",
-      ],
+      featureList:
+        featureList ??
+        [
+          "100% local browser processing for the core workflow",
+          "No upload step for the main task",
+          "Privacy-first explanations and review guidance",
+          "Related internal tool cluster for the next constraint",
+        ],
     }),
     buildFaqPageSchema(page.faq),
     buildBreadcrumbList(
@@ -135,18 +147,19 @@ export function ProgrammaticLayout({
 
           <header className="max-w-4xl space-y-4">
             <div className="inline-flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-              <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1">
-                100% local
-              </span>
-              <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1">
-                no upload
-              </span>
-              <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1">
-                privacy-first
-              </span>
-              <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1">
-                browser-only
-              </span>
+              {(heroBadges ?? [
+                "100% local",
+                "no upload",
+                "privacy-first",
+                "browser-only",
+              ]).map((badge) => (
+                <span
+                  key={badge}
+                  className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1"
+                >
+                  {badge}
+                </span>
+              ))}
             </div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               {resolvedTitle}
@@ -208,7 +221,7 @@ export function ProgrammaticLayout({
                 ))}
               </section>
 
-              <VerifyLocalProcessing />
+              {showVerifyLocalProcessing ? <VerifyLocalProcessing /> : null}
 
               <Section
                 title="Privacy-First Callout"
@@ -273,11 +286,11 @@ export function ProgrammaticLayout({
                 translate="no"
               >
                 <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                  Try the Live Tool
+                  {liveToolTitle ?? "Try the Live Tool"}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  This workspace stays browser-only for the core local workflow. Use the real file,
-                  review the output, then download the result on-device.
+                  {liveToolDescription ??
+                    "This workspace stays browser-only for the core local workflow. Use the real file, review the output, then download the result on-device."}
                 </p>
                 <div className="mt-4">{liveTool}</div>
               </section>

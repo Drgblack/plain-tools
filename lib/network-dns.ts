@@ -1,3 +1,5 @@
+import { getSampleDomains } from "@/lib/network-utils"
+
 export type DnsRecordType = "A" | "AAAA" | "MX" | "TXT" | "NS" | "SOA" | "CNAME"
 
 export type DnsAnswer = {
@@ -42,20 +44,7 @@ export const DNS_RECORD_TYPES: readonly DnsRecordType[] = [
   "CNAME",
 ]
 
-export const DNS_SITEMAP_DOMAINS = [
-  "plain.tools",
-  "google.com",
-  "cloudflare.com",
-  "github.com",
-  "openai.com",
-  "youtube.com",
-  "amazon.com",
-  "reddit.com",
-  "netflix.com",
-  "microsoft.com",
-  "apple.com",
-  "stripe.com",
-] as const
+export const DNS_SITEMAP_DOMAINS = getSampleDomains(72)
 
 export const DNS_RECORD_DEFINITIONS: Record<DnsRecordType, DnsRecordDefinition> = {
   A: {
