@@ -109,6 +109,19 @@ export default function RootLayout({
   return (
     <html lang="en-GB" suppressHydrationWarning>
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMDZKHTSJG" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WMDZKHTSJG', {
+    anonymize_ip: true
+  });
+`,
+          }}
+        />
         <script dangerouslySetInnerHTML={{ __html: safeThemeInitScript }} />
         <script defer data-domain="plain.tools" src="https://plausible.io/js/script.js" />
         <AdsenseScript />
