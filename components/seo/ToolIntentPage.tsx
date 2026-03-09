@@ -5,6 +5,7 @@ import { FaqBlock } from "@/components/seo/faq-block"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { VerifyLocalProcessing } from "@/components/verify-local-processing"
 import AnnotatePdfTool from "@/components/tools/annotate-pdf-tool"
 import ComparePdfTool from "@/components/tools/compare-pdf-tool"
 import CompressPdfTool from "@/components/tools/compress-pdf-tool"
@@ -94,6 +95,14 @@ const TOOL_COMPONENTS: Record<string, ComponentType> = {
   "word-to-pdf": WordToPdfTool,
 }
 
+const VERIFY_LOCAL_PROCESSING_SLUGS = new Set([
+  "compress-pdf-online",
+  "merge-pdf-files",
+  "convert-pdf-to-word",
+  "jpg-to-pdf",
+  "pdf-to-jpg",
+])
+
 function FallbackToolWorkspace() {
   return (
     <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
@@ -118,6 +127,7 @@ export function ToolIntentPage({
   const canonical = buildCanonicalUrl(`/${slug}`)
   const toolHref = `/tools/${toolSlug}`
   const ToolComponent = TOOL_COMPONENTS[toolSlug] ?? FallbackToolWorkspace
+  const showVerifyLocalProcessing = VERIFY_LOCAL_PROCESSING_SLUGS.has(slug)
   const schema = combineJsonLd([
     buildWebPageSchema({
       name: title,
@@ -229,34 +239,38 @@ export function ToolIntentPage({
             <ToolComponent />
           </section>
 
-          <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
-            <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
-              Why Plain.tools is private
-            </h2>
-            <div className="mt-3 grid gap-3 md:grid-cols-3">
-              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
-                <h3 className="text-sm font-semibold text-foreground">No upload step</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  The core file workflow on this page runs in your browser, so the document does
-                  not need to be sent to a Plain.tools server to complete the task.
-                </p>
+          {showVerifyLocalProcessing ? (
+            <VerifyLocalProcessing />
+          ) : (
+            <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
+              <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
+                Why Plain.tools is private
+              </h2>
+              <div className="mt-3 grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                  <h3 className="text-sm font-semibold text-foreground">No upload step</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    The core file workflow on this page runs in your browser, so the document does
+                    not need to be sent to a Plain.tools server to complete the task.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                  <h3 className="text-sm font-semibold text-foreground">Easy to verify</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    You can inspect browser network requests yourself while using the tool and confirm
+                    whether file bytes are being transmitted.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                  <h3 className="text-sm font-semibold text-foreground">Built for task flow</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    The aim is to let you finish a PDF job quickly without account friction, upload
+                    queues, or hidden processing steps that are hard to audit.
+                  </p>
+                </div>
               </div>
-              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
-                <h3 className="text-sm font-semibold text-foreground">Easy to verify</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  You can inspect browser network requests yourself while using the tool and confirm
-                  whether file bytes are being transmitted.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
-                <h3 className="text-sm font-semibold text-foreground">Built for task flow</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  The aim is to let you finish a PDF job quickly without account friction, upload
-                  queues, or hidden processing steps that are hard to audit.
-                </p>
-              </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
             <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
