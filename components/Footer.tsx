@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
+import { NoTranslate } from "@/components/no-translate"
 
 type FooterLink = {
   label: string
@@ -76,8 +77,8 @@ export function Footer() {
     <footer className="border-t border-border/60 bg-background/95">
       <div className="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div className="mb-10 md:mb-12">
-          <Link href="/" className="text-lg font-semibold tracking-tight text-foreground">
-            Plain Tools
+          <Link href="/" className="text-lg font-semibold tracking-tight text-foreground" translate="no">
+            <NoTranslate>Plain Tools</NoTranslate>
           </Link>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
             Private browser utilities for everyday PDF and file workflows. Processed locally with no
@@ -97,8 +98,19 @@ export function Footer() {
                       target={link.external ? "_blank" : undefined}
                       rel={link.external ? "noopener noreferrer" : undefined}
                       className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      translate={
+                        link.href.startsWith("mailto:") ||
+                        link.label.includes("Plain") ||
+                        link.label.includes("TimeMeaning")
+                          ? "no"
+                          : undefined
+                      }
                     >
-                      {link.label}
+                      {link.label.includes("Plain") || link.label.includes("TimeMeaning") || link.href.startsWith("mailto:") ? (
+                        <NoTranslate>{link.label}</NoTranslate>
+                      ) : (
+                        link.label
+                      )}
                       {link.external ? <ExternalLink className="h-3 w-3" /> : null}
                     </Link>
                   </li>
@@ -111,9 +123,12 @@ export function Footer() {
         <div className="mt-12 border-t border-border/60 pt-6 text-sm text-muted-foreground">
           <p>Private browser tools. Files processed locally where supported.</p>
           <p className="mt-1">
-            Looking for calculators? Visit Plain Figures. Need timezone clarity? Use TimeMeaning.
+            Looking for calculators? Visit <NoTranslate>Plain Figures</NoTranslate>. Need
+            timezone clarity? Use <NoTranslate>TimeMeaning</NoTranslate>.
           </p>
-          <p className="mt-1">&copy; {year} Plain Tools. All rights reserved.</p>
+          <p className="mt-1">
+            &copy; {year} <NoTranslate>Plain Tools</NoTranslate>. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

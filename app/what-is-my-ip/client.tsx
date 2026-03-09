@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Server, Wifi, Radio, Copy, Check, Loader2, RefreshCw, AlertTriangle } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { ToolShell } from "@/components/tool-shell"
@@ -244,10 +245,24 @@ function IPToolInterface() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        This checks your public IP through a lightweight endpoint and shows optional connection hints from your browser. No tracking is added.
+        This checks your public IP through a lightweight endpoint and shows optional connection
+        hints from your browser. No files are uploaded, and the tool only requests the network
+        data needed for this result.
       </p>
       {checkedAt ? (
         <p className="text-xs text-muted-foreground">Last checked: {new Date(checkedAt).toLocaleTimeString()}</p>
+      ) : null}
+      {publicIp ? (
+        <div className="rounded-md border border-border p-4">
+          <h3 className="text-sm font-medium text-foreground">Inspect this IP further</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Open the dedicated lookup page for ownership, ASN, ISP, and approximate geolocation
+            context for <span className="font-mono text-foreground">{publicIp}</span>.
+          </p>
+          <Button asChild variant="outline" size="sm" className="mt-3">
+            <Link href={`/ip/${encodeURIComponent(publicIp)}`}>Open IP ownership lookup</Link>
+          </Button>
+        </div>
       ) : null}
     </div>
   )
@@ -261,10 +276,16 @@ export function WhatIsMyIPClient() {
   return (
     <ToolShell
       name="What Is My IP Address"
-      description="View your public IP address and basic browser-provided connection details"
+      description="Check your public IP address, confirm IPv4 or IPv6 exposure, and review browser-provided connection details"
       category={{ name: "Network Tools", href: "/network-tools", type: "network" }}
-      tags={["Local", "Edge"]}
-      explanation="This tool fetches your public IP from a simple IP endpoint and displays network details your browser already exposes (if supported). No files are involved and no tracking scripts are added."
+      tags={["Browser-only", "No upload", "Privacy-first"]}
+      schemaPath="/what-is-my-ip"
+      schemaFeatureList={[
+        "Detect the public IP your browser currently uses",
+        "Show browser-reported connection hints when available",
+        "Link directly into IP ownership, DNS, and latency checks",
+      ]}
+      explanation="This page asks a lightweight IP endpoint what public address your browser is using right now, then combines that with connection hints your browser already exposes. It does not require file uploads, accounts, or a local install."
       faqs={faqs}
       relatedTools={relatedTools}
       examples={wellKnownIPs.map(i => ({ label: `${i.ip} (${i.name})`, href: `/ip/${i.ip}` }))}

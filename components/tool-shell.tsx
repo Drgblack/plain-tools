@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/accordion"
 import { buildStandardToolIntro } from "@/lib/tool-intro"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { NoTranslate } from "@/components/no-translate"
 
 interface FAQ {
   question: string
@@ -159,7 +160,7 @@ export function ToolShell({
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            {name}
+            <NoTranslate>{name}</NoTranslate>
           </h1>
           <p className="mt-2 text-muted-foreground">{introText}</p>
 
@@ -250,7 +251,7 @@ export function ToolShell({
 
           {/* Tool Panel */}
           <div className="order-1 lg:order-2">
-            <Surface className="sticky top-20 p-6">
+            <Surface className="sticky top-20 p-6 notranslate" data-plain-tool-shell translate="no">
               {children}
             </Surface>
           </div>

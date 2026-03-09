@@ -17,7 +17,9 @@ import {
 import {
   type DnsAnswer,
   type DnsRecordType,
+  DNS_SITEMAP_DOMAINS,
   fetchDnsRecords,
+  formatDnsRecordValue,
   isValidDnsDomain,
   normalizeDnsDomain,
 } from "@/lib/network-dns"
@@ -47,18 +49,12 @@ const relatedTools = [
 ]
 
 // Popular domains for "Try these examples"
-const popularDomains = [
-  { domain: "google.com", name: "Google" },
-  { domain: "youtube.com", name: "YouTube" },
-  { domain: "facebook.com", name: "Facebook" },
-  { domain: "amazon.com", name: "Amazon" },
-  { domain: "twitter.com", name: "Twitter/X" },
-  { domain: "github.com", name: "GitHub" },
-  { domain: "netflix.com", name: "Netflix" },
-  { domain: "reddit.com", name: "Reddit" },
-  { domain: "openai.com", name: "OpenAI" },
-  { domain: "cloudflare.com", name: "Cloudflare" },
-]
+const popularDomains = DNS_SITEMAP_DOMAINS.map((domain) => ({
+  domain,
+  name: domain
+    .split(".")[0]
+    ?.replace(/(^\w)|(-\w)/g, (chunk) => chunk.replace("-", "").toUpperCase()) ?? domain,
+}))
 
 const faqs = [
   {
@@ -176,9 +172,10 @@ function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
             <SelectItem value="A">A (IPv4)</SelectItem>
             <SelectItem value="AAAA">AAAA (IPv6)</SelectItem>
             <SelectItem value="MX">MX (Mail)</SelectItem>
-            <SelectItem value="TXT">TXT (Text)</SelectItem>
             <SelectItem value="NS">NS (Nameserver)</SelectItem>
+            <SelectItem value="TXT">TXT (Text)</SelectItem>
             <SelectItem value="CNAME">CNAME (Alias)</SelectItem>
+            <SelectItem value="SOA">SOA (Authority)</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -222,12 +219,15 @@ function DNSToolInterface({ initialDomain = "" }: { initialDomain?: string }) {
           ) : (
             <div className="space-y-2">
               {results.map((record, i) => (
-                <code
+                <div
                   key={`${record.data}-${i}`}
-                  className="block rounded bg-secondary px-2 py-1 font-mono text-sm text-foreground"
+                  className="rounded bg-secondary px-3 py-2 font-mono text-sm text-foreground"
                 >
-                  {record.data}
-                </code>
+                  <div>{formatDnsRecordValue(recordType, record)}</div>
+                  <div className="mt-1 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                    TTL {record.ttl}s
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -283,7 +283,7 @@ export function DNSLookupClient({ initialDomain, fixedDomain = false }: DNSLooku
       description="Query live DNS-over-HTTPS records for A, AAAA, and MX responses"
       category={{ name: "Network Tools", href: "/network-tools", type: "network" }}
       tags={["Browser fetch", "DoH"]}
-      explanation="Enter a domain and this tool queries DNS-over-HTTPS endpoints directly from your browser. Results show current DNS answers without file uploads or tracking scripts."
+      explanation="Enter a domain and this tool queries DNS-over-HTTPS endpoints directly from your browser. Results show current DNS answers, TTL values, and record data without file uploads or tracking scripts."
       faqs={faqs}
       relatedTools={relatedTools}
       examples={popularDomains.map(d => ({ label: d.name, href: `/dns/${d.domain}` }))}

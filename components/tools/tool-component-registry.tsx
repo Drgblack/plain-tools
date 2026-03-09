@@ -1,0 +1,46 @@
+import { lazy, type ComponentType, type LazyExoticComponent } from "react"
+
+export type RegisteredToolComponent = ComponentType | LazyExoticComponent<ComponentType>
+
+export const toolComponents: Record<string, RegisteredToolComponent> = {
+  "annotate-pdf": lazy(() => import("@/components/tools/annotate-pdf-tool")),
+  "compare-pdf": lazy(() => import("@/components/tools/compare-pdf-tool")),
+  "compress-pdf": lazy(() => import("@/components/tools/compress-pdf-tool")),
+  "compression-preview": lazy(() => import("@/components/tools/compression-previewer-tool")),
+  "extract-pdf": lazy(() => import("@/components/tools/extract-pdf-tool")),
+  "file-hash": lazy(() => import("@/components/tools/file-hash-tool")),
+  "fill-pdf": lazy(() => import("@/components/tools/fill-pdf-tool")),
+  "html-to-pdf": lazy(() => import("@/components/tools/html-to-pdf-tool")),
+  "image-compress": lazy(() => import("@/components/tools/image-compress-tool")),
+  "irreversible-redactor": lazy(() => import("@/components/tools/redact-tool")),
+  "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
+  "json-formatter": lazy(() => import("@/components/tools/json-formatter-tool")),
+  "local-signer": lazy(() => import("@/components/tools/local-signer-tool")),
+  "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
+  "ocr-pdf": lazy(() => import("@/components/tools/ocr-pdf-tool")),
+  "offline-ocr": lazy(() => import("@/components/tools/ocr-tool")),
+  "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),
+  "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
+  "pdf-to-html": lazy(() => import("@/components/tools/pdf-to-html-tool")),
+  "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
+  "pdf-to-markdown": lazy(() => import("@/components/tools/pdf-to-markdown-tool")),
+  "pdf-to-ppt": lazy(() => import("@/components/tools/pdf-to-ppt-tool")),
+  "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
+  "privacy-risk-scanner": lazy(() => import("@/components/tools/privacy-scanner-tool")),
+  "privacy-scan": lazy(() => import("@/components/tools/privacy-scanner-tool")),
+  "protect-pdf": lazy(() => import("@/components/tools/protect-pdf-tool")),
+  "qr-code": lazy(() => import("@/components/tools/qr-code-tool")),
+  "redact-pdf": lazy(() => import("@/components/tools/redact-tool")),
+  "regex-tester": lazy(() => import("@/components/tools/regex-tester-tool")),
+  "reorder-pdf": lazy(() => import("@/components/tools/webgpu-organiser-tool")),
+  "rotate-pdf": lazy(() => import("@/components/tools/rotate-pdf-tool")),
+  "sign-pdf": lazy(() => import("@/components/tools/sign-pdf-tool")),
+  "split-pdf": lazy(() => import("@/components/tools/split-pdf-tool")),
+  "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
+  "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
+  "text-to-pdf": lazy(() => import("@/components/tools/text-to-pdf-tool")),
+  "unlock-pdf": lazy(() => import("@/components/tools/unlock-pdf-tool")),
+  "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
+}
+
+export const FallbackToolComponent = () => <div>Tool UI coming soon</div>

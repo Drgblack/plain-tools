@@ -134,6 +134,130 @@ Public health endpoint:
 
 This endpoint is intentionally crawl-allowed in `robots.txt` for uptime tooling compatibility.
 
+## Programmatic Tool Variants
+
+Plain Tools now supports nested tool-intent variant pages at:
+
+- `/tools/[toolSlug]/[modifierSlug]`
+
+The first wave is generated from `lib/tools-matrix.ts` and rendered by `app/tools/[toolSlug]/[modifierSlug]/page.tsx` using `components/ProgrammaticVariantPage.tsx`.
+
+### How generation works
+
+1. Define supported tools and modifiers in `lib/tools-matrix.ts`.
+2. Filter combinations so only useful, non-nonsense pairings ship.
+3. `generateStaticParams()` returns the full matrix for static generation.
+4. Each page gets a unique H1, metadata, FAQ set, internal links, and JSON-LD.
+5. The main sitemap and `sitemap-tools.xml` both include the generated routes.
+
+### Revalidation strategy
+
+- Route ISR is set to `30 days`:
+  - `export const revalidate = 60 * 60 * 24 * 30`
+- This is a good default because the content is mostly evergreen and dataset-driven rather than news-like.
+
+### Local verification
+
+Run:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+Then spot-check a few generated routes, for example:
+
+- `/tools/compress-pdf/for-email`
+- `/tools/merge-pdf/offline`
+- `/tools/pdf-to-word/no-upload`
+- `/tools/ocr-pdf/searchable`
+
+### Scaling to 2,000+ pages later
+
+- Add more real tools only where the live tool UI already exists.
+- Add more modifiers only when the combination creates a distinct user problem.
+- Keep build-time guards for:
+  - minimum word count
+  - valid tool slugs
+  - sensible total page count per wave
+- Prefer expanding by high-intent clusters such as:
+  - submission constraints
+  - device-specific workflows
+  - privacy and no-upload queries
+  - archive and records workflows
+- Add new waves gradually and monitor indexing and internal-link coverage before doubling the matrix again.
+
+## Problem Diagnosis Tool
+
+Plain Tools now includes a diagnosis-first route at:
+
+- `/diagnosis`
+
+It helps users describe a file problem in plain language, then recommends the most relevant core tool or nested tool-variant route.
+
+### Main files
+
+- `lib/diagnosis-rules.ts`
+- `components/DiagnosisTool.tsx`
+- `components/DiagnosisResultCard.tsx`
+- `app/diagnosis/page.tsx`
+
+### How to add new rules
+
+1. Open `lib/diagnosis-rules.ts`.
+2. Add a new `rule(...)` entry to `DIAGNOSIS_RULES`.
+3. Keep the rule specific to a real user problem, such as:
+   - file is too large for upload
+   - scanned PDF needs editing
+   - password-protected file will not open
+4. Point each recommendation at:
+   - a real tool route under `/tools/[slug]`, or
+   - a real variant route under `/tools/[toolSlug]/[modifierSlug]`
+5. Keep the recommendation description practical and specific to the problem.
+
+### Testing the diagnosis feature
+
+Run:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+Then spot-check:
+
+- `/diagnosis`
+- `/diagnosis?fileType=pdf&problem=too-large&goal=email`
+- `/diagnosis?fileType=pdf&problem=scanned-document&goal=edit`
+- `/why-is-my-pdf-so-large`
+- `/pdf-wont-open`
+
+### Analytics and privacy
+
+- Diagnosis logic runs locally in the browser.
+- The free-text input is not sent to Plain Tools.
+- GA4 event tracking only records high-level enums such as:
+  - file type
+  - problem
+  - goal
+  - device
+  - top recommendation URL
+- Do not add raw free-text logging.
+
+### Revalidation strategy
+
+- Diagnosis page ISR is set to `86400` seconds (1 day).
+- This keeps the route fresh enough for copy or rules updates without making it dynamic.
+
+### Scaling later
+
+To expand beyond the first rule wave:
+
+1. Add more precise problem patterns in `lib/diagnosis-rules.ts`.
+2. Add new redirect-style long-tails that prefill `/diagnosis`.
+3. Watch which diagnosis combinations are used most often.
+4. Promote the strongest combinations into dedicated long-form programmatic pages when they deserve their own route.
+
 ## Launch Checklist
 
 ### Pre-launch

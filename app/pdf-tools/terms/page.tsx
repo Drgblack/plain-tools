@@ -1,10 +1,15 @@
 import type { Metadata } from 'next'
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-export const metadata: Metadata = {
-  title: 'Terms of Service',
-  description: 'Terms of Service for Plain - the local-first PDF processing platform. All processing is executed locally on your device.',
-}
+import { buildPageMetadata } from "@/lib/page-metadata"
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Terms of Service",
+  description:
+    "Terms of Service for Plain - the local-first PDF processing platform. All processing is executed locally on your device.",
+  path: "/pdf-tools/terms",
+  googleNotranslate: true,
+})
 
 const sections = [
   {
@@ -46,7 +51,7 @@ export default function TermsOfServicePage() {
         {/* Background subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-[oklch(0.11_0.004_250)] pointer-events-none" />
         
-        <div className="relative mx-auto max-w-[800px]">
+        <div className="relative mx-auto max-w-[800px] notranslate" data-plain-legal-copy translate="no">
           {/* Back button */}
           <Link
             href="/pdf-tools/tools"

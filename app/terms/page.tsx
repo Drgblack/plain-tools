@@ -1,17 +1,21 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-export const metadata: Metadata = {
+import { buildPageMetadata } from "@/lib/page-metadata"
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
   description:
     "Terms of Service for Plain covering free tier usage, Pro subscriptions, cancellation, prohibited use, and governing law.",
-}
+  path: "/terms",
+  googleNotranslate: true,
+})
 
 export default function TermsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-4 py-16">
-        <div className="mx-auto max-w-3xl space-y-10">
+        <div className="mx-auto max-w-3xl space-y-10 notranslate" data-plain-legal-copy translate="no">
           <Link
             href="/tools"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"

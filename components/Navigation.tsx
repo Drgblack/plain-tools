@@ -6,6 +6,7 @@ import { ExternalLink, Menu, X } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { ThemeToggle } from "@/components/ThemeToggle"
+import { NoTranslate } from "@/components/no-translate"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -68,8 +69,9 @@ export function Navigation() {
         <Link
           href="/"
           className="rounded-md text-base font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          translate="no"
         >
-          Plain Tools
+          <NoTranslate>Plain Tools</NoTranslate>
         </Link>
 
         <nav className="hidden items-center gap-1.5 lg:flex">
@@ -101,8 +103,9 @@ export function Navigation() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+              translate="no"
             >
-              {item.label}
+              <NoTranslate>{item.label}</NoTranslate>
               <ExternalLink className="h-3.5 w-3.5" />
             </Link>
           ))}
@@ -181,8 +184,9 @@ export function Navigation() {
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center justify-between rounded-md px-3 py-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+                  translate="no"
                 >
-                  {item.label}
+                  <NoTranslate>{item.label}</NoTranslate>
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
               ))}

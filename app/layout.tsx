@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { AdsenseScript } from '@/components/ads/adsense-script'
 import { AppShellChrome } from '@/components/app-shell-chrome'
 import { JsonLd } from '@/components/seo/json-ld'
+import { TranslationProtection } from '@/components/translation-protection'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
 import { buildSiteVerificationMetadata } from "@/lib/seo-monitoring"
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
@@ -108,12 +109,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en-GB"
+      lang="en"
       suppressHydrationWarning
       data-theme="dark"
       style={{ colorScheme: "dark" }}
     >
       <head>
+        <meta httpEquiv="content-language" content="en" />
+        <meta name="google" content="notranslate" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMDZKHTSJG" />
         <script
           dangerouslySetInnerHTML={{
@@ -136,6 +139,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
+        <TranslationProtection />
         <AppShellChrome>{children}</AppShellChrome>
       </body>
     </html>

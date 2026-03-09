@@ -1,0 +1,442 @@
+[
+  {
+    "slug": "plain-tools-vs-smallpdf",
+    "title": "Plain Tools vs Smallpdf",
+    "url": "/pdf-tools/compare/plain-tools-vs-smallpdf",
+    "tool1": "plain-tools",
+    "tool2": "smallpdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-ilovepdf",
+    "title": "Plain Tools vs iLovePDF",
+    "url": "/pdf-tools/compare/plain-tools-vs-ilovepdf",
+    "tool1": "plain-tools",
+    "tool2": "ilovepdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-adobe",
+    "title": "Plain Tools vs Adobe Acrobat Online",
+    "url": "/pdf-tools/compare/plain-tools-vs-adobe",
+    "tool1": "plain-tools",
+    "tool2": "adobe",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-sejda",
+    "title": "Plain Tools vs Sejda",
+    "url": "/pdf-tools/compare/plain-tools-vs-sejda",
+    "tool1": "plain-tools",
+    "tool2": "sejda",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-pdf24",
+    "title": "Plain Tools vs PDF24",
+    "url": "/pdf-tools/compare/plain-tools-vs-pdf24",
+    "tool1": "plain-tools",
+    "tool2": "pdf24",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-pdfgear",
+    "title": "Plain Tools vs PDFgear",
+    "url": "/pdf-tools/compare/plain-tools-vs-pdfgear",
+    "tool1": "plain-tools",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-pdfcandy",
+    "title": "Plain Tools vs PDF Candy",
+    "url": "/pdf-tools/compare/plain-tools-vs-pdfcandy",
+    "tool1": "plain-tools",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-sodapdf",
+    "title": "Plain Tools vs Soda PDF",
+    "url": "/pdf-tools/compare/plain-tools-vs-sodapdf",
+    "tool1": "plain-tools",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-foxit",
+    "title": "Plain Tools vs Foxit PDF",
+    "url": "/pdf-tools/compare/plain-tools-vs-foxit",
+    "tool1": "plain-tools",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "plain-tools-vs-canva",
+    "title": "Plain Tools vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/plain-tools-vs-canva",
+    "tool1": "plain-tools",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-ilovepdf",
+    "title": "Smallpdf vs iLovePDF",
+    "url": "/pdf-tools/compare/smallpdf-vs-ilovepdf",
+    "tool1": "smallpdf",
+    "tool2": "ilovepdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-adobe",
+    "title": "Smallpdf vs Adobe Acrobat Online",
+    "url": "/pdf-tools/compare/smallpdf-vs-adobe",
+    "tool1": "smallpdf",
+    "tool2": "adobe",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-sejda",
+    "title": "Smallpdf vs Sejda",
+    "url": "/pdf-tools/compare/smallpdf-vs-sejda",
+    "tool1": "smallpdf",
+    "tool2": "sejda",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-pdf24",
+    "title": "Smallpdf vs PDF24",
+    "url": "/pdf-tools/compare/smallpdf-vs-pdf24",
+    "tool1": "smallpdf",
+    "tool2": "pdf24",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-pdfgear",
+    "title": "Smallpdf vs PDFgear",
+    "url": "/pdf-tools/compare/smallpdf-vs-pdfgear",
+    "tool1": "smallpdf",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-pdfcandy",
+    "title": "Smallpdf vs PDF Candy",
+    "url": "/pdf-tools/compare/smallpdf-vs-pdfcandy",
+    "tool1": "smallpdf",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-sodapdf",
+    "title": "Smallpdf vs Soda PDF",
+    "url": "/pdf-tools/compare/smallpdf-vs-sodapdf",
+    "tool1": "smallpdf",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-foxit",
+    "title": "Smallpdf vs Foxit PDF",
+    "url": "/pdf-tools/compare/smallpdf-vs-foxit",
+    "tool1": "smallpdf",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "smallpdf-vs-canva",
+    "title": "Smallpdf vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/smallpdf-vs-canva",
+    "tool1": "smallpdf",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-adobe",
+    "title": "iLovePDF vs Adobe Acrobat Online",
+    "url": "/pdf-tools/compare/ilovepdf-vs-adobe",
+    "tool1": "ilovepdf",
+    "tool2": "adobe",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-sejda",
+    "title": "iLovePDF vs Sejda",
+    "url": "/pdf-tools/compare/ilovepdf-vs-sejda",
+    "tool1": "ilovepdf",
+    "tool2": "sejda",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-pdf24",
+    "title": "iLovePDF vs PDF24",
+    "url": "/pdf-tools/compare/ilovepdf-vs-pdf24",
+    "tool1": "ilovepdf",
+    "tool2": "pdf24",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-pdfgear",
+    "title": "iLovePDF vs PDFgear",
+    "url": "/pdf-tools/compare/ilovepdf-vs-pdfgear",
+    "tool1": "ilovepdf",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-pdfcandy",
+    "title": "iLovePDF vs PDF Candy",
+    "url": "/pdf-tools/compare/ilovepdf-vs-pdfcandy",
+    "tool1": "ilovepdf",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-sodapdf",
+    "title": "iLovePDF vs Soda PDF",
+    "url": "/pdf-tools/compare/ilovepdf-vs-sodapdf",
+    "tool1": "ilovepdf",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-foxit",
+    "title": "iLovePDF vs Foxit PDF",
+    "url": "/pdf-tools/compare/ilovepdf-vs-foxit",
+    "tool1": "ilovepdf",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "ilovepdf-vs-canva",
+    "title": "iLovePDF vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/ilovepdf-vs-canva",
+    "tool1": "ilovepdf",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-sejda",
+    "title": "Adobe Acrobat Online vs Sejda",
+    "url": "/pdf-tools/compare/adobe-vs-sejda",
+    "tool1": "adobe",
+    "tool2": "sejda",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-pdf24",
+    "title": "Adobe Acrobat Online vs PDF24",
+    "url": "/pdf-tools/compare/adobe-vs-pdf24",
+    "tool1": "adobe",
+    "tool2": "pdf24",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-pdfgear",
+    "title": "Adobe Acrobat Online vs PDFgear",
+    "url": "/pdf-tools/compare/adobe-vs-pdfgear",
+    "tool1": "adobe",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-pdfcandy",
+    "title": "Adobe Acrobat Online vs PDF Candy",
+    "url": "/pdf-tools/compare/adobe-vs-pdfcandy",
+    "tool1": "adobe",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-sodapdf",
+    "title": "Adobe Acrobat Online vs Soda PDF",
+    "url": "/pdf-tools/compare/adobe-vs-sodapdf",
+    "tool1": "adobe",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-foxit",
+    "title": "Adobe Acrobat Online vs Foxit PDF",
+    "url": "/pdf-tools/compare/adobe-vs-foxit",
+    "tool1": "adobe",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "adobe-vs-canva",
+    "title": "Adobe Acrobat Online vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/adobe-vs-canva",
+    "tool1": "adobe",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-pdf24",
+    "title": "Sejda vs PDF24",
+    "url": "/pdf-tools/compare/sejda-vs-pdf24",
+    "tool1": "sejda",
+    "tool2": "pdf24",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-pdfgear",
+    "title": "Sejda vs PDFgear",
+    "url": "/pdf-tools/compare/sejda-vs-pdfgear",
+    "tool1": "sejda",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-pdfcandy",
+    "title": "Sejda vs PDF Candy",
+    "url": "/pdf-tools/compare/sejda-vs-pdfcandy",
+    "tool1": "sejda",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-sodapdf",
+    "title": "Sejda vs Soda PDF",
+    "url": "/pdf-tools/compare/sejda-vs-sodapdf",
+    "tool1": "sejda",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-foxit",
+    "title": "Sejda vs Foxit PDF",
+    "url": "/pdf-tools/compare/sejda-vs-foxit",
+    "tool1": "sejda",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sejda-vs-canva",
+    "title": "Sejda vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/sejda-vs-canva",
+    "tool1": "sejda",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdf24-vs-pdfgear",
+    "title": "PDF24 vs PDFgear",
+    "url": "/pdf-tools/compare/pdf24-vs-pdfgear",
+    "tool1": "pdf24",
+    "tool2": "pdfgear",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdf24-vs-pdfcandy",
+    "title": "PDF24 vs PDF Candy",
+    "url": "/pdf-tools/compare/pdf24-vs-pdfcandy",
+    "tool1": "pdf24",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdf24-vs-sodapdf",
+    "title": "PDF24 vs Soda PDF",
+    "url": "/pdf-tools/compare/pdf24-vs-sodapdf",
+    "tool1": "pdf24",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdf24-vs-foxit",
+    "title": "PDF24 vs Foxit PDF",
+    "url": "/pdf-tools/compare/pdf24-vs-foxit",
+    "tool1": "pdf24",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdf24-vs-canva",
+    "title": "PDF24 vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/pdf24-vs-canva",
+    "tool1": "pdf24",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfgear-vs-pdfcandy",
+    "title": "PDFgear vs PDF Candy",
+    "url": "/pdf-tools/compare/pdfgear-vs-pdfcandy",
+    "tool1": "pdfgear",
+    "tool2": "pdfcandy",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfgear-vs-sodapdf",
+    "title": "PDFgear vs Soda PDF",
+    "url": "/pdf-tools/compare/pdfgear-vs-sodapdf",
+    "tool1": "pdfgear",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfgear-vs-foxit",
+    "title": "PDFgear vs Foxit PDF",
+    "url": "/pdf-tools/compare/pdfgear-vs-foxit",
+    "tool1": "pdfgear",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfgear-vs-canva",
+    "title": "PDFgear vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/pdfgear-vs-canva",
+    "tool1": "pdfgear",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfcandy-vs-sodapdf",
+    "title": "PDF Candy vs Soda PDF",
+    "url": "/pdf-tools/compare/pdfcandy-vs-sodapdf",
+    "tool1": "pdfcandy",
+    "tool2": "sodapdf",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfcandy-vs-foxit",
+    "title": "PDF Candy vs Foxit PDF",
+    "url": "/pdf-tools/compare/pdfcandy-vs-foxit",
+    "tool1": "pdfcandy",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "pdfcandy-vs-canva",
+    "title": "PDF Candy vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/pdfcandy-vs-canva",
+    "tool1": "pdfcandy",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sodapdf-vs-foxit",
+    "title": "Soda PDF vs Foxit PDF",
+    "url": "/pdf-tools/compare/sodapdf-vs-foxit",
+    "tool1": "sodapdf",
+    "tool2": "foxit",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "sodapdf-vs-canva",
+    "title": "Soda PDF vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/sodapdf-vs-canva",
+    "tool1": "sodapdf",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  },
+  {
+    "slug": "foxit-vs-canva",
+    "title": "Foxit PDF vs Canva PDF Tools",
+    "url": "/pdf-tools/compare/foxit-vs-canva",
+    "tool1": "foxit",
+    "tool2": "canva",
+    "plainToolsToolHref": "/tools/merge-pdf"
+  }
+]

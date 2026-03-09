@@ -3,10 +3,11 @@ import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
+import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 
 export async function GET() {
   const now = new Date()
-  const seoLandingPages = ["/is-chatgpt-down", "/check-if-website-is-down"] as const
+  const seoLandingPages = ["/diagnosis", "/is-chatgpt-down", "/check-if-website-is-down"] as const
 
   const entries: SitemapXmlEntry[] = TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     url: `${BASE_URL}/tools/${tool.slug}`,
@@ -21,6 +22,12 @@ export async function GET() {
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.84,
+    })),
+    ...TOOL_VARIANT_PAGES.map((page) => ({
+      url: `${BASE_URL}${page.path}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.83,
     })),
     ...PDF_INTENT_PAGES.map((page) => ({
       url: `${BASE_URL}${pdfIntentPathFor(page.slug)}`,

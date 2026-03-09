@@ -150,6 +150,137 @@ html[data-theme="light"],
   }
 }
 
+/* Google Translate widget:
+ * - UX helper only: client-side translations are not indexable by Google.
+ * - Real multilingual SEO still requires dedicated /es/, /fr/, /de/ URLs,
+ *   full hreflang coverage, language sitemaps, and professional translations.
+ */
+.plain-translate-widget {
+  position: fixed;
+  top: calc(4.25rem + 0.75rem);
+  right: 1rem;
+  z-index: 80;
+  display: flex;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.plain-translate-trigger,
+.plain-translate-panel {
+  box-shadow:
+    0 20px 45px -30px rgba(0, 0, 0, 0.75),
+    0 8px 20px -18px rgba(0, 0, 0, 0.55);
+}
+
+.plain-translate-trigger {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--border) 92%, transparent);
+  background: color-mix(in oklab, var(--card) 94%, transparent);
+  padding: 0.7rem 0.95rem;
+  color: var(--foreground);
+  backdrop-filter: blur(14px);
+  transition:
+    border-color 150ms ease,
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.plain-translate-trigger:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+}
+
+.plain-translate-panel {
+  display: none;
+  width: min(22rem, calc(100vw - 1.5rem));
+  border-radius: 1rem;
+  border: 1px solid color-mix(in oklab, var(--border) 92%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, transparent), color-mix(in oklab, var(--background) 98%, transparent));
+  padding: 1rem;
+  backdrop-filter: blur(18px);
+}
+
+.plain-translate-panel--open {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.plain-translate-element {
+  min-height: 2.75rem;
+}
+
+#google_translate_element .goog-te-gadget {
+  width: 100%;
+  color: var(--muted-foreground) !important;
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+}
+
+#google_translate_element .goog-te-gadget-simple {
+  display: flex !important;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.875rem !important;
+  border: 1px solid color-mix(in oklab, var(--border) 92%, transparent) !important;
+  background: color-mix(in oklab, var(--background) 92%, transparent) !important;
+  padding: 0.65rem 0.75rem !important;
+}
+
+#google_translate_element .goog-te-gadget-simple:hover {
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border)) !important;
+}
+
+#google_translate_element .goog-te-gadget-simple span,
+#google_translate_element .goog-te-gadget-simple a,
+#google_translate_element .goog-te-menu-value span {
+  color: var(--foreground) !important;
+}
+
+#google_translate_element .goog-te-menu-value {
+  margin: 0 !important;
+}
+
+#google_translate_element .goog-te-menu-value img,
+#google_translate_element .goog-te-gadget-icon {
+  display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate,
+iframe.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+[translate="no"],
+.notranslate {
+  unicode-bidi: isolate;
+}
+
+@media (max-width: 640px) {
+  .plain-translate-widget {
+    top: auto;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .plain-translate-panel {
+    width: min(20rem, calc(100vw - 1.5rem));
+  }
+}
+
 /* Category accent color utility classes */
 .category-network {
   --category-accent: var(--accent-network);

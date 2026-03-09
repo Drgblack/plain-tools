@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
 import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
+import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import {
   FIRST_WAVE_COMPARE_PAGES,
   FIRST_WAVE_GUIDE_PAGES,
@@ -276,6 +277,20 @@ const homepageProblemPages = TOOL_PROBLEM_PAGES.filter((page) =>
 ).map((page) => ({
   label: page.h1,
   href: `/tools/${page.slug}`,
+}))
+
+const homepageVariantPages = TOOL_VARIANT_PAGES.filter((page) =>
+  [
+    "/tools/compress-pdf/for-email",
+    "/tools/compress-pdf/under-1mb",
+    "/tools/merge-pdf/offline",
+    "/tools/pdf-to-word/no-upload",
+    "/tools/ocr-pdf/searchable",
+    "/tools/jpg-to-pdf/iphone",
+  ].includes(page.path)
+).map((page) => ({
+  label: page.h1,
+  href: page.path,
 }))
 
 const homepageProofPoints = [
@@ -749,6 +764,20 @@ export default function HomePage() {
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {homepageProblemPages.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Variant routes
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {homepageVariantPages.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}

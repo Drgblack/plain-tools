@@ -7,6 +7,7 @@ export const metadata: Metadata = generateStaticPageMetadata({
   title: "Privacy Policy",
   description: "Plain Tools privacy policy. We don't collect, store, or transmit your files. All processing happens locally in your browser.",
   slug: "privacy",
+  googleNotranslate: true,
 })
 
 export default function PrivacyPage() {
@@ -34,7 +35,7 @@ export default function PrivacyPage() {
 
         <section>
           <div className="mx-auto max-w-6xl px-4 py-12">
-            <div className="prose prose-sm prose-invert max-w-2xl">
+            <div className="prose prose-sm prose-invert max-w-2xl notranslate" data-plain-legal-copy translate="no">
               <h2 className="text-lg font-medium text-foreground">Summary</h2>
               <p className="mt-2 text-muted-foreground">
                 plain.tools is designed to process your files locally. We don't

@@ -74,18 +74,21 @@ interface StaticPageMetadataProps {
   title: string
   description: string
   slug: string
+  googleNotranslate?: boolean
 }
 
 export function generateStaticPageMetadata({
   title,
   description,
   slug,
+  googleNotranslate = false,
 }: StaticPageMetadataProps): Metadata {
   return buildPageMetadata({
     title: normaliseTitle(title),
     description: normaliseDescription(description),
     path: normalisePath(slug),
     image: "/og/default.png",
+    googleNotranslate,
   })
 }
 

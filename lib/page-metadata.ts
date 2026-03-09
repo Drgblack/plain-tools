@@ -13,6 +13,7 @@ type PageMetadataInput = {
   path: string
   image?: string
   type?: "website" | "article"
+  googleNotranslate?: boolean
 }
 
 function normalisePageTitle(rawTitle: string): string {
@@ -48,6 +49,7 @@ export function buildPageMetadata({
   path,
   image = "/og/default.png",
   type = "website",
+  googleNotranslate = false,
 }: PageMetadataInput): Metadata {
   const canonical = buildCanonicalUrl(path)
   const resolvedTitle = normalisePageTitle(title)
@@ -60,10 +62,15 @@ export function buildPageMetadata({
       canonical,
       languages: {
         en: canonical,
-        de: canonical,
         "x-default": canonical,
       },
     },
+    other: googleNotranslate
+      ? {
+          // Page-level only. For section-level protection use translate="no" / .notranslate.
+          google: "notranslate",
+        }
+      : undefined,
     openGraph: {
       type,
       siteName: "Plain Tools",

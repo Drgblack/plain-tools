@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
+import { Suspense } from "react"
 
 import { AdAfterResult, AdContentTop, AdToolSidebar } from "@/components/ads/tool-page-ad-slots"
 import { ErrorBoundary } from "@/components/error-boundary"
@@ -15,6 +15,7 @@ import { getToolSeoLinks } from "@/lib/seo/tranche1-link-map"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { buildToolHowToSteps, buildToolSeoDescription, getToolPageProfile } from "@/lib/tool-page-content"
+import { buildStandardToolIntro } from "@/lib/tool-intro"
 import {
   buildToolProblemMetadata,
   getToolProblemPage,
@@ -22,14 +23,18 @@ import {
   TOOL_PROBLEM_PAGE_SLUGS,
 } from "@/lib/tool-problem-pages"
 import { ToolProblemPage } from "@/components/seo/ToolProblemPage"
+import {
+  FallbackToolComponent,
+  type RegisteredToolComponent,
+  toolComponents,
+} from "@/components/tools/tool-component-registry"
+import { getToolVariantPagesForTool } from "@/lib/tools-matrix"
 
 type ToolRouteParams = { slug: string }
 
 type PageProps = {
   params: Promise<ToolRouteParams>
 }
-
-type ToolComponent = ComponentType | LazyExoticComponent<ComponentType>
 
 const INTENT_TOOL_SLUGS = new Set([
   "compress-pdf",
@@ -57,46 +62,6 @@ const INTENT_TOOL_SLUGS = new Set([
   "text-to-pdf",
 ])
 
-const toolComponents: Record<string, ToolComponent> = {
-  "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
-  "split-pdf": lazy(() => import("@/components/tools/split-pdf-tool")),
-  "compare-pdf": lazy(() => import("@/components/tools/compare-pdf-tool")),
-  "rotate-pdf": lazy(() => import("@/components/tools/rotate-pdf-tool")),
-  "annotate-pdf": lazy(() => import("@/components/tools/annotate-pdf-tool")),
-  "watermark-pdf": lazy(() => import("@/components/tools/watermark-pdf-tool")),
-  "fill-pdf": lazy(() => import("@/components/tools/fill-pdf-tool")),
-  "compress-pdf": lazy(() => import("@/components/tools/compress-pdf-tool")),
-  "irreversible-redactor": lazy(() => import("@/components/tools/redact-tool")),
-  "redact-pdf": lazy(() => import("@/components/tools/redact-tool")),
-  "privacy-risk-scanner": lazy(() => import("@/components/tools/privacy-scanner-tool")),
-  "privacy-scan": lazy(() => import("@/components/tools/privacy-scanner-tool")),
-  "offline-ocr": lazy(() => import("@/components/tools/ocr-tool")),
-  "compression-preview": lazy(() => import("@/components/tools/compression-previewer-tool")),
-  "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),
-  "suggest-edits": lazy(() => import("@/components/tools/suggest-edits-tool")),
-  "summarize-pdf": lazy(() => import("@/components/tools/summarize-tool")),
-  "ocr-pdf": lazy(() => import("@/components/tools/ocr-pdf-tool")),
-  "pdf-to-word": lazy(() => import("@/components/tools/pdf-to-word-tool")),
-  "protect-pdf": lazy(() => import("@/components/tools/protect-pdf-tool")),
-  "unlock-pdf": lazy(() => import("@/components/tools/unlock-pdf-tool")),
-  "sign-pdf": lazy(() => import("@/components/tools/sign-pdf-tool")),
-  "local-signer": lazy(() => import("@/components/tools/local-signer-tool")),
-  "word-to-pdf": lazy(() => import("@/components/tools/word-to-pdf-tool")),
-  "pdf-to-jpg": lazy(() => import("@/components/tools/pdf-to-jpg-tool")),
-  "pdf-to-excel": lazy(() => import("@/components/tools/pdf-to-excel-tool")),
-  "pdf-to-ppt": lazy(() => import("@/components/tools/pdf-to-ppt-tool")),
-  "pdf-to-html": lazy(() => import("@/components/tools/pdf-to-html-tool")),
-  "html-to-pdf": lazy(() => import("@/components/tools/html-to-pdf-tool")),
-  "jpg-to-pdf": lazy(() => import("@/components/tools/jpg-to-pdf-tool")),
-  "text-to-pdf": lazy(() => import("@/components/tools/text-to-pdf-tool")),
-  "reorder-pdf": lazy(() => import("@/components/tools/webgpu-organiser-tool")),
-  "image-compress": lazy(() => import("@/components/tools/image-compress-tool")),
-  "file-hash": lazy(() => import("@/components/tools/file-hash-tool")),
-  "qr-code": lazy(() => import("@/components/tools/qr-code-tool")),
-}
-
-const FallbackToolComponent = () => <div>Tool UI coming soon</div>
-
 const resolveToolSlug = async (params: Promise<ToolRouteParams>) => {
   const { slug } = await params
   return slug
@@ -115,9 +80,15 @@ function normaliseToolMetadataTitle(rawTitle: string, fallbackToolName: string) 
 }
 
 function buildToolLeadParagraph(description: string, category: string) {
-  if (category === "AI Assistant") return description
-  if (/files?\s+never\s+leave\s+your\s+device/i.test(description)) return description
-  return `${description} Files never leave your device.`
+  if (category === "AI Assistant") {
+    return buildStandardToolIntro(description, "ai")
+  }
+
+  if (category === "Network Tools") {
+    return buildStandardToolIntro(description, "network")
+  }
+
+  return buildStandardToolIntro(description, "local")
 }
 
 const TOOL_META_INTROS: Record<string, string> = {
@@ -137,12 +108,13 @@ function buildToolMetaDescription(slug: string, toolName: string, description: s
   const intro =
     TOOL_META_INTROS[slug] ??
     `${toolName} runs entirely in your browser with Plain Tools.`
-  const body =
-    /no upload|local|browser/i.test(cleanedDescription)
-      ? cleanedDescription
-      : `${cleanedDescription} Fast, private local processing with no upload step.`
+  const body = /no upload|local|browser/i.test(cleanedDescription)
+    ? cleanedDescription
+    : `${cleanedDescription} Fast local processing with no upload step.`
 
-  return buildMetaDescription(`${intro} No upload, no account, and verifiable local processing. ${body}`)
+  return buildMetaDescription(
+    `${intro} No upload, no account, and privacy-first local processing. ${body}`
+  )
 }
 
 export async function generateStaticParams() {
@@ -210,13 +182,14 @@ export default async function ToolPage({ params }: PageProps) {
     notFound()
   }
 
-  const ToolComponent: ToolComponent = tool.available
+  const ToolComponent: RegisteredToolComponent = tool.available
     ? toolComponents[tool.slug] ?? FallbackToolComponent
     : FallbackToolComponent
   const profile = getToolPageProfile(tool)
   const introLead = buildToolLeadParagraph(profile.description, tool.category)
   const seoLinks = getToolSeoLinks(tool.slug)
   const relatedProblemPages = getToolProblemPagesForTool(tool.slug)
+  const relatedVariantPages = getToolVariantPagesForTool(tool.slug).slice(0, 6)
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
@@ -325,6 +298,30 @@ export default async function ToolPage({ params }: PageProps) {
                           <a
                             key={page.slug}
                             href={`/tools/${page.slug}`}
+                            className="rounded-full border border-border/70 bg-background/70 px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/40 hover:text-accent/90"
+                          >
+                            {page.h1}
+                          </a>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {relatedVariantPages.length > 0 ? (
+                    <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+                      <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                        Popular task variants
+                      </h2>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        These routes answer common modifier searches such as offline, no-upload,
+                        mobile, large-file, and sharing-specific workflows while reusing the same
+                        core tool.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {relatedVariantPages.map((page) => (
+                          <a
+                            key={page.slug}
+                            href={page.path}
                             className="rounded-full border border-border/70 bg-background/70 px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/40 hover:text-accent/90"
                           >
                             {page.h1}
