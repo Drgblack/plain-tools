@@ -4,7 +4,6 @@ import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "re
 
 import { AdAfterResult, AdContentTop, AdToolSidebar } from "@/components/ads/tool-page-ad-slots"
 import { ErrorBoundary } from "@/components/error-boundary"
-import { JsonLd } from "@/components/seo/json-ld"
 import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
@@ -16,7 +15,6 @@ import { getToolSeoLinks } from "@/lib/seo/tranche1-link-map"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { buildToolHowToSteps, buildToolSeoDescription, getToolPageProfile } from "@/lib/tool-page-content"
-import { buildToolSchema } from "@/lib/tool-schema"
 
 type ToolRouteParams = { slug: string }
 
@@ -198,44 +196,9 @@ export default async function ToolPage({ params }: PageProps) {
   const profile = getToolPageProfile(tool)
   const introLead = buildToolLeadParagraph(profile.description, tool.category)
   const seoLinks = getToolSeoLinks(tool.slug)
-  const toolSchema = buildToolSchema({
-    name: tool.name,
-    slug,
-    description: profile.description,
-    featureList: profile.featureList,
-    browserRequirements:
-      "Requires a modern browser with WebAssembly support (Chrome 57+, Firefox 53+, Safari 11+, Edge 16+).",
-    includeHowTo: true,
-    howToSteps: [
-      {
-        name: "Upload your file",
-        text: "Select a file from your device. The file stays local in your browser session.",
-      },
-      {
-        name: "Choose options",
-        text: "Pick the settings needed for your workflow before processing.",
-      },
-      {
-        name: "Process locally",
-        text: `Run ${tool.name} directly in the browser without server-side file handling.`,
-      },
-      {
-        name: "Download output",
-        text: "Download the processed result and verify output quality before sharing.",
-      },
-    ],
-    includeFaq: profile.faqs.length > 0,
-    faqs: profile.faqs.map((faq) => ({
-      question: faq.question,
-      answer: faq.answer,
-    })),
-  })
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
-      {toolSchema ? <JsonLd id={`tool-schema-${tool.slug}`} schema={toolSchema} /> : null}
-      
-
       <main className="flex-1">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
           <PageBreadcrumbs

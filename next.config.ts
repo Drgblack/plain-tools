@@ -567,6 +567,19 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/robots.txt",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600",
+          },
+          {
+            key: "Content-Type",
+            value: "text/plain; charset=utf-8",
+          },
+        ],
+      },
       // Exclude /api and /api/* since API CORS headers are managed separately.
       {
         source: "/((?!api(?:/|$)).*)",

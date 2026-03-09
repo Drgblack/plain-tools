@@ -14,3 +14,4 @@ coverage/
 projects/pdf-client-demo/package-lock.json
 projects/*/dist/
 projects/*/package-lock.json
+.codex-start*.log
