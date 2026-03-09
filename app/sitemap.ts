@@ -50,7 +50,6 @@ const staticHighPriority = [
 
 const staticCorePages = [
   "/blog",
-  "/pricing",
   "/pdf-tools",
   "/file-converters",
   "/image-tools",

@@ -13,6 +13,9 @@ const baseMetadata = buildPageMetadata({
 
 export const metadata: Metadata = {
   ...baseMetadata,
+  alternates: {
+    canonical: "https://plain.tools/",
+  },
   robots: {
     index: false,
     follow: false,

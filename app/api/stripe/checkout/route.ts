@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         },
       },
       success_url: `${baseUrl}/pro/success`,
-      cancel_url: `${baseUrl}/pricing`,
+      cancel_url: `${baseUrl}/`,
       allow_promotion_codes: true,
     })
 
