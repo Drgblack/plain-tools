@@ -337,6 +337,178 @@ function countWords(values: string[]) {
     .filter(Boolean).length
 }
 
+function splitIntoSentences(text: string) {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+}
+
+function trimParagraph(text: string) {
+  const sentences = splitIntoSentences(text)
+  if (sentences.length > 1) {
+    return sentences.slice(0, -1).join(" ")
+  }
+
+  const words = text.trim().split(/\s+/).filter(Boolean)
+  if (words.length <= 80) {
+    return text
+  }
+
+  return `${words.slice(0, 80).join(" ")}.`
+}
+
+function buildProgrammaticWordCount(input: {
+  description: string
+  explanationBlocks: ProgrammaticExplanationBlock[]
+  faq: ProgrammaticFaq[]
+  howItWorks: string[]
+  howToSteps: ProgrammaticHowToStep[]
+  intro: string[]
+  privacyNote: string[]
+  title: string
+  whyUsersNeedThis: string[]
+}) {
+  return countWords([
+    input.title,
+    input.description,
+    ...input.intro,
+    ...input.whyUsersNeedThis,
+    ...input.howItWorks,
+    ...input.howToSteps.flatMap((step) => [step.name, step.text]),
+    ...input.explanationBlocks.flatMap((block) => [block.title, ...block.paragraphs]),
+    ...input.privacyNote,
+    ...input.faq.flatMap((entry) => [entry.question, entry.answer]),
+  ])
+}
+
+function clampProgrammaticContent(input: {
+  description: string
+  explanationBlocks: ProgrammaticExplanationBlock[]
+  faq: ProgrammaticFaq[]
+  howItWorks: string[]
+  howToSteps: ProgrammaticHowToStep[]
+  intro: string[]
+  privacyNote: string[]
+  title: string
+  whyUsersNeedThis: string[]
+}) {
+  const intro = [...input.intro]
+  const whyUsersNeedThis = [...input.whyUsersNeedThis]
+  const howItWorks = [...input.howItWorks]
+  const explanationBlocks = input.explanationBlocks.map((block) => ({
+    ...block,
+    paragraphs: [...block.paragraphs],
+  }))
+  const privacyNote = [...input.privacyNote]
+  const faq = input.faq.map((entry) => ({ ...entry }))
+
+  const getCurrentWordCount = () =>
+    buildProgrammaticWordCount({
+      description: input.description,
+      explanationBlocks,
+      faq,
+      howItWorks,
+      howToSteps: input.howToSteps,
+      intro,
+      privacyNote,
+      title: input.title,
+      whyUsersNeedThis,
+    })
+
+  const trimCollections: Array<() => boolean> = [
+    () => {
+      for (let index = explanationBlocks.length - 1; index >= 0; index -= 1) {
+        const block = explanationBlocks[index]
+        for (let paragraphIndex = block.paragraphs.length - 1; paragraphIndex >= 0; paragraphIndex -= 1) {
+          const next = trimParagraph(block.paragraphs[paragraphIndex] ?? "")
+          if (next !== block.paragraphs[paragraphIndex]) {
+            block.paragraphs[paragraphIndex] = next
+            return true
+          }
+        }
+      }
+      return false
+    },
+    () => {
+      for (let index = howItWorks.length - 1; index >= 0; index -= 1) {
+        const next = trimParagraph(howItWorks[index] ?? "")
+        if (next !== howItWorks[index]) {
+          howItWorks[index] = next
+          return true
+        }
+      }
+      return false
+    },
+    () => {
+      for (let index = whyUsersNeedThis.length - 1; index >= 0; index -= 1) {
+        const next = trimParagraph(whyUsersNeedThis[index] ?? "")
+        if (next !== whyUsersNeedThis[index]) {
+          whyUsersNeedThis[index] = next
+          return true
+        }
+      }
+      return false
+    },
+    () => {
+      for (let index = intro.length - 1; index >= 0; index -= 1) {
+        const next = trimParagraph(intro[index] ?? "")
+        if (next !== intro[index]) {
+          intro[index] = next
+          return true
+        }
+      }
+      return false
+    },
+    () => {
+      for (let index = privacyNote.length - 1; index >= 0; index -= 1) {
+        const next = trimParagraph(privacyNote[index] ?? "")
+        if (next !== privacyNote[index]) {
+          privacyNote[index] = next
+          return true
+        }
+      }
+      return false
+    },
+    () => {
+      for (let index = faq.length - 1; index >= 0; index -= 1) {
+        const next = trimParagraph(faq[index]?.answer ?? "")
+        if (next !== faq[index]?.answer) {
+          faq[index].answer = next
+          return true
+        }
+      }
+      return false
+    },
+  ]
+
+  let wordCount = getCurrentWordCount()
+  while (wordCount > 1500) {
+    let changed = false
+    for (const trimCollection of trimCollections) {
+      if (trimCollection()) {
+        changed = true
+        wordCount = getCurrentWordCount()
+        break
+      }
+    }
+
+    if (!changed) {
+      break
+    }
+  }
+
+  return {
+    explanationBlocks,
+    faq,
+    howItWorks,
+    intro,
+    privacyNote,
+    whyUsersNeedThis,
+    wordCount,
+  }
+}
+
 function humanizeSlug(value: string) {
   return value
     .replace(/[-_/]+/g, " ")
@@ -565,29 +737,37 @@ export function buildProgrammaticPageData(
   }
 
   const context = buildParamContext(paramSlug)
-  const intro = buildIntro(tool, context)
-  const whyUsersNeedThis = buildWhyUsersNeedThis(tool, context)
-  const howItWorks = buildHowItWorks(tool, context)
+  const initialIntro = buildIntro(tool, context)
+  const initialWhyUsersNeedThis = buildWhyUsersNeedThis(tool, context)
+  const initialHowItWorks = buildHowItWorks(tool, context)
   const howToSteps = buildHowToSteps(tool, context)
-  const explanationBlocks = buildExplanationBlocks(tool, context)
-  const privacyNote = buildPrivacyNote()
-  const faq = buildFaq(tool, context)
+  const initialExplanationBlocks = buildExplanationBlocks(tool, context)
+  const initialPrivacyNote = buildPrivacyNote()
+  const initialFaq = buildFaq(tool, context)
   const relatedTools = getProgrammaticRelatedTools(tool)
   const title = `${tool.name} ${context.titleSuffix} | Plain Tools`
   const description = buildProgrammaticDescription(tool, context)
   const canonicalPath = buildProgrammaticCanonicalPath(tool.slug, paramSlug)
 
-  const wordCount = countWords([
-    title,
+  const {
+    explanationBlocks,
+    faq,
+    howItWorks,
+    intro,
+    privacyNote,
+    whyUsersNeedThis,
+    wordCount,
+  } = clampProgrammaticContent({
     description,
-    ...intro,
-    ...whyUsersNeedThis,
-    ...howItWorks,
-    ...howToSteps.flatMap((step) => [step.name, step.text]),
-    ...explanationBlocks.flatMap((block) => [block.title, ...block.paragraphs]),
-    ...privacyNote,
-    ...faq.flatMap((entry) => [entry.question, entry.answer]),
-  ])
+    explanationBlocks: initialExplanationBlocks,
+    faq: initialFaq,
+    howItWorks: initialHowItWorks,
+    howToSteps,
+    intro: initialIntro,
+    privacyNote: initialPrivacyNote,
+    title,
+    whyUsersNeedThis: initialWhyUsersNeedThis,
+  })
 
   if (wordCount < 800 || wordCount > 1500) {
     throw new Error(
