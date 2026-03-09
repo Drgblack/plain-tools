@@ -796,6 +796,23 @@ export const STATUS_CATEGORIES: StatusCategory[] = [
   "design",
 ]
 
+/**
+ * Primary category set used for high-intent "is [site] down" discovery.
+ * These map closely to the major search clusters we want to win first.
+ */
+export const STATUS_PRIMARY_CATEGORIES: StatusCategory[] = [
+  "social",
+  "streaming",
+  "ai",
+  "developer-tools",
+  "finance",
+  "ecommerce",
+  "productivity",
+  "cloud",
+  "gaming",
+  "news",
+]
+
 export const STATUS_CATEGORY_META: Record<
   StatusCategory,
   { title: string; description: string }
@@ -880,6 +897,12 @@ export const STATUS_DOMAINS_BY_CATEGORY: Record<StatusCategory, StatusDomain[]> 
     },
     {} as Record<StatusCategory, StatusDomain[]>
   )
+
+/**
+ * Public count for UI copy, sitemap commentary, and QA checks.
+ * Current curated dataset size intentionally exceeds 1,000 domains.
+ */
+export const STATUS_DOMAIN_COUNT = STATUS_DOMAINS.length
 
 /**
  * Pre-render all curated status routes to maximize crawlable coverage.

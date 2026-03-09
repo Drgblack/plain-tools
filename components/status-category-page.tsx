@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import {
   STATUS_CATEGORIES,
+  STATUS_DOMAIN_COUNT,
   STATUS_CATEGORY_META,
   STATUS_DOMAINS_BY_CATEGORY,
   type StatusCategory,
@@ -72,6 +73,10 @@ export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
             Outages can be global or local. Use each status page as a quick signal, then confirm
             with DNS lookup, latency checks, and a second network when results are mixed.
+          </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            This hub is part of a curated {STATUS_DOMAIN_COUNT.toLocaleString()}-domain status dataset
+            built for high-intent search queries and fast internal navigation between related services.
           </p>
         </div>
       </section>

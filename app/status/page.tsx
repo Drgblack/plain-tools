@@ -14,8 +14,10 @@ import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-p
 import {
   STATUS_CATEGORIES,
   STATUS_CATEGORY_META,
+  STATUS_DOMAIN_COUNT,
   STATUS_DOMAINS_BY_CATEGORY,
   STATUS_POPULAR_DOMAINS,
+  STATUS_PRIMARY_CATEGORIES,
 } from "@/lib/status-domains"
 import { statusPathFor } from "@/lib/site-status"
 import {
@@ -79,6 +81,11 @@ export default function StatusDirectoryPage() {
             Use this hub to check whether a website is down, browse category-based status pages,
             and move quickly between related network diagnostics.
           </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            Plain Tools currently pre-renders status routes for {STATUS_DOMAIN_COUNT.toLocaleString()} curated domains,
+            giving you crawlable pages for high-demand checks such as ChatGPT, GitHub, Netflix, Discord, and
+            other major consumer and infrastructure services.
+          </p>
           <form action="/site-status" method="get" className="rounded-xl border border-border/70 bg-card/35 p-4">
             <label htmlFor="status-query" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               Search by domain
@@ -102,6 +109,30 @@ export default function StatusDirectoryPage() {
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl">
           <TrendingStatus title="Trending checks today" limit={10} />
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold text-foreground">Priority status hubs</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            These category hubs cover the highest-value clusters for "is it down" searches.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {STATUS_PRIMARY_CATEGORIES.map((category) => (
+              <article key={category} className="rounded-lg border border-border bg-card/40 p-4">
+                <Link
+                  href={`/status/${category}`}
+                  className="text-sm font-semibold text-foreground transition hover:text-accent hover:underline"
+                >
+                  {STATUS_CATEGORY_META[category].title}
+                </Link>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  {STATUS_DOMAINS_BY_CATEGORY[category]?.length ?? 0} curated services in this cluster.
+                </p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
