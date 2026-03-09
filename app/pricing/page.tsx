@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 const baseMetadata = buildPageMetadata({
   title: "Pricing",
   description:
-    "See Plain Pro pricing, free core-tool access, and local-first upgrade options. Compare plans, AI limits, billing, and upgrade timing before you commit.",
+    "Review Plain Tools pricing, free core-tool access, and upgrade details for AI features and support. This page is hidden from search results.",
   path: "/pricing",
   image: "/og/default.png",
 })

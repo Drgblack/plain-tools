@@ -41,7 +41,7 @@ const siteVerificationMetadata = buildSiteVerificationMetadata()
 const baseMetadata = buildPageMetadata({
   title: "Plain Tools - Local utility hub for PDF, file and network workflows",
   description:
-    "Browse Plain Tools for offline PDF workflows, network diagnostics, converters and utility pages. Local processing, no uploads, no tracking by design.",
+    "Private browser tools for PDF, file conversion, network checks, and status monitoring. Local processing where supported, with no uploads for core workflows.",
   path: "/",
   image: "/og/default.png",
 })

@@ -28,7 +28,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Utility tools directory",
   description:
-    "Browse 43+ local PDF tools, converters, and utilities on Plain Tools. Private browser processing, no uploads, no tracking, and verifiable behaviour.",
+    "Browse Plain Tools for free PDF workflows, converters, and utilities. Core browser tools process files locally with no uploads and clear privacy guidance.",
   path: "/tools",
   image: "/og/tools.png",
 })

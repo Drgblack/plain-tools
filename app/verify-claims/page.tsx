@@ -9,7 +9,7 @@ import { verifyClaimsFaqs, verifyClaimsSchema } from "@/lib/verify-claims-schema
 export const metadata: Metadata = buildPageMetadata({
   title: "Do PDF Tools Upload Your Files? | Plain.tools Privacy Verification",
   description:
-    "Learn how online PDF tools process documents and verify that Plain.tools keeps files on your device. See how to confirm this using your browser’s developer tools.",
+    "Learn how online PDF tools handle documents and verify that Plain Tools keeps files on your device. Check the claim directly with browser DevTools.",
   path: "/verify-claims",
   image: "/og/default.png",
 })

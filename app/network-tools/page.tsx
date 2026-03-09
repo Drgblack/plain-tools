@@ -18,7 +18,7 @@ import { STATUS_HIGH_DEMAND_SITES } from "@/lib/status-domains"
 export const metadata: Metadata = buildPageMetadata({
   title: "Network tools",
   description:
-    "Browser-run network diagnostics for IP, DNS, site status, and latency. Requests go directly to the target endpoint or public API you choose.",
+    "Client-side network diagnostics for IP, DNS, status, and latency checks. Requests go directly to the target service or public API, with no proxy.",
   path: "/network-tools",
   image: "/og/default.png",
 })

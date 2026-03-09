@@ -5,7 +5,7 @@ export const BASE_URL = "https://plain.tools"
 const MIN_DESCRIPTION_LENGTH = 140
 const MAX_DESCRIPTION_LENGTH = 160
 const DEFAULT_PAGE_DESCRIPTION =
-  "Access 43+ offline PDF tools, file converters, network diagnostics, and status checks. Core workflows run locally on Plain Tools with no uploads and no tracking."
+  "Private browser tools for PDF, file, network, and status workflows. Local processing where supported, with no uploads for core tools and clear trust guidance."
 
 type PageMetadataInput = {
   title: string

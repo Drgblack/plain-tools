@@ -46,7 +46,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Utility platform for PDF, status and network tools",
   description:
-    "43+ offline PDF tools, network diagnostics, converters and utilities - 100% local processing, no uploads, no tracking, with privacy by design.",
+    "43+ offline PDF, network, status and utility tools - 100% local processing, no uploads, no tracking, with privacy-first browser workflows today.",
   path: "/",
   image: "/og/default.png",
 })
