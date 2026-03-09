@@ -5,6 +5,7 @@ import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { RelatedLinks } from "@/components/seo/related-links"
 import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
 import {
   Carousel,
@@ -234,6 +235,11 @@ export function ProgrammaticLayout({
                     forcing users back to search results after one page.
                   </p>
                 </div>
+
+                <RelatedLinks
+                  currentPath={page.canonicalPath}
+                  heading={relatedSectionTitle}
+                />
 
                 <Carousel opts={{ align: "start", containScroll: "trimSnaps" }} className="px-10">
                   <CarouselContent>

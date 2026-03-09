@@ -11,23 +11,26 @@ import {
 } from "@/components/tools/tool-component-registry"
 import {
   buildPdfVariantProgrammaticBundle,
-  generatePdfToolVariantStaticParams,
-  type PdfToolVariantRouteParams,
-} from "@/lib/pdf-tool-variants"
+  generatePdfVariantStaticParams,
+  type PdfVariantRouteParams,
+} from "@/lib/pdf-variants"
 
 type PageProps = {
-  params: Promise<PdfToolVariantRouteParams>
+  params: Promise<PdfVariantRouteParams>
 }
 
-export const dynamic = "force-static"
 export const revalidate = 86400
+export const dynamicParams = true
 
-async function resolveParams(params: Promise<PdfToolVariantRouteParams>) {
+async function resolveParams(params: Promise<PdfVariantRouteParams>) {
   return params
 }
 
 export function generateStaticParams() {
-  return generatePdfToolVariantStaticParams()
+  const requestedLimit = Number.parseInt(process.env.PDF_VARIANT_PREBUILD_LIMIT ?? "", 10)
+  const limit = Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : undefined
+
+  return generatePdfVariantStaticParams({ limit })
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

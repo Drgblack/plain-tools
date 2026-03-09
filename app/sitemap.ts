@@ -5,7 +5,7 @@ import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { getFileConverterSitemapPaths } from "@/lib/file-converter-slugs"
-import { getPdfToolVariantSitemapPaths } from "@/lib/pdf-tool-variants"
+import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
@@ -130,7 +130,7 @@ function buildAllEntries(now: Date) {
     toEntry(pdfIntentPathFor(page.slug), now, "monthly", 0.82)
   )
   const pdfToolVariantIndex = toEntry("/pdf-tools/variants", now, "monthly", 0.8)
-  const pdfToolVariantPages = getPdfToolVariantSitemapPaths().map((path) =>
+  const pdfToolVariantPages = getPdfVariantSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
   )
   const fileConverterPages = getFileConverterSitemapPaths().map((path) =>

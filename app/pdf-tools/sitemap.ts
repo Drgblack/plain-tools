@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 
 import { buildCanonicalUrl } from "@/lib/page-metadata"
-import { getPdfToolVariantSitemapPaths } from "@/lib/pdf-tool-variants"
+import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       url: buildCanonicalUrl("/pdf-tools/variants"),
     },
-    ...getPdfToolVariantSitemapPaths().map((path) => ({
+    ...getPdfVariantSitemapPaths().map((path) => ({
       changeFrequency: "daily" as const,
       lastModified: now,
       priority: 0.78,

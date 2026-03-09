@@ -1,7 +1,7 @@
 import {
-  getPdfToolVariantPage,
-  getRelatedPdfToolVariantPages,
-} from "@/lib/pdf-tool-variants"
+  getPdfVariantPage,
+  getRelatedPdfVariantPages,
+} from "@/lib/pdf-variants"
 import { getSiteStatusContext, normalizeSiteInput, statusPathFor } from "@/lib/site-status"
 import { STATUS_CATEGORY_META, STATUS_DOMAINS } from "@/lib/status-domains"
 import { getToolBySlug } from "@/lib/tools-catalogue"
@@ -164,11 +164,11 @@ function getPdfVariantRelatedLinks(currentPath: string): RelatedLink[] {
   if (!match) return []
 
   const [, action, variant] = match
-  const page = getPdfToolVariantPage(action, variant)
+  const page = getPdfVariantPage(action, variant)
   if (!page) return []
 
   const tool = getToolBySlug(page.toolSlug)
-  const siblingVariants = getRelatedPdfToolVariantPages(page.toolSlug, page.modifierSlug, 4).map(
+  const siblingVariants = getRelatedPdfVariantPages(action, page.modifierSlug, 4).map(
     (entry) => ({
       title: entry.h1,
       href: entry.pdfPath,
