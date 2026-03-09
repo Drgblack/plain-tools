@@ -102,7 +102,7 @@ function buildLearnSchema(article: TrancheLearnArticle, basePath: string, sectio
         "Follow this step in sequence for a local no-upload workflow.",
     }))
 
-  if (article.intent === "how-to" && howToSteps.length > 0) {
+  if (howToSteps.length > 0) {
     schemas.push(
       buildHowToSchema(article.title, article.metaDescription, howToSteps)
     )

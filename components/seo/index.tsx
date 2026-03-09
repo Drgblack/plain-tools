@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ChevronRight, Home } from "lucide-react"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { getImageAltTextOrStub } from "@/lib/image-alt"
 
 // ============================================
 // Canonical URL Component
@@ -155,7 +156,7 @@ export function KeyTerm({ children, definition }: KeyTermProps) {
 // ============================================
 interface TechnicalFigureProps {
   src: string
-  alt: string
+  alt?: string
   caption: string
   className?: string
 }
@@ -166,7 +167,7 @@ export function TechnicalFigure({ src, alt, caption, className = "" }: Technical
       <div className="overflow-hidden rounded-lg border border-[#333] bg-[#111]">
         <Image
           src={src} 
-          alt={alt}
+          alt={getImageAltTextOrStub(alt)}
           width={1200}
           height={675}
           className="h-auto w-full"
