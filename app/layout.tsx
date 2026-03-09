@@ -107,7 +107,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en-GB" suppressHydrationWarning>
+    <html
+      lang="en-GB"
+      suppressHydrationWarning
+      data-theme="dark"
+      style={{ colorScheme: "dark" }}
+    >
       <head>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMDZKHTSJG" />
         <script

@@ -109,7 +109,12 @@ export function Navigation() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <div className="flex items-center gap-2 rounded-md border border-border/70 bg-card/40 px-2 py-1">
+            <span className="hidden text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:inline">
+              Theme
+            </span>
+            <ThemeToggle />
+          </div>
           <Button
             type="button"
             variant="ghost"
@@ -151,6 +156,19 @@ export function Navigation() {
                 </Link>
               )
             })}
+            <div className="mt-2 rounded-md border border-border/60 bg-card/30 px-3 py-2">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    Theme
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Switch between dark and light mode safely in this browser.
+                  </p>
+                </div>
+                <ThemeToggle />
+              </div>
+            </div>
             <div className="mt-2 border-t border-border/70 pt-2">
               <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                 Sister sites
