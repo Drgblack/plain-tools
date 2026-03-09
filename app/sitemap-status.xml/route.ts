@@ -1,10 +1,11 @@
 import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
-import { STATUS_CATEGORIES, STATUS_DOMAIN_NAMES } from "@/lib/status-domains"
+import { STATUS_CATEGORIES, STATUS_DOMAIN_NAMES, STATUS_HIGH_DEMAND_SITES } from "@/lib/status-domains"
 import { statusPathFor } from "@/lib/site-status"
 
 export async function GET() {
   const now = new Date()
+  const highDemandSet = new Set(STATUS_HIGH_DEMAND_SITES)
 
   const entries: SitemapXmlEntry[] = [
     {
@@ -35,7 +36,7 @@ export async function GET() {
       url: `${BASE_URL}${statusPathFor(site)}`,
       lastModified: now,
       changeFrequency: "daily" as const,
-      priority: index < 100 ? 0.8 : 0.6,
+      priority: highDemandSet.has(site) ? 0.88 : index < 100 ? 0.8 : 0.6,
     })),
   ]
 

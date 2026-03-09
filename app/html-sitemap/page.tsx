@@ -16,6 +16,7 @@ import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-p
 import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
+import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -80,6 +81,11 @@ const toolLinks: SitemapLink[] = TOOL_CATALOGUE.filter((tool) => tool.available)
 const toolIntentLinks: SitemapLink[] = PDF_INTENT_PAGES.map((page) => ({
   label: page.h1.replace(" (Private, No Uploads)", ""),
   href: `/${page.slug}`,
+}))
+
+const toolProblemLinks: SitemapLink[] = TOOL_PROBLEM_PAGES.map((page) => ({
+  label: page.h1,
+  href: `/tools/${page.slug}`,
 }))
 
 const learnHighlights: SitemapLink[] = [...trancheLearnSlugs, ...expansionLearnSlugs]
@@ -220,6 +226,7 @@ export default function HtmlSitemapPage() {
 
         <SitemapSectionList section={{ title: "Key tools", links: toolLinks }} />
         <SitemapSectionList section={{ title: "Tool intent pages", links: toolIntentLinks }} />
+        <SitemapSectionList section={{ title: "Tool problem pages", links: toolProblemLinks }} />
         <SitemapSectionList section={{ title: "Network tools", links: networkLinks }} />
         <SitemapSectionList section={{ title: "Status categories", links: statusCategoryLinks }} />
         <SitemapSectionList section={{ title: "Popular status checks", links: popularStatusLinks }} />

@@ -34,6 +34,7 @@ import {
 import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
+import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import {
   FIRST_WAVE_COMPARE_PAGES,
   FIRST_WAVE_GUIDE_PAGES,
@@ -261,6 +262,20 @@ const homepageSeoToolLinks = PDF_INTENT_PAGES.filter((page) =>
 ).map((page) => ({
   label: page.h1,
   href: `/${page.slug}`,
+}))
+
+const homepageProblemPages = TOOL_PROBLEM_PAGES.filter((page) =>
+  [
+    "merge-pdf-mac",
+    "merge-pdf-offline",
+    "compress-pdf-large-files",
+    "sign-pdf-online",
+    "pdf-to-word-no-upload",
+    "make-pdf-searchable",
+  ].includes(page.slug)
+).map((page) => ({
+  label: page.h1,
+  href: `/tools/${page.slug}`,
 }))
 
 const homepageProofPoints = [
@@ -720,6 +735,20 @@ export default function HomePage() {
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {homepageSeoToolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Problem-led PDF routes
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {homepageProblemPages.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}

@@ -39,6 +39,7 @@ import {
   STATUS_CATEGORIES,
   STATUS_CATEGORY_META,
   STATUS_DOMAINS,
+  STATUS_HIGH_DEMAND_SITES,
   STATUS_STATIC_DOMAINS,
 } from "@/lib/status-domains"
 
@@ -183,7 +184,13 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
   const siteContext = getSiteStatusContext(normalizedSite)
   const siteSpecificContext = getSiteSpecificStatusContext(normalizedSite)
   const relatedStatusChecks = Array.from(
-    new Set([...siteContext.relatedExamples, ...STATUS_POPULAR_SITES, ...STATUS_EXAMPLE_SITES, ...STATUS_TRAFFIC_SITES])
+    new Set([
+      ...STATUS_HIGH_DEMAND_SITES,
+      ...siteContext.relatedExamples,
+      ...STATUS_POPULAR_SITES,
+      ...STATUS_EXAMPLE_SITES,
+      ...STATUS_TRAFFIC_SITES,
+    ])
   )
     .filter((value) => value !== normalizedSite)
     .slice(0, 8)

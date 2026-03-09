@@ -13,6 +13,7 @@ import {
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
+import { STATUS_HIGH_DEMAND_SITES } from "@/lib/status-domains"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Network tools",
@@ -75,6 +76,11 @@ const guides = [
     description: "Use browser tooling to inspect what a page or checker is sending over the network.",
   },
 ]
+
+const highDemandStatusLinks = STATUS_HIGH_DEMAND_SITES.map((site) => ({
+  label: `Check whether ${site} is down`,
+  href: `/status/${site}`,
+}))
 
 const networkToolsSchema = combineJsonLd([
   buildWebPageSchema({
@@ -225,15 +231,11 @@ export default function NetworkToolsPage() {
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Common status checks</h2>
             <div className="mt-4 flex flex-wrap gap-2 text-xs">
-              <Link href="/status/chatgpt.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
-                Check whether chatgpt.com is down
-              </Link>
-              <Link href="/status/reddit.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
-                Check whether reddit.com is down
-              </Link>
-              <Link href="/status/discord.com" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
-                Check whether discord.com is down
-              </Link>
+              {highDemandStatusLinks.map((link) => (
+                <Link key={link.href} href={link.href} className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                  {link.label}
+                </Link>
+              ))}
               <Link href="/tools/site-status-checker" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Open browser HEAD checker
               </Link>

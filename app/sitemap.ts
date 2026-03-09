@@ -7,11 +7,16 @@ import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
-import { STATUS_CATEGORIES, STATUS_STATIC_DOMAINS } from "@/lib/status-domains"
+import {
+  STATUS_CATEGORIES,
+  STATUS_HIGH_DEMAND_SITES,
+  STATUS_STATIC_DOMAINS,
+} from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { statusPathFor } from "@/lib/site-status"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
+import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 
 const BASE_URL = "https://plain.tools"
 const now = new Date()
@@ -81,6 +86,13 @@ const pdfIntentPages = PDF_INTENT_PAGES.map((page) => ({
   lastModified: now,
   changeFrequency: "monthly" as const,
   priority: 0.82,
+}))
+
+const toolProblemPages = TOOL_PROBLEM_PAGES.map((page) => ({
+  url: `${BASE_URL}/tools/${page.slug}`,
+  lastModified: now,
+  changeFrequency: "monthly" as const,
+  priority: 0.84,
 }))
 
 const statusCategoryPages = STATUS_CATEGORIES.map((category) => ({
@@ -174,7 +186,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${BASE_URL}${statusPathFor(site)}`,
     lastModified: now,
     changeFrequency: "daily" as const,
-    priority: 0.75,
+    priority: STATUS_HIGH_DEMAND_SITES.includes(site as (typeof STATUS_HIGH_DEMAND_SITES)[number])
+      ? 0.88
+      : 0.75,
   }))
 
   const entries = [
@@ -183,6 +197,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticCore,
     ...curatedLanding,
     ...pdfIntentPages,
+    ...toolProblemPages,
     ...statusCategoryPages,
     ...statusQueryPages,
     ...outageHistoryPages,

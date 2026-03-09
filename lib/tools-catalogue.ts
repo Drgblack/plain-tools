@@ -32,6 +32,7 @@ export interface ToolDefinition {
   slug: string
   category: ToolCategory
   description: string
+  problemPageSlugs?: string[]
   badge?: string
   pro?: boolean
   icon?: string
@@ -102,6 +103,12 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "merge-pdf",
     category: "Core",
     description: "Combine multiple PDF files into one document locally in your browser.",
+    problemPageSlugs: [
+      "merge-pdf-mac",
+      "merge-pdf-windows",
+      "merge-pdf-offline",
+      "merge-pdf-secure",
+    ],
     icon: "Merge",
     available: true,
     handler: async (files) => {
@@ -134,6 +141,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Core",
     description:
       "Compare two PDFs locally with page-by-page text differences, visual review cues, and a downloadable comparison report.",
+    problemPageSlugs: ["compare-pdf-files"],
     badge: "100% Local",
     icon: "FileSearch",
     available: true,
@@ -144,6 +152,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "compress-pdf",
     category: "Core",
     description: "Optimise PDF size locally with light, medium, and strong compression modes.",
+    problemPageSlugs: ["compress-pdf-large-files", "compress-pdf-scanned"],
     icon: "Minimize2",
     available: true,
     handler: async (files, options) => {
@@ -160,6 +169,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "reorder-pdf",
     category: "Core",
     description: "Drag, reorder, extract, delete, and rotate pages locally.",
+    problemPageSlugs: ["reorder-pdf-pages"],
     icon: "ArrowUpDown",
     available: true,
     handler: async (files, options) => {
@@ -178,6 +188,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "rotate-pdf",
     category: "Edit",
     description: "Rotate individual pages or all pages in a PDF locally with thumbnail preview controls.",
+    problemPageSlugs: [],
     badge: "100% Local",
     icon: "RefreshCw",
     available: true,
@@ -200,6 +211,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Edit",
     description:
       "Annotate PDF pages locally with pen, highlight, and text tools in a browser review workspace.",
+    problemPageSlugs: ["annotate-pdf-online"],
     badge: "100% Local",
     icon: "PenTool",
     available: true,
@@ -210,6 +222,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "extract-pdf",
     category: "Core",
     description: "Extract selected pages into a new local PDF file.",
+    problemPageSlugs: [],
     icon: "FileOutput",
     available: true,
     handler: async (files, options) => {
@@ -246,6 +259,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Security & Privacy",
     description:
       "Place a visual signature on a PDF locally using draw, type, or image-based signature controls.",
+    problemPageSlugs: ["sign-pdf-online"],
     badge: "100% Local",
     icon: "PenTool",
     available: true,
@@ -256,6 +270,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "protect-pdf",
     category: "Security & Privacy",
     description: "Password-protect PDFs locally so the shared copy requires the key you set to open it.",
+    problemPageSlugs: ["protect-pdf-password"],
     badge: "100% Local",
     icon: "Lock",
     available: true,
@@ -266,6 +281,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "unlock-pdf",
     category: "Security & Privacy",
     description: "Unlock password-protected PDFs locally when you have the correct password and need an accessible copy.",
+    problemPageSlugs: ["unlock-pdf-online"],
     badge: "100% Local",
     icon: "Unlock",
     available: true,
@@ -276,6 +292,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "ocr-pdf",
     category: "Performance & Edit",
     description: "Run best-effort OCR locally and export searchable text output for scanned PDFs without a cloud upload step.",
+    problemPageSlugs: ["ocr-pdf-online", "make-pdf-searchable"],
     badge: "100% Local",
     icon: "ScanText",
     available: true,
@@ -286,6 +303,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "pdf-to-word",
     category: "Core",
     description: "Extract PDF text locally and export a best-effort editable DOCX file.",
+    problemPageSlugs: ["pdf-to-word-no-upload"],
     badge: "100% Local",
     icon: "FileText",
     available: true,
@@ -296,6 +314,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "pdf-to-jpg",
     category: "Core",
     description: "Convert PDF pages to JPG images locally with quality, scale, and page-range controls.",
+    problemPageSlugs: ["pdf-to-jpg-free"],
     badge: "100% Local",
     icon: "FileImage",
     available: true,
@@ -307,6 +326,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Core",
     description:
       "Extract table-like data from PDFs locally and export spreadsheet-ready output for Excel cleanup and analysis.",
+    problemPageSlugs: ["pdf-to-excel-online"],
     badge: "100% Local",
     icon: "FileSpreadsheet",
     available: true,
@@ -318,6 +338,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     category: "Core",
     description:
       "Convert each PDF page to an image-based PowerPoint slide locally in your browser for quick presentation reuse.",
+    problemPageSlugs: ["pdf-to-powerpoint-online"],
     badge: "100% Local",
     icon: "Presentation",
     available: true,
@@ -350,6 +371,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "jpg-to-pdf",
     category: "Core",
     description: "Combine JPG, JPEG, or PNG images into one PDF locally with layout controls.",
+    problemPageSlugs: ["jpg-to-pdf-offline"],
     badge: "100% Local",
     icon: "FileImage",
     available: true,
@@ -491,6 +513,7 @@ export const TOOL_CATALOGUE: ToolDefinition[] = [
     slug: "fill-pdf",
     category: "Core",
     description: "Fill AcroForm fields locally, then export either a flattened share copy or editable output.",
+    problemPageSlugs: ["fill-pdf-form-online"],
     badge: "PRO",
     pro: true,
     icon: "FileText",

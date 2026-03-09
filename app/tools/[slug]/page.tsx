@@ -15,6 +15,13 @@ import { getToolSeoLinks } from "@/lib/seo/tranche1-link-map"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getToolSeoEntry } from "@/lib/seo-route-map"
 import { buildToolHowToSteps, buildToolSeoDescription, getToolPageProfile } from "@/lib/tool-page-content"
+import {
+  buildToolProblemMetadata,
+  getToolProblemPage,
+  getToolProblemPagesForTool,
+  TOOL_PROBLEM_PAGE_SLUGS,
+} from "@/lib/tool-problem-pages"
+import { ToolProblemPage } from "@/components/seo/ToolProblemPage"
 
 type ToolRouteParams = { slug: string }
 
@@ -139,14 +146,22 @@ function buildToolMetaDescription(slug: string, toolName: string, description: s
 }
 
 export async function generateStaticParams() {
-  return TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
+  const canonicalToolParams = TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     slug: tool.slug,
   }))
+  const problemPageParams = TOOL_PROBLEM_PAGE_SLUGS.map((slug) => ({ slug }))
+
+  return [...canonicalToolParams, ...problemPageParams]
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const slug = await resolveToolSlug(params)
   const tool = getToolBySlug(slug)
+  const problemPageMetadata = buildToolProblemMetadata(slug)
+
+  if (problemPageMetadata) {
+    return problemPageMetadata
+  }
 
   if (!tool) {
     return buildPageMetadata({
@@ -184,7 +199,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ToolPage({ params }: PageProps) {
   const slug = await resolveToolSlug(params)
   const tool = getToolBySlug(slug)
+  const problemPage = getToolProblemPage(slug)
   const seo = getToolSeoEntry(slug)
+
+  if (problemPage) {
+    return <ToolProblemPage {...problemPage} />
+  }
 
   if (!tool) {
     notFound()
@@ -196,6 +216,7 @@ export default async function ToolPage({ params }: PageProps) {
   const profile = getToolPageProfile(tool)
   const introLead = buildToolLeadParagraph(profile.description, tool.category)
   const seoLinks = getToolSeoLinks(tool.slug)
+  const relatedProblemPages = getToolProblemPagesForTool(tool.slug)
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
@@ -288,6 +309,29 @@ export default async function ToolPage({ params }: PageProps) {
 
                   {profile.faqs.length > 0 ? (
                     <ToolFaqBlock faqs={profile.faqs} className="mt-6" />
+                  ) : null}
+
+                  {relatedProblemPages.length > 0 ? (
+                    <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 md:p-5">
+                      <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">
+                        Related problem pages
+                      </h2>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Prefer a page tailored to a specific constraint or user situation? These
+                        routes use the same underlying tool with more focused guidance.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {relatedProblemPages.map((page) => (
+                          <a
+                            key={page.slug}
+                            href={`/tools/${page.slug}`}
+                            className="rounded-full border border-border/70 bg-background/70 px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/40 hover:text-accent/90"
+                          >
+                            {page.h1}
+                          </a>
+                        ))}
+                      </div>
+                    </section>
                   ) : null}
 
                   {INTENT_TOOL_SLUGS.has(tool.slug) ? (

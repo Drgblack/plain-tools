@@ -2,6 +2,7 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { BASE_URL } from "@/lib/page-metadata"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
+import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 
 export async function GET() {
   const now = new Date()
@@ -15,6 +16,12 @@ export async function GET() {
   }))
 
   entries.push(
+    ...TOOL_PROBLEM_PAGES.map((page) => ({
+      url: `${BASE_URL}/tools/${page.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.84,
+    })),
     ...PDF_INTENT_PAGES.map((page) => ({
       url: `${BASE_URL}${pdfIntentPathFor(page.slug)}`,
       lastModified: now,

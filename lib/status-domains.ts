@@ -925,6 +925,19 @@ export const STATUS_TRENDING_DEFAULT = [
   "google.com",
 ] as const
 
+export const STATUS_HIGH_DEMAND_SITES = [
+  "chatgpt.com",
+  "discord.com",
+  "reddit.com",
+  "youtube.com",
+  "github.com",
+  "netflix.com",
+  "gmail.com",
+  "amazon.com",
+  "instagram.com",
+  "facebook.com",
+] as const
+
 export const STATUS_DEVELOPER_DOMAINS = STATUS_DOMAINS_BY_CATEGORY["developer-tools"].map(
   (entry) => entry.domain
 )

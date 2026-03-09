@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { serializeJsonLd } from "@/lib/sanitize"
 import { getToolPageProfile } from "@/lib/tool-page-content"
 import { buildToolSchema } from "@/lib/tool-schema"
+import { getToolProblemPage } from "@/lib/tool-problem-pages"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
 type ToolHeadProps = {
@@ -12,6 +13,11 @@ type ToolHeadProps = {
 export default async function Head({ params }: ToolHeadProps) {
   const { slug } = await params
   const tool = getToolBySlug(slug)
+  const problemPage = getToolProblemPage(slug)
+
+  if (problemPage) {
+    return null
+  }
 
   if (!tool) {
     notFound()
