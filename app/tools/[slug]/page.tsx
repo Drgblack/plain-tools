@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react"
 
-import { AdSlot } from "@/components/ads/ad-slot"
+import { AdAfterResult, AdContentTop, AdToolSidebar } from "@/components/ads/tool-page-ad-slots"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
@@ -255,34 +255,7 @@ export default async function ToolPage({ params }: PageProps) {
             <>
               <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
                 <div>
-                  <AdSlot placement="tool_content_top" className="mb-8" />
-
-                  <section className="mb-8 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
-                      Privacy and trust
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-foreground">
-                      {tool.category !== "AI Assistant"
-                        ? "Processed locally in your browser. Files never leave your device."
-                        : "Text is extracted locally first. AI response requires explicit opt-in."}
-                    </p>
-                    <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs text-muted-foreground">
-                      {profile.trustPoints.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                    <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
-                  </section>
-
-                  <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
-
-                  <ToolSeoContent
-                    toolName={tool.name}
-                    description={buildToolSeoDescription(tool, profile)}
-                    steps={buildToolHowToSteps(tool)}
-                    faq={profile.faqs}
-                    relatedTools={seoLinks?.relatedTools ?? []}
-                  />
+                  <AdContentTop className="mb-8" />
 
                   <section className="mb-3">
                     <h2 className="text-base font-semibold tracking-tight text-foreground md:text-lg">Tool workspace</h2>
@@ -308,13 +281,40 @@ export default async function ToolPage({ params }: PageProps) {
                   </section>
 
                   <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
-                    <p className="font-medium text-foreground">Result experience</p>
+                    <p className="font-medium text-foreground">Result section</p>
                     <p className="mt-1 text-muted-foreground">
                       When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.
                     </p>
                   </section>
 
-                  <AdSlot placement="tool_result_after" className="mt-6" />
+                  <AdAfterResult className="mt-6" />
+
+                  <section className="mt-6 rounded-2xl border border-border/80 bg-card/65 p-5 shadow-[0_12px_38px_-28px_rgba(0,112,243,0.35)] md:p-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent/90">
+                      Privacy and trust
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-foreground">
+                      {tool.category !== "AI Assistant"
+                        ? "Processed locally in your browser. Files never leave your device."
+                        : "Text is extracted locally first. AI response requires explicit opt-in."}
+                    </p>
+                    <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs text-muted-foreground">
+                      {profile.trustPoints.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                    <p className="mt-3 text-xs text-muted-foreground">{profile.limitation}</p>
+                  </section>
+
+                  <ToolAnswerFirst toolName={tool.name} content={profile.answerFirst} />
+
+                  <ToolSeoContent
+                    toolName={tool.name}
+                    description={buildToolSeoDescription(tool, profile)}
+                    steps={buildToolHowToSteps(tool)}
+                    faq={profile.faqs}
+                    relatedTools={seoLinks?.relatedTools ?? []}
+                  />
 
                   <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
                     <p className="font-medium text-foreground">Known limitations</p>
@@ -373,7 +373,7 @@ export default async function ToolPage({ params }: PageProps) {
                 </div>
 
                 <aside className="hidden xl:block xl:sticky xl:top-24">
-                  <AdSlot placement="tool_sidebar" />
+                  <AdToolSidebar />
                   <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
                     <p className="font-medium text-foreground">Before you share the output</p>
                     <p className="mt-2">

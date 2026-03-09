@@ -53,6 +53,29 @@ const networkTools = [
   },
 ]
 
+const guides = [
+  {
+    label: "Is it down for everyone or just me?",
+    href: "/learn/is-it-down-for-everyone-or-just-me",
+    description: "Work through the difference between a global outage and a local connectivity problem.",
+  },
+  {
+    label: "How DNS lookup works",
+    href: "/learn/how-dns-lookup-works",
+    description: "Understand what a resolver check tells you before you blame the target service.",
+  },
+  {
+    label: "What response time means in uptime checks",
+    href: "/learn/what-response-time-means-in-uptime-check",
+    description: "Interpret slow responses versus hard failures when reading status output.",
+  },
+  {
+    label: "How to audit network requests in DevTools",
+    href: "/learn/how-to-audit-pdf-tool-network-requests",
+    description: "Use browser tooling to inspect what a page or checker is sending over the network.",
+  },
+]
+
 const networkToolsSchema = combineJsonLd([
   buildWebPageSchema({
     name: "Network Tools - Plain Tools",
@@ -102,6 +125,16 @@ export default function NetworkToolsPage() {
               Start here when you need quick diagnostics before escalating: verify resolver output,
               confirm what public IP is exposed, test whether a URL answers a HEAD request, or
               compare WebSocket latency across public echo endpoints.
+            </p>
+            <p className="max-w-4xl text-sm leading-8 text-muted-foreground">
+              This category page is designed as the main network entry point for Plain Tools. Use
+              it when the job is operational rather than document-based: checking whether a website
+              is reachable, confirming resolver output, measuring simple latency, or verifying what
+              public IP is visible from your current connection. Unlike the PDF workflows, these
+              tools do make direct requests to the endpoint or public API needed for the result,
+              but they still avoid unnecessary account friction and keep the workflow lightweight.
+              The aim is to help you move from a quick symptom such as “site not loading” or
+              “Discord feels down” to a clearer diagnosis without jumping between unrelated pages.
             </p>
           </div>
         </section>
@@ -171,6 +204,24 @@ export default function NetworkToolsPage() {
         </section>
 
         <section className="px-4 py-12">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-foreground">Relevant guides</h2>
+            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+              {guides.map((guide) => (
+                <li key={guide.href} className="rounded-lg border border-border bg-card/40 p-4">
+                  <Link href={guide.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                    {guide.label}
+                  </Link>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {guide.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="border-t border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Common status checks</h2>
             <div className="mt-4 flex flex-wrap gap-2 text-xs">

@@ -205,14 +205,16 @@ export default function ToolsPage() {
 
   const searchIntentLinks = PDF_INTENT_PAGES.filter((page) =>
     [
-      "sign-pdf-online",
-      "protect-pdf-with-password",
-      "add-watermark-to-pdf",
-      "fill-pdf-form-online",
-      "ocr-pdf",
-      "make-pdf-searchable",
-      "compare-pdf-files",
-      "pdf-to-excel",
+      "merge-pdf-online",
+      "split-pdf-online",
+      "compress-pdf-online",
+      "pdf-to-word-online",
+      "word-to-pdf-online",
+      "pdf-to-jpg-online",
+      "jpg-to-pdf-online",
+      "pdf-to-png-online",
+      "png-to-pdf-online",
+      "rotate-pdf-online",
     ].includes(page.slug)
   ).map((page) => ({
     label: page.h1.replace(" (Private, No Uploads)", ""),

@@ -445,6 +445,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/tools/pdf-to-png",
+        destination: "/tools/pdf-to-jpg",
+        permanent: true,
+      },
+      {
+        source: "/tools/png-to-pdf",
+        destination: "/tools/jpg-to-pdf",
+        permanent: true,
+      },
+      {
         source: "/file-converters/pdf-to-word",
         destination: "/tools/pdf-to-word",
         permanent: true,

@@ -101,9 +101,9 @@ export function VerifyClaimsContent() {
             <Badge variant="outline" className="border-accent/45 bg-accent/10 text-white">
               Verification First
             </Badge>
-            <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
+            <h2 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
               We Dare You to Catch Us Uploading Your Files.
-            </h1>
+            </h2>
             <p className="mx-auto max-w-3xl text-base text-white/80 sm:text-lg">
               Every privacy claim we make is technically verifiable. Here&apos;s exactly how to
               check.

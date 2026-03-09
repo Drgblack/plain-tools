@@ -25,6 +25,7 @@ export function PdfIntentPage({ slug }: PdfIntentPageProps) {
       title={page.h1}
       metaDescription={page.metaDescription}
       toolSlug={page.toolKey}
+      toolSummary={page.toolSummary}
       intro={page.intro}
       howItWorks={page.howItWorks}
       limitations={page.limitations ?? DEFAULT_LIMITATIONS}

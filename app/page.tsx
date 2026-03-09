@@ -33,6 +33,7 @@ import {
 } from "@/lib/structured-data"
 import { cn } from "@/lib/utils"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
 import {
   FIRST_WAVE_COMPARE_PAGES,
   FIRST_WAVE_GUIDE_PAGES,
@@ -102,16 +103,23 @@ const categories = [
   {
     name: "Convert and Handle Files",
     description: "Use browser-based file utilities for format checks and lightweight conversion workflows",
-    href: "/file-tools",
+    href: "/file-converters",
     icon: <FileText className="h-6 w-6" />,
-    toolCount: 4,
+    toolCount: 8,
   },
   {
     name: "Work with PDFs",
     description: "Merge, split, compress, convert, OCR, and sign PDFs locally in your browser",
-    href: "/tools",
+    href: "/pdf-tools",
     icon: <FileType className="h-6 w-6" />,
     toolCount: TOOL_CATALOGUE.filter((tool) => tool.available).length,
+  },
+  {
+    name: "Image Tools",
+    description: "Export PDF pages as images, combine images into PDFs, and optimise visual files locally",
+    href: "/image-tools",
+    icon: <Eye className="h-6 w-6" />,
+    toolCount: 6,
   },
   {
     name: "Check Site Status",
@@ -173,6 +181,87 @@ const popularTools = [
     icon: <FileText className="h-5 w-5" />,
   },
 ]
+
+const homepageMostPopularTools = [
+  {
+    name: "Merge PDF",
+    description: "Combine multiple PDF files in one browser-based workflow with no upload step.",
+    href: "/tools/merge-pdf",
+    icon: <FileType className="h-5 w-5" />,
+  },
+  {
+    name: "Split PDF",
+    description: "Break a PDF into separate pages or ranges without sending files to a server.",
+    href: "/tools/split-pdf",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "Compress PDF",
+    description: "Reduce PDF size locally with practical controls for smaller email-ready files.",
+    href: "/tools/compress-pdf",
+    icon: <HardDrive className="h-5 w-5" />,
+  },
+  {
+    name: "PDF to Word",
+    description: "Convert PDF documents into editable Word files directly in your browser.",
+    href: "/tools/pdf-to-word",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "Word to PDF",
+    description: "Turn Word documents into PDFs quickly for sharing, printing, or sign-off.",
+    href: "/tools/word-to-pdf",
+    icon: <FileType className="h-5 w-5" />,
+  },
+  {
+    name: "PDF to JPG",
+    description: "Export PDF pages as JPG images when you need previews or lighter image output.",
+    href: "/tools/pdf-to-jpg",
+    icon: <Eye className="h-5 w-5" />,
+  },
+  {
+    name: "JPG to PDF",
+    description: "Bundle JPG images into a single PDF for applications, records, or sharing.",
+    href: "/tools/jpg-to-pdf",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "PDF to PNG",
+    description: "Open the image-export workflow for clean page snapshots and transparent-friendly output.",
+    href: "/tools/pdf-to-png",
+    icon: <Eye className="h-5 w-5" />,
+  },
+  {
+    name: "PNG to PDF",
+    description: "Use the image-to-PDF workflow to combine PNG assets into one portable document.",
+    href: "/tools/png-to-pdf",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    name: "Check Website Status",
+    description: "See whether a website is up, down, or timing out before you start troubleshooting.",
+    href: "/site-status",
+    icon: <Wifi className="h-5 w-5" />,
+  },
+]
+
+const homepageSeoToolLinks = PDF_INTENT_PAGES.filter((page) =>
+  [
+    "merge-pdf-online",
+    "split-pdf-online",
+    "compress-pdf-online",
+    "pdf-to-word-online",
+    "word-to-pdf-online",
+    "pdf-to-jpg-online",
+    "jpg-to-pdf-online",
+    "pdf-to-png-online",
+    "png-to-pdf-online",
+    "rotate-pdf-online",
+  ].includes(page.slug)
+).map((page) => ({
+  label: page.h1,
+  href: `/${page.slug}`,
+}))
 
 const homepageProofPoints = [
   {
@@ -238,10 +327,17 @@ const privacyClaims = [
 const browseCategories = [
   { 
     name: "PDF Tools", 
-    href: "/tools", 
+    href: "/pdf-tools", 
     count: TOOL_CATALOGUE.filter((tool) => tool.available).length,
     description: "Conversion, organisation, and secure document workflows",
     icon: <FileType className="h-5 w-5" />,
+  },
+  { 
+    name: "Image Tools", 
+    href: "/image-tools", 
+    count: 6,
+    description: "PDF image export, image-to-PDF, OCR, and image optimisation",
+    icon: <Eye className="h-5 w-5" />,
   },
   { 
     name: "Network Tools", 
@@ -251,10 +347,10 @@ const browseCategories = [
     icon: <Globe className="h-5 w-5" />,
   },
   { 
-    name: "File Tools", 
-    href: "/file-tools", 
-    count: 4,
-    description: "Browser-based file conversion and handling utilities",
+    name: "File Converters", 
+    href: "/file-converters", 
+    count: 8,
+    description: "Document, spreadsheet, presentation, and text conversion workflows",
     icon: <FileText className="h-5 w-5" />,
   },
   { 
@@ -474,16 +570,28 @@ export default function HomePage() {
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link
+                href="/pdf-tools"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                PDF tools
+              </Link>
+              <Link
+                href="/file-converters"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                File converters
+              </Link>
+              <Link
+                href="/image-tools"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Image tools
+              </Link>
+              <Link
                 href="/network-tools"
                 className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
                 Network tools
-              </Link>
-              <Link
-                href="/file-tools"
-                className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                File tools
               </Link>
               <Link
                 href="/learn"
@@ -570,6 +678,57 @@ export default function HomePage() {
               >
                 View source on GitHub
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border/50">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                Most Popular Tools
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Jump straight into the PDF and status workflows people use most often on Plain Tools.
+                These links are crawlable, server-rendered entry points for common day-to-day tasks.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {homepageMostPopularTools.map((tool) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className="group rounded-xl border border-border bg-card/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-card/60 hover:shadow-[0_20px_60px_-36px_rgba(100,200,180,0.45)]"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/20 bg-accent/10 text-accent">
+                    {tool.icon}
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{tool.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {tool.description}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                    Open tool
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Popular PDF searches
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {homepageSeoToolLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </section>

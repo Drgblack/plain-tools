@@ -48,6 +48,10 @@ const mainSections: SitemapSection[] = [
     links: [
       { label: "Home", href: "/" },
       { label: "Tools", href: "/tools" },
+      { label: "PDF Tools", href: "/pdf-tools" },
+      { label: "File Converters", href: "/file-converters" },
+      { label: "Image Tools", href: "/image-tools" },
+      { label: "Network Tools", href: "/network-tools" },
       { label: "Learn", href: "/learn" },
       { label: "Compare", href: "/compare" },
       { label: "Blog", href: "/blog" },

@@ -9,37 +9,37 @@ import {
 
 export const verifyClaimsFaqs = [
   {
-    question: "How do I verify no upload?",
+    question: "Do PDF converters upload files?",
     answer:
-      "Open DevTools, switch to the Network tab, run a local PDF workflow, and inspect Fetch and XHR requests to confirm no file bytes are being sent.",
+      "Many online PDF converters do upload files to remote servers because the conversion runs in cloud infrastructure. Plain Tools core PDF workflows are built to process files locally in the browser instead.",
   },
   {
-    question: "What should I look for in the Network tab?",
+    question: "Are online PDF tools safe?",
     answer:
-      "Look for outgoing requests, request payloads, and multipart form uploads while the tool runs. Local workflows should not send your PDF content to a remote endpoint.",
+      "Some are safer than others, but safety depends on architecture and handling practices. If a tool uploads your file for processing, you are trusting that provider with the document and any hidden data inside it.",
   },
   {
-    question: "Does Plain Tools upload my PDFs?",
+    question: "Can websites see my documents when I convert a PDF?",
     answer:
-      "No for core local PDF tools. Those workflows process files directly in your browser without uploading document bytes to a Plain Tools server.",
+      "Yes, if the website uploads the file to its servers for processing. With local browser processing, the site can run the workflow without sending the document bytes away during the core task.",
   },
   {
-    question: "Can I inspect the implementation on GitHub?",
+    question: "Do PDF compressors store files?",
     answer:
-      "Yes. The public repository shows how the product is built, and you can compare that code with what you observe in your own browser during a live test.",
+      "Many upload-based PDF compressors temporarily process files on remote infrastructure, and some may log or retain them according to their own policies. Plain Tools core compression is designed to run on-device instead.",
   },
   {
-    question: "Are AI features included in the no-upload claim?",
+    question: "Is local PDF processing more secure?",
     answer:
-      "No. AI features are opt-in and may send extracted text for processing. The no-upload verification on this page applies to the core local workflows.",
+      "Local processing is usually a stronger privacy default because the file stays on your device during the task. It reduces exposure to third-party storage, server logs, and cloud transfer paths, but you should still verify the behaviour in DevTools.",
   },
 ] as const
 
 export const verifyClaimsSchema = combineJsonLd([
   buildWebPageSchema({
-    name: "Verify Plain Tools no-upload claims",
+    name: "Do online PDF tools upload your files?",
     description:
-      "Verification page showing how to inspect Plain Tools network behaviour, confirm no-upload workflows, and validate claims in DevTools.",
+      "Learn how online PDF tools process documents and verify that Plain.tools keeps files on your device. See how to confirm this using your browser’s developer tools.",
     url: "https://plain.tools/verify-claims",
   }),
   buildSoftwareApplicationSchema({

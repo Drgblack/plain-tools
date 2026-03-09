@@ -58,6 +58,7 @@ type ToolIntentPageProps = {
   title: string
   metaDescription: string
   toolSlug: string
+  toolSummary?: string
   intro: string
   howItWorks: string[]
   limitations: string[]
@@ -116,6 +117,7 @@ export function ToolIntentPage({
   title,
   metaDescription,
   toolSlug,
+  toolSummary,
   intro,
   howItWorks,
   limitations,
@@ -189,7 +191,7 @@ export function ToolIntentPage({
                 What this tool does
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
-                {tool?.description ?? metaDescription}
+                {toolSummary ?? tool?.description ?? metaDescription}
               </p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 This landing page uses the same underlying workflow as{" "}

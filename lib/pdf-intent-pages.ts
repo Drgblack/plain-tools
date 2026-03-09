@@ -48,6 +48,7 @@ export type PdfIntentPage = {
   toolKey: PdfIntentToolKey
   canonicalToolHref: string
   canonicalToolLabel: string
+  toolSummary?: string
   howItWorks: string[]
   relatedTools: IntentLink[]
   learnLinks: IntentLink[]
@@ -59,9 +60,9 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   {
     slug: "compress-pdf-online",
     h1: "Compress PDF Online",
-    title: "Compress PDF Online (No Uploads) | Plain.tools",
+    title: "Compress PDF Online (Free, Private, No Upload) | Plain.tools",
     metaDescription:
-      "Compress PDF files directly in your browser with no uploads required. Fast, private PDF compression using local processing.",
+      "Compress PDF files online directly in your browser. Plain.tools processes files locally so your documents never leave your device.",
     intro:
       "Compress PDF Online is built for people who need a smaller PDF without sending documents to a remote server. Whether you are trying to email a file, upload a report to a form with strict limits, or store lighter PDFs on your device, this page lets you reduce file size using the same local compression engine that powers the main Plain.tools workflow. The tool runs inside your browser, so the PDF stays on your device while you choose a lighter, medium, or stronger optimisation mode. That matters for invoices, contracts, internal memos, and other files you should not casually upload to third-party services. It is also faster for many everyday jobs because there is no upload queue, no waiting for server-side processing, and no account step. If the file is still too large after one pass, you can adjust the settings and try again immediately. The result is a practical, privacy-first way to compress PDFs online while keeping the actual processing local.",
     toolKey: "compress-pdf",
@@ -1420,6 +1421,437 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
     ],
   },
 ]
+
+function cloneIntentPage(baseSlug: string, overrides: Partial<PdfIntentPage> & Pick<PdfIntentPage, "slug" | "h1" | "title" | "metaDescription" | "intro">): PdfIntentPage {
+  const base = PDF_INTENT_PAGES.find((page) => page.slug === baseSlug)
+  if (!base) {
+    throw new Error(`Unknown base PDF intent page: ${baseSlug}`)
+  }
+
+  return {
+    ...base,
+    ...overrides,
+    relatedTools: overrides.relatedTools ?? base.relatedTools,
+    learnLinks: overrides.learnLinks ?? base.learnLinks,
+    faqs: overrides.faqs ?? base.faqs,
+    howItWorks: overrides.howItWorks ?? base.howItWorks,
+    limitations: overrides.limitations ?? base.limitations,
+  }
+}
+
+PDF_INTENT_PAGES.push(
+  cloneIntentPage("merge-pdf-files", {
+    slug: "merge-pdf-online",
+    h1: "Merge PDF Online",
+    title: "Merge PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Merge PDF files online directly in your browser. Plain.tools combines documents locally so your files never leave your device.",
+    intro:
+      "Merge PDF Online is built for the exact query people use when they need one combined PDF quickly and do not want to upload contracts, statements, application packs, or internal documents to a cloud service. This page loads the same Plain.tools merge workflow that sits on the main tool route, so there is no reduced feature set and no extra step before you can start. Add the files you want, check the order, and produce one output PDF directly in the browser. Because the merge runs locally, the file bytes stay on your device during the core task. That privacy model matters when the job is routine but the document contents are still sensitive. It also keeps the workflow faster for many everyday cases because there is no upload queue, no waiting for a remote processor, and no sign-up wall between you and the download.",
+    relatedTools: [
+      { label: "Split PDF Online", href: "/split-pdf-online" },
+      { label: "Compress PDF Online", href: "/compress-pdf-online" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I merge PDF files online without uploading them?",
+        answer:
+          "Yes. On Plain.tools the merge workflow runs in your browser, so the core file combination happens locally on your device.",
+      },
+      {
+        question: "Can I change the file order before merging?",
+        answer:
+          "Yes. Add your PDFs, review the order, then rearrange them before creating the final merged document.",
+      },
+      {
+        question: "Is Merge PDF Online free to use?",
+        answer:
+          "Yes. The main local merge workflow is available without creating an account for basic everyday use.",
+      },
+    ],
+  }),
+  cloneIntentPage("split-pdf-pages", {
+    slug: "split-pdf-online",
+    h1: "Split PDF Online",
+    title: "Split PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Split PDF files online directly in your browser. Plain.tools processes pages locally so your document stays on your device.",
+    intro:
+      "Split PDF Online targets the common search intent behind people who need a few pages from a larger file, want one page per document, or need to break a bundle into smaller pieces for sharing. This route reuses the existing Plain.tools split interface, which means you get the live tool immediately rather than a marketing page that sends you somewhere else to finish the task. Upload the PDF, choose the pages or ranges you need, and download the output directly from the same browser session. Because the workflow runs locally, the source PDF is not sent to a remote splitting service as part of the core job. That makes the page a better fit for invoices, scanned records, HR forms, and other files that still deserve careful handling even when the task itself is simple.",
+    relatedTools: [
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+      { label: "Extract PDF Pages", href: "/extract-pdf-pages" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I split a PDF online without uploading it?",
+        answer:
+          "Yes. The split workflow on Plain.tools runs in your browser, so the source document stays on your device during processing.",
+      },
+      {
+        question: "Can I export just a few selected pages?",
+        answer:
+          "Yes. You can choose specific pages or ranges instead of splitting every page into a separate file.",
+      },
+      {
+        question: "Will I get a ZIP file when there are many outputs?",
+        answer:
+          "Yes. When the split generates multiple files, Plain.tools can package them into a ZIP for easier download.",
+      },
+    ],
+  }),
+  cloneIntentPage("convert-pdf-to-word", {
+    slug: "pdf-to-word-online",
+    h1: "PDF to Word Online",
+    title: "PDF to Word Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PDF to Word online directly in your browser. Plain.tools processes documents locally so the source PDF stays on your device.",
+    intro:
+      "PDF to Word Online is built for people who want an editable version of a PDF without handing the source file to an upload-first converter. This route embeds the existing Plain.tools PDF to Word workflow immediately, so you can start the job as soon as the page loads. It is most useful for text-based PDFs where the goal is editing or reusing content rather than perfectly preserving a complex print layout. Upload the file, run the local conversion, and download the generated Word document from the same browser session. Because the work happens in-browser, the PDF stays on your device for the core workflow. That makes this page a practical option for internal reports, drafts, notes, and working documents where privacy still matters even though the task is routine.",
+    relatedTools: [
+      { label: "Word to PDF Online", href: "/word-to-pdf-online" },
+      { label: "PDF to JPG Online", href: "/pdf-to-jpg-online" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to Word online without uploading the file?",
+        answer:
+          "Yes. The core conversion runs locally in your browser, so the PDF does not need to be sent to a server to create the output.",
+      },
+      {
+        question: "Will the Word file keep the original layout perfectly?",
+        answer:
+          "Not always. Text-heavy PDFs usually convert better than scans or heavily designed page layouts.",
+      },
+      {
+        question: "Is PDF to Word Online free?",
+        answer:
+          "Yes. The local browser workflow is available without account creation for standard use.",
+      },
+    ],
+  }),
+  cloneIntentPage("convert-word-to-pdf", {
+    slug: "word-to-pdf-online",
+    h1: "Word to PDF Online",
+    title: "Word to PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert Word to PDF online directly in your browser. Plain.tools handles DOCX locally so your document never leaves your device.",
+    intro:
+      "Word to PDF Online is aimed at people who need a fast DOCX-to-PDF workflow for applications, records, printing, or sharing and do not want to rely on a cloud office suite. This page uses the same local Plain.tools converter as the main tool page, so the workflow is immediate and familiar: upload the document, run the conversion, and download the PDF. The core operation stays in your browser, which means the Word file is not uploaded to a remote server just to create a PDF. That approach is especially useful for resumes, statements, draft contracts, and internal documents where the job is simple but the contents still call for restraint. If you need to compress, merge, or secure the resulting file afterward, this page also links directly into the surrounding PDF workflow cluster.",
+    relatedTools: [
+      { label: "PDF to Word Online", href: "/pdf-to-word-online" },
+      { label: "Compress PDF Online", href: "/compress-pdf-online" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert Word to PDF online without uploading the document?",
+        answer:
+          "Yes. Plain.tools runs the core DOCX-to-PDF workflow locally in your browser, so the source file stays on your device.",
+      },
+      {
+        question: "What Word file type works best?",
+        answer:
+          "DOCX is the intended input. Review the PDF output if the source file uses complex styling or layout.",
+      },
+      {
+        question: "Do I need an account to use Word to PDF Online?",
+        answer:
+          "No. The standard local conversion workflow is available without sign-up.",
+      },
+    ],
+  }),
+  cloneIntentPage("pdf-to-jpg", {
+    slug: "pdf-to-jpg-online",
+    h1: "PDF to JPG Online",
+    title: "PDF to JPG Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PDF pages to JPG online directly in your browser. Plain.tools renders pages locally so the source file stays on your device.",
+    intro:
+      "PDF to JPG Online is built for people who need image exports from a PDF for previews, slide decks, document sharing, or simple image-based handoff. This page opens the existing Plain.tools image-export workflow directly, so there is no extra navigation before you can start converting pages. Upload the PDF, choose the pages you need, and export JPG output from the same browser session. Because the rendering and export happen locally, the source PDF does not need to be uploaded to a remote converter during the core workflow. That makes the page a more practical fit for internal reports, forms, and working files where privacy still matters, even if the goal is only to produce images for quick reuse.",
+    relatedTools: [
+      { label: "PDF to PNG Online", href: "/pdf-to-png-online" },
+      { label: "JPG to PDF Online", href: "/jpg-to-pdf-online" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to JPG online without uploading it?",
+        answer:
+          "Yes. The export workflow runs in your browser, so the PDF stays on your device during the core conversion.",
+      },
+      {
+        question: "Can I export more than one page?",
+        answer:
+          "Yes. You can export multiple pages from the same PDF depending on what you need from the document.",
+      },
+      {
+        question: "Is PDF to JPG Online free?",
+        answer:
+          "Yes. The local browser workflow is available without a sign-up step for normal use.",
+      },
+    ],
+  }),
+  cloneIntentPage("jpg-to-pdf", {
+    slug: "jpg-to-pdf-online",
+    h1: "JPG to PDF Online",
+    title: "JPG to PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert JPG to PDF online directly in your browser. Plain.tools builds the document locally so your images stay on your device.",
+    intro:
+      "JPG to PDF Online is designed for people who need to turn photos or scanned images into one shareable PDF without sending the files to an upload-based converter. This page uses the same Plain.tools image-to-PDF workflow as the canonical tool route, so you can start immediately with the live component already in place. Add one or more JPG files, adjust the order, and download the PDF from the same browser session. Because the file assembly happens locally, the images stay on your device during the core workflow. That makes the page useful for application materials, receipts, records, and quick document bundles where privacy still matters but the task needs to stay fast and practical.",
+    relatedTools: [
+      { label: "PNG to PDF Online", href: "/png-to-pdf-online" },
+      { label: "PDF to JPG Online", href: "/pdf-to-jpg-online" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert JPG to PDF online without uploading the images?",
+        answer:
+          "Yes. The image-to-PDF workflow runs in your browser, so the source images stay on your device during processing.",
+      },
+      {
+        question: "Can I combine multiple JPG files into one PDF?",
+        answer:
+          "Yes. Add multiple images, check their order, and export one combined PDF.",
+      },
+      {
+        question: "Do I need an account to use JPG to PDF Online?",
+        answer:
+          "No. The standard local workflow is available without creating an account.",
+      },
+    ],
+  }),
+  cloneIntentPage("pdf-to-jpg", {
+    slug: "pdf-to-png-online",
+    h1: "PDF to PNG Online",
+    title: "PDF to PNG Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PDF pages to PNG online directly in your browser. Plain.tools renders pages locally so the source PDF stays on your device.",
+    intro:
+      "PDF to PNG Online is for people who want page images from a PDF but still prefer a privacy-first, browser-based workflow. This landing page uses the existing Plain.tools image-export component, which already handles the page rendering locally on your device. That means you can open the file, export the pages you need, and download the output without sending the original PDF to a remote conversion server. The route is useful for previews, design handoff, documentation, and any job where you need image output from a PDF but do not want cloud-processing friction. If your actual downstream need is JPG instead of PNG, you can use the closely related export route from the same workflow cluster.",
+    toolSummary:
+      "This route targets PNG-focused search intent while using the existing local PDF page-export workflow. Rendering happens in your browser, so the source PDF stays on your device during the core task.",
+    relatedTools: [
+      { label: "PDF to JPG Online", href: "/pdf-to-jpg-online" },
+      { label: "PNG to PDF Online", href: "/png-to-pdf-online" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to PNG online without uploading it?",
+        answer:
+          "Yes. Plain.tools handles the core page-rendering workflow locally in your browser, so the PDF stays on your device.",
+      },
+      {
+        question: "Why does this page reuse the existing image-export tool?",
+        answer:
+          "The underlying export workflow is already local and privacy-first, so this landing page uses that same component for PNG-oriented search intent.",
+      },
+      {
+        question: "Should I review the image output afterward?",
+        answer:
+          "Yes. Check the pages you export to confirm the output quality and choose the image format that best fits the next step in your workflow.",
+      },
+    ],
+  }),
+  cloneIntentPage("jpg-to-pdf", {
+    slug: "png-to-pdf-online",
+    h1: "PNG to PDF Online",
+    title: "PNG to PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PNG to PDF online directly in your browser. Plain.tools assembles the PDF locally so your images stay on your device.",
+    intro:
+      "PNG to PDF Online is built for people who need a quick way to combine PNG images into a PDF while keeping the workflow private and straightforward. This page uses the existing Plain.tools image-to-PDF component, which already handles file assembly locally in the browser. You can add the images you need, check the order, and export one PDF without sending those files to a remote server as part of the core workflow. That makes the route useful for design assets, screenshots, scanned pages, forms, and visual records where cloud-upload friction adds risk without adding much value. If you need JPG support instead, the closely related image-to-PDF route is available from the same tool cluster.",
+    toolSummary:
+      "This route targets PNG-to-PDF search intent while using the existing local image-to-PDF workflow. The core file assembly happens in your browser, so the source images stay on your device.",
+    relatedTools: [
+      { label: "JPG to PDF Online", href: "/jpg-to-pdf-online" },
+      { label: "PDF to PNG Online", href: "/pdf-to-png-online" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PNG to PDF online without uploading the images?",
+        answer:
+          "Yes. The image-to-PDF workflow runs locally in your browser, so the PNG files stay on your device during the core task.",
+      },
+      {
+        question: "Can I combine multiple PNG files into one PDF?",
+        answer:
+          "Yes. Add several images, review the order, and export one PDF from the same browser session.",
+      },
+      {
+        question: "Why does this page reuse the existing image-to-PDF tool?",
+        answer:
+          "The existing workflow already supports privacy-first local conversion, so this route uses that same component for PNG-focused search intent.",
+      },
+    ],
+  }),
+  cloneIntentPage("rotate-pdf-pages", {
+    slug: "rotate-pdf-online",
+    h1: "Rotate PDF Online",
+    title: "Rotate PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Rotate PDF pages online directly in your browser. Plain.tools fixes page orientation locally so your file stays on your device.",
+    intro:
+      "Rotate PDF Online is designed for the common case where a scan, statement, or form opens sideways and you need a corrected file immediately. This page loads the existing Plain.tools rotation interface directly, so you can review page thumbnails, rotate the pages you need, and download the updated PDF without taking a detour through another tool directory. The core workflow runs in your browser, which means the PDF does not need to be uploaded to a remote rotation service just to fix orientation. That makes the route a practical fit for admin paperwork, scanned records, camera captures, and mixed-orientation PDFs where the task is simple but the file should still stay under your control.",
+    relatedTools: [
+      { label: "Split PDF Online", href: "/split-pdf-online" },
+      { label: "Extract PDF Pages", href: "/extract-pdf-pages" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I rotate a PDF online without uploading it?",
+        answer:
+          "Yes. The rotation workflow runs locally in your browser, so the document stays on your device during the core task.",
+      },
+      {
+        question: "Can I rotate only some pages?",
+        answer:
+          "Yes. You can apply rotation to selected pages rather than forcing the same orientation on the whole file.",
+      },
+      {
+        question: "Is Rotate PDF Online free?",
+        answer:
+          "Yes. The main local rotation workflow is available without a required account for standard use.",
+      },
+    ],
+  }),
+  cloneIntentPage("extract-pdf-pages", {
+    slug: "extract-pages-from-pdf",
+    h1: "Extract Pages from PDF",
+    title: "Extract Pages from PDF (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Extract pages from PDF directly in your browser. Plain.tools processes the document locally so the source file stays on your device.",
+    intro:
+      "Extract Pages from PDF is built for the exact task people describe when they want only a few pages from a longer document and do not want to upload the whole file to a cloud service. This page uses the existing Plain.tools extraction workflow, so the tool loads immediately and lets you specify exact page numbers or ranges without any extra navigation. That makes it practical for contracts, reports, forms, and scans where you only need selected pages for sharing, review, or archiving. Because the extraction runs locally in your browser, the PDF stays on your device during the core workflow. That privacy-first approach matters even for simple document trimming jobs, especially when the original file contains unrelated or sensitive pages you do not want to send anywhere else first.",
+    relatedTools: [
+      { label: "Split PDF Online", href: "/split-pdf-online" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I extract pages from a PDF without uploading it?",
+        answer:
+          "Yes. The extraction workflow runs locally in your browser, so the source PDF stays on your device during processing.",
+      },
+      {
+        question: "Can I extract a custom range of pages?",
+        answer:
+          "Yes. You can enter individual page numbers, page ranges, or a mixed selection depending on the output you need.",
+      },
+      {
+        question: "Can I save each extracted page as a separate PDF?",
+        answer:
+          "Yes. The extractor supports separate outputs as well as combined extraction into one new PDF.",
+      },
+    ],
+  }),
+  cloneIntentPage("ocr-pdf", {
+    slug: "ocr-pdf-online",
+    h1: "OCR PDF Online",
+    title: "OCR PDF Online (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "OCR PDF online directly in your browser. Plain.tools processes scans locally so your document stays on your device during OCR.",
+    intro:
+      "OCR PDF Online targets the high-intent query people use when they need to turn a scanned PDF into searchable text without trusting a remote OCR service. This page loads the existing Plain.tools OCR workflow directly, so you can start with the live tool immediately instead of stepping through another directory page first. It is useful for records, receipts, reports, onboarding packs, and scanned paperwork that need to become searchable or easier to reuse. Because the OCR pass runs in your browser, the source PDF stays on your device during the core workflow. That is a better fit for private or regulated documents where a cloud OCR upload would add risk without improving the task itself. Accuracy still depends on scan quality, but this route gives a direct, privacy-first answer to the common OCR PDF online search.",
+    relatedTools: [
+      { label: "Make PDF Searchable", href: "/make-pdf-searchable" },
+      { label: "PDF to Word Online", href: "/pdf-to-word-online" },
+      { label: "Compress PDF Online", href: "/compress-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I OCR a PDF online without uploading it?",
+        answer:
+          "Yes. The OCR workflow on Plain.tools runs locally in your browser, so the scanned file stays on your device during processing.",
+      },
+      {
+        question: "Will OCR work on every scan?",
+        answer:
+          "Not perfectly. OCR quality depends on scan clarity, contrast, skew, and language, so review important sections after export.",
+      },
+      {
+        question: "Is OCR PDF Online free to try?",
+        answer:
+          "Yes. You can run the local OCR workflow without an account for normal use and review the output afterward.",
+      },
+    ],
+  }),
+  cloneIntentPage("pdf-to-jpg", {
+    slug: "pdf-to-png",
+    h1: "PDF to PNG",
+    title: "PDF to PNG (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PDF to PNG directly in your browser. Plain.tools renders PDF pages locally so the source file stays on your device.",
+    intro:
+      "PDF to PNG is aimed at people who need page images from a PDF but prefer a privacy-first workflow that does not start with a cloud upload. This page reuses the existing Plain.tools image-export component, so the live tool is available immediately and the rendering still happens locally in your browser. That makes it useful for previews, design handoff, documentation, screenshots, and any workflow where PNG output is easier to reuse than the original PDF. Because the source document stays on your device during the core task, the page is a better fit for internal documents and working files that should not be uploaded just to create a few page images. If you need JPG output instead, the adjacent export route is linked below from the same tool cluster.",
+    toolSummary:
+      "This page targets PDF-to-PNG search intent while reusing the existing local PDF page-export workflow. Rendering happens in your browser, so the source file stays on your device.",
+    relatedTools: [
+      { label: "PDF to JPG", href: "/pdf-to-jpg" },
+      { label: "PNG to PDF", href: "/png-to-pdf" },
+      { label: "Rotate PDF Online", href: "/rotate-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PDF to PNG without uploading the file?",
+        answer:
+          "Yes. The underlying export workflow runs locally in your browser, so the PDF stays on your device during conversion.",
+      },
+      {
+        question: "Why does this page use the existing image export tool?",
+        answer:
+          "The current export component already handles local page rendering well, so this route reuses that workflow for PNG-focused search intent.",
+      },
+      {
+        question: "Should I review the image output before sharing it?",
+        answer:
+          "Yes. Check the exported pages for quality and choose the image format that best fits the next step in your workflow.",
+      },
+    ],
+  }),
+  cloneIntentPage("jpg-to-pdf", {
+    slug: "png-to-pdf",
+    h1: "PNG to PDF",
+    title: "PNG to PDF (Free, Private, No Upload) | Plain.tools",
+    metaDescription:
+      "Convert PNG to PDF directly in your browser. Plain.tools builds the document locally so your images stay on your device.",
+    intro:
+      "PNG to PDF is built for people who want to turn screenshots, design assets, scanned images, or other PNG files into one shareable PDF without passing them through a hosted converter. This page uses the existing Plain.tools image-to-PDF workflow, so the tool is ready immediately and the core file assembly still happens in your browser. That makes it useful for records, forms, visual reports, and quick document bundles where privacy matters even though the task itself is straightforward. Because the conversion runs locally, the input images stay on your device during the workflow. If you also need JPG support, the related image-to-PDF route is linked below from the same PDF conversion cluster.",
+    toolSummary:
+      "This page targets PNG-to-PDF search intent while reusing the existing local image-to-PDF workflow. The core conversion happens in your browser, so the source images stay on your device.",
+    relatedTools: [
+      { label: "JPG to PDF", href: "/jpg-to-pdf" },
+      { label: "PDF to PNG", href: "/pdf-to-png" },
+      { label: "Merge PDF Online", href: "/merge-pdf-online" },
+    ],
+    faqs: [
+      {
+        question: "Can I convert PNG to PDF without uploading the images?",
+        answer:
+          "Yes. The image-to-PDF workflow runs locally in your browser, so the PNG files stay on your device during processing.",
+      },
+      {
+        question: "Can I combine multiple PNG files into one PDF?",
+        answer:
+          "Yes. Add multiple images, set the order, and export one PDF directly from the same browser session.",
+      },
+      {
+        question: "Why does this route reuse the existing image-to-PDF tool?",
+        answer:
+          "The existing component already supports a strong local conversion workflow, so this page uses it for PNG-specific search demand.",
+      },
+    ],
+  })
+)
 
 const PDF_INTENT_PAGE_MAP = new Map(PDF_INTENT_PAGES.map((page) => [page.slug, page]))
 

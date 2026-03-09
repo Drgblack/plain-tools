@@ -1,205 +1,116 @@
 import type { Metadata } from "next"
 import { FileImage, FileSpreadsheet, FileText, FileType, Presentation } from "lucide-react"
-import Link from "next/link"
 
-import { ToolShell } from "@/components/tool-shell"
-import { JsonLd } from "@/components/seo/json-ld"
+import { ToolCategoryHub } from "@/components/seo/tool-category-hub"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import {
-  buildBreadcrumbList,
-  buildCollectionPageSchema,
-  buildItemListSchema,
-  buildWebPageSchema,
-  combineJsonLd,
-} from "@/lib/structured-data"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "File converters",
   description:
-    "Open canonical file-converter routes on Plain Tools. Live converters redirect to working /tools paths for local, privacy-first processing.",
+    "Browse file conversion workflows on Plain Tools for document, spreadsheet, presentation, image, and text-oriented tasks with local processing.",
   path: "/file-converters",
   image: "/og/tools.png",
 })
 
-const relatedTools = [
+const tools = [
   {
     name: "PDF to Word",
-    description: "Convert PDF to editable Word files locally",
+    description: "Convert text-based PDFs into editable Word files locally.",
     href: "/tools/pdf-to-word",
-    tags: ["Local", "Best-effort"],
+    tags: ["Local", "Best-effort"] as const,
     icon: <FileText className="h-4 w-4" />,
   },
   {
     name: "Word to PDF",
-    description: "Convert .docx files to PDF in your browser",
+    description: "Convert DOCX files to PDF directly in your browser.",
     href: "/tools/word-to-pdf",
-    tags: ["Local", "Best-effort"],
+    tags: ["Local", "Best-effort"] as const,
     icon: <FileType className="h-4 w-4" />,
   },
   {
     name: "PDF to JPG",
-    description: "Export PDF pages as JPG images locally",
+    description: "Export PDF pages as JPG images for sharing or reuse.",
     href: "/tools/pdf-to-jpg",
-    tags: ["Local", "Image output"],
+    tags: ["Local", "Image output"] as const,
     icon: <FileImage className="h-4 w-4" />,
   },
   {
     name: "JPG to PDF",
-    description: "Combine JPG/PNG images into one PDF",
+    description: "Combine JPG or PNG images into one PDF document locally.",
     href: "/tools/jpg-to-pdf",
-    tags: ["Local", "Image input"],
+    tags: ["Local", "Image input"] as const,
     icon: <FileImage className="h-4 w-4" />,
   },
-]
-
-const faqs = [
   {
-    question: "Are converter files uploaded?",
-    answer:
-      "Live converters run locally in your browser for supported workflows. Files are not uploaded for those local tools.",
-  },
-  {
-    question: "Why do some converter URLs redirect?",
-    answer:
-      "Some legacy converter slugs were documentation shells. They now redirect to the nearest live tool or this hub to avoid misleading empty pages.",
-  },
-  {
-    question: "Where should I start?",
-    answer:
-      "Pick the converter below that matches your source and output format, then process directly on the canonical /tools route.",
-  },
-]
-
-const liveConverters = [
-  {
-    label: "PDF to Word",
-    detail: "Best-effort text extraction to DOCX.",
-    href: "/tools/pdf-to-word",
-  },
-  {
-    label: "Word to PDF",
-    detail: "Best-effort DOCX rendering to PDF.",
-    href: "/tools/word-to-pdf",
-  },
-  {
-    label: "PDF to JPG",
-    detail: "Convert PDF pages to JPG with quality and page controls.",
-    href: "/tools/pdf-to-jpg",
-  },
-  {
-    label: "JPG or PNG to PDF",
-    detail: "Merge image files into a single PDF output.",
-    href: "/tools/jpg-to-pdf",
-  },
-  {
-    label: "PDF to Excel",
-    detail: "Extract table-like data to CSV spreadsheet format.",
+    name: "PDF to Excel",
+    description: "Extract table-like PDF content into spreadsheet-ready output.",
     href: "/tools/pdf-to-excel",
+    tags: ["Local", "Spreadsheet"] as const,
+    icon: <FileSpreadsheet className="h-4 w-4" />,
   },
   {
-    label: "PDF to PowerPoint",
-    detail: "One PDF page per image-based PPT slide.",
+    name: "PDF to PowerPoint",
+    description: "Convert PDF pages into slide-based output for presentation reuse.",
     href: "/tools/pdf-to-ppt",
+    tags: ["Local", "Presentation"] as const,
+    icon: <Presentation className="h-4 w-4" />,
+  },
+  {
+    name: "PDF to HTML",
+    description: "Convert PDF content into browser-friendly HTML locally.",
+    href: "/tools/pdf-to-html",
+    tags: ["Local", "Web"] as const,
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    name: "HTML to PDF",
+    description: "Turn simple HTML content into a PDF directly in your browser.",
+    href: "/tools/html-to-pdf",
+    tags: ["Local", "Web"] as const,
+    icon: <FileType className="h-4 w-4" />,
+  },
+  {
+    name: "PDF to Markdown",
+    description: "Extract structured text from a PDF into Markdown output.",
+    href: "/tools/pdf-to-markdown",
+    tags: ["Local", "Text"] as const,
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    name: "Text to PDF",
+    description: "Create a PDF from plain text or Markdown locally.",
+    href: "/tools/text-to-pdf",
+    tags: ["Local", "Text"] as const,
+    icon: <FileType className="h-4 w-4" />,
   },
 ]
 
-const redirectedAliases = [
-  "pdf-to-image",
-  "pdf-to-png",
-  "image-to-pdf",
-  "png-to-pdf",
+const guides = [
+  {
+    label: "No uploads explained",
+    href: "/learn/no-uploads-explained",
+    description: "Understand how local conversion workflows avoid a file upload step.",
+  },
+  {
+    label: "How to verify a PDF tool does not upload your files",
+    href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+    description: "Use DevTools to check whether a converter is sending file bytes anywhere.",
+  },
+  {
+    label: "Browser memory limits for PDF tools",
+    href: "/learn/browser-memory-limits-for-pdf-tools",
+    description: "Know when large conversions may need splitting, batching, or a different workflow.",
+  },
+  {
+    label: "How PDFs work",
+    href: "/learn/how-pdfs-work",
+    description: "Get context on why some conversions are best-effort rather than layout-perfect.",
+  },
 ]
 
-const unsupportedLegacy = [
-  "excel-to-pdf",
-  "ppt-to-pdf",
-  "heic-to-pdf",
-  "pdf-to-heic",
-  "tiff-to-pdf",
-]
-
-const converterHubSchema = combineJsonLd([
-  buildWebPageSchema({
-    name: "File Converters - Plain Tools",
-    description:
-      "Converter hub that routes users to canonical local-processing tools under /tools.",
-    url: "https://plain.tools/file-converters",
-  }),
-  buildCollectionPageSchema({
-    name: "File converter routes",
-    description:
-      "Live converter routes and alias handling for canonical Plain Tools conversion workflows.",
-    url: "https://plain.tools/file-converters",
-  }),
-  buildBreadcrumbList([
-    { name: "Home", url: "https://plain.tools/" },
-    { name: "File Converters", url: "https://plain.tools/file-converters" },
-  ]),
-  buildItemListSchema(
-    "Live converter tools",
-    liveConverters.map((converter) => ({
-      name: converter.label,
-      description: converter.detail,
-      url: `https://plain.tools${converter.href}`,
-    })),
-    "https://plain.tools/file-converters"
-  ),
-])
+const intro =
+  "Plain Tools File Converters is the category hub for browser-based format conversion workflows. It groups the document, image, spreadsheet, presentation, and text routes that users most often need when they are moving content from one format into another. The aim is not to send you through a chain of empty converter shells. Each link here points to a live working tool or a canonical route that loads the existing conversion component immediately. For the supported core workflows, processing happens locally in your browser rather than through a cloud upload queue. That makes this hub useful for resumes, reports, scanned pages, slide decks, data extracts, and internal working files where privacy still matters even if the conversion job is routine. Use it as the main entry point when you know the source and target format you need, then follow the guide links below if you want to verify local processing or understand conversion limits before you start."
 
 export default function FileConvertersPage() {
-  return (
-    <ToolShell
-      name="File Converters"
-      description="Canonical converter directory for live local tools."
-      category={{ name: "File Tools", href: "/file-tools", type: "file" }}
-      tags={["Local", "Canonical routes"]}
-      explanation="Use the live converter routes below. Legacy /file-converters/* aliases now redirect so no empty converter shells remain exposed."
-      faqs={faqs}
-      relatedTools={relatedTools}
-    >
-      {converterHubSchema ? <JsonLd id="file-converters-hub-schema" schema={converterHubSchema} /> : null}
-      <div className="space-y-8">
-        <section className="rounded-lg border border-border bg-secondary/30 p-4">
-          <h2 className="text-lg font-semibold text-foreground">Live converter tools</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            These routes load real working converters under the canonical /tools path.
-          </p>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {liveConverters.map((converter) => (
-              <li key={converter.href} className="rounded-md border border-border bg-card/60 p-3">
-                <Link href={converter.href} className="text-sm font-semibold text-accent hover:underline">
-                  {converter.label}
-                </Link>
-                <p className="mt-1 text-xs text-muted-foreground">{converter.detail}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="rounded-lg border border-border bg-secondary/30 p-4">
-          <h2 className="text-lg font-semibold text-foreground">Alias handling</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            The following legacy aliases redirect to working canonical tools:
-          </p>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-            {redirectedAliases.map((slug) => (
-              <li key={slug}>/file-converters/{slug}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="rounded-lg border border-border bg-secondary/30 p-4">
-          <h2 className="text-lg font-semibold text-foreground">Unsupported legacy requests</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            These routes redirect back to this hub because no live converter is currently available.
-          </p>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-            {unsupportedLegacy.map((slug) => (
-              <li key={slug}>/file-converters/{slug}</li>
-            ))}
-          </ul>
-        </section>
-      </div>
-    </ToolShell>
-  )
+  return <ToolCategoryHub title="File Converters" path="/file-converters" intro={intro} tools={tools} guides={guides} />
 }
