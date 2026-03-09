@@ -148,6 +148,11 @@ export default function NetworkToolsPage() {
         <section className="border-b border-border px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Available network diagnostics</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              Each card opens a dedicated tool page with the live checker, a static explanation of
+              what the result means, and links to the next network step if the first check does not
+              answer the problem.
+            </p>
             <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {networkTools.map((tool) => (
                 <ToolCard
