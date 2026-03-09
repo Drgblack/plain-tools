@@ -1,10 +1,5 @@
-import type { Metadata } from "next"
-
-import { PdfIntentPage } from "@/components/intent/pdf-intent-page"
-import { buildPdfIntentMetadata } from "@/lib/pdf-intent-pages"
-
-export const metadata: Metadata = buildPdfIntentMetadata("ocr-pdf-online")
+import { permanentRedirect } from "next/navigation"
 
 export default function OcrPdfOnlinePage() {
-  return <PdfIntentPage slug="ocr-pdf-online" />
+  permanentRedirect("/ocr-pdf")
 }

@@ -193,15 +193,21 @@ export function ToolIntentPage({
 
             <div className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
               <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
-                How it works locally
+                Step-by-step instructions
               </h2>
-              <ul className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                {howItWorks.map((step) => (
-                  <li key={step} className="rounded-xl border border-border/70 bg-background/60 p-3">
-                    {step}
+              <ol className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                {howItWorks.map((step, index) => (
+                  <li
+                    key={step}
+                    className="rounded-xl border border-border/70 bg-background/60 p-3"
+                  >
+                    <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/70 bg-card text-xs font-semibold text-foreground">
+                      {index + 1}
+                    </span>
+                    <span>{step}</span>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           </section>
 
@@ -221,6 +227,35 @@ export function ToolIntentPage({
               </div>
             </div>
             <ToolComponent />
+          </section>
+
+          <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
+              Why Plain.tools is private
+            </h2>
+            <div className="mt-3 grid gap-3 md:grid-cols-3">
+              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                <h3 className="text-sm font-semibold text-foreground">No upload step</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  The core file workflow on this page runs in your browser, so the document does
+                  not need to be sent to a Plain.tools server to complete the task.
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Easy to verify</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  You can inspect browser network requests yourself while using the tool and confirm
+                  whether file bytes are being transmitted.
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+                <h3 className="text-sm font-semibold text-foreground">Built for task flow</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  The aim is to let you finish a PDF job quickly without account friction, upload
+                  queues, or hidden processing steps that are hard to audit.
+                </p>
+              </div>
+            </div>
           </section>
 
           <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">

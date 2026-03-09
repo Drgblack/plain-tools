@@ -520,8 +520,8 @@ export default function HomePage() {
               <Link href="/compare-pdf-files" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
                 Compare PDF files
               </Link>
-              <Link href="/ocr-pdf-online" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
-                OCR PDF online
+              <Link href="/ocr-pdf" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                OCR PDF
               </Link>
             </div>
 

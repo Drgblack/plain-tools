@@ -209,7 +209,7 @@ export default function ToolsPage() {
       "protect-pdf-with-password",
       "add-watermark-to-pdf",
       "fill-pdf-form-online",
-      "ocr-pdf-online",
+      "ocr-pdf",
       "make-pdf-searchable",
       "compare-pdf-files",
       "pdf-to-excel",

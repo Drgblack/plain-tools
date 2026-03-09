@@ -58,8 +58,8 @@ export type PdfIntentPage = {
 export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   {
     slug: "compress-pdf-online",
-    h1: "Compress PDF Online (Private, No Uploads)",
-    title: "Compress PDF Online (Private, No Uploads) | Plain.tools",
+    h1: "Compress PDF Online",
+    title: "Compress PDF Online (No Uploads) | Plain.tools",
     metaDescription:
       "Compress PDF files directly in your browser with no uploads required. Fast, private PDF compression using local processing.",
     intro:
@@ -156,8 +156,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "merge-pdf-files",
-    h1: "Merge PDF Files (Private, No Uploads)",
-    title: "Merge PDF Files (Private, No Uploads) | Plain.tools",
+    h1: "Merge PDF Files",
+    title: "Merge PDF Files (No Uploads) | Plain.tools",
     metaDescription:
       "Merge PDF files directly in your browser with no uploads. Combine PDFs privately using the existing local Plain.tools merge workflow.",
     intro:
@@ -205,8 +205,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "convert-pdf-to-word",
-    h1: "Convert PDF to Word (Private, No Uploads)",
-    title: "Convert PDF to Word (Private, No Uploads) | Plain.tools",
+    h1: "Convert PDF to Word",
+    title: "Convert PDF to Word (No Uploads) | Plain.tools",
     metaDescription:
       "Convert PDF to Word in your browser with no uploads required. Private local processing for best-effort DOCX conversion.",
     intro:
@@ -254,8 +254,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "convert-word-to-pdf",
-    h1: "Convert Word to PDF (Private, No Uploads)",
-    title: "Convert Word to PDF (Private, No Uploads) | Plain.tools",
+    h1: "Convert Word to PDF",
+    title: "Convert Word to PDF (No Uploads) | Plain.tools",
     metaDescription:
       "Convert Word to PDF directly in your browser with no uploads. Private DOCX-to-PDF conversion using local Plain.tools processing.",
     intro:
@@ -303,8 +303,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "split-pdf-pages",
-    h1: "Split PDF Pages (Private, No Uploads)",
-    title: "Split PDF Pages (Private, No Uploads) | Plain.tools",
+    h1: "Split PDF Pages",
+    title: "Split PDF Pages (No Uploads) | Plain.tools",
     metaDescription:
       "Split PDF pages in your browser with no uploads. Extract ranges or individual pages privately using local Plain.tools processing.",
     intro:
@@ -352,8 +352,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "rotate-pdf-pages",
-    h1: "Rotate PDF Pages (Private, No Uploads)",
-    title: "Rotate PDF Pages (Private, No Uploads) | Plain.tools",
+    h1: "Rotate PDF Pages",
+    title: "Rotate PDF Pages (No Uploads) | Plain.tools",
     metaDescription:
       "Rotate PDF pages locally in your browser with no uploads. Use thumbnail controls and download the updated PDF privately.",
     intro:
@@ -401,8 +401,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "extract-pdf-pages",
-    h1: "Extract PDF Pages (Private, No Uploads)",
-    title: "Extract PDF Pages (Private, No Uploads) | Plain.tools",
+    h1: "Extract PDF Pages",
+    title: "Extract PDF Pages (No Uploads) | Plain.tools",
     metaDescription:
       "Extract PDF pages in your browser with no uploads. Pull selected pages into a new PDF using local Plain.tools processing.",
     intro:
@@ -450,8 +450,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "pdf-to-jpg",
-    h1: "PDF to JPG (Private, No Uploads)",
-    title: "PDF to JPG (Private, No Uploads) | Plain.tools",
+    h1: "PDF to JPG",
+    title: "PDF to JPG (No Uploads) | Plain.tools",
     metaDescription:
       "Convert PDF to JPG in your browser with no uploads required. Private local processing for page-by-page JPG export.",
     intro:
@@ -499,8 +499,8 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
   },
   {
     slug: "jpg-to-pdf",
-    h1: "JPG to PDF (Private, No Uploads)",
-    title: "JPG to PDF (Private, No Uploads) | Plain.tools",
+    h1: "JPG to PDF",
+    title: "JPG to PDF (No Uploads) | Plain.tools",
     metaDescription:
       "Convert JPG to PDF in your browser with no uploads. Private local image-to-PDF conversion using existing Plain.tools logic.",
     intro:
@@ -979,13 +979,13 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
     ],
   },
   {
-    slug: "ocr-pdf-online",
-    h1: "OCR PDF Online",
-    title: "OCR PDF Online Privately (No Uploads) | Plain Tools",
+    slug: "ocr-pdf",
+    h1: "OCR PDF",
+    title: "OCR PDF (No Uploads) | Plain.tools",
     metaDescription:
-      "Run OCR on PDFs online in your browser without uploading them. Private local processing helps turn scans into searchable text safely.",
+      "Run OCR on PDF files directly in your browser with no uploads. Local processing helps turn scans into searchable text more privately.",
     intro:
-      "OCR PDF Online is for people who need searchable text from scanned pages but do not want to pass the document through a cloud OCR service. This route uses the local Plain Tools OCR workflow, so page images and extracted text stay on-device during the core process.",
+      "OCR PDF is built for people who need searchable text from scans, photographed paperwork, or image-based PDFs without sending those files to a cloud OCR service first. This page embeds the existing Plain.tools OCR workflow, so the tool interface and processing path are the same ones already used on the main tool route. That matters for invoices, reports, records, onboarding packs, and archived scans that may contain private or regulated information. Instead of uploading the document and waiting for a remote service to return extracted text, the OCR pass runs in your browser and keeps the file on your device during the core workflow. You can review the output, test whether the PDF has become searchable, and decide whether it is good enough for downstream work such as conversion, indexing, or internal records handling. Accuracy still depends on the original scan quality, but this route gives users a direct, privacy-first answer to the common OCR PDF search query while reusing the live Plain.tools component rather than creating a separate SEO-only experience.",
     toolKey: "ocr-pdf",
     canonicalToolHref: "/tools/ocr-pdf",
     canonicalToolLabel: "OCR PDF",
@@ -1008,10 +1008,14 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
         label: "How OCR works on scanned PDFs",
         href: "/learn/how-ocr-works-on-scanned-pdfs",
       },
+      {
+        label: "How to verify a PDF tool does not upload your files",
+        href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+      },
     ],
     faqs: [
       {
-        question: "Can I OCR a PDF online without uploading it?",
+        question: "How can I OCR a PDF without uploading it?",
         answer:
           "Yes. This page runs OCR in your browser, so the document stays on your device during the core workflow.",
       },
@@ -1024,6 +1028,11 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
         question: "When should I prefer local OCR?",
         answer:
           "Local OCR is a strong default when the PDF contains personal, legal, or medical information that should not be sent to a third-party OCR service.",
+      },
+      {
+        question: "Is the OCR tool free to try?",
+        answer:
+          "Yes. You can run the OCR workflow on this page without an account, then review the output before deciding whether it fits your document workflow.",
       },
     ],
     limitations: [
@@ -1049,7 +1058,7 @@ export const PDF_INTENT_PAGES: PdfIntentPage[] = [
       "Download the searchable PDF and check a few pages with search or copy-and-paste before using it elsewhere.",
     ],
     relatedTools: [
-      { label: "OCR PDF Online", href: "/ocr-pdf-online" },
+      { label: "OCR PDF", href: "/ocr-pdf" },
       { label: "Split PDF Pages", href: "/split-pdf-pages" },
       { label: "Compress PDF Online", href: "/compress-pdf-online" },
     ],
