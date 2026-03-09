@@ -1,10 +1,12 @@
 import Link from "next/link"
 
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { FileConverterToolEmbed } from "@/components/seo/file-converter-tool-embed"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
 import { VerifyLocalProcessing } from "@/components/verify-local-processing"
 import type { FileConverterSeoPage } from "@/lib/file-converter-slugs"
 import {
@@ -56,9 +58,11 @@ export function FileConverterPage({ page }: FileConverterPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <CanonicalSelf path={page.path} />
+      <SsrContentDebug routeId={page.path} />
       {schema ? <JsonLd id={`file-converter-${page.slug}-schema`} schema={schema} /> : null}
 
-      <main className="flex-1">
+      <main className="flex-1" data-plain-ssr-content>
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
           <PageBreadcrumbs
             items={[

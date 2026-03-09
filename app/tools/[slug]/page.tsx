@@ -4,9 +4,11 @@ import { Suspense } from "react"
 
 import { AdAfterResult, AdContentTop, AdToolSidebar } from "@/components/ads/tool-page-ad-slots"
 import { ErrorBoundary } from "@/components/error-boundary"
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
 import { ToolAnswerFirst } from "@/components/seo/tool-answer-first"
 import { ToolIntentLinks } from "@/components/intent/tool-intent-links"
 import { ToolSeoContent } from "@/components/tool-seo-content"
@@ -35,6 +37,8 @@ type ToolRouteParams = { slug: string }
 type PageProps = {
   params: Promise<ToolRouteParams>
 }
+
+export const dynamic = "force-static"
 
 const INTENT_TOOL_SLUGS = new Set([
   "compress-pdf",
@@ -193,8 +197,10 @@ export default async function ToolPage({ params }: PageProps) {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <CanonicalSelf path={`/tools/${slug}`} />
+      <SsrContentDebug routeId={`/tools/${slug}`} />
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14" data-plain-ssr-content>
           <PageBreadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -221,23 +227,32 @@ export default async function ToolPage({ params }: PageProps) {
                     </p>
                   </section>
 
-                  <Suspense
-                    fallback={
-                      <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
-                        Loading tool workspace...
-                      </div>
-                    }
+                  <section
+                    className="notranslate"
+                    data-plain-tool-shell
+                    translate="no"
                   >
-                    <ErrorBoundary context={`tool:${tool.slug}`}>
-                      <ToolComponent />
-                    </ErrorBoundary>
-                  </Suspense>
+                    <Suspense
+                      fallback={
+                        <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                          Loading tool workspace...
+                        </div>
+                      }
+                    >
+                      <ErrorBoundary context={`tool:${tool.slug}`}>
+                        <ToolComponent />
+                      </ErrorBoundary>
+                    </Suspense>
+                  </section>
 
                   <section className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
                     This tool is completely free. Enjoy unlimited basic use - no account needed.
                   </section>
 
-                  <section className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm">
+                  <section
+                    className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm notranslate"
+                    translate="no"
+                  >
                     <p className="font-medium text-foreground">Result section</p>
                     <p className="mt-1 text-muted-foreground">
                       When processing finishes, a download action appears below. If output quality is not ideal, adjust options and run again.

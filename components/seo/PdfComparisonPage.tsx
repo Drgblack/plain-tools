@@ -1,7 +1,9 @@
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
 import type { PdfComparisonPage as PdfComparisonPageData } from "@/lib/pdf-tool-comparisons"
 import {
   buildBreadcrumbList,
@@ -45,9 +47,11 @@ export function PdfComparisonPage({ page }: PdfComparisonPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <CanonicalSelf path={page.path} />
+      <SsrContentDebug routeId={page.path} />
       {schema ? <JsonLd id={`pdf-compare-${page.pairSlug}-schema`} schema={schema} /> : null}
 
-      <main className="flex-1">
+      <main className="flex-1" data-plain-ssr-content>
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
           <PageBreadcrumbs
             items={[

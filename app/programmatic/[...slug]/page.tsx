@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { notFound, permanentRedirect } from "next/navigation"
 import { Suspense } from "react"
 
-import { ProgrammaticPageLayout } from "@/components/ProgrammaticPageLayout"
+import { ProgrammaticLayout } from "@/components/ProgrammaticLayout"
 import { ErrorBoundary } from "@/components/error-boundary"
 import {
   FallbackToolComponent,
@@ -22,6 +22,9 @@ type PageProps = {
   params: Promise<{ slug: string[] }>
 }
 
+// Force static generation for enumerated programmatic routes so crawlers always
+// receive full HTML instead of a hydration shell.
+export const dynamic = "force-static"
 export const revalidate = 3600
 
 export async function generateStaticParams() {
@@ -118,7 +121,7 @@ export default async function ProgrammaticCatchAllPage({ params }: PageProps) {
     toolComponents[page.tool.slug] ?? FallbackToolComponent
 
   return (
-    <ProgrammaticPageLayout
+    <ProgrammaticLayout
       page={page}
       schema={programmatic.jsonLd}
       liveTool={

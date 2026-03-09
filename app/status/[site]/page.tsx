@@ -4,12 +4,14 @@ import { permanentRedirect } from "next/navigation"
 import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { InvalidParam } from '@/components/invalid-param'
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
 import { TrendingStatus } from "@/components/trending-status"
 import { StatusHistory } from "@/components/status-history"
 import { JsonLd } from "@/components/seo/json-ld"
-import { buildPageMetadata } from "@/lib/page-metadata"
+import { RelatedLinks } from "@/components/seo/related-links"
+import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
@@ -206,7 +208,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
     name: `Step ${index + 1}`,
     text: step,
   }))
-  const pageUrl = `https://plain.tools/status/${normalizedSite}`
+  const pageUrl = buildCanonicalUrl(canonicalStatusPath)
   const schemaId = normalizedSite.replace(/[^a-z0-9-]/gi, "-").toLowerCase()
   const statusPageSchema = combineJsonLd([
     buildWebPageSchema({
@@ -216,9 +218,9 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       url: pageUrl,
     }),
     buildBreadcrumbList([
-      { name: "Home", url: "https://plain.tools/" },
-      { name: "Network Tools", url: "https://plain.tools/network-tools" },
-      { name: "Site Status", url: "https://plain.tools/site-status" },
+      { name: "Home", url: buildCanonicalUrl("/") },
+      { name: "Network Tools", url: buildCanonicalUrl("/network-tools") },
+      { name: "Site Status", url: buildCanonicalUrl("/site-status") },
       { name: siteLabel, url: pageUrl },
     ]),
     buildHowToSchema(
@@ -228,17 +230,18 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
     ),
     buildFaqPageSchema(faqs),
     buildItemListSchema(
-      `Related status checks for ${siteLabel}`,
-      relatedStatusChecks.map((value) => ({
-        name: `Is ${value} down?`,
-        url: `https://plain.tools${statusPathFor(value)}`,
-      })),
-      pageUrl
-    ),
+        `Related status checks for ${siteLabel}`,
+        relatedStatusChecks.map((value) => ({
+          name: `Is ${value} down?`,
+          url: buildCanonicalUrl(statusPathFor(value)),
+        })),
+        pageUrl
+      ),
   ])
 
   return (
     <article className="category-network">
+      <CanonicalSelf pathname={canonicalStatusPath} />
       {statusPageSchema ? <JsonLd id={`status-page-schema-${schemaId}`} schema={statusPageSchema} /> : null}
       <nav className="border-b border-border/50" aria-label="Breadcrumb">
         <div className="mx-auto max-w-6xl px-4 py-3">
@@ -389,6 +392,11 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 ))}
               </Accordion>
             </section>
+
+            <RelatedLinks
+              currentPath={canonicalStatusPath}
+              heading="You might also need"
+            />
           </div>
 
           <aside className="space-y-6">

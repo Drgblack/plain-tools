@@ -4,10 +4,12 @@ import { Globe, Radio, Server, Wifi } from "lucide-react"
 import { notFound, permanentRedirect } from "next/navigation"
 
 import { InvalidParam } from "@/components/invalid-param"
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { JsonLd } from "@/components/seo/json-ld"
+import { RelatedLinks } from "@/components/seo/related-links"
 import { Surface } from "@/components/surface"
 import { ToolCard } from "@/components/tool-card"
-import { buildPageMetadata } from "@/lib/page-metadata"
+import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
   IP_SITEMAP_ADDRESSES,
   describeIpScope,
@@ -97,7 +99,7 @@ function LatencyHint({ ip }: { ip: string }) {
 }
 
 export async function generateStaticParams() {
-  return IP_SITEMAP_ADDRESSES.map((ip) => ({ ip }))
+  return IP_SITEMAP_ADDRESSES.map((ip) => ({ ip: encodeURIComponent(ip) }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -124,8 +126,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const base = buildPageMetadata({
-    title: `IP Address ${validation.normalized} Lookup | ISP, Location & ASN | Plain Tools`,
-    description: `Lookup IP address ${validation.normalized} for ISP, ASN, organization, city, region, country, latitude, and longitude. Check who owns this IP and review security notes for routing and attribution context.`,
+    title: `IP ${validation.normalized} Lookup - Location, ISP, ASN | Plain Tools`,
+    description: `Lookup IP ${validation.normalized} for ISP, ASN, organization, city, region, country, latitude, and longitude. Review ownership, routing, and privacy notes, then continue with DNS, ping, and status checks.`,
     path: `/ip/${encodeURIComponent(validation.normalized)}`,
     image: "/og/default.png",
     googleNotranslate: true,
@@ -159,29 +161,31 @@ export default async function IPAddressPage({ params }: Props) {
   }
 
   const faq = buildFaq(validation.normalized)
+  const currentPath = `/ip/${encodeURIComponent(validation.normalized)}`
   const schema = combineJsonLd([
     buildWebPageSchema({
-      name: `IP Address ${validation.normalized} Lookup`,
+      name: `IP ${validation.normalized} Lookup`,
       description:
         lookup.kind === "public"
           ? `Lookup for ${validation.normalized} with ISP, city, region, country, ASN, organization, and geolocation context.`
           : `Lookup for ${validation.normalized} showing that the address is ${lookup.kind} and not a public IP with routable ownership metadata.`,
-      url: `https://plain.tools/ip/${encodeURIComponent(validation.normalized)}`,
+      url: buildCanonicalUrl(currentPath),
     }),
     buildFaqPageSchema(faq),
     buildBreadcrumbList([
-      { name: "Home", url: "https://plain.tools/" },
-      { name: "Network Tools", url: "https://plain.tools/network-tools" },
-      { name: "What Is My IP", url: "https://plain.tools/what-is-my-ip" },
+      { name: "Home", url: buildCanonicalUrl("/") },
+      { name: "Network Tools", url: buildCanonicalUrl("/network-tools") },
+      { name: "What Is My IP", url: buildCanonicalUrl("/what-is-my-ip") },
       {
         name: validation.normalized,
-        url: `https://plain.tools/ip/${encodeURIComponent(validation.normalized)}`,
+        url: buildCanonicalUrl(currentPath),
       },
     ]),
   ])
 
   return (
     <article className="category-network">
+      <CanonicalSelf pathname={currentPath} />
       {schema ? <JsonLd id={`ip-lookup-${validation.normalized}-schema`} schema={schema} /> : null}
 
       <div className="border-b border-border/50">
@@ -206,7 +210,7 @@ export default async function IPAddressPage({ params }: Props) {
             IP Ownership and Location
           </div>
           <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-            IP Address {validation.normalized} Lookup
+            IP {validation.normalized} Lookup
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
             Use this page to inspect ISP ownership, routing context, approximate geolocation, and
@@ -284,6 +288,26 @@ export default async function IPAddressPage({ params }: Props) {
 
             <Surface as="section">
               <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                Privacy and attribution notes
+              </h2>
+              <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
+                <p>
+                  IP intelligence depends on public routing and geolocation databases, so this page
+                  only requests the minimum public metadata needed to explain ownership, ASN, and
+                  rough location. Plain Tools does not ask for file uploads or account access to run
+                  this lookup.
+                </p>
+                <p>
+                  Local browser processing is the default principle across Plain Tools where it is
+                  technically possible. IP and DNS pages are the exception because the answer lives
+                  on the public internet, but the lookup still stays narrow: one IP in, one result
+                  out, with clear follow-up links for DNS, ping, and status investigation.
+                </p>
+              </div>
+            </Surface>
+
+            <Surface as="section">
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">
                 Security notes
               </h2>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -301,6 +325,11 @@ export default async function IPAddressPage({ params }: Props) {
                 </li>
               </ul>
             </Surface>
+
+            <RelatedLinks
+              currentPath={currentPath}
+              heading={`Related lookups for ${validation.normalized}`}
+            />
 
             <Surface as="section">
               <h2 className="text-xl font-semibold tracking-tight text-foreground">

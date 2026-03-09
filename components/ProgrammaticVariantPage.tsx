@@ -2,10 +2,12 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 import { ErrorBoundary } from "@/components/error-boundary"
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
 import { VerifyLocalProcessing } from "@/components/verify-local-processing"
 import { FallbackToolComponent, toolComponents } from "@/components/tools/tool-component-registry"
 import { buildCanonicalUrl } from "@/lib/page-metadata"
@@ -99,9 +101,11 @@ export function ProgrammaticVariantPage({ page }: ProgrammaticVariantPageProps) 
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+      <CanonicalSelf path={page.path} />
+      <SsrContentDebug routeId={page.path} />
       {schema ? <JsonLd id={`tool-variant-schema-${page.slug.replace(/\//g, "-")}`} schema={schema} /> : null}
 
-      <main className="flex-1">
+      <main className="flex-1" data-plain-ssr-content>
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14">
           <PageBreadcrumbs
             items={[
@@ -181,17 +185,19 @@ export function ProgrammaticVariantPage({ page }: ProgrammaticVariantPageProps) 
                 , with guidance tuned to this specific use case.
               </p>
             </div>
-            <Suspense
-              fallback={
-                <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
-                  Loading tool workspace...
-                </div>
-              }
-            >
-              <ErrorBoundary context={`tool-variant:${page.slug}`}>
-                <ToolComponent />
-              </ErrorBoundary>
-            </Suspense>
+            <section className="notranslate" data-plain-tool-shell translate="no">
+              <Suspense
+                fallback={
+                  <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                    Loading tool workspace...
+                  </div>
+                }
+              >
+                <ErrorBoundary context={`tool-variant:${page.slug}`}>
+                  <ToolComponent />
+                </ErrorBoundary>
+              </Suspense>
+            </section>
           </section>
 
           <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">

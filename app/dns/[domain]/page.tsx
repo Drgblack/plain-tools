@@ -4,10 +4,12 @@ import { Globe, Radio, Server, Wifi } from "lucide-react"
 import { permanentRedirect } from "next/navigation"
 
 import { InvalidParam } from "@/components/invalid-param"
+import { CanonicalSelf } from "@/components/seo/canonical-self"
 import { JsonLd } from "@/components/seo/json-ld"
+import { RelatedLinks } from "@/components/seo/related-links"
 import { Surface } from "@/components/surface"
 import { ToolCard } from "@/components/tool-card"
-import { buildPageMetadata } from "@/lib/page-metadata"
+import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
   DNS_RECORD_DEFINITIONS,
   DNS_RECORD_TYPES,
@@ -82,7 +84,7 @@ function buildDnsFaq(domain: string) {
 }
 
 function buildDnsDescription(domain: string) {
-  return `Check A, AAAA, MX, NS, TXT, SOA, and CNAME records for ${domain}. View TTL values, nameserver delegation, email routing, and DNS propagation clues with a privacy-first DNS lookup.`
+  return `Check A, AAAA, MX, NS, TXT, SOA, and CNAME records for ${domain}. View TTL values, nameserver delegation, email routing, and DNS propagation clues with a privacy-first DNS lookup and strong follow-up links for IP, ping, and status checks.`
 }
 
 export async function generateStaticParams() {
@@ -113,7 +115,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return buildPageMetadata({
-    title: `DNS Lookup for ${normalizedDomain} | A, MX, NS Records | Plain Tools`,
+    title: `DNS Lookup for ${normalizedDomain} - A/MX/NS/TXT Records | Plain Tools`,
     description: buildDnsDescription(normalizedDomain),
     path: `/dns/${encodeURIComponent(normalizedDomain)}`,
     image: "/og/default.png",
@@ -263,26 +265,28 @@ export default async function DNSDomainPage({ params }: Props) {
 
   const faq = buildDnsFaq(normalizedDomain)
   const records = await fetchDnsRecordsForPage(normalizedDomain, revalidate)
+  const currentPath = `/dns/${encodeURIComponent(normalizedDomain)}`
   const schema = combineJsonLd([
     buildWebPageSchema({
       name: `DNS Lookup for ${normalizedDomain}`,
       description: buildDnsDescription(normalizedDomain),
-      url: `https://plain.tools/dns/${encodeURIComponent(normalizedDomain)}`,
+      url: buildCanonicalUrl(currentPath),
     }),
     buildFaqPageSchema(faq),
     buildBreadcrumbList([
-      { name: "Home", url: "https://plain.tools/" },
-      { name: "Network Tools", url: "https://plain.tools/network-tools" },
-      { name: "DNS Lookup", url: "https://plain.tools/dns-lookup" },
+      { name: "Home", url: buildCanonicalUrl("/") },
+      { name: "Network Tools", url: buildCanonicalUrl("/network-tools") },
+      { name: "DNS Lookup", url: buildCanonicalUrl("/dns-lookup") },
       {
         name: normalizedDomain,
-        url: `https://plain.tools/dns/${encodeURIComponent(normalizedDomain)}`,
+        url: buildCanonicalUrl(currentPath),
       },
     ]),
   ])
 
   return (
     <article className="category-network">
+      <CanonicalSelf pathname={currentPath} />
       {schema ? <JsonLd id={`dns-lookup-${normalizedDomain}-schema`} schema={schema} /> : null}
 
       <div className="border-b border-border/50">
@@ -395,6 +399,27 @@ export default async function DNSDomainPage({ params }: Props) {
 
             <Surface as="section">
               <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                Privacy and lookup method
+              </h2>
+              <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
+                <p>
+                  This page performs server-side DNS resolution against public resolvers so the live
+                  record tables can be indexed and shared as a stable reference. The lookup target
+                  is the domain you requested, not a file or private document, and Plain Tools does
+                  not ask you to upload anything to inspect these DNS answers.
+                </p>
+                <p>
+                  For visitors moving between network tools, the privacy model stays consistent:
+                  browser-first flows stay in your browser where possible, and remote lookups are
+                  limited to the minimum public query needed to return DNS, IP, or status data. Use
+                  the related links below to continue the diagnosis without leaving the main
+                  troubleshooting path.
+                </p>
+              </div>
+            </Surface>
+
+            <Surface as="section">
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">
                 Common DNS issues
               </h2>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -416,6 +441,11 @@ export default async function DNSDomainPage({ params }: Props) {
                 </li>
               </ul>
             </Surface>
+
+            <RelatedLinks
+              currentPath={currentPath}
+              heading={`You might also need for ${normalizedDomain}`}
+            />
 
             <Surface as="section">
               <h2 className="text-xl font-semibold tracking-tight text-foreground">

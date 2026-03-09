@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import Script from 'next/script'
 import { AdsenseScript } from '@/components/ads/adsense-script'
 import { AppShellChrome } from '@/components/app-shell-chrome'
 import { JsonLd } from '@/components/seo/json-ld'
-import { TranslationProtection } from '@/components/translation-protection'
 import { combineJsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/lib/structured-data'
 import { buildSiteVerificationMetadata } from "@/lib/seo-monitoring"
 import { buildThemeInitScript } from '@/lib/theme-bootstrap'
@@ -26,14 +26,14 @@ ${themeInitScript}
 const rootSchema = combineJsonLd([
   buildWebSiteSchema({
     name: "Plain Tools",
-    url: "https://plain.tools",
+    url: "https://www.plain.tools",
     description:
       "Trust-first utility platform for PDF workflows, file tasks, network diagnostics, and site availability checks.",
   }),
   buildOrganizationSchema({
     name: "Plain Tools",
-    url: "https://plain.tools",
-    logoUrl: "https://plain.tools/icon-512x512.png",
+    url: "https://www.plain.tools",
+    logoUrl: "https://www.plain.tools/icon-512x512.png",
     contactEmail: "hello@plain.tools",
     sameAs: ["https://github.com/Drgblack/plain-tools"],
   }),
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Plain Tools" }],
   creator: "Plain Tools",
-  metadataBase: new URL("https://plain.tools"),
+  metadataBase: new URL("https://www.plain.tools"),
   verification: siteVerificationMetadata,
   robots: {
     index: true,
@@ -100,6 +100,13 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/site.webmanifest",
+  alternates: {
+    ...baseMetadata.alternates,
+    languages: {
+      en: "https://www.plain.tools/",
+      "x-default": "https://www.plain.tools/",
+    },
+  },
 }
 
 export default function RootLayout({
@@ -115,10 +122,16 @@ export default function RootLayout({
       style={{ colorScheme: "dark" }}
     >
       <head>
+        {/* Keep the site in one canonical language cluster until real locale routes exist. */}
         <meta httpEquiv="content-language" content="en" />
         <meta name="google" content="notranslate" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMDZKHTSJG" />
-        <script
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-WMDZKHTSJG"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="plain-tools-ga"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
   window.dataLayer = window.dataLayer || [];
@@ -139,7 +152,6 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${geist.variable} ${geistMono.variable} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
-        <TranslationProtection />
         <AppShellChrome>{children}</AppShellChrome>
       </body>
     </html>

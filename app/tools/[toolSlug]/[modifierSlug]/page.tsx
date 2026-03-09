@@ -17,6 +17,7 @@ type PageProps = {
   params: Promise<ToolVariantRouteParams>
 }
 
+export const dynamic = "force-static"
 export const revalidate = 2592000
 export const dynamicParams = false
 

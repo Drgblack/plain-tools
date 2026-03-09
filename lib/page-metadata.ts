@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 
-export const BASE_URL = "https://plain.tools"
+export const BASE_URL = "https://www.plain.tools"
 const MIN_DESCRIPTION_LENGTH = 140
 const MAX_DESCRIPTION_LENGTH = 160
 const DEFAULT_PAGE_DESCRIPTION =

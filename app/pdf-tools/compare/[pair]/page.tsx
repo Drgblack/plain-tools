@@ -13,6 +13,7 @@ type PageProps = {
   params: Promise<PdfComparisonRouteParams>
 }
 
+export const dynamic = "force-static"
 export const revalidate = 86400
 export const dynamicParams = false
 

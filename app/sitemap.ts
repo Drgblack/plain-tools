@@ -25,7 +25,7 @@ import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
-const BASE_URL = "https://plain.tools"
+const BASE_URL = "https://www.plain.tools"
 const SITEMAP_CHUNK_SIZE = 5000
 const firstWavePriorityPathSet = new Set(FIRST_WAVE_PRIORITY_PATHS)
 
