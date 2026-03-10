@@ -61,10 +61,13 @@ export type ConverterPairPage = ConverterPair & {
 }
 
 export type ConverterFormatCategory =
+  | "3d"
   | "archive"
   | "audio"
+  | "cad"
   | "document"
   | "ebook"
+  | "font"
   | "image"
   | "pdf"
   | "subtitle"

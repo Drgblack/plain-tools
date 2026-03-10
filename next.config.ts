@@ -281,6 +281,11 @@ const nextConfig: NextConfig = {
         destination: "/status/:isp-in-:country",
         permanent: true,
       },
+      {
+        source: "/convert/open/:format([^/]+)",
+        destination: "/convert/open-:format",
+        permanent: true,
+      },
       // Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
@@ -594,6 +599,10 @@ const nextConfig: NextConfig = {
       {
         source: "/status/:site(.+)-:country([a-z0-9-]+)",
         destination: "/status/region/:site/:country",
+      },
+      {
+        source: "/convert/open-:format([^/]+)",
+        destination: "/convert/open/:format",
       },
       {
         source: "/:service(chatgpt|discord|youtube|reddit|github|netflix|spotify|stripe|slack|openai)-outage-history",

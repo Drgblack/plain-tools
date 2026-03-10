@@ -23,7 +23,17 @@ import {
 } from "@/lib/converter-modifiers"
 
 type FamilyFormat = ConverterFormat & {
-  family: "archive" | "audio" | "ebook" | "image" | "raw" | "subtitle" | "video"
+  family:
+    | "3d"
+    | "archive"
+    | "audio"
+    | "cad"
+    | "ebook"
+    | "font"
+    | "image"
+    | "raw"
+    | "subtitle"
+    | "video"
 }
 
 type ModifierSeed = {
@@ -35,7 +45,7 @@ type ModifierSeed = {
   slug: string
 }
 
-const EXTENDED_CONVERTER_TOOL: ToolDefinition = {
+export const EXTENDED_CONVERTER_TOOL: ToolDefinition = {
   available: true,
   category: "File Tools",
   description: "Privacy-first browser file conversion routes with no upload for the core workflow.",
@@ -100,6 +110,23 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "ebook", slug: "lrf", seoLabel: "LRF", longLabel: "LRF ebook", problem: "LRF survives in older Sony Reader libraries, but most modern readers now expect EPUB or MOBI instead.", category: "ebook" },
   { family: "ebook", slug: "pdfebook", seoLabel: "PDF", longLabel: "PDF ebook", problem: "PDF still appears in ebook and manual workflows, but many readers prefer reflowable EPUB or MOBI outputs.", category: "ebook" },
   { family: "ebook", slug: "djvu", seoLabel: "DJVU", longLabel: "DJVU ebook", problem: "DJVU survives in scanned-book and archive workflows, but general reading tools still prefer EPUB, PDF, or MOBI.", category: "ebook" },
+  { family: "font", slug: "ttf", seoLabel: "TTF", longLabel: "TTF font file", problem: "TTF is still common in desktop font libraries, but web delivery and modern app packaging often need a different font container.", category: "font" },
+  { family: "font", slug: "otf", seoLabel: "OTF", longLabel: "OTF font file", problem: "OTF travels well in creative workflows, but web stacks and some app pipelines still expect WOFF, WOFF2, or TTF instead.", category: "font" },
+  { family: "font", slug: "woff", seoLabel: "WOFF", longLabel: "WOFF font file", problem: "WOFF is useful for web delivery, but print, design, and desktop edit workflows often still need TTF or OTF copies.", category: "font" },
+  { family: "font", slug: "woff2", seoLabel: "WOFF2", longLabel: "WOFF2 font file", problem: "WOFF2 is compact for the web, but desktop preview and packaging flows often need TTF or OTF instead.", category: "font" },
+  { family: "font", slug: "eot", seoLabel: "EOT", longLabel: "EOT font file", problem: "EOT survives in older legacy stacks, but most modern design and delivery workflows now expect WOFF, WOFF2, TTF, or OTF.", category: "font" },
+  { family: "cad", slug: "dwg", seoLabel: "DWG", longLabel: "DWG CAD file", problem: "DWG is standard in many CAD environments, but vendor-neutral review, archive, and sharing flows often need a simpler exchange format.", category: "cad" },
+  { family: "cad", slug: "dxf", seoLabel: "DXF", longLabel: "DXF CAD file", problem: "DXF is broad and exchange-friendly, but project teams still frequently need DWG, STEP, or PDF-adjacent derivatives for the next tool.", category: "cad" },
+  { family: "cad", slug: "step", seoLabel: "STEP", longLabel: "STEP CAD file", problem: "STEP helps with 3D exchange, but teams often still need DXF or DWG handoff copies for downstream review and procurement workflows.", category: "cad" },
+  { family: "cad", slug: "stp", seoLabel: "STP", longLabel: "STP CAD file", problem: "STP appears in interchange-heavy engineering workflows, but the next app or reviewer may still ask for STEP, DXF, or DWG.", category: "cad" },
+  { family: "cad", slug: "iges", seoLabel: "IGES", longLabel: "IGES CAD file", problem: "IGES survives in older manufacturing and supplier handoffs, but many current tools still prefer STEP or DXF for review and archive work.", category: "cad" },
+  { family: "cad", slug: "iges5", seoLabel: "IGS", longLabel: "IGS CAD file", problem: "IGS shows up in legacy engineering archives, but present-day collaboration and vendor review usually expect a different exchange format.", category: "cad" },
+  { family: "3d", slug: "stl", seoLabel: "STL", longLabel: "STL 3D model", problem: "STL is common for 3D printing, but richer design or preview workflows may still need OBJ, FBX, or STEP-type interchange files.", category: "3d" },
+  { family: "3d", slug: "obj", seoLabel: "OBJ", longLabel: "OBJ 3D model", problem: "OBJ is widely exchangeable, but some print, animation, or engineering workflows still need STL, FBX, or STEP variants.", category: "3d" },
+  { family: "3d", slug: "fbx", seoLabel: "FBX", longLabel: "FBX 3D model", problem: "FBX is strong for animation and scene data, but simpler print and review routes often need STL or OBJ instead.", category: "3d" },
+  { family: "3d", slug: "glb", seoLabel: "GLB", longLabel: "GLB 3D model", problem: "GLB is useful for modern web preview and lightweight packaging, but not every CAD, print, or DCC tool accepts it directly.", category: "3d" },
+  { family: "3d", slug: "gltf", seoLabel: "GLTF", longLabel: "GLTF 3D model", problem: "GLTF is efficient for browsers, but downstream animation, print, and archive steps often still prefer OBJ, FBX, or STL.", category: "3d" },
+  { family: "3d", slug: "ply", seoLabel: "PLY", longLabel: "PLY 3D model", problem: "PLY appears in scan and mesh workflows, but wider design and print toolchains often expect STL, OBJ, or FBX.", category: "3d" },
   { family: "raw", slug: "dng", seoLabel: "DNG", longLabel: "DNG raw image", problem: "DNG keeps camera detail, but many everyday review, sharing, and archive workflows still need a more portable output.", category: "image" },
   { family: "raw", slug: "cr2", seoLabel: "CR2", longLabel: "Canon CR2 raw image", problem: "CR2 files are excellent for editing, but they are hard to preview or share outside photography tools.", category: "image" },
   { family: "raw", slug: "nef", seoLabel: "NEF", longLabel: "Nikon NEF raw image", problem: "NEF files preserve camera data, but they block casual review, uploads, and many browser workflows.", category: "image" },
@@ -156,6 +183,16 @@ const EXTENDED_MODIFIERS: ModifierSeed[] = [
   { slug: "quick-export", headline: "for Quick Export", keyword: "quick export", desc: "when the job is less about perfect fidelity and more about unblocking the next handoff fast", review: "whether the output is ready to move immediately into the next share or upload step", families: ["audio", "video", "archive", "ebook"] },
   { slug: "team-handoff", headline: "for Team Handoff", keyword: "team handoff", desc: "when the conversion has to make life easier for the next teammate instead of only the current user", review: "whether the target format is genuinely more usable for the team receiving it", families: ["audio", "video", "archive", "ebook"] },
   { slug: "transfer-ready", headline: "for Transfer", keyword: "transfer ready", desc: "when the output is being prepared specifically for another system, device, or recipient to receive", review: "whether the new format is easier to move and open in the destination workflow", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "no-watermark", headline: "with No Watermark", keyword: "no watermark", desc: "when the user explicitly wants a cleaner output without a branded export experience in the middle of the workflow", review: "whether the output is presentation-ready and free from unnecessary converter artifacts", families: ["audio", "video", "ebook", "font", "3d"] },
+  { slug: "lossless", headline: "for Lossless Output", keyword: "lossless", desc: "when the handoff needs to preserve as much source fidelity as practical before any later compression step", review: "whether the output preserves the quality signals that matter in the next workflow", families: ["audio", "video", "image", "raw", "3d"] },
+  { slug: "quick-preview", headline: "for Quick Preview", keyword: "quick preview", desc: "when the immediate goal is to open, inspect, or preview the file quickly without installing another specialist app", review: "whether the converted output becomes easier to open and assess immediately", families: ["audio", "video", "ebook", "archive", "cad", "3d", "font"] },
+  { slug: "secure-compress", headline: "for Secure Compression", keyword: "secure compress", desc: "when the output should be easier to deliver or archive without introducing an upload-first compression detour", review: "whether the new format reduces operational friction while keeping the workflow private", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "low-bandwidth", headline: "for Low Bandwidth", keyword: "low bandwidth", desc: "when the next handoff depends on slower connections, remote sites, or constrained mobile networks", review: "whether the output is manageable on the networks that actually matter next", families: ["audio", "video", "ebook", "archive"] },
+  { slug: "portal-ready", headline: "for Upload Portals", keyword: "portal ready", desc: "when the destination is a stricter upload portal that rejects heavier, stranger, or niche file containers", review: "whether the output feels safer for a portal, ticket, or form submission workflow", families: ["audio", "video", "archive", "ebook", "font", "cad"] },
+  { slug: "ops-handoff", headline: "for Ops Handoff", keyword: "ops handoff", desc: "when the file is moving between support, operations, procurement, or QA teams that care more about compatibility than perfect source fidelity", review: "whether the output is genuinely simpler for the next operational handoff", families: ["archive", "ebook", "cad", "3d", "font"] },
+  { slug: "support-ticket", headline: "for Support Tickets", keyword: "support ticket", desc: "when the converted file needs to be attached to a support, bug, or vendor ticket without creating another confusing format issue", review: "whether the output is small, portable, and obvious enough for support workflows", families: ["audio", "video", "archive", "ebook", "font"] },
+  { slug: "browser-review", headline: "for Browser Review", keyword: "browser review", desc: "when the next person is expected to inspect the file in a browser instead of a heavyweight specialist application", review: "whether the output is easier to preview and validate directly in the browser", families: ["audio", "video", "ebook", "image", "raw", "font", "3d"] },
+  { slug: "vendor-share", headline: "for Vendor Sharing", keyword: "vendor share", desc: "when the converted file is leaving the company boundary and needs to be easy for outside partners to open", review: "whether the output is more universal for vendor, supplier, or contractor workflows", families: ["audio", "video", "archive", "ebook", "cad", "3d"] },
 ]
 
 const FORMAT_MAP = new Map(EXTENDED_FORMATS.map((format) => [format.slug, format]))
@@ -179,6 +216,63 @@ function pairPath(from: string, to: string) {
 
 function modifierPath(from: string, to: string, modifier: string) {
   return `/convert/${from}-to-${to}/${modifier}`
+}
+
+function openGuidePath(format: string) {
+  return `/convert/open-${format}`
+}
+
+export type ConverterOpenGuidePage = {
+  breadcrumbs: Array<{ href?: string; label: string }>
+  canonicalPath: string
+  description: string
+  embed: ConverterEmbed
+  faq: ConverterFaq[]
+  featureList: string[]
+  format: FamilyFormat
+  h1: string
+  heroBadges: string[]
+  howToSteps: ConverterStep[]
+  intro: string[]
+  keywords: string[]
+  liveToolDescription: string
+  privacyNote: string[]
+  relatedLinks: Array<{ href: string; title: string }>
+  sections: ConverterSection[]
+  slug: string
+  suggestedOutput: FamilyFormat
+  title: string
+  wordCount: number
+}
+
+function getFallbackFormatInFamily(format: FamilyFormat) {
+  return EXTENDED_FORMATS.find(
+    (entry) => entry.family === format.family && entry.slug !== format.slug
+  )
+}
+
+function getSuggestedOpenTarget(format: FamilyFormat) {
+  const preferredTargets: Partial<Record<FamilyFormat["family"], string[]>> = {
+    "3d": ["obj", "stl", "glb"],
+    archive: ["zip", "tar", "7z"],
+    audio: ["mp3", "wav", "aac"],
+    cad: ["dxf", "step", "dwg"],
+    ebook: ["epub", "pdfebook", "mobi"],
+    font: ["woff", "ttf", "otf"],
+    image: ["jpg", "png", "webp"],
+    raw: ["jpg", "png", "dng"],
+    subtitle: ["vtt", "srt", "ass"],
+    video: ["mp4", "webm", "mov"],
+  }
+
+  for (const slug of preferredTargets[format.family] ?? []) {
+    const match = EXTENDED_FORMATS.find(
+      (entry) => entry.family === format.family && entry.slug === slug && entry.slug !== format.slug
+    )
+    if (match) return match
+  }
+
+  return getFallbackFormatInFamily(format) ?? format
 }
 
 function buildRelatedLinks(fromFormat: FamilyFormat, toFormat: FamilyFormat) {
@@ -381,6 +475,196 @@ function buildModifierPage(
   }
 }
 
+function buildOpenGuidePage(format: FamilyFormat): ConverterOpenGuidePage {
+  const suggestedOutput = getSuggestedOpenTarget(format)
+  const title = `How to Open ${format.seoLabel} Files Without Uploading – Local Browser Guide | Plain Tools`
+  const description = `Learn how to open ${format.seoLabel} files locally in your browser, when to convert ${format.seoLabel} to ${suggestedOutput.seoLabel}, and how to keep the workflow private on Plain Tools with no upload-first detour.`
+  const intro = [
+    `${format.seoLabel} files usually become a search problem at the exact moment a user only wants to open, preview, or sanity-check the file and the current app refuses to cooperate.`,
+    `${format.problem} In practice, that means the real intent is often not full editing. It is just getting the file into a format or preview path that works right now without installing another heavyweight application.`,
+    "That is why this guide exists as a dedicated route instead of a generic converter listing. It explains how to open the format, what usually breaks, and which local conversion path is the safest next move when direct preview fails.",
+    "Plain Tools leans into a browser-first trust model here. The point is not only convenience. The point is reducing the number of upload-first services involved when the user only needs to inspect a file or make it readable for the next person.",
+    `For ${format.longLabel} specifically, the smartest fallback is usually converting into ${suggestedOutput.seoLabel} because that output is easier to preview, share, or pass into the next workflow without losing the whole task context.`,
+  ]
+  const sections: ConverterSection[] = [
+    {
+      title: `Why ${format.seoLabel} is hard to open in ordinary workflows`,
+      paragraphs: [
+        `${format.seoLabel} shows up in real production workflows, but not always in the tools the average user has available at the moment they need it. That mismatch is why "open ${format.slug}" and "view ${format.slug}" queries keep appearing.`,
+        "The important part is that the user is not necessarily asking for deep editing. They are asking for a trustworthy path to inspect the file, confirm what it contains, and move into the next step without breaking privacy or compatibility.",
+      ],
+    },
+    {
+      title: "What to try before converting",
+      paragraphs: [
+        "Start by checking whether the current browser, operating system, or default viewer already supports the file enough for a quick preview. In some cases, the right answer is not conversion at all.",
+        `If preview fails, stalls, or renders incorrectly, conversion becomes the practical fallback. On this route, the recommended fallback is ${format.seoLabel} to ${suggestedOutput.seoLabel} because that usually lowers compatibility friction for the next step.`,
+      ],
+    },
+    {
+      title: `Why ${suggestedOutput.seoLabel} is the suggested fallback`,
+      paragraphs: [
+        `${suggestedOutput.seoLabel} is not automatically the best output forever. It is simply the most practical destination for opening, checking, sharing, or routing the file onward in everyday workflows.`,
+        `A good open-format page should explain that tradeoff honestly: convert just enough to unblock the task, then decide whether the result needs another specialist route afterward.`,
+      ],
+    },
+    {
+      title: "How the local browser workflow helps",
+      paragraphs: [
+        "Users looking for ways to open a file are often in a hurry and on an untrusted machine, shared workstation, or locked-down device. A browser-first path reduces setup friction and avoids another account or upload queue.",
+        "That matters especially for vendor files, customer attachments, scans, archives, and creative assets where the user may only need a quick preview instead of a full cloud-processing pipeline.",
+      ],
+    },
+    {
+      title: "What to review after converting for preview",
+      paragraphs: [
+        `Opening a file successfully is only useful if the preview still tells the truth about the source. After converting, review page order, visible quality, timing, styling, or model fidelity depending on the format family.`,
+        `That review step is what keeps this route useful instead of thin. The page is not just trying to generate another slug. It is helping the user confirm whether ${suggestedOutput.seoLabel} is genuinely easier to inspect than the source format.`,
+      ],
+    },
+    {
+      title: "What to do next if preview succeeds",
+      paragraphs: [
+        "If the converted preview looks right, the next step is usually one of three things: share the easier output, archive the more compatible copy, or open a sibling converter/modifier route tuned to the real downstream requirement.",
+        "That is why the related links stay inside the same task silo. A user who needed help opening one file format is often only one step away from emailing, compressing, packaging, or handing off the result.",
+      ],
+    },
+  ]
+  const howToSteps: ConverterStep[] = [
+    {
+      name: `Try to preview the ${format.seoLabel} file directly`,
+      text: "Use the browser or current device first. If the file opens cleanly, you may not need a conversion step at all.",
+    },
+    {
+      name: `Convert ${format.seoLabel} to ${suggestedOutput.seoLabel} locally`,
+      text: `Use the embedded workspace below to create a ${suggestedOutput.seoLabel} fallback that is easier to inspect and share without an upload-first detour.`,
+    },
+    {
+      name: "Review the fallback output for truthfulness",
+      text: "Make sure the converted preview still reflects the source accurately enough for the decision you need to make next.",
+    },
+    {
+      name: "Move into the next converter or PDF tool only if needed",
+      text: "If the file now opens but still needs compression, packaging, or a different destination format, use the related links instead of starting the search over.",
+    },
+  ]
+  const faq: ConverterFaq[] = [
+    {
+      question: `How do I open ${format.seoLabel} files if my device will not preview them?`,
+      answer: `The practical fallback is usually converting ${format.seoLabel} into ${suggestedOutput.seoLabel}, which is easier to preview in ordinary browser and desktop workflows.`,
+    },
+    {
+      question: `Can I open ${format.seoLabel} without uploading it to another service?`,
+      answer: "Yes. This route is built around a local browser-first workflow on Plain Tools so the core handling can stay on your device.",
+    },
+    {
+      question: `Why suggest ${suggestedOutput.seoLabel} instead of another format?`,
+      answer: `${suggestedOutput.seoLabel} usually gives the best balance between compatibility, readability, and speed for the next likely preview or handoff step.`,
+    },
+    {
+      question: `Will converting ${format.seoLabel} change the file permanently?`,
+      answer: "No. Conversion creates a second, more compatible copy for preview or sharing. The original source file stays intact unless you choose to replace it yourself.",
+    },
+    {
+      question: `What should I check after converting for preview?`,
+      answer: "Check whether the rendered output is readable, complete, and faithful enough for the decision or handoff you need to make next.",
+    },
+    {
+      question: "Why does this page include related tools and next steps?",
+      answer: "Because opening a hard-to-preview format is usually just the first step in a broader file workflow that may continue into compression, packaging, or another conversion.",
+    },
+    {
+      question: "Does Plain Tools store the source file?",
+      answer: "No. The route is designed around local browser processing for the core task, which keeps the file out of another upload-first queue.",
+    },
+  ]
+  const privacyNote = [
+    "100% local browser processing - no upload - privacy-first. If you only need to open or inspect a file, there is no good reason to push it through a generic upload queue first.",
+    `That matters for ${format.seoLabel} because the source file may still contain internal drafts, supplier assets, sensitive attachments, or customer data even when the task sounds simple.`,
+    "Keeping the workflow local also reduces operational drag. There is no extra account, no waiting for another hosted converter, and no uncertainty about where the file was stored just to generate a preview-friendly copy.",
+    "That combination of privacy and speed is what makes dedicated open-format routes worth building. They solve a real trust problem, not just a naming problem.",
+  ]
+  const relatedLinks = [
+    {
+      href: pairPath(format.slug, suggestedOutput.slug),
+      title: `${format.seoLabel} to ${suggestedOutput.seoLabel} converter`,
+    },
+    {
+      href: modifierPath(format.slug, suggestedOutput.slug, "no-upload"),
+      title: `${format.seoLabel} to ${suggestedOutput.seoLabel} with no upload`,
+    },
+    {
+      href: modifierPath(format.slug, suggestedOutput.slug, "quick-preview"),
+      title: `${format.seoLabel} to ${suggestedOutput.seoLabel} for quick preview`,
+    },
+    {
+      href: modifierPath(format.slug, suggestedOutput.slug, "browser-review"),
+      title: `${format.seoLabel} to ${suggestedOutput.seoLabel} for browser review`,
+    },
+    ...EXTENDED_FORMATS.filter(
+      (entry) => entry.family === format.family && entry.slug !== format.slug && entry.slug !== suggestedOutput.slug
+    )
+      .slice(0, 3)
+      .map((entry) => ({
+        href: pairPath(format.slug, entry.slug),
+        title: `${format.seoLabel} to ${entry.seoLabel} converter`,
+      })),
+    { href: "/file-converters", title: "Browse file converters" },
+    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/compare/plain-tools-vs-smallpdf", title: "Compare privacy-first alternatives" },
+  ]
+  const wordCount = countWords([
+    title,
+    description,
+    ...intro,
+    ...sections.flatMap((section) => [section.title, ...section.paragraphs]),
+    ...howToSteps.flatMap((step) => [step.name, step.text]),
+    ...faq.flatMap((item) => [item.question, item.answer]),
+    ...privacyNote,
+  ])
+
+  if (wordCount < 900) {
+    throw new Error(`Open-format guide ${format.slug} is below 900 words (${wordCount}).`)
+  }
+
+  return {
+    breadcrumbs: [
+      { href: "/", label: "Home" },
+      { href: "/file-converters", label: "File Converters" },
+      { label: `Open ${format.seoLabel}` },
+    ],
+    canonicalPath: openGuidePath(format.slug),
+    description,
+    embed: { kind: "universal" } satisfies ConverterEmbed,
+    faq,
+    featureList: [
+      `Open ${format.seoLabel} files locally`,
+      `Suggested ${suggestedOutput.seoLabel} fallback for preview`,
+      "100% local browser processing",
+      "No upload for the core workflow",
+    ],
+    format,
+    h1: `How to Open ${format.seoLabel} Files Without Uploading`,
+    heroBadges: ["open files", "100% local", "no upload", "privacy-first"],
+    howToSteps,
+    intro,
+    keywords: [
+      `open ${format.slug}`,
+      `how to open ${format.slug} files`,
+      `${format.slug} viewer no upload`,
+      `${format.slug} browser preview`,
+    ],
+    liveToolDescription: `Use the local ${format.seoLabel} to ${suggestedOutput.seoLabel} workspace below if you need a more preview-friendly copy right away.`,
+    privacyNote,
+    relatedLinks,
+    sections,
+    slug: `open-${format.slug}`,
+    suggestedOutput,
+    title,
+    wordCount,
+  }
+}
+
 function getExtendedFormat(slug: string) {
   return FORMAT_MAP.get(slug)
 }
@@ -446,6 +730,25 @@ export function getExtendedConverterModifierSitemapPaths() {
   ].filter((path, index, paths) => paths.findIndex((entry) => entry === path) === index)
 }
 
+export function getExtendedOpenFormatGuidePage(format: string) {
+  const entry = getExtendedFormat(format.toLowerCase())
+  if (!entry) return null
+  return buildOpenGuidePage(entry)
+}
+
+export function getExtendedOpenFormatGuidePaths() {
+  return EXTENDED_FORMATS.map((format) => openGuidePath(format.slug))
+}
+
+export function generateAllExtendedOpenFormatGuideParams(limit?: number) {
+  const params = EXTENDED_FORMATS.map((format) => ({ format: format.slug }))
+  return typeof limit === "number" ? params.slice(0, limit) : params
+}
+
+export function getExtendedOpenFormatRelatedLinks(format: string) {
+  return getExtendedOpenFormatGuidePage(format)?.relatedLinks ?? []
+}
+
 export function getExtendedRelatedConverterLinks(from: string, to: string) {
   return getExtendedConverterPairPage(from, to)?.relatedLinks ?? getBaseRelatedConverterLinks(from, to)
 }
@@ -463,12 +766,19 @@ export const EXTENDED_CONVERTER_METADATA_EXAMPLES = [
   getExtendedConverterModifierPage("rar", "zip", "legal"),
   getExtendedConverterModifierPage("dng", "nef", "private-sharing"),
   getExtendedConverterModifierPage("srt", "vtt", "education"),
+  getExtendedOpenFormatGuidePage("heic"),
+  getExtendedOpenFormatGuidePage("avif"),
+  getExtendedOpenFormatGuidePage("rar"),
+  getExtendedOpenFormatGuidePage("ttf"),
 ]
-  .filter((entry): entry is ConverterPairPage | ConverterModifierPage => Boolean(entry))
+  .filter(
+    (entry): entry is ConverterPairPage | ConverterModifierPage | ConverterOpenGuidePage =>
+      Boolean(entry)
+  )
   .map((entry) => ({
     description: entry.description,
     path: entry.canonicalPath,
     title: entry.title,
   }))
 
-export type { ConverterModifierRouteParams, ConverterRouteParams }
+export type { ConverterModifierRouteParams, ConverterRouteParams, FamilyFormat }

@@ -21,9 +21,9 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw = process.env.STATUS_REGION_PREBUILD_LIMIT
-  if (!raw) return 2500
+  if (!raw) return 3500
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 2500
+  return Number.isFinite(value) && value > 0 ? value : 3500
 }
 
 export function generateStaticParams() {

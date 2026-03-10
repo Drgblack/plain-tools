@@ -39,6 +39,25 @@ type StatusIspSeed = {
   label: string
 }
 
+const GENERIC_REGION_SLUGS = new Set([
+  "com",
+  "net",
+  "org",
+  "gov",
+  "edu",
+  "info",
+  "int",
+  "pro",
+  "dev",
+  "tech",
+  "top",
+  "news",
+  "name",
+  "cat",
+  "mobi",
+  "xyz",
+])
+
 export const POPULAR_STATUS_TLDS = [
   "ac","ad","ae","af","ag","ai","al","am","ao","aq","ar","as","at","au","aw","ax","az",
   "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
@@ -70,7 +89,7 @@ export const POPULAR_STATUS_TLDS = [
   "za","zm","zw",
 ] as const
 
-export const STATUS_REGION_MARKETS: StatusMarket[] = [
+const NAMED_STATUS_REGION_MARKETS: StatusMarket[] = [
   { slug: "us", label: "United States" },
   { slug: "uk", label: "United Kingdom" },
   { slug: "de", label: "Germany" },
@@ -146,6 +165,27 @@ export const STATUS_REGION_MARKETS: StatusMarket[] = [
   { slug: "cy", label: "Cyprus" },
 ] as const
 
+function toRegionLabelFromSlug(slug: string) {
+  return `${slug.toUpperCase()} market`
+}
+
+const AUTO_STATUS_REGION_MARKETS = Array.from(
+  new Set(
+    POPULAR_STATUS_TLDS.filter((slug) =>
+      /^[a-z]{2,3}$/.test(slug) && !GENERIC_REGION_SLUGS.has(slug)
+    )
+  )
+)
+  .filter(
+    (slug) => !NAMED_STATUS_REGION_MARKETS.some((entry) => entry.slug === slug)
+  )
+  .map((slug) => ({ slug, label: toRegionLabelFromSlug(slug) }))
+
+export const STATUS_REGION_MARKETS: StatusMarket[] = [
+  ...NAMED_STATUS_REGION_MARKETS,
+  ...AUTO_STATUS_REGION_MARKETS,
+]
+
 export const STATUS_ISP_SEEDS: StatusIspSeed[] = [
   { slug: "att", label: "AT&T" },
   { slug: "verizon", label: "Verizon" },
@@ -187,10 +227,22 @@ export const STATUS_ISP_SEEDS: StatusIspSeed[] = [
   { slug: "dtac", label: "DTAC" },
   { slug: "telmex", label: "Telmex" },
   { slug: "izzi", label: "izzi" },
+  { slug: "frontier", label: "Frontier" },
+  { slug: "centurylink", label: "CenturyLink" },
+  { slug: "shaw", label: "Shaw" },
+  { slug: "ee", label: "EE" },
+  { slug: "three", label: "Three" },
+  { slug: "eir", label: "eir" },
+  { slug: "bouygues", label: "Bouygues Telecom" },
+  { slug: "telekom", label: "Deutsche Telekom" },
+  { slug: "globe-at-home", label: "Globe At Home" },
+  { slug: "maxis", label: "Maxis" },
+  { slug: "celcom", label: "Celcom" },
+  { slug: "m1", label: "M1" },
 ] as const
 
-export const STATUS_REGION_BASE_DOMAINS = EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS.slice(0, 720)
-export const STATUS_REGION_COUNTRY_VARIANTS = STATUS_REGION_MARKETS.slice(0, 72)
+export const STATUS_REGION_BASE_DOMAINS = EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS.slice(0, 1100)
+export const STATUS_REGION_COUNTRY_VARIANTS = STATUS_REGION_MARKETS.slice(0, 132)
 
 function countWords(values: string[]) {
   return values.join(" ").trim().split(/\s+/).filter(Boolean).length
@@ -289,7 +341,7 @@ export function getStatusIspPaths() {
   )
 }
 
-export function getStatusRegionStaticParams(limit = 2500) {
+export function getStatusRegionStaticParams(limit = 3500) {
   return getStatusRegionPaths()
     .slice(0, limit)
     .map((path) => {
@@ -300,7 +352,7 @@ export function getStatusRegionStaticParams(limit = 2500) {
     .filter((value): value is { country: string; site: string } => Boolean(value))
 }
 
-export function getStatusIspStaticParams(limit = 600) {
+export function getStatusIspStaticParams(limit = 900) {
   return getStatusIspPaths()
     .slice(0, limit)
     .map((path) => {

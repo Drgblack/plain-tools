@@ -1,5 +1,7 @@
 import {
   getExtendedConverterModifierPage,
+  getExtendedOpenFormatGuidePage,
+  getExtendedOpenFormatRelatedLinks,
   getExtendedRelatedConverterModifierLinks,
 } from "@/lib/converter-families"
 import {
@@ -349,6 +351,26 @@ function getDnsRelatedLinks(currentPath: string): RelatedLink[] {
 }
 
 function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
+  const openGuideMatch = /^\/convert\/open-([^/]+)$/.exec(normalisePath(currentPath))
+  if (openGuideMatch) {
+    const [, format] = openGuideMatch
+    const page = getExtendedOpenFormatGuidePage(format)
+    if (page) {
+      return dedupeLinks(
+        [
+          ...getExtendedOpenFormatRelatedLinks(format),
+          {
+            title: `${page.format.seoLabel} to ${page.suggestedOutput.seoLabel} converter`,
+            href: `/convert/${page.format.slug}-to-${page.suggestedOutput.slug}`,
+          },
+          { title: "Browse file converters", href: "/file-converters" },
+          { title: "Browse PDF tools", href: "/pdf-tools" },
+        ],
+        currentPath
+      ).slice(0, 10)
+    }
+  }
+
   const modifierMatch = /^\/convert\/([^/]+)-to-([^/]+)\/([^/]+)$/.exec(normalisePath(currentPath))
   if (modifierMatch) {
     const [, from, to, modifier] = modifierMatch

@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next"
 
 import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-specialized-ext"
+import { getExtendedOpenFormatGuidePaths } from "@/lib/converter-families-ext"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { getCalculatorPaths } from "@/lib/calculator-financial-deep"
@@ -294,6 +295,9 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const fileConverterModifierPages = getExtendedConverterModifierSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
   )
+  const openFormatGuidePages = getExtendedOpenFormatGuidePaths().map((path) =>
+    toEntry(path, now, "monthly", 0.77)
+  )
   const calculatorPages = getCalculatorPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
   )
@@ -383,6 +387,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...pdfToolVariantPages,
     ...fileConverterPages,
     ...fileConverterModifierPages,
+    ...openFormatGuidePages,
     ...calculatorPages,
     ...comparisonMatrixPages,
     ...professionalWorkflowPages,

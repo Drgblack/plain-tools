@@ -26,7 +26,7 @@ function runTsx(code) {
   const output = execSync(`npx tsx -e ${JSON.stringify(code)}`, {
     cwd: ROOT_DIR,
     encoding: "utf8",
-    maxBuffer: 32 * 1024 * 1024,
+    maxBuffer: 8 * 1024 * 1024,
     shell: true,
     stdio: ["ignore", "pipe", "inherit"],
   })
@@ -77,11 +77,14 @@ if (!fs.existsSync(PUBLIC_DIR)) {
   fs.mkdirSync(PUBLIC_DIR, { recursive: true })
 }
 
-const sitemapPayload = JSON.parse(
-  runTsx(
-    "(async()=>{const mod=await import('./lib/sitemap-data.ts'); const entries=mod.buildSitemapEntries?.(new Date()) ?? []; const chunks=mod.buildSitemapChunks?.(new Date()) ?? [entries]; process.stdout.write(JSON.stringify({ entries, chunks: chunks.map((chunk, id) => ({ id, entries: chunk })) }));})().catch((error)=>{console.error(error); process.exit(1)})"
-  )
+const payloadPath = path.join(ROOT_DIR, ".tmp-sitemap-payload.json")
+
+runTsx(
+  `(async()=>{const fs=await import('node:fs'); const mod=await import('./lib/sitemap-data.ts'); const entries=mod.buildSitemapEntries?.(new Date()) ?? []; const chunks=mod.buildSitemapChunks?.(new Date()) ?? [entries]; fs.writeFileSync(${JSON.stringify(payloadPath)}, JSON.stringify({ entries, chunks: chunks.map((chunk, id) => ({ id, entries: chunk })) })); process.stdout.write('ok');})().catch((error)=>{console.error(error); process.exit(1)})`
 )
+
+const sitemapPayload = JSON.parse(fs.readFileSync(payloadPath, "utf8"))
+fs.rmSync(payloadPath, { force: true })
 
 const sitemapXml =
   sitemapPayload.chunks.length <= 1
