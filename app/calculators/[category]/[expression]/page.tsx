@@ -31,9 +31,9 @@ function getPrebuildLimit() {
   const raw =
     process.env.CALCULATOR_FINANCIAL_PREBUILD_LIMIT ??
     process.env.FINANCIAL_CALCULATOR_PREBUILD_LIMIT
-  if (!raw) return 4200
+  if (!raw) return 520
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 4200
+  return Number.isFinite(value) && value > 0 ? value : 520
 }
 
 export function generateStaticParams() {

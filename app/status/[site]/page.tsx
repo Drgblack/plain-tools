@@ -56,6 +56,20 @@ interface Props {
 
 export const revalidate = 3600
 
+function getSitePrebuildLimit() {
+  const raw = process.env.STATUS_SITE_PREBUILD_LIMIT
+  if (!raw) return 160
+  const value = Number.parseInt(raw, 10)
+  return Number.isFinite(value) && value > 0 ? value : 160
+}
+
+function getFlatPrebuildLimit() {
+  const raw = process.env.STATUS_FLAT_PREBUILD_LIMIT
+  if (!raw) return 180
+  const value = Number.parseInt(raw, 10)
+  return Number.isFinite(value) && value > 0 ? value : 180
+}
+
 const BRAND_NAME_OVERRIDES: Record<string, string> = {
   "chatgpt.com": "ChatGPT",
   "discord.com": "Discord",
@@ -121,10 +135,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export function generateStaticParams() {
   return [
-    ...STATUS_STATIC_DOMAINS.map((site) => ({
+    ...STATUS_STATIC_DOMAINS.slice(0, getSitePrebuildLimit()).map((site) => ({
       site: encodeURIComponent(site),
     })),
-    ...getStatusFlatStaticParams(),
+    ...getStatusFlatStaticParams(getFlatPrebuildLimit()),
   ]
 }
 

@@ -25,9 +25,9 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw = process.env.STATUS_OUTAGE_HISTORY_PREBUILD_LIMIT
-  if (!raw) return 500
+  if (!raw) return 100
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 500
+  return Number.isFinite(value) && value > 0 ? value : 100
 }
 
 export function generateStaticParams() {

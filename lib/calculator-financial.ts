@@ -2137,16 +2137,16 @@ const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
 ]
 
 const CALCULATOR_PREBUILD_BUDGETS: Record<PublicCalculatorCategory, number> = {
-  "basic-loan-payment": 900,
-  "compound-interest-basic": 900,
-  "credit-card-payoff": 850,
-  percentage: 1800,
-  "retirement-savings-intro": 650,
-  "salary-to-hourly": 450,
-  "savings-goal": 750,
-  "simple-interest": 700,
-  "tax-estimate-simple": 450,
-  "tip-calculator": 550,
+  "basic-loan-payment": 120,
+  "compound-interest-basic": 60,
+  "credit-card-payoff": 80,
+  percentage: 120,
+  "retirement-savings-intro": 40,
+  "salary-to-hourly": 30,
+  "savings-goal": 50,
+  "simple-interest": 40,
+  "tax-estimate-simple": 60,
+  "tip-calculator": 40,
 }
 
 export function getCalculatorClusterRolloutSummary() {

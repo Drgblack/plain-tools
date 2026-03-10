@@ -23,15 +23,6 @@ const targetSitemapChunkDir = path.join(PUBLIC_DIR, "sitemap")
 const SITE_URL = "https://www.plain.tools"
 const isVercelBuild = process.env.VERCEL === "1"
 
-function hasCommittedSitemapArtifacts() {
-  if (!fs.existsSync(targetSitemapPath)) return false
-  if (!fs.existsSync(targetSitemapChunkDir)) return false
-
-  return fs
-    .readdirSync(targetSitemapChunkDir)
-    .some((file) => file.toLowerCase().endsWith(".xml"))
-}
-
 function runTsx(code) {
   const output = execSync(`npx tsx -e ${JSON.stringify(code)}`, {
     cwd: ROOT_DIR,
@@ -87,8 +78,8 @@ if (!fs.existsSync(PUBLIC_DIR)) {
   fs.mkdirSync(PUBLIC_DIR, { recursive: true })
 }
 
-if (isVercelBuild && hasCommittedSitemapArtifacts()) {
-  console.log(`[OK] Preserved committed sitemap assets at ${targetSitemapPath}`)
+if (isVercelBuild) {
+  console.log("[OK] Skipped static sitemap generation on Vercel build")
   process.exit(0)
 }
 

@@ -314,7 +314,7 @@ export async function renderStatusFlatRoute(input: string) {
   }
 }
 
-export function getStatusFlatStaticParams(limit = 3200) {
+export function getStatusFlatStaticParams(limit = 180) {
   return Array.from(new Set(getStatusRpmRolloutPaths(limit)))
     .slice(0, limit)
     .map((path) => ({ site: decodeFlatSlug(path.replace(/^\/status\//, "")) }))
