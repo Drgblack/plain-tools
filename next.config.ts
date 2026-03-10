@@ -262,7 +262,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/status/trending/:segment(social|cloud|gaming|finance)",
+        source: "/status/trending/:segment(social|cloud|streaming|finance|gaming|ecommerce)",
         destination: "/status/trending-:segment",
         permanent: true,
       },
@@ -570,7 +570,7 @@ const nextConfig: NextConfig = {
         destination: "/is/:site",
       },
       {
-        source: "/status/trending-:segment(social|cloud|gaming|finance)",
+        source: "/status/trending-:segment(social|cloud|streaming|finance|gaming|ecommerce)",
         destination: "/status/trending/:segment",
       },
       {
@@ -585,6 +585,32 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Content-Type",
+            value: "application/xml; charset=utf-8",
+          },
+        ],
+      },
+      {
+        source: "/sitemap/:id.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Content-Type",
+            value: "application/xml; charset=utf-8",
+          },
+        ],
+      },
       {
         source: "/.well-known/security.txt",
         headers: [

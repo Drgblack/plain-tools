@@ -1,11 +1,19 @@
 import {
   STATUS_CLOUD_DOMAINS,
+  STATUS_ECOMMERCE_DOMAINS,
   STATUS_FINANCE_DOMAINS,
   STATUS_GAMING_DOMAINS,
   STATUS_SOCIAL_DOMAINS,
+  STATUS_STREAMING_DOMAINS,
 } from "@/lib/status-domains"
 
-export type StatusTrendingCategory = "social" | "cloud" | "gaming" | "finance"
+export type StatusTrendingCategory =
+  | "social"
+  | "cloud"
+  | "streaming"
+  | "finance"
+  | "gaming"
+  | "ecommerce"
 
 export const STATUS_TRENDING_CATEGORIES: Array<{
   category: StatusTrendingCategory
@@ -28,6 +36,13 @@ export const STATUS_TRENDING_CATEGORIES: Array<{
     popularSites: STATUS_CLOUD_DOMAINS.slice(0, 18),
   },
   {
+    category: "streaming",
+    description:
+      "Streaming, media, and creator platforms where playback, login, and billing failures create rapid spike traffic.",
+    label: "Streaming Platforms",
+    popularSites: STATUS_STREAMING_DOMAINS.slice(0, 18),
+  },
+  {
     category: "gaming",
     description:
       "Gaming networks and launcher ecosystems where login, store, and matchmaking outages produce repeatable long-tail demand.",
@@ -40,6 +55,13 @@ export const STATUS_TRENDING_CATEGORIES: Array<{
       "Payments, banking, and trading services where downtime has unusually strong urgency and advertiser value.",
     label: "Finance Platforms",
     popularSites: STATUS_FINANCE_DOMAINS.slice(0, 18),
+  },
+  {
+    category: "ecommerce",
+    description:
+      "Retail, ordering, and marketplace platforms where outages hit checkout, ordering, and merchant operations at the same time.",
+    label: "Ecommerce Platforms",
+    popularSites: STATUS_ECOMMERCE_DOMAINS.slice(0, 18),
   },
 ]
 

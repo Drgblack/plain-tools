@@ -214,6 +214,18 @@ export default function SiteStatusPage() {
               >
                 Gaming outage trends
               </Link>
+              <Link
+                href={statusTrendingPathForCategory("streaming")}
+                className="font-medium text-accent transition hover:underline"
+              >
+                Streaming outage trends
+              </Link>
+              <Link
+                href={statusTrendingPathForCategory("ecommerce")}
+                className="font-medium text-accent transition hover:underline"
+              >
+                Ecommerce outage trends
+              </Link>
             </div>
           </div>
         </div>

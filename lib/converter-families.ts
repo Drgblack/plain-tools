@@ -23,7 +23,7 @@ import {
 } from "@/lib/converter-modifiers"
 
 type FamilyFormat = ConverterFormat & {
-  family: "archive" | "audio" | "ebook" | "subtitle" | "video"
+  family: "archive" | "audio" | "ebook" | "raw" | "subtitle" | "video"
 }
 
 type ModifierSeed = {
@@ -63,11 +63,21 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "archive", slug: "7z", seoLabel: "7Z", longLabel: "7Z archive", problem: "7Z compresses well, but not every endpoint or device opens it cleanly.", category: "archive" },
   { family: "archive", slug: "tar", seoLabel: "TAR", longLabel: "TAR archive", problem: "TAR is useful in developer and Linux workflows, but less friendly for general recipients.", category: "archive" },
   { family: "archive", slug: "gz", seoLabel: "GZ", longLabel: "GZ archive", problem: "GZ is efficient for packaged files, but everyday users often need ZIP instead.", category: "archive" },
+  { family: "archive", slug: "bz2", seoLabel: "BZ2", longLabel: "BZ2 archive", problem: "BZ2 appears in older packaging and server workflows, but many recipients still only understand ZIP or TAR.", category: "archive" },
+  { family: "archive", slug: "xz", seoLabel: "XZ", longLabel: "XZ archive", problem: "XZ compresses efficiently, but non-technical recipients and uploaders rarely accept it cleanly.", category: "archive" },
   { family: "ebook", slug: "epub", seoLabel: "EPUB", longLabel: "EPUB ebook", problem: "EPUB is portable, but some devices and storefronts still demand a different ebook output.", category: "ebook" },
   { family: "ebook", slug: "mobi", seoLabel: "MOBI", longLabel: "MOBI ebook", problem: "MOBI persists in older Kindle workflows, but many teams now need EPUB or AZW3.", category: "ebook" },
   { family: "ebook", slug: "azw3", seoLabel: "AZW3", longLabel: "AZW3 ebook", problem: "AZW3 fits Kindle workflows, but it is less universal than EPUB outside that ecosystem.", category: "ebook" },
   { family: "ebook", slug: "fb2", seoLabel: "FB2", longLabel: "FB2 ebook", problem: "FB2 appears in niche reading workflows, but compatibility is weak elsewhere.", category: "ebook" },
   { family: "ebook", slug: "cbz", seoLabel: "CBZ", longLabel: "CBZ comic archive", problem: "CBZ is useful for comic workflows, but some readers and uploaders still expect EPUB or PDF-adjacent packaging.", category: "ebook" },
+  { family: "ebook", slug: "kfx", seoLabel: "KFX", longLabel: "KFX ebook", problem: "KFX improves Kindle delivery, but the format is awkward when the file needs to leave Amazon-centric reading flows.", category: "ebook" },
+  { family: "ebook", slug: "lrf", seoLabel: "LRF", longLabel: "LRF ebook", problem: "LRF survives in older Sony Reader libraries, but most modern readers now expect EPUB or MOBI instead.", category: "ebook" },
+  { family: "raw", slug: "dng", seoLabel: "DNG", longLabel: "DNG raw image", problem: "DNG keeps camera detail, but many everyday review, sharing, and archive workflows still need a more portable output.", category: "image" },
+  { family: "raw", slug: "cr2", seoLabel: "CR2", longLabel: "Canon CR2 raw image", problem: "CR2 files are excellent for editing, but they are hard to preview or share outside photography tools.", category: "image" },
+  { family: "raw", slug: "nef", seoLabel: "NEF", longLabel: "Nikon NEF raw image", problem: "NEF files preserve camera data, but they block casual review, uploads, and many browser workflows.", category: "image" },
+  { family: "raw", slug: "arw", seoLabel: "ARW", longLabel: "Sony ARW raw image", problem: "ARW files suit editing pipelines, but most client and team workflows still need a simpler exchange format.", category: "image" },
+  { family: "raw", slug: "raf", seoLabel: "RAF", longLabel: "Fujifilm RAF raw image", problem: "RAF source files are useful for color work, but not for quick previews, approvals, or delivery.", category: "image" },
+  { family: "raw", slug: "orf", seoLabel: "ORF", longLabel: "Olympus ORF raw image", problem: "ORF appears in camera archives, but many collaborators cannot inspect it without converting first.", category: "image" },
   { family: "subtitle", slug: "srt", seoLabel: "SRT", longLabel: "SRT subtitle file", problem: "SRT is common, but different video platforms still expect other subtitle formats.", category: "subtitle" },
   { family: "subtitle", slug: "vtt", seoLabel: "VTT", longLabel: "VTT subtitle file", problem: "VTT is browser-friendly, but some legacy tools still ask for SRT or ASS.", category: "subtitle" },
   { family: "subtitle", slug: "ass", seoLabel: "ASS", longLabel: "ASS subtitle file", problem: "ASS supports richer styling, but the next workflow may only accept simpler subtitle files.", category: "subtitle" },
@@ -82,6 +92,9 @@ const EXTENDED_MODIFIERS: ModifierSeed[] = [
   { slug: "android", headline: "on Android", keyword: "android", desc: "when the source lives on Android and needs a browser-based handoff", review: "whether the output survives the next Android share step without friction" },
   { slug: "offline", headline: "Offline", keyword: "offline", desc: "when privacy or connectivity means the task should stay entirely local", review: "whether the browser can finish the conversion locally without another service" },
   { slug: "secure", headline: "Securely", keyword: "secure", desc: "when the source file should not be uploaded just to change format", review: "whether the result is ready to share without unnecessary exposure of the original" },
+  { slug: "no-upload", headline: "with No Upload", keyword: "no upload", desc: "when the conversion should stay inside the browser instead of another upload queue", review: "whether the job is solved without handing the source file to another hosted converter first" },
+  { slug: "private-sharing", headline: "for Private Sharing", keyword: "private sharing", desc: "when the source is sensitive but the converted file still has to reach a teammate or client", review: "whether the output is polished enough for the recipient without another risky handoff" },
+  { slug: "offline-no-upload", headline: "Offline & No Upload", keyword: "offline no upload", desc: "when the file needs a browser-first path with no network dependency or third-party queue", review: "whether the browser can complete the conversion locally and leave you with a usable result immediately" },
   { slug: "for-email", headline: "for Email", keyword: "for email", desc: "when the output has to be more portable and easier to send immediately", review: "whether the output is small enough, compatible enough, and actually ready to send" },
   { slug: "batch", headline: "in Batch", keyword: "batch", desc: "when the same conversion needs to repeat across several files", review: "whether the output stays consistent across the full set instead of only the first file" },
   { slug: "legal", headline: "for Legal Teams", keyword: "legal", desc: "when the file belongs to a legal or evidence-handling workflow", review: "whether the output is clear enough for counsel, reviewers, or evidence packets" },
@@ -387,8 +400,10 @@ export const EXTENDED_CONVERTER_METADATA_EXAMPLES = [
   getExtendedConverterPairPage("mp3", "wav"),
   getExtendedConverterPairPage("epub", "mobi"),
   getExtendedConverterPairPage("zip", "7z"),
+  getExtendedConverterPairPage("dng", "nef"),
   getExtendedConverterModifierPage("mp4", "mov", "offline"),
   getExtendedConverterModifierPage("rar", "zip", "legal"),
+  getExtendedConverterModifierPage("dng", "nef", "private-sharing"),
   getExtendedConverterModifierPage("srt", "vtt", "education"),
 ]
   .filter((entry): entry is ConverterPairPage | ConverterModifierPage => Boolean(entry))

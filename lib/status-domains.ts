@@ -947,6 +947,9 @@ export const STATUS_CLOUD_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.cloud.map(
 export const STATUS_FINANCE_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.finance.map(
   (entry) => entry.domain
 )
+export const STATUS_ECOMMERCE_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.ecommerce.map(
+  (entry) => entry.domain
+)
 export const STATUS_GAMING_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.gaming.map(
   (entry) => entry.domain
 )

@@ -8,14 +8,21 @@ import type {
 } from "@/lib/programmatic-content"
 import type { ToolDefinition } from "@/lib/tools-catalogue"
 
-export type CalculatorCategory =
+export type PublicCalculatorCategory =
   | "percentage"
   | "tip"
   | "salary-to-hourly"
   | "basic-loan"
   | "simple-interest"
+  | "retirement-basic"
+
+export type LegacyCalculatorCategory =
   | "compound-interest-intro"
   | "retirement-savings-basic"
+
+export type CalculatorCategory =
+  | PublicCalculatorCategory
+  | LegacyCalculatorCategory
 
 export type CalculatorRouteParams = {
   category: CalculatorCategory
@@ -109,9 +116,9 @@ type ParsedCompoundInterestIntro = {
   years: number
 }
 
-type ParsedRetirementSavingsBasic = {
+type ParsedRetirementBasic = {
   annualRate: number
-  category: "retirement-savings-basic"
+  category: "retirement-basic"
   expression: string
   futureValue: number
   monthlyContribution: number
@@ -123,7 +130,7 @@ type ParsedCalculator =
   | ParsedBasicLoan
   | ParsedCompoundInterestIntro
   | ParsedPercentage
-  | ParsedRetirementSavingsBasic
+  | ParsedRetirementBasic
   | ParsedSalary
   | ParsedSimpleInterest
   | ParsedTip
@@ -142,21 +149,29 @@ const CATEGORY_LABELS: Record<CalculatorCategory, string> = {
   "basic-loan": "Basic Loan Calculator",
   "compound-interest-intro": "Compound Interest Calculator",
   percentage: "Percentage Calculator",
+  "retirement-basic": "Basic Retirement Savings Calculator",
   "retirement-savings-basic": "Retirement Savings Calculator",
   "salary-to-hourly": "Salary to Hourly Calculator",
   "simple-interest": "Simple Interest Calculator",
   tip: "Tip Calculator",
 }
 
-const CATEGORY_ORDER: CalculatorCategory[] = [
+const PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
   "percentage",
   "tip",
   "salary-to-hourly",
   "basic-loan",
   "simple-interest",
+  "retirement-basic",
+]
+
+const CATEGORY_ORDER: CalculatorCategory[] = [
+  ...PUBLIC_CATEGORY_ORDER,
   "compound-interest-intro",
   "retirement-savings-basic",
 ]
+
+const PUBLIC_CATEGORY_SET = new Set<PublicCalculatorCategory>(PUBLIC_CATEGORY_ORDER)
 
 const PERCENT_VALUES = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 22, 25, 30, 33, 35, 40, 45, 50,
@@ -268,7 +283,9 @@ export function isCalculatorCategory(value: string): value is CalculatorCategory
 }
 
 export function buildCalculatorPath(category: CalculatorCategory, expression: string) {
-  return `/calculators/${category}/${expression}`
+  const canonicalCategory =
+    category === "retirement-savings-basic" ? "retirement-basic" : category
+  return `/calculators/${canonicalCategory}/${expression}`
 }
 
 export function buildCalculatorExpression(
@@ -356,6 +373,7 @@ export function buildCalculatorExpression(
       }
       return compoundExpressionFor(principal, annualRate, years)
     }
+    case "retirement-basic":
     case "retirement-savings-basic": {
       const monthlyContribution = readNumber("monthlyContribution")
       const annualRate = readNumber("annualRate")
@@ -557,7 +575,7 @@ function parseCalculatorExpression(
   const futureValue = futureValueRetirement(monthlyContribution, annualRate, years)
   return {
     annualRate,
-    category: "retirement-savings-basic",
+    category: "retirement-basic",
     expression: retirementExpressionFor(monthlyContribution, annualRate, years),
     futureValue,
     monthlyContribution,
@@ -691,7 +709,7 @@ function retirementEntries(): CalculatorEntry[] {
   return RETIREMENT_MONTHLY.flatMap((monthlyContribution) =>
     RETIREMENT_RATES.flatMap((annualRate) =>
       RETIREMENT_YEARS.map((years) => ({
-        category: "retirement-savings-basic" as const,
+        category: "retirement-basic" as const,
         description: buildMetaDescription(
           `Estimate retirement savings from ${formatCurrency(monthlyContribution)} per month at ${annualRate}% over ${years} years with a local browser calculator on Plain Tools.`
         ),
@@ -717,6 +735,10 @@ const CALCULATOR_TEMPLATES: CalculatorEntry[] = [
   ...compoundEntries(),
   ...retirementEntries(),
 ]
+
+const PUBLIC_CALCULATOR_TEMPLATES = CALCULATOR_TEMPLATES.filter((entry) =>
+  PUBLIC_CATEGORY_SET.has(entry.category as PublicCalculatorCategory)
+)
 
 const CALCULATOR_ENTRY_MAP = new Map(
   CALCULATOR_TEMPLATES.map((entry) => [`${entry.category}/${entry.expression}`, entry])
@@ -750,27 +772,27 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
         { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
         { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.termYears)), title: "Compare with simple interest" },
-        { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, parsed.annualRate, parsed.termYears)), title: "Compare with compound growth" },
+        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(300, Math.max(1, parsed.annualRate), Math.max(10, parsed.termYears * 2))), title: "Basic retirement savings example" },
       ]
     case "simple-interest":
       return [
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, parsed.annualRate, Math.max(1, parsed.years))), title: "Basic loan payment example" },
-        { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, parsed.annualRate, parsed.years)), title: "Compound interest comparison" },
+        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(250, Math.max(2, parsed.annualRate), Math.max(10, parsed.years * 4))), title: "Basic retirement savings example" },
       ]
     case "compound-interest-intro":
       return [
         { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
         { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.years)), title: "Simple interest comparison" },
-        { href: buildCalculatorPath("retirement-savings-basic", retirementExpressionFor(500, parsed.annualRate, Math.max(10, parsed.years))), title: "Retirement savings example" },
+        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(500, parsed.annualRate, Math.max(10, parsed.years))), title: "Retirement savings example" },
       ]
-    case "retirement-savings-basic":
+    case "retirement-basic":
       return [
-        { href: buildCalculatorPath("retirement-savings-basic", retirementExpressionFor(parsed.monthlyContribution, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${Math.max(1, parsed.annualRate - 1)}%` },
-        { href: buildCalculatorPath("retirement-savings-basic", retirementExpressionFor(parsed.monthlyContribution, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${parsed.annualRate + 1}%` },
-        { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(10000, parsed.annualRate, Math.max(5, parsed.years))), title: "Compound interest intro" },
+        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(parsed.monthlyContribution, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${Math.max(1, parsed.annualRate - 1)}%` },
+        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(parsed.monthlyContribution, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(10000, Math.max(1, parsed.annualRate - 1), Math.max(1, Math.round(parsed.years / 5)))), title: "Simple interest example" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(90000, 40)), title: "Salary to hourly example" },
       ]
   }
@@ -1160,7 +1182,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     initialValues = { annualRate: parsed.annualRate, principal: parsed.principal, years: parsed.years }
   }
 
-  if (parsed.category === "retirement-savings-basic") {
+  if (parsed.category === "retirement-basic") {
     const scenarioText = `${formatCurrency(parsed.monthlyContribution)} per month at ${formatPercent(parsed.annualRate)} for ${parsed.years} years`
     intro = [
       "Retirement savings pages can still fit this capped cluster when they stay simple and first-pass. The goal here is to estimate how recurring monthly savings might grow, not to replace a full retirement planning platform.",
@@ -1187,7 +1209,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       "Why a basic retirement savings page is still useful",
       [
         "Many users simply want to know what a monthly savings habit could look like over time. That is a narrower intent than full retirement planning, and it is appropriate for a capped utility cluster like this one.",
-        "The important guardrail is to stay basic: monthly savings, time, rate, and an easy comparison path into related intro finance pages.",
+        "The important guardrail is to stay basic: monthly savings, time, rate, and an easy comparison path into related first-pass finance pages.",
       ]
     )
     privacyNote = [
@@ -1200,7 +1222,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       { question: "Why compare projected value with contributions?", answer: "It helps the user separate what they put in from what growth adds over time." },
       { question: "Can I test another monthly contribution quickly?", answer: "Yes. The local calculator and related links open nearby scenarios immediately." },
       { question: "Does the page send savings values anywhere?", answer: "No. The calculation stays local in the browser." },
-      { question: "What should I check next?", answer: "Compound-interest intro and salary comparison pages are common next steps after a basic retirement-savings estimate." },
+      { question: "What should I check next?", answer: "Salary comparison and simple-interest pages are common next steps after a basic retirement-savings estimate." },
     ]
     summaryRows = [
       { label: "Monthly contribution", value: formatCurrency(parsed.monthlyContribution) },
@@ -1237,7 +1259,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     expression: parsed.expression,
     featureList: [
       `${CATEGORY_LABELS[entry.category]} with a canonical long-tail route`,
-      "All calculations run locally in the browser",
+      "All calculations run locally in your browser - nothing is sent anywhere",
       "Privacy-first utility page with no uploads or account requirement",
       "Strong internal links into nearby calculator and utility pages",
     ],
@@ -1246,7 +1268,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     initialValues,
     keywords: entry.keywords,
     liveToolDescription:
-      "Adjust the inputs below to open the exact next calculator route. All calculations happen locally in the browser and no data is sent.",
+      "Adjust the inputs below to open the exact next calculator route. All calculations run locally in your browser - nothing is sent anywhere.",
     page: {
       canonicalPath,
       description: entry.description,
@@ -1282,48 +1304,53 @@ export function getCalculatorPage(
 ): CalculatorPage | null {
   const parsed = parseCalculatorExpression(category, expression)
   if (!parsed) return null
-  const entry = CALCULATOR_ENTRY_MAP.get(`${category}/${parsed.expression}`)
+  const entry = CALCULATOR_ENTRY_MAP.get(`${parsed.category}/${parsed.expression}`)
   if (!entry) return null
   return buildCalculatorPageData(entry, parsed)
 }
 
 export function getCalculatorPaths() {
-  return CALCULATOR_TEMPLATES.map((entry) => buildCalculatorPath(entry.category, entry.expression))
+  return PUBLIC_CALCULATOR_TEMPLATES.map((entry) =>
+    buildCalculatorPath(entry.category, entry.expression)
+  )
 }
 
 export function generateCategoryCalculatorParams(
   category: CalculatorCategory,
   limit?: number
 ) {
-  const entries = CALCULATOR_TEMPLATES.filter((entry) => entry.category === category)
+  const entries = PUBLIC_CALCULATOR_TEMPLATES.filter((entry) => entry.category === category)
   const slice = typeof limit === "number" ? entries.slice(0, limit) : entries
   return slice.map((entry) => ({ category, expression: entry.expression }))
 }
 
 export function generateCalculatorParams(limit?: number) {
   const entries =
-    typeof limit === "number" ? CALCULATOR_TEMPLATES.slice(0, limit) : CALCULATOR_TEMPLATES
+    typeof limit === "number"
+      ? PUBLIC_CALCULATOR_TEMPLATES.slice(0, limit)
+      : PUBLIC_CALCULATOR_TEMPLATES
   return entries.map((entry) => ({ category: entry.category, expression: entry.expression }))
 }
 
 export function generateNonPercentageCalculatorParams(limit?: number) {
-  const entries = CALCULATOR_TEMPLATES.filter((entry) => entry.category !== "percentage")
+  const entries = PUBLIC_CALCULATOR_TEMPLATES.filter(
+    (entry) => entry.category !== "percentage"
+  )
   const slice = typeof limit === "number" ? entries.slice(0, limit) : entries
   return slice.map((entry) => ({ category: entry.category, expression: entry.expression }))
 }
 
-export function getPrebuildCalculatorParams(limit = 520) {
-  const perCategory: Record<CalculatorCategory, number> = {
-    "basic-loan": 72,
-    "compound-interest-intro": 48,
-    percentage: 260,
-    "retirement-savings-basic": 36,
-    "salary-to-hourly": 36,
-    "simple-interest": 48,
-    tip: 48,
+export function getPrebuildCalculatorParams(limit = 400) {
+  const perCategory: Record<PublicCalculatorCategory, number> = {
+    "basic-loan": 44,
+    percentage: 200,
+    "retirement-basic": 32,
+    "salary-to-hourly": 28,
+    "simple-interest": 44,
+    tip: 52,
   }
 
-  const staged = CATEGORY_ORDER.flatMap((category) =>
+  const staged = PUBLIC_CATEGORY_ORDER.flatMap((category) =>
     generateCategoryCalculatorParams(category, perCategory[category])
   )
   return staged.slice(0, limit)
@@ -1335,8 +1362,7 @@ export const CALCULATOR_FINANCIAL_METADATA_EXAMPLES = [
   getCalculatorPage("salary-to-hourly", "salary-to-hourly-60000-40"),
   getCalculatorPage("basic-loan", "loan-payment-10000-5-3-years"),
   getCalculatorPage("simple-interest", "simple-interest-10000-5-3"),
-  getCalculatorPage("compound-interest-intro", "compound-interest-10000-7-10"),
-  getCalculatorPage("retirement-savings-basic", "retirement-savings-500-monthly-6-20-years"),
+  getCalculatorPage("retirement-basic", "retirement-savings-500-monthly-6-20-years"),
 ]
   .filter((entry): entry is CalculatorPage => Boolean(entry))
   .map((entry) => ({

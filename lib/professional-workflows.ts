@@ -62,17 +62,23 @@ const INDUSTRIES: IndustryDefinition[] = [
   { slug: "legal", label: "Legal Teams", keyword: "legal", docs: "contracts, exhibit bundles, and client review copies", risk: "matter files often contain privileged language, signatures, and ID data", nextStep: "court filing, outside counsel review, or client delivery", review: "page order, redactions, signatures, and submission size", comparePath: "/compare/plain-tools-vs-adobe-acrobat-online" },
   { slug: "accounting", label: "Accounting Teams", keyword: "accounting", docs: "invoices, statements, and month-end support packs", risk: "the files mix payment details, customer records, and audit evidence", nextStep: "finance approval, audit support, or reporting", review: "totals, legibility, file size, and record completeness", comparePath: "/compare/plain-tools-vs-pdf24" },
   { slug: "hr", label: "HR Teams", keyword: "hr", docs: "candidate packets, onboarding forms, and signed policies", risk: "HR files carry personal data, compensation details, and signatures", nextStep: "onboarding, employee review, or secure records storage", review: "field values, signatures, metadata, and final record quality", comparePath: "/compare/plain-tools-vs-smallpdf" },
+  { slug: "hr-recruitment", label: "HR Recruitment Teams", keyword: "hr recruitment", docs: "candidate packets, NDAs, interview summaries, and offer-letter PDFs", risk: "recruitment files carry candidate data, compensation notes, signatures, and internal interview feedback", nextStep: "candidate review, hiring approval, or onboarding handoff", review: "redactions, signatures, metadata, and final share-copy quality", comparePath: "/compare/plain-tools-vs-smallpdf" },
   { slug: "students", label: "Students", keyword: "student", docs: "assignments, scanned notes, and submission PDFs", risk: "student uploads often include ID numbers, grades, and application material", nextStep: "course submission, scholarship upload, or tutor review", review: "legibility, page order, searchable text, and upload readiness", comparePath: "/compare/plain-tools-vs-ilovepdf" },
+  { slug: "accounting-finance", label: "Accounting & Finance Teams", keyword: "accounting finance", docs: "close packs, board-ready statements, reconciliations, and approval PDFs", risk: "finance files combine bank details, payroll data, commercial terms, and audit evidence", nextStep: "controller review, board circulation, or secure archive delivery", review: "totals, page order, metadata, file size, and external-share readiness", comparePath: "/compare/plain-tools-vs-pdf24" },
   { slug: "healthcare-admin", label: "Healthcare Admin", keyword: "healthcare admin", docs: "referral packets, scanned records, and intake forms", risk: "admin records can contain personal health details and operational notes", nextStep: "records administration, clinical review, or secure sharing", review: "readability, OCR quality, orientation, and packet completeness", comparePath: "/compare/plain-tools-vs-sejda" },
+  { slug: "healthcare", label: "Healthcare Teams", keyword: "healthcare", docs: "patient packets, signed consents, scanned referrals, and claims-support PDFs", risk: "healthcare files often contain patient identifiers, signatures, treatment notes, and regulated attachments", nextStep: "clinical review, patient handoff, or regulated archive storage", review: "redactions, OCR quality, metadata, page order, and chart-readiness", comparePath: "/compare/plain-tools-vs-sejda" },
   { slug: "government", label: "Government Submissions", keyword: "government submission", docs: "applications, supporting evidence, and signed forms", risk: "submission files often carry identity records and regulated attachments", nextStep: "portal submission, procurement review, or compliance filing", review: "size limits, page count, searchable text, and validation readiness", comparePath: "/compare/plain-tools-vs-smallpdf" },
+  { slug: "government-compliance", label: "Government Compliance Teams", keyword: "government compliance", docs: "regulator response packs, evidence bundles, signed attestations, and audit PDFs", risk: "compliance files often include identity records, regulated evidence, signatures, and controlled review notes", nextStep: "regulator submission, audit review, or internal compliance sign-off", review: "redactions, bates order, searchable text, metadata, and submission readiness", comparePath: "/compare/plain-tools-vs-smallpdf" },
   { slug: "procurement", label: "Procurement Teams", keyword: "procurement", docs: "vendor packets, tax forms, and signed terms", risk: "supplier files combine commercial terms, tax data, and compliance records", nextStep: "supplier onboarding, approval, or retention", review: "document completeness, signatures, and share-copy quality", comparePath: "/compare/plain-tools-vs-pdfgear" },
   { slug: "real-estate", label: "Real Estate Teams", keyword: "real estate", docs: "lease packets, disclosures, and closing PDFs", risk: "property files contain signatures, addresses, and financial disclosures", nextStep: "client signature, brokerage review, or archive storage", review: "signatures, page order, metadata, and delivery polish", comparePath: "/compare/plain-tools-vs-dochub" },
+  { slug: "property-management", label: "Property Management Teams", keyword: "property management", docs: "lease renewals, maintenance forms, notice packets, and resident-ready PDFs", risk: "property-management files contain tenant details, signatures, addresses, and payment references", nextStep: "tenant delivery, owner review, or record retention", review: "signatures, metadata, page order, and resident-share quality", comparePath: "/compare/plain-tools-vs-dochub" },
   { slug: "insurance", label: "Insurance Teams", keyword: "insurance", docs: "claims packets, policy PDFs, and scanned evidence", risk: "claims workflows combine personal details, payment records, and supporting scans", nextStep: "claims handling, adjuster review, or archive storage", review: "OCR quality, page order, file size, and evidence readability", comparePath: "/compare/plain-tools-vs-foxit-pdf" },
   { slug: "consulting", label: "Consulting Teams", keyword: "consulting", docs: "client reports, proposal PDFs, and sign-off copies", risk: "consulting documents often include client strategy, budgets, and internal notes", nextStep: "client delivery, executive review, or scope approval", review: "branding, page consistency, file size, and client-readiness", comparePath: "/compare/plain-tools-vs-pdf24" },
   { slug: "sales", label: "Sales Teams", keyword: "sales", docs: "quotes, order forms, and signed proposal PDFs", risk: "sales files blend pricing, customer details, and signatures", nextStep: "buyer review, signature, or customer delivery", review: "pricing pages, signatures, file size, and final polish", comparePath: "/compare/plain-tools-vs-sodapdf" },
   { slug: "customer-success", label: "Customer Success Teams", keyword: "customer success", docs: "handover packs, onboarding PDFs, and account plans", risk: "customer files include account history, contacts, and contract attachments", nextStep: "customer onboarding, handover, or renewal review", review: "clarity, page order, shared-file size, and team usability", comparePath: "/compare/plain-tools-vs-xodo" },
   { slug: "marketing-ops", label: "Marketing Operations", keyword: "marketing operations", docs: "media kits, campaign proofs, and approval packs", risk: "campaign files can contain unreleased assets and client review comments", nextStep: "campaign approval, partner handoff, or archive packaging", review: "asset quality, orientation, page order, and reviewer fit", comparePath: "/compare/plain-tools-vs-canva-pdf-tools" },
   { slug: "education-admin", label: "Education Admin", keyword: "education administration", docs: "student records, enrollment forms, and board packets", risk: "office files include student identifiers, signatures, and internal review notes", nextStep: "records processing, board review, or secure communication", review: "OCR quality, redaction status, file size, and handoff readiness", comparePath: "/compare/plain-tools-vs-pdfescape" },
+  { slug: "registrar-services", label: "Registrar Services Teams", keyword: "registrar services", docs: "transcript requests, student forms, verification letters, and policy PDFs", risk: "registrar files contain student identifiers, signatures, grades, and regulated school records", nextStep: "student services delivery, records review, or archive retention", review: "redactions, OCR quality, metadata, and student-share readiness", comparePath: "/compare/plain-tools-vs-pdfescape" },
   { slug: "construction", label: "Construction Teams", keyword: "construction", docs: "site packs, signed permits, and inspection records", risk: "site files include signatures, addresses, commercial terms, and safety records", nextStep: "permit upload, site approval, or contractor delivery", review: "legibility, orientation, file size, and field usability", comparePath: "/compare/plain-tools-vs-swifdoo-pdf" },
   { slug: "nonprofit", label: "Nonprofit Teams", keyword: "nonprofit", docs: "grant packets, board PDFs, and signed approvals", risk: "nonprofit admin files still include donor data, signatures, and governance records", nextStep: "grant submission, board circulation, or donor delivery", review: "file size, readability, signatures, and external submission readiness", comparePath: "/compare/plain-tools-vs-lightpdf" },
   { slug: "engineering", label: "Engineering Teams", keyword: "engineering", docs: "design review PDFs, incident reports, and release evidence", risk: "engineering documents often include architecture notes, client data, and internal postmortem details", nextStep: "design review, release approval, or incident documentation", review: "diagram clarity, page order, searchable text, and export fidelity", comparePath: "/compare/plain-tools-vs-updf" },
@@ -85,6 +91,7 @@ const INDUSTRIES: IndustryDefinition[] = [
   { slug: "manufacturing", label: "Manufacturing Teams", keyword: "manufacturing", docs: "quality packets, work instructions, and compliance forms", risk: "manufacturing PDFs often include supplier data, QA evidence, and traceability records", nextStep: "line release, supplier review, or compliance archive", review: "scan quality, page sequence, signatures, and record completeness", comparePath: "/compare/plain-tools-vs-onlyoffice-pdf" },
   { slug: "hospitality", label: "Hospitality Teams", keyword: "hospitality", docs: "vendor forms, event packets, and signed operations PDFs", risk: "hospitality files can include guest details, commercial terms, and signed approvals", nextStep: "vendor onboarding, event delivery, or records retention", review: "file size, readability, signatures, and handoff readiness", comparePath: "/compare/plain-tools-vs-docfly" },
   { slug: "legal-ops", label: "Legal Operations", keyword: "legal operations", docs: "matter packets, billing PDFs, and signer-ready documents", risk: "legal ops files mix privileged data, invoices, and signature workflows", nextStep: "matter review, invoicing, or approval routing", review: "redactions, signatures, file size, and billing packet order", comparePath: "/compare/plain-tools-vs-adobe-acrobat-online" },
+  { slug: "litigation-support", label: "Litigation Support Teams", keyword: "litigation support", docs: "discovery packets, deposition exhibits, production sets, and court-ready PDFs", risk: "litigation-support files often include privileged review notes, personal identifiers, exhibit numbering, and court-sensitive attachments", nextStep: "court filing, outside counsel review, or discovery production", review: "bates order, redactions, OCR quality, metadata, and filing readiness", comparePath: "/compare/plain-tools-vs-adobe-acrobat-online" },
   { slug: "biotech", label: "Biotech Teams", keyword: "biotech", docs: "submission packs, lab records, and controlled review PDFs", risk: "biotech documents can include regulated data, study evidence, and partner attachments", nextStep: "regulatory review, partner delivery, or archive submission", review: "scan quality, metadata, page order, and reviewer usability", comparePath: "/compare/plain-tools-vs-wondershare-pdfelement" },
   { slug: "media", label: "Media Teams", keyword: "media", docs: "press kits, contracts, and review PDFs", risk: "media packs often hold embargoed assets, talent contracts, and internal comments", nextStep: "partner delivery, legal review, or archive packaging", review: "asset fidelity, signature status, page order, and final polish", comparePath: "/compare/plain-tools-vs-lightpdf" },
   { slug: "fundraising", label: "Fundraising Teams", keyword: "fundraising", docs: "board packs, donor PDFs, and grant attachments", risk: "fundraising files can contain donor details, grant evidence, and signed approvals", nextStep: "board circulation, donor delivery, or grant submission", review: "file size, signatures, page order, and external share quality", comparePath: "/compare/plain-tools-vs-kami" },
@@ -119,6 +126,14 @@ const WORKFLOWS: WorkflowDefinition[] = [
   { slug: "package-html-reports-as-pdf", title: "Package HTML Reports as PDF", toolSlug: "html-to-pdf", keyword: "html to pdf report", problem: "browser-based reports still need a stable PDF version for review and archive", goal: "capture the report locally as PDF before it heads into approval, archive, or delivery", faqLead: "html export", relatedToolSlugs: ["text-to-pdf", "word-to-pdf", "compress-pdf", "protect-pdf"] },
   { slug: "mark-approval-drafts", title: "Mark Approval Drafts", toolSlug: "watermark-pdf", keyword: "watermark draft pdf", problem: "review copies risk being mistaken for the final approved version", goal: "add a visible draft marker locally before the document circulates to approvers or partners", faqLead: "draft labels", relatedToolSlugs: ["annotate-pdf", "protect-pdf", "sign-pdf", "compress-pdf"] },
   { slug: "prepare-signed-form-packets", title: "Prepare Signed Form Packets", toolSlug: "fill-pdf", keyword: "fill and sign pdf packet", problem: "forms need to be completed accurately before they move into signature or archive workflows", goal: "fill the form locally and hand off a cleaner packet for signing, review, or retention", faqLead: "form packets", relatedToolSlugs: ["sign-pdf", "protect-pdf", "merge-pdf", "metadata-purge"] },
+  { slug: "redact-for-gdpr", title: "Redact PDF for GDPR and Sensitive Review", toolSlug: "redact-pdf", keyword: "redact pdf for gdpr", problem: "the file cannot move forward until personal data, privileged notes, or regulated details are removed correctly", goal: "create a safer review copy locally before the document enters discovery, audit, client review, or external sharing", faqLead: "gdpr redaction", canonicalVariantPath: "/pdf-tools/redact-pdf/legal", relatedToolSlugs: ["metadata-purge", "protect-pdf", "compare-pdf", "annotate-pdf"] },
+  { slug: "sign-nda", title: "Sign NDA PDFs", toolSlug: "sign-pdf", keyword: "sign nda pdf", problem: "the NDA is approved in principle but still needs a clean local signature workflow before circulation", goal: "place the signature locally and produce a signer-ready copy without pushing a confidential agreement into another upload-first service", faqLead: "nda signature", canonicalVariantPath: "/pdf-tools/sign-pdf/no-upload", relatedToolSlugs: ["fill-pdf", "protect-pdf", "merge-pdf", "metadata-purge"] },
+  { slug: "merge-contracts", title: "Merge Contract PDFs", toolSlug: "merge-pdf", keyword: "merge contracts pdf", problem: "contract exhibits, schedules, and signed addenda arrive as scattered files instead of one usable packet", goal: "bundle the right agreements into one locally prepared packet that is easier to route for review, signature, or submission", faqLead: "contract packet order", canonicalVariantPath: "/pdf-tools/merge-pdf/legal", relatedToolSlugs: ["split-pdf", "compare-pdf", "compress-pdf", "protect-pdf"] },
+  { slug: "ocr-scanned-forms", title: "OCR Scanned Forms", toolSlug: "ocr-pdf", keyword: "ocr scanned forms pdf", problem: "paper-origin forms are unreadable to search, route, or verify because the text is trapped inside image scans", goal: "turn scanned forms into searchable PDFs locally before teams review, archive, or upload them to a controlled system", faqLead: "form OCR quality", canonicalVariantPath: "/pdf-tools/ocr-pdf/scanned", relatedToolSlugs: ["rotate-pdf", "compress-pdf", "metadata-purge", "pdf-to-word"] },
+  { slug: "bates-numbering", title: "Apply Bates Numbering to PDFs", toolSlug: "watermark-pdf", keyword: "bates numbering pdf", problem: "review packets need stable reference numbers before counsel, auditors, or reviewers can cite pages consistently", goal: "apply visible numbering locally so the packet is easier to reference without creating another cloud copy of sensitive files", faqLead: "bates numbering", canonicalVariantPath: "/pdf-tools/bates-numbering/legal", relatedToolSlugs: ["merge-pdf", "compare-pdf", "redact-pdf", "protect-pdf"] },
+  { slug: "flatten-for-court", title: "Flatten PDF Forms for Court and Filing", toolSlug: "fill-pdf", keyword: "flatten pdf for court", problem: "fillable or layered PDFs can break when the court, regulator, or archive system expects a flattened share copy", goal: "export a flatter, more stable PDF locally before the file heads into court filing, regulated upload, or external review", faqLead: "flattened filing copy", relatedToolSlugs: ["sign-pdf", "protect-pdf", "compress-pdf", "merge-pdf"] },
+  { slug: "anonymize-metadata", title: "Anonymize PDF Metadata", toolSlug: "metadata-purge", keyword: "anonymize pdf metadata", problem: "the visible pages look safe, but hidden author fields, revision traces, and document properties still expose context", goal: "strip identifying metadata locally so the outbound copy reveals less than the working version", faqLead: "metadata anonymization", canonicalVariantPath: "/pdf-tools/metadata-purge/legal", relatedToolSlugs: ["redact-pdf", "protect-pdf", "compare-pdf", "sign-pdf"] },
+  { slug: "compress-for-email-secure", title: "Compress PDF for Secure Email", toolSlug: "compress-pdf", keyword: "compress pdf for secure email", problem: "email and secure-message limits reject the document even though the next reviewer still needs a readable PDF copy", goal: "reduce file size locally so the document can be sent securely without routing a sensitive file through a third-party compression queue", faqLead: "secure email size", canonicalVariantPath: "/pdf-tools/compress-pdf/for-email", relatedToolSlugs: ["protect-pdf", "metadata-purge", "merge-pdf", "ocr-pdf"] },
 ]
 
 const INDUSTRY_MAP = new Map(INDUSTRIES.map((industry) => [industry.slug, industry]))
@@ -140,10 +155,18 @@ function mustGetTool(toolSlug: string) {
 
 function buildEntry(industry: IndustryDefinition, workflow: WorkflowDefinition): ProfessionalWorkflowEntry {
   return {
-    desc: buildMetaDescription(`${workflow.title} for ${industry.label.toLowerCase()} with 100% local browser processing, no upload, and privacy-first document handling on Plain Tools.`),
+    desc: buildMetaDescription(`${workflow.title} for ${industry.label.toLowerCase()} with 100% local processing, no upload, files never leaving your device, and privacy-first document handling on Plain Tools.`),
     industry: industry.slug,
-    keywords: [`${workflow.keyword} for ${industry.keyword}`, `${workflow.keyword} no upload`, `${industry.keyword} pdf workflow`, "privacy-first pdf tools", "local browser processing"],
-    title: `${workflow.title} for ${industry.label} – No Upload, Local Browser | Plain Tools`,
+    keywords: [
+      `${workflow.keyword} for ${industry.keyword}`,
+      `${workflow.keyword} no upload`,
+      `${industry.keyword} pdf workflow`,
+      `${workflow.keyword} offline`,
+      `${workflow.keyword} private`,
+      "privacy-first pdf tools",
+      "local browser processing",
+    ],
+    title: `${workflow.title} for ${industry.label} (Local, No Upload, Private) | Plain Tools`,
     toolSlug: workflow.toolSlug,
     workflow: workflow.slug,
   }
@@ -157,10 +180,35 @@ const WORKFLOW_ENTRY_MAP = new Map(
   PROFESSIONAL_WORKFLOW_MATRIX.map((entry) => [`${entry.industry}/${entry.workflow}`, entry])
 )
 
+const PRIORITY_INDUSTRIES = new Set([
+  "legal",
+  "hr-recruitment",
+  "accounting-finance",
+  "healthcare",
+  "real-estate",
+  "government-compliance",
+  "education-admin",
+])
+
+const PRIORITY_WORKFLOWS = new Set([
+  "redact-for-gdpr",
+  "sign-nda",
+  "merge-contracts",
+  "ocr-scanned-forms",
+  "bates-numbering",
+  "flatten-for-court",
+  "anonymize-metadata",
+  "compress-for-email-secure",
+  "compress-shared-pdfs",
+  "merge-document-packets",
+  "ocr-scanned-records",
+])
+
 function intro(tool: ToolDefinition, industry: IndustryDefinition, workflow: WorkflowDefinition) {
   return [
-    `${workflow.title} for ${industry.label.toLowerCase()} is usually a live workflow query. People land here when ${workflow.problem}, and the file is already part of ${industry.docs}. The goal is to solve that bottleneck quickly without adding one more upload step halfway through the process.`,
-    `That is why Plain Tools leans so hard on local processing. ${industry.risk}. This route pairs the live ${tool.name.toLowerCase()} workspace with intent-specific guidance, so the user gets both the tool and the review context needed before the file moves into ${industry.nextStep}.`,
+    `${workflow.title} for ${industry.label.toLowerCase()} is usually a live workflow query. People land here when ${workflow.problem}, and the file is already part of ${industry.docs}. The goal is to solve that bottleneck quickly without adding another upload step.`,
+    `That is why Plain Tools leans so hard on local processing. ${industry.risk}. This route pairs the live ${tool.name.toLowerCase()} workspace with the review context needed before the file moves into ${industry.nextStep}.`,
+    `The positioning is deliberate: 100% local processing, no upload, and files never leaving your device during the core step. For ${industry.label.toLowerCase()}, that matters because the workflow is usually blocked by trust and review readiness.`,
   ]
 }
 
@@ -168,6 +216,7 @@ function why(industry: IndustryDefinition, workflow: WorkflowDefinition) {
   return [
     `${industry.label} do not usually need another generic PDF homepage. They need a route that recognises why ${workflow.problem} matters in their environment and how it affects the next handoff. This page is written around that narrower question.`,
     `A stronger programmatic page is useful because it keeps the explanation anchored to a professional job-to-be-done. Here that means ${workflow.goal}, while still reminding the reader to verify ${industry.review} before treating the output as final.`,
+    `That combination of workflow intent plus review guidance is what keeps the page from being a thin variant. It explains why the output has to survive ${industry.nextStep} without exposing more of the document than necessary.`,
   ]
 }
 
@@ -175,6 +224,7 @@ function how(tool: ToolDefinition, industry: IndustryDefinition) {
   return [
     `Open the live ${tool.name.toLowerCase()} panel below with the real working file. Plain Tools keeps the core transformation in the browser, so the document stays on-device during the main step rather than bouncing through an upload-first queue.`,
     `That local workflow is only valuable if the result is ready for the next team. For ${industry.label.toLowerCase()}, the review should focus on ${industry.review}. This page exists to spell that out clearly instead of assuming every workflow ends the moment the download finishes.`,
+    `If the file still needs one more change after the main step, the page points into adjacent local tools and variants. That reduces the chance of sending the same sensitive packet through multiple utilities just to finish one workflow.`,
   ]
 }
 
@@ -183,7 +233,8 @@ function steps(industry: IndustryDefinition, workflow: WorkflowDefinition): Prog
     { name: "Load the real working file", text: `Use the actual document that needs to move into ${industry.nextStep}, not a throwaway sample. That keeps the checks relevant to the real job.` },
     { name: `Run ${workflow.title.toLowerCase()} locally`, text: `Process the file in the browser so the core task happens on-device. That is the privacy-first default when the document contains material ${industry.label.toLowerCase()} handle every day.` },
     { name: "Review the output against the next handoff", text: `Check ${industry.review}. A successful download does not help if the receiving reviewer or portal still rejects the file.` },
-    { name: "Move to the next local fix only if needed", text: `If the file still needs OCR, protection, compression, or metadata cleanup, stay inside the related-tools cluster instead of restarting elsewhere.` },
+    { name: "Confirm the privacy expectation before sharing", text: `Make sure the outgoing copy matches the privacy bar for ${industry.label.toLowerCase()}. The safest route is usually the one where the core transformation stayed local and the final file reveals only what the next step needs.` },
+    { name: "Move to the next local fix only if needed", text: `If the file still needs OCR, protection, compression, metadata cleanup, or a cleaner review copy, stay inside the related-tools cluster instead of restarting elsewhere.` },
   ]
 }
 
@@ -204,6 +255,13 @@ function blocks(industry: IndustryDefinition, workflow: WorkflowDefinition): Pro
       ],
     },
     {
+      title: "Why the privacy angle is part of product fit",
+      paragraphs: [
+        `For ${industry.label.toLowerCase()}, privacy is not decorative messaging. ${industry.risk}. Keeping the transformation local reduces exposure during the step that often happens before formal review or archive controls are applied.`,
+        `That is why this route repeats the same operating model clearly: 100% local processing, no upload, and files never leaving your device during the core task.`,
+      ],
+    },
+    {
       title: "What to check before you trust the file",
       paragraphs: [
         `Before the document leaves your device, review ${industry.review}. Those checks are where downstream failures usually show up, especially with scans, signatures, and regulated uploads.`,
@@ -217,6 +275,7 @@ function privacy(industry: IndustryDefinition) {
   return [
     `Plain Tools keeps the trust model simple on this route: 100% local browser processing for the core workflow, no upload, and no account wall before you can act. That matters here because ${industry.risk}.`,
     `Privacy-first does not mean the workflow is complete the second the file downloads. It means the transformation step exposed the document to fewer systems before it entered ${industry.nextStep}.`,
+    `In practical terms, this page is built for teams that want the result without the extra exposure. Files never leave your device for the main transformation, which is often the cleanest fit for regulated or confidential PDF work.`,
   ]
 }
 
@@ -228,6 +287,8 @@ function faq(industry: IndustryDefinition, workflow: WorkflowDefinition, tool: T
     { question: "Does this replace the canonical tool page?", answer: "No. The main tool page remains the product-level route. This page narrows the advice for one professional use case and links into the adjacent workflows." },
     { question: `Why emphasize privacy on a ${workflow.keyword} page?`, answer: `Because ${industry.risk}. The privacy angle is part of product fit, not decorative copy.` },
     { question: "What if the file still is not ready?", answer: "Use the related links to move into the next local workflow such as OCR, compression, protection, metadata cleanup, or comparison rather than restarting elsewhere." },
+    { question: "Do files leave my device during the main workflow?", answer: "No. The core transformation is designed to run locally in the browser, so the file does not need to leave your device for the main step." },
+    { question: `Why does this page talk about ${industry.nextStep}?`, answer: `Because a useful workflow page should prepare the file for the real handoff. The destination is what determines whether the output is actually done.` },
   ]
 }
 
@@ -259,6 +320,29 @@ function relatedLinks(industry: IndustryDefinition, workflow: WorkflowDefinition
     .slice(0, 10)
 }
 
+function workflowPriorityScore(entry: ProfessionalWorkflowEntry) {
+  let score = 0
+
+  if (PRIORITY_INDUSTRIES.has(entry.industry)) score += 6
+  if (PRIORITY_WORKFLOWS.has(entry.workflow)) score += 6
+  if (entry.toolSlug === "redact-pdf" || entry.toolSlug === "sign-pdf") score += 2
+  if (entry.toolSlug === "merge-pdf" || entry.toolSlug === "ocr-pdf") score += 1
+
+  return score
+}
+
+function orderedWorkflowEntries() {
+  return [...PROFESSIONAL_WORKFLOW_MATRIX].sort((left, right) => {
+    const scoreDiff = workflowPriorityScore(right) - workflowPriorityScore(left)
+    if (scoreDiff !== 0) return scoreDiff
+
+    const industryDiff = left.industry.localeCompare(right.industry)
+    if (industryDiff !== 0) return industryDiff
+
+    return left.workflow.localeCompare(right.workflow)
+  })
+}
+
 export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: string): ProfessionalWorkflowPage | null {
   const entry = WORKFLOW_ENTRY_MAP.get(`${industrySlug}/${workflowSlug}`)
   if (!entry) return null
@@ -288,8 +372,8 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
     ...faqCopy.flatMap((item) => [item.question, item.answer]),
   ])
 
-  if (wordCount < 800) {
-    throw new Error(`Workflow page ${canonicalPath} is below 800 words (${wordCount}).`)
+  if (wordCount < 900) {
+    throw new Error(`Workflow page ${canonicalPath} is below 900 words (${wordCount}).`)
   }
 
   return {
@@ -303,13 +387,13 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
     canonicalPath,
     featureList: [
       `${workflow.title} in a browser-first workflow for ${industry.label.toLowerCase()}`,
-      "100% local processing for the core document step",
+      "100% local processing - no upload - files never leave your device",
       "No upload, no account gate, and task-specific review guidance",
       "Strong internal links into adjacent PDF tools, variants, and comparisons",
     ],
     heroBadges: ["professional workflow", "100% local", "no upload", "privacy-first"],
     h1: `${workflow.title} for ${industry.label}`,
-    liveToolDescription: `Use the live ${tool.name.toLowerCase()} workspace below for ${industry.label.toLowerCase()}. The core workflow stays local in the browser, so the file never needs to leave your device for the main task.`,
+    liveToolDescription: `Use the live ${tool.name.toLowerCase()} workspace below for ${industry.label.toLowerCase()}. The core workflow stays local in the browser - no upload, files never leaving your device for the main task.`,
     page: {
       canonicalPath,
       description: entry.desc,
@@ -339,7 +423,8 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
 }
 
 export function generateAllProfessionalWorkflowParams(limit?: number): ProfessionalWorkflowRouteParams[] {
-  const entries = typeof limit === "number" ? PROFESSIONAL_WORKFLOW_MATRIX.slice(0, limit) : PROFESSIONAL_WORKFLOW_MATRIX
+  const orderedEntries = orderedWorkflowEntries()
+  const entries = typeof limit === "number" ? orderedEntries.slice(0, limit) : orderedEntries
   return entries.map((entry) => ({ industry: entry.industry, workflow: entry.workflow }))
 }
 
@@ -352,10 +437,12 @@ export function getRelatedProfessionalWorkflowLinks(industry: string, workflow: 
 }
 
 export const PROFESSIONAL_WORKFLOW_METADATA_EXAMPLES = [
-  getProfessionalWorkflowPage("legal", "compress-shared-pdfs"),
-  getProfessionalWorkflowPage("real-estate", "prepare-client-evidence-bundles"),
-  getProfessionalWorkflowPage("executive", "mark-approval-drafts"),
-  getProfessionalWorkflowPage("accounting", "merge-document-packets"),
+  getProfessionalWorkflowPage("legal", "redact-for-gdpr"),
+  getProfessionalWorkflowPage("hr-recruitment", "sign-nda"),
+  getProfessionalWorkflowPage("accounting-finance", "merge-contracts"),
+  getProfessionalWorkflowPage("healthcare", "ocr-scanned-forms"),
+  getProfessionalWorkflowPage("government-compliance", "flatten-for-court"),
+  getProfessionalWorkflowPage("education-admin", "compress-for-email-secure"),
 ].filter((entry): entry is ProfessionalWorkflowPage => Boolean(entry)).map((entry) => ({
   description: entry.desc,
   path: entry.canonicalPath,

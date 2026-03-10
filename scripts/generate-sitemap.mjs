@@ -18,12 +18,14 @@ const __dirname = path.dirname(__filename)
 const ROOT_DIR = path.resolve(__dirname, "..")
 const PUBLIC_DIR = path.join(ROOT_DIR, "public")
 const targetSitemapPath = path.join(PUBLIC_DIR, "sitemap.xml")
+const targetSitemapChunkDir = path.join(PUBLIC_DIR, "sitemap")
 const SITE_URL = "https://www.plain.tools"
 
 function runTsx(code) {
   const output = execSync(`npx tsx -e ${JSON.stringify(code)}`, {
     cwd: ROOT_DIR,
     encoding: "utf8",
+    maxBuffer: 32 * 1024 * 1024,
     shell: true,
     stdio: ["ignore", "pipe", "inherit"],
   })
@@ -74,24 +76,30 @@ if (!fs.existsSync(PUBLIC_DIR)) {
   fs.mkdirSync(PUBLIC_DIR, { recursive: true })
 }
 
-const metadataIds = JSON.parse(
+const sitemapPayload = JSON.parse(
   runTsx(
-    "(async()=>{const mod=await import('./app/sitemap.ts'); const ids=await (mod.generateSitemaps?.() ?? [{ id: 0 }]); process.stdout.write(JSON.stringify(ids));})().catch((error)=>{console.error(error); process.exit(1)})"
+    "(async()=>{const mod=await import('./lib/sitemap-data.ts'); const entries=mod.buildSitemapEntries?.(new Date()) ?? []; const chunks=mod.buildSitemapChunks?.(new Date()) ?? [entries]; process.stdout.write(JSON.stringify({ entries, chunks: chunks.map((chunk, id) => ({ id, entries: chunk })) }));})().catch((error)=>{console.error(error); process.exit(1)})"
   )
 )
 
 const sitemapXml =
-  metadataIds.length <= 1
-    ? buildUrlSet(
-        JSON.parse(
-          runTsx(
-            "(async()=>{const mod=await import('./app/sitemap.ts'); const sitemapFn=typeof mod.default==='function' ? mod.default : mod.default?.default; if (typeof sitemapFn !== 'function') { throw new TypeError('Sitemap route default export is not callable'); } const entries=await sitemapFn({ id: 0 }); process.stdout.write(JSON.stringify(entries));})().catch((error)=>{console.error(error); process.exit(1)})"
-          )
-        )
-      )
-    : buildSitemapIndex(metadataIds)
+  sitemapPayload.chunks.length <= 1
+    ? buildUrlSet(sitemapPayload.entries)
+    : buildSitemapIndex(sitemapPayload.chunks.map(({ id }) => ({ id })))
 
 fs.writeFileSync(targetSitemapPath, sitemapXml, "utf8")
 
+if (sitemapPayload.chunks.length > 1) {
+  fs.mkdirSync(targetSitemapChunkDir, { recursive: true })
+  for (const chunk of sitemapPayload.chunks) {
+    const chunkPath = path.join(targetSitemapChunkDir, `${chunk.id}.xml`)
+    fs.writeFileSync(chunkPath, buildUrlSet(chunk.entries), "utf8")
+  }
+} else if (fs.existsSync(targetSitemapChunkDir)) {
+  for (const file of fs.readdirSync(targetSitemapChunkDir)) {
+    fs.rmSync(path.join(targetSitemapChunkDir, file), { force: true })
+  }
+}
+
 console.log(`[OK] Wrote ${targetSitemapPath}`)
-console.log(`[OK] Exported ${metadataIds.length} sitemap chunk(s) from app/sitemap.ts.`)
+console.log(`[OK] Exported ${sitemapPayload.chunks.length} sitemap chunk(s) from app/sitemap.ts.`)

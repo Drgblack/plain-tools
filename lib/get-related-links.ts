@@ -29,6 +29,7 @@ import {
   getStatusTrendingBundle,
   statusOutageHistoryPathForDomain,
   statusTrendingPathForCategory,
+  STATUS_TRENDING_SEGMENTS,
 } from "@/lib/status-extensions"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
@@ -524,12 +525,10 @@ function getStatusExtensionLinks(currentPath: string): RelatedLink[] {
         [
           { title: "All trending outage checks", href: "/status/trending" },
           { title: "Status checker", href: "/site-status" },
-          { title: "DNS lookup", href: "/dns-lookup" },
-          { title: "Ping test", href: "/ping-test" },
-          { title: "Trending social outages", href: statusTrendingPathForCategory("social") },
-          { title: "Trending cloud outages", href: statusTrendingPathForCategory("cloud") },
-          { title: "Trending gaming outages", href: statusTrendingPathForCategory("gaming") },
-          { title: "Trending finance outages", href: statusTrendingPathForCategory("finance") },
+          ...STATUS_TRENDING_SEGMENTS.map((entry) => ({
+            title: `Trending ${entry.label.toLowerCase()} outages`,
+            href: statusTrendingPathForCategory(entry.segment),
+          })),
         ],
         currentPath
       ).slice(0, 8)

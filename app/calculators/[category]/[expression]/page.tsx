@@ -30,9 +30,9 @@ function getPrebuildLimit() {
   const raw =
     process.env.CALCULATOR_FINANCIAL_PREBUILD_LIMIT ??
     process.env.FINANCIAL_CALCULATOR_PREBUILD_LIMIT
-  if (!raw) return 260
+  if (!raw) return 200
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 260
+  return Number.isFinite(value) && value > 0 ? value : 200
 }
 
 export function generateStaticParams() {
@@ -102,7 +102,7 @@ export default async function FinancialCalculatorPageRoute({ params }: PageProps
     notFound()
   }
 
-  if (expression !== page.expression) {
+  if (category !== page.category || expression !== page.expression) {
     permanentRedirect(page.canonicalPath)
   }
 

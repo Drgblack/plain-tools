@@ -35,13 +35,16 @@ export const revalidate = 300
 
 export default async function StatusTrendingPage() {
   const storage = getStatusObservabilityStorageInfo()
-  const [topChecks, socialChecks, cloudChecks, financeChecks, gamingChecks] = await Promise.all([
+  const [topChecks, ...segmentChecks] = await Promise.all([
     getStatusTrends({ limit: 100, segment: "all" }),
-    getStatusTrends({ limit: 12, segment: "social" }),
-    getStatusTrends({ limit: 12, segment: "cloud" }),
-    getStatusTrends({ limit: 12, segment: "finance" }),
-    getStatusTrends({ limit: 12, segment: "gaming" }),
+    ...STATUS_TRENDING_SEGMENTS.map((entry) =>
+      getStatusTrends({ limit: 12, segment: entry.segment })
+    ),
   ])
+  const segmentSections = STATUS_TRENDING_SEGMENTS.map((entry, index) => ({
+    ...entry,
+    entries: segmentChecks[index] ?? [],
+  }))
 
   const schema = combineJsonLd([
     buildWebPageSchema({
@@ -161,80 +164,26 @@ export default async function StatusTrendingPage() {
       </section>
 
       <section className="border-b border-border/60 px-4 py-10">
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
-          <section>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Trending social platform checks
-            </h2>
-            <ul className="mt-3 space-y-2">
-              {socialChecks.map((entry) => (
-                <li key={entry.domain}>
-                  <Link
-                    href={entry.href}
-                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
-                  >
-                    Check whether {entry.domain} is down
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Trending cloud platform checks
-            </h2>
-            <ul className="mt-3 space-y-2">
-              {cloudChecks.map((entry) => (
-                <li key={entry.domain}>
-                  <Link
-                    href={entry.href}
-                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
-                  >
-                    Check whether {entry.domain} is down
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      </section>
-
-      <section className="border-b border-border/60 px-4 py-10">
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
-          <section>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Trending finance platform checks
-            </h2>
-            <ul className="mt-3 space-y-2">
-              {financeChecks.map((entry) => (
-                <li key={entry.domain}>
-                  <Link
-                    href={entry.href}
-                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
-                  >
-                    Check whether {entry.domain} is down
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Trending gaming platform checks
-            </h2>
-            <ul className="mt-3 space-y-2">
-              {gamingChecks.map((entry) => (
-                <li key={entry.domain}>
-                  <Link
-                    href={entry.href}
-                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
-                  >
-                    Check whether {entry.domain} is down
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2 xl:grid-cols-3">
+          {segmentSections.map((entry) => (
+            <section key={entry.segment}>
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                Trending {entry.label.toLowerCase()} checks
+              </h2>
+              <ul className="mt-3 space-y-2">
+                {entry.entries.map((item) => (
+                  <li key={item.domain}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
+                    >
+                      Check whether {item.domain} is down
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
       </section>
 

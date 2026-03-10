@@ -77,6 +77,7 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       const futureValue = principal * (1 + annualRate / 100 / 12) ** (years * 12)
       return `Projected value: ${formatCurrency(futureValue)}`
     }
+    case "retirement-basic":
     case "retirement-savings-basic": {
       const monthlyContribution = readNumber(values.monthlyContribution ?? "")
       const annualRate = readNumber(values.annualRate ?? "")
@@ -229,6 +230,7 @@ function renderFields(
           </label>
         </>
       )
+    case "retirement-basic":
     case "retirement-savings-basic":
       return (
         <>

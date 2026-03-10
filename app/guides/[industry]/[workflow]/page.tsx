@@ -19,9 +19,9 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw = process.env.PRO_WORKFLOW_PREBUILD_LIMIT
-  if (!raw) return 140
+  if (!raw) return 300
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 140
+  return Number.isFinite(value) && value > 0 ? value : 300
 }
 
 export function generateStaticParams() {
