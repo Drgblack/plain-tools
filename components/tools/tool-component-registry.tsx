@@ -17,6 +17,7 @@ export const toolComponents: Record<string, RegisteredToolComponent> = {
   "json-formatter": lazy(() => import("@/components/tools/json-formatter-tool")),
   "local-signer": lazy(() => import("@/components/tools/local-signer-tool")),
   "merge-pdf": lazy(() => import("@/components/tools/merge-pdf-tool")),
+  "metadata-purge": lazy(() => import("@/components/tools/metadata-purge-tool")),
   "ocr-pdf": lazy(() => import("@/components/tools/ocr-pdf-tool")),
   "offline-ocr": lazy(() => import("@/components/tools/ocr-tool")),
   "pdf-qa": lazy(() => import("@/components/tools/qa-tool")),

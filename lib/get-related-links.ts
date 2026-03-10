@@ -1,4 +1,8 @@
 import {
+  getConverterModifierPage,
+  getRelatedConverterModifierLinks,
+} from "@/lib/converter-modifiers"
+import {
   getComparisonPage,
   getRelatedComparisonLinks,
 } from "@/lib/compare-matrix"
@@ -10,6 +14,10 @@ import {
   getPdfVariantPage,
   getRelatedPdfVariantPages,
 } from "@/lib/pdf-variants"
+import {
+  getProfessionalWorkflowPage,
+  getRelatedProfessionalWorkflowLinks,
+} from "@/lib/professional-workflows"
 import { getSiteStatusContext, normalizeSiteInput, statusPathFor } from "@/lib/site-status"
 import { STATUS_CATEGORY_META, STATUS_DOMAINS } from "@/lib/status-domains"
 import { getToolBySlug } from "@/lib/tools-catalogue"
@@ -264,6 +272,23 @@ function getDnsRelatedLinks(currentPath: string): RelatedLink[] {
 }
 
 function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
+  const modifierMatch = /^\/convert\/([^/]+)-to-([^/]+)\/([^/]+)$/.exec(normalisePath(currentPath))
+  if (modifierMatch) {
+    const [, from, to, modifier] = modifierMatch
+    const page = getConverterModifierPage(from, to, modifier)
+    if (page) {
+      return dedupeLinks(
+        [
+          ...getRelatedConverterModifierLinks(from, to, modifier),
+          { title: "Browse file converters", href: "/file-converters" },
+          { title: "Browse PDF tools", href: "/pdf-tools" },
+          { title: "Compare privacy-first alternatives", href: "/compare/plain-tools-vs-smallpdf" },
+        ],
+        currentPath
+      ).slice(0, 8)
+    }
+  }
+
   const match = /^\/convert\/([^/]+)-to-([^/]+)$/.exec(normalisePath(currentPath))
   if (!match) return []
 
@@ -298,6 +323,25 @@ function getCompareRelatedLinks(currentPath: string): RelatedLink[] {
       { title: "Browse PDF tools", href: "/pdf-tools" },
       { title: "Merge PDF locally", href: "/tools/merge-pdf" },
       { title: "Compress PDF locally", href: "/tools/compress-pdf" },
+    ],
+    currentPath
+  ).slice(0, 8)
+}
+
+function getProfessionalWorkflowLinks(currentPath: string): RelatedLink[] {
+  const match = /^\/guides\/([^/]+)\/([^/]+)$/.exec(normalisePath(currentPath))
+  if (!match) return []
+
+  const [, industry, workflow] = match
+  const page = getProfessionalWorkflowPage(industry, workflow)
+  if (!page) return []
+
+  return dedupeLinks(
+    [
+      ...getRelatedProfessionalWorkflowLinks(industry, workflow),
+      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Browse learn guides", href: "/learn" },
+      { title: "Compare privacy-first alternatives", href: page.siloLinks[2]?.href ?? "/compare" },
     ],
     currentPath
   ).slice(0, 8)
@@ -359,6 +403,11 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
     return compareLinks
   }
 
+  const professionalWorkflowLinks = getProfessionalWorkflowLinks(normalizedPath)
+  if (professionalWorkflowLinks.length >= 6) {
+    return professionalWorkflowLinks
+  }
+
   const dnsLinks = getDnsRelatedLinks(normalizedPath)
   if (dnsLinks.length >= 6) {
     return dnsLinks
@@ -383,6 +432,11 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
 
   if (normalizedPath.startsWith("/compare")) {
     return dedupeLinks([...compareLinks, ...GLOBAL_FALLBACK_LINKS], normalizedPath).slice(0, 8)
+  }
+
+  if (normalizedPath.startsWith("/guides")) {
+    return dedupeLinks([...professionalWorkflowLinks, ...GLOBAL_FALLBACK_LINKS], normalizedPath)
+      .slice(0, 8)
   }
 
   if (normalizedPath.includes("pdf")) {

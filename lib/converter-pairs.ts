@@ -44,6 +44,7 @@ export type ConverterPairPage = ConverterPair & {
   embed: ConverterEmbed
   faq: ConverterFaq[]
   featureList: string[]
+  fromFormat: ConverterFormat
   h1: string
   heroBadges: string[]
   howToSteps: ConverterStep[]
@@ -53,13 +54,15 @@ export type ConverterPairPage = ConverterPair & {
   proxyTool: ToolDefinition
   relatedLinks: Array<{ href: string; title: string }>
   sections: ConverterSection[]
+  slug: string
+  toFormat: ConverterFormat
   title: string
   wordCount: number
 }
 
-type ConverterFormatCategory = "document" | "image" | "pdf" | "text"
+export type ConverterFormatCategory = "document" | "image" | "pdf" | "text"
 
-type ConverterFormat = {
+export type ConverterFormat = {
   browserSupportNote?: string
   category: ConverterFormatCategory
   longLabel: string
@@ -373,6 +376,10 @@ const CONVERTER_PAIR_MAP = new Map(
   CONVERTER_PAIRS.map((pair) => [`${pair.from}->${pair.to}`, pair])
 )
 
+export function getConverterFormat(slug: string) {
+  return FORMATS[slug.toLowerCase()] ?? null
+}
+
 function buildEmbed(from: string, to: string): ConverterEmbed {
   if (from === "pdf") {
     if (["word", "docx"].includes(to)) return { kind: "tool", toolSlug: "pdf-to-word" }
@@ -522,6 +529,7 @@ export function getConverterPairPage(from: string, to: string): ConverterPairPag
   const fromFormat = FORMATS[pair.from]
   const toFormat = FORMATS[pair.to]
   const canonicalPath = `/convert/${pair.from}-to-${pair.to}`
+  const slug = `${pair.from}-to-${pair.to}`
   const embed = buildEmbed(pair.from, pair.to)
   const intro = buildProblemIntro(fromFormat, toFormat)
   const whyUsersNeedThis = buildWhyItMatters(fromFormat, toFormat)
@@ -562,6 +570,7 @@ export function getConverterPairPage(from: string, to: string): ConverterPairPag
       "No upload for the core conversion path",
       "Related links to adjacent converters, PDF tools, and comparison pages",
     ],
+    fromFormat,
     h1: `${fromFormat.seoLabel} to ${toFormat.seoLabel} Converter`,
     heroBadges: ["100% local", "no upload", "privacy-first", "browser-based"],
     howToSteps: steps,
@@ -581,6 +590,8 @@ export function getConverterPairPage(from: string, to: string): ConverterPairPag
       },
       ...sections,
     ],
+    slug,
+    toFormat,
     title: pair.title,
     wordCount,
   }

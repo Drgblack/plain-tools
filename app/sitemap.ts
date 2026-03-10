@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next"
 
+import { getConverterModifierSitemapPaths } from "@/lib/converter-modifiers"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { getConverterSitemapPaths } from "@/lib/converter-pairs"
@@ -9,6 +10,7 @@ import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
+import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
 import { expansionSitemapUrls } from "@/lib/seo/expansion-content"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
@@ -137,8 +139,14 @@ function buildAllEntries(now: Date) {
   const fileConverterPages = getConverterSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.8)
   )
+  const fileConverterModifierPages = getConverterModifierSitemapPaths().map((path) =>
+    toEntry(path, now, "daily", 0.79)
+  )
   const comparisonMatrixPages = getCompareMatrixSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.79)
+  )
+  const professionalWorkflowPages = getProfessionalWorkflowSitemapPaths().map((path) =>
+    toEntry(path, now, "monthly", 0.82)
   )
   const pdfComparisonPages = getPdfComparisonSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
@@ -201,7 +209,9 @@ function buildAllEntries(now: Date) {
     pdfToolVariantIndex,
     ...pdfToolVariantPages,
     ...fileConverterPages,
+    ...fileConverterModifierPages,
     ...comparisonMatrixPages,
+    ...professionalWorkflowPages,
     ...pdfComparisonPages,
     ...toolProblemPages,
     ...toolVariantPages,
