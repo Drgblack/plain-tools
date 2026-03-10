@@ -9,6 +9,7 @@ import { getStatusHistorySummary } from "@/lib/status-trending"
 import {
   getStatusOutageHistoryBundle,
   STATUS_OUTAGE_HISTORY_DOMAINS,
+  statusOutageHistoryPathForDomain,
 } from "@/lib/status-extensions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import { normalizeSiteInput } from "@/lib/site-status"
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: "The requested site is not valid for outage history.",
       googleNotranslate: true,
       image: "/og/default.png",
-      path: `/status/${encodeURIComponent(site)}/outage-history`,
+      path: `/status/${encodeURIComponent(site)}-outage-history`,
       title: "Invalid outage history route | Plain Tools",
     })
     return { ...invalid, robots: { follow: false, index: false } }
@@ -93,7 +94,10 @@ export default async function StatusOutageHistoryPage({ params }: Props) {
   }
 
   if (site !== normalized) {
-    permanentRedirect(`/status/${encodeURIComponent(normalized)}/outage-history`)
+    permanentRedirect(
+      statusOutageHistoryPathForDomain(normalized) ??
+        `/status/${encodeURIComponent(normalized)}-outage-history`
+    )
   }
 
   const page = getStatusOutageHistoryBundle(normalized)

@@ -3,6 +3,9 @@ import { getStatusTrends } from "@/lib/status-trending"
 import type { StatusTrendSegment } from "@/lib/status-domains"
 
 type TrendingStatusVariant =
+  | "cloud"
+  | "finance"
+  | "gaming"
   | "today"
   | "consumer"
   | "developer"
@@ -20,6 +23,9 @@ type TrendingStatusProps = {
 }
 
 const VARIANT_TO_SEGMENT: Record<TrendingStatusVariant, StatusTrendSegment> = {
+  cloud: "cloud",
+  finance: "finance",
+  gaming: "gaming",
   today: "all",
   consumer: "consumer",
   developer: "developer",
@@ -29,6 +35,9 @@ const VARIANT_TO_SEGMENT: Record<TrendingStatusVariant, StatusTrendSegment> = {
 }
 
 const VARIANT_TITLES: Record<TrendingStatusVariant, string> = {
+  cloud: "Trending cloud platform checks",
+  finance: "Trending finance platform checks",
+  gaming: "Trending gaming platform checks",
   today: "Trending checks today",
   consumer: "Most checked consumer websites",
   developer: "Popular developer service checks",

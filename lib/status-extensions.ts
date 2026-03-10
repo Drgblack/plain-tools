@@ -8,35 +8,48 @@ import type {
 } from "@/lib/programmatic-content"
 import { STATUS_DOMAIN_NAMES } from "@/lib/status-domains"
 import { normalizeSiteInput } from "@/lib/site-status"
+import {
+  getStatusTrendingCategoryEntry,
+  STATUS_TRENDING_CATEGORIES,
+  type StatusTrendingCategory,
+} from "@/lib/status-trending-config"
 import { getToolBySlug, type ToolDefinition } from "@/lib/tools-catalogue"
 
-export type StatusTrendingSegment = "consumer" | "developer" | "saas" | "social" | "streaming"
-
 export const STATUS_TRENDING_SEGMENTS: Array<{
+  description: string
   label: string
-  segment: StatusTrendingSegment
-}> = [
-  { label: "Social Platforms", segment: "social" },
-  { label: "Consumer Platforms", segment: "consumer" },
-  { label: "Cloud & SaaS Services", segment: "saas" },
-  { label: "Developer Platforms", segment: "developer" },
-  { label: "Streaming Services", segment: "streaming" },
-]
+  segment: StatusTrendingCategory
+}> = STATUS_TRENDING_CATEGORIES.map((entry) => ({
+  description: entry.description,
+  label: entry.label,
+  segment: entry.category,
+}))
 
-export const STATUS_OUTAGE_HISTORY_DOMAINS = STATUS_DOMAIN_NAMES.slice(0, 180)
+export const STATUS_OUTAGE_HISTORY_DOMAINS = STATUS_DOMAIN_NAMES
 
 export function normalizeStatusHistoryDomain(value: string) {
   return normalizeSiteInput(value)
 }
 
+export function statusTrendingPathForCategory(segment: StatusTrendingCategory) {
+  return `/status/trending-${segment}`
+}
+
+export function statusOutageHistoryPathForDomain(domain: string) {
+  const normalized = normalizeStatusHistoryDomain(domain)
+  if (!normalized) return null
+  return `/status/${encodeURIComponent(normalized)}-outage-history`
+}
+
 export function getStatusTrendingPaths() {
-  return STATUS_TRENDING_SEGMENTS.map((entry) => `/status/trending/${entry.segment}`)
+  return STATUS_TRENDING_SEGMENTS.map((entry) => statusTrendingPathForCategory(entry.segment))
 }
 
 export function getStatusOutageHistoryPaths() {
-  return STATUS_OUTAGE_HISTORY_DOMAINS.map(
-    (domain) => `/status/${encodeURIComponent(domain)}/outage-history`
-  )
+  return STATUS_OUTAGE_HISTORY_DOMAINS.flatMap((domain) => {
+    const path = statusOutageHistoryPathForDomain(domain)
+    return path ? [path] : []
+  })
 }
 
 export const STATUS_EXTENSION_METADATA_EXAMPLES = [
@@ -44,14 +57,14 @@ export const STATUS_EXTENSION_METADATA_EXAMPLES = [
     description: buildMetaDescription(
       "Trending social outage checks today on Plain Tools, with canonical status routes and adjacent DNS and IP diagnostics."
     ),
-    path: "/status/trending/social",
+    path: "/status/trending-social",
     title: "Trending Social Outages Today | Plain Tools",
   },
   {
     description: buildMetaDescription(
       "Outage history for chatgpt.com with aggregated checks, recent incident windows, and privacy-first network diagnostics on Plain Tools."
     ),
-    path: "/status/chatgpt.com/outage-history",
+    path: "/status/chatgpt.com-outage-history",
     title: "chatgpt.com Outage History – Incidents & Status Timeline | Plain Tools",
   },
 ]
@@ -111,11 +124,11 @@ function buildPageData(input: {
   } satisfies ProgrammaticPageData
 }
 
-export function getStatusTrendingBundle(segment: StatusTrendingSegment): StatusPageBundle | null {
-  const entry = STATUS_TRENDING_SEGMENTS.find((item) => item.segment === segment)
+export function getStatusTrendingBundle(segment: StatusTrendingCategory): StatusPageBundle | null {
+  const entry = getStatusTrendingCategoryEntry(segment)
   if (!entry) return null
 
-  const canonicalPath = `/status/trending/${segment}`
+  const canonicalPath = statusTrendingPathForCategory(segment)
   const title = `Trending ${entry.label} Outages Today | Plain Tools`
   const desc = buildMetaDescription(
     `See trending ${entry.label.toLowerCase()} outage checks today on Plain Tools, with canonical status pages and adjacent DNS, IP, and latency diagnostics.`
@@ -212,7 +225,8 @@ export function getStatusOutageHistoryBundle(domain: string): StatusPageBundle |
   const normalized = normalizeStatusHistoryDomain(domain)
   if (!normalized) return null
 
-  const canonicalPath = `/status/${encodeURIComponent(normalized)}/outage-history`
+  const canonicalPath = statusOutageHistoryPathForDomain(normalized)
+  if (!canonicalPath) return null
   const title = `${normalized} Outage History – Incidents & Status Timeline | Plain Tools`
   const desc = buildMetaDescription(
     `Review outage history for ${normalized}, including recent aggregated checks, timeline guidance, and follow-up DNS and network diagnostics on Plain Tools.`

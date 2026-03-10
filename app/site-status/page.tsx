@@ -16,6 +16,7 @@ import {
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { FIRST_WAVE_GUIDE_PAGES } from "@/lib/seo/first-wave-pages"
+import { statusTrendingPathForCategory } from "@/lib/status-extensions"
 
 import { SiteStatusClient } from "./client"
 
@@ -177,16 +178,16 @@ export default function SiteStatusPage() {
           <TrendingStatus title="Trending outages and checks" limit={10} />
           <div className="grid gap-4 lg:grid-cols-2">
             <TrendingStatus
-              title="Popular developer service checks"
-              variant="developer"
+              title="Trending social platform checks"
+              variant="social"
               limit={5}
               compact
               showDescription={false}
               showTopChecksLink={false}
             />
             <TrendingStatus
-              title="Popular social platform checks"
-              variant="social"
+              title="Trending cloud platform checks"
+              variant="cloud"
               limit={5}
               compact
               showDescription={false}
@@ -194,12 +195,26 @@ export default function SiteStatusPage() {
             />
           </div>
           <div>
-            <Link
-              href="/status/trending"
-              className="text-sm font-medium text-accent transition hover:underline"
-            >
-              View the full top checks page
-            </Link>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <Link
+                href="/status/trending"
+                className="font-medium text-accent transition hover:underline"
+              >
+                View the full top checks page
+              </Link>
+              <Link
+                href={statusTrendingPathForCategory("finance")}
+                className="font-medium text-accent transition hover:underline"
+              >
+                Finance outage trends
+              </Link>
+              <Link
+                href={statusTrendingPathForCategory("gaming")}
+                className="font-medium text-accent transition hover:underline"
+              >
+                Gaming outage trends
+              </Link>
+            </div>
           </div>
         </div>
       </section>

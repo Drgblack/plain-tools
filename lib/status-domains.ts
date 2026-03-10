@@ -941,6 +941,15 @@ export const STATUS_HIGH_DEMAND_SITES = [
 export const STATUS_DEVELOPER_DOMAINS = STATUS_DOMAINS_BY_CATEGORY["developer-tools"].map(
   (entry) => entry.domain
 )
+export const STATUS_CLOUD_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.cloud.map(
+  (entry) => entry.domain
+)
+export const STATUS_FINANCE_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.finance.map(
+  (entry) => entry.domain
+)
+export const STATUS_GAMING_DOMAINS = STATUS_DOMAINS_BY_CATEGORY.gaming.map(
+  (entry) => entry.domain
+)
 export const STATUS_SOCIAL_DOMAINS = Array.from(
   new Set([
     ...STATUS_DOMAINS_BY_CATEGORY.social.map((entry) => entry.domain),
@@ -956,7 +965,10 @@ export const STATUS_CONSUMER_DOMAINS = STATUS_DOMAIN_NAMES.slice(0, 160)
 export type StatusTrendSegment =
   | "all"
   | "consumer"
+  | "cloud"
   | "developer"
+  | "finance"
+  | "gaming"
   | "social"
   | "streaming"
   | "saas"
@@ -965,8 +977,11 @@ export const STATUS_TREND_SEGMENT_DOMAINS: Record<
   Exclude<StatusTrendSegment, "all">,
   string[]
 > = {
+  cloud: STATUS_CLOUD_DOMAINS,
   consumer: STATUS_CONSUMER_DOMAINS,
   developer: STATUS_DEVELOPER_DOMAINS,
+  finance: STATUS_FINANCE_DOMAINS,
+  gaming: STATUS_GAMING_DOMAINS,
   social: STATUS_SOCIAL_DOMAINS,
   streaming: STATUS_STREAMING_DOMAINS,
   saas: STATUS_SAAS_DOMAINS,

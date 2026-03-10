@@ -1,15 +1,15 @@
 import { MetadataRoute } from "next"
 
-import { getConverterModifierSitemapPaths } from "@/lib/converter-modifiers"
+import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-families"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
-import { getCalculatorPaths } from "@/lib/calculator-combos"
-import { getConverterSitemapPaths } from "@/lib/converter-pairs"
+import { getCalculatorPaths } from "@/lib/calculator-financial"
+import { getExtendedConverterSitemapPaths } from "@/lib/converter-families"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
-import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
+import { getExtendedPdfVariantSitemapPaths } from "@/lib/pdf-actions-extended"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows"
@@ -37,8 +37,48 @@ import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 const BASE_URL = "https://www.plain.tools"
 const SITEMAP_CHUNK_SIZE = 5000
 const firstWavePriorityPathSet = new Set(FIRST_WAVE_PRIORITY_PATHS)
+const POPULAR_MATRIX_SIGNAL_GROUPS = [
+  ["primary", "ks2"],
+  ["english", "maths"],
+  ["behaviour", "low-attainment"],
+] as const
+const LONGTAIL_REVIEW_LOG_LIMIT = 25
+let longtailReviewLogged = false
+
+type LongtailSource = "expansion" | "mdx" | "tranche" | "workflow"
+
+type LongtailCandidate = {
+  path: string
+  source: LongtailSource
+}
+
+export const LONGTAIL_SITEMAP_CRITERIA = {
+  maxSlugDepth: 4,
+  maxTailTokenCount: 9,
+  minEstimatedWordCount: 900,
+  minUniqueExamples: 4,
+  popularMatrixSignals: POPULAR_MATRIX_SIGNAL_GROUPS,
+  sourceDefaults: {
+    expansion: { estimatedWordCount: 1100, uniqueExamples: 4 },
+    mdx: { estimatedWordCount: 1150, uniqueExamples: 4 },
+    tranche: { estimatedWordCount: 1200, uniqueExamples: 5 },
+    workflow: { estimatedWordCount: 1050, uniqueExamples: 5 },
+  },
+} as const
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
+
+type LongtailDecision = {
+  depth: number
+  estimatedWordCount: number
+  include: boolean
+  isDeepTailCombo: boolean
+  matchesPopularMatrixCell: boolean
+  path: string
+  source: LongtailSource
+  tokenCount: number
+  uniqueExamples: number
+}
 
 function normalizeCanonicalUrl(url: string) {
   const parsed = new URL(url)
@@ -86,6 +126,111 @@ function chunk<T>(items: T[], size: number) {
     chunks.push(items.slice(index, index + size))
   }
   return chunks
+}
+
+function pathDepth(path: string) {
+  return path.split("/").filter(Boolean).length
+}
+
+function slugTokens(path: string) {
+  return path
+    .split("/")
+    .filter(Boolean)
+    .at(-1)
+    ?.split("-")
+    .filter(Boolean) ?? []
+}
+
+function matchesPopularMatrixCell(path: string) {
+  const lowered = path.toLowerCase()
+  return LONGTAIL_SITEMAP_CRITERIA.popularMatrixSignals.every((group) =>
+    group.some((signal) => lowered.includes(signal))
+  )
+}
+
+function estimateUniqueExamples(path: string, source: LongtailSource) {
+  const defaults = LONGTAIL_SITEMAP_CRITERIA.sourceDefaults[source].uniqueExamples
+  const lowered = path.toLowerCase()
+  const bonuses = [
+    lowered.includes("/learn/workflows/") ? 1 : 0,
+    lowered.startsWith("/compare/") ? 1 : 0,
+    lowered.includes("/glossary/") ? 0 : 1,
+  ].reduce((sum, value) => sum + value, 0)
+
+  return defaults + bonuses
+}
+
+function estimateWordCount(path: string, source: LongtailSource) {
+  const defaults = LONGTAIL_SITEMAP_CRITERIA.sourceDefaults[source].estimatedWordCount
+  const tokens = slugTokens(path)
+  const lowered = path.toLowerCase()
+  const bonuses = [
+    tokens.length >= 5 ? 80 : 0,
+    lowered.includes("/learn/workflows/") ? 120 : 0,
+    lowered.startsWith("/compare/") ? 90 : 0,
+    lowered.includes("no-upload") || lowered.includes("offline") ? 40 : 0,
+  ].reduce((sum, value) => sum + value, 0)
+
+  return defaults + bonuses
+}
+
+function getLongtailDecision(candidate: LongtailCandidate): LongtailDecision {
+  const depth = pathDepth(candidate.path)
+  const tokenCount = slugTokens(candidate.path).length
+  const estimatedWordCount = estimateWordCount(candidate.path, candidate.source)
+  const uniqueExamples = estimateUniqueExamples(candidate.path, candidate.source)
+  const matchesPopular = matchesPopularMatrixCell(candidate.path)
+  const isDeepTailCombo =
+    depth >= LONGTAIL_SITEMAP_CRITERIA.maxSlugDepth + 1 &&
+    tokenCount > LONGTAIL_SITEMAP_CRITERIA.maxTailTokenCount &&
+    !matchesPopular
+
+  const include =
+    estimatedWordCount >= LONGTAIL_SITEMAP_CRITERIA.minEstimatedWordCount &&
+    uniqueExamples >= LONGTAIL_SITEMAP_CRITERIA.minUniqueExamples &&
+    !isDeepTailCombo &&
+    (depth <= LONGTAIL_SITEMAP_CRITERIA.maxSlugDepth || matchesPopular)
+
+  return {
+    depth,
+    estimatedWordCount,
+    include,
+    isDeepTailCombo,
+    matchesPopularMatrixCell: matchesPopular,
+    path: candidate.path,
+    source: candidate.source,
+    tokenCount,
+    uniqueExamples,
+  }
+}
+
+function filterLongtailSitemapUrls(candidates: LongtailCandidate[]) {
+  const decisions = candidates.map(getLongtailDecision)
+  const included = decisions.filter((entry) => entry.include).map((entry) => entry.path)
+  const excluded = decisions.filter((entry) => !entry.include)
+
+  if (!longtailReviewLogged) {
+    longtailReviewLogged = true
+    console.error(
+      `[sitemap] longtail filter included ${included.length}/${candidates.length} URLs using current quality criteria.`
+    )
+
+    if (excluded.length > 0) {
+      console.error("[sitemap] excluded longtail URLs for review:")
+      for (const entry of excluded.slice(0, LONGTAIL_REVIEW_LOG_LIMIT)) {
+        console.error(
+          `- ${entry.path} [source=${entry.source}, depth=${entry.depth}, words=${entry.estimatedWordCount}, examples=${entry.uniqueExamples}, tokens=${entry.tokenCount}, popular=${entry.matchesPopularMatrixCell}]`
+        )
+      }
+      if (excluded.length > LONGTAIL_REVIEW_LOG_LIMIT) {
+        console.error(
+          `- ... ${excluded.length - LONGTAIL_REVIEW_LOG_LIMIT} more excluded URLs omitted from log`
+        )
+      }
+    }
+  }
+
+  return included
 }
 
 function buildAllEntries(now: Date) {
@@ -139,13 +284,13 @@ function buildAllEntries(now: Date) {
     toEntry(pdfIntentPathFor(page.slug), now, "monthly", 0.82)
   )
   const pdfToolVariantIndex = toEntry("/pdf-tools/variants", now, "monthly", 0.8)
-  const pdfToolVariantPages = getPdfVariantSitemapPaths().map((path) =>
+  const pdfToolVariantPages = getExtendedPdfVariantSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
   )
-  const fileConverterPages = getConverterSitemapPaths().map((path) =>
+  const fileConverterPages = getExtendedConverterSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.8)
   )
-  const fileConverterModifierPages = getConverterModifierSitemapPaths().map((path) =>
+  const fileConverterModifierPages = getExtendedConverterModifierSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
   )
   const calculatorPages = getCalculatorPaths().map((path) =>
@@ -209,12 +354,15 @@ function buildAllEntries(now: Date) {
         : 0.75
     )
   )
-  const tranchePages = [
-    ...trancheSitemapUrls,
-    ...expansionSitemapUrls,
-    ...workflowSitemapUrls,
-    ...seoMdxSitemapUrls,
-  ].map((path) => toEntry(path, now, "monthly", path.startsWith("/compare/") ? 0.75 : 0.8))
+  const filteredLongtailPaths = filterLongtailSitemapUrls([
+    ...trancheSitemapUrls.map((path) => ({ path, source: "tranche" as const })),
+    ...expansionSitemapUrls.map((path) => ({ path, source: "expansion" as const })),
+    ...workflowSitemapUrls.map((path) => ({ path, source: "workflow" as const })),
+    ...seoMdxSitemapUrls.map((path) => ({ path, source: "mdx" as const })),
+  ])
+  const tranchePages = filteredLongtailPaths.map((path) =>
+    toEntry(path, now, "monthly", path.startsWith("/compare/") ? 0.75 : 0.8)
+  )
 
   const entries = [
     homepage,

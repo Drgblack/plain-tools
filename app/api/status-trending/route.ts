@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
   const limit = Number.parseInt(rawLimit ?? "10", 10)
   const allowedSegments: StatusTrendSegment[] = [
     "all",
+    "cloud",
     "consumer",
     "developer",
+    "finance",
+    "gaming",
     "social",
     "streaming",
     "saas",

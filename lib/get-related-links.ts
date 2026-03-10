@@ -1,29 +1,34 @@
 import {
-  getConverterModifierPage,
-  getRelatedConverterModifierLinks,
-} from "@/lib/converter-modifiers"
+  getExtendedConverterModifierPage,
+  getExtendedRelatedConverterModifierLinks,
+} from "@/lib/converter-families"
 import {
   getComparisonPage,
   getRelatedComparisonLinks,
 } from "@/lib/compare-matrix"
 import {
-  getConverterPairPage,
-  getRelatedConverterLinks,
-} from "@/lib/converter-pairs"
+  getExtendedConverterPairPage,
+  getExtendedRelatedConverterLinks,
+} from "@/lib/converter-families"
 import {
-  getPdfVariantPage,
-  getRelatedPdfVariantPages,
-} from "@/lib/pdf-variants"
+  getExtendedPdfVariantPage,
+  getExtendedRelatedPdfVariantPages,
+} from "@/lib/pdf-actions-extended"
 import {
   getProfessionalWorkflowPage,
   getRelatedProfessionalWorkflowLinks,
 } from "@/lib/professional-workflows"
-import { getPercentageCalculatorPage } from "@/lib/calculator-combos"
+import {
+  getCalculatorPage,
+  isCalculatorCategory,
+} from "@/lib/calculator-financial"
 import { getSiteStatusContext, normalizeSiteInput, statusPathFor } from "@/lib/site-status"
 import { STATUS_CATEGORY_META, STATUS_DOMAINS } from "@/lib/status-domains"
 import {
   getStatusOutageHistoryBundle,
   getStatusTrendingBundle,
+  statusOutageHistoryPathForDomain,
+  statusTrendingPathForCategory,
 } from "@/lib/status-extensions"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
@@ -182,7 +187,9 @@ function getStatusRelatedLinks(currentPath: string): RelatedLink[] {
       },
       {
         title: `${site} outage history`,
-        href: `/status/${encodeURIComponent(site)}/outage-history`,
+        href:
+          statusOutageHistoryPathForDomain(site) ??
+          `/status/${encodeURIComponent(site)}-outage-history`,
       },
       {
         title: `Run a fresh status check for ${site}`,
@@ -212,29 +219,20 @@ function getPdfVariantRelatedLinks(currentPath: string): RelatedLink[] {
   if (!match) return []
 
   const [, action, variant] = match
-  const page = getPdfVariantPage(action, variant)
+  const page = getExtendedPdfVariantPage(action, variant)
   if (!page) return []
 
   const tool = getToolBySlug(page.toolSlug)
-  const siblingVariants = getRelatedPdfVariantPages(action, page.modifierSlug, 4).map(
-    (entry) => ({
-      title: entry.h1,
-      href: entry.pdfPath,
+  const siblingVariants = getExtendedRelatedPdfVariantPages(action, variant, 4)
+    .flatMap((entry) => {
+      const href =
+        "canonicalPath" in entry
+          ? entry.canonicalPath
+          : "pdfPath" in entry
+            ? entry.pdfPath
+            : undefined
+      return href ? [{ title: entry.h1, href }] : []
     })
-  )
-  const relatedTools = page.relatedToolSlugs.slice(0, 3).flatMap((slug) => {
-    const relatedTool = getToolBySlug(slug)
-    if (!relatedTool) return []
-
-    return {
-      title: relatedTool.name,
-      href: `/tools/${relatedTool.slug}`,
-    }
-  })
-  const relatedGuides = page.relatedGuidePaths.slice(0, 2).map((path) => ({
-    title: formatPathTitle(path),
-    href: path,
-  }))
 
   return dedupeLinks(
     [
@@ -245,8 +243,8 @@ function getPdfVariantRelatedLinks(currentPath: string): RelatedLink[] {
       { title: "Browse PDF tools", href: "/pdf-tools" },
       { title: "Browse PDF variants", href: "/pdf-tools/variants" },
       ...siblingVariants,
-      ...relatedTools,
-      ...relatedGuides,
+      { title: "Privacy-first PDF comparisons", href: "/compare/plain-tools-vs-smallpdf" },
+      { title: "Professional PDF guides", href: "/guides/legal/compress-shared-pdfs" },
     ],
     currentPath
   ).slice(0, 8)
@@ -306,11 +304,11 @@ function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
   const modifierMatch = /^\/convert\/([^/]+)-to-([^/]+)\/([^/]+)$/.exec(normalisePath(currentPath))
   if (modifierMatch) {
     const [, from, to, modifier] = modifierMatch
-    const page = getConverterModifierPage(from, to, modifier)
+    const page = getExtendedConverterModifierPage(from, to, modifier)
     if (page) {
       return dedupeLinks(
         [
-          ...getRelatedConverterModifierLinks(from, to, modifier),
+          ...getExtendedRelatedConverterModifierLinks(from, to, modifier),
           { title: "Browse file converters", href: "/file-converters" },
           { title: "Browse PDF tools", href: "/pdf-tools" },
           { title: "Compare privacy-first alternatives", href: "/compare/plain-tools-vs-smallpdf" },
@@ -324,12 +322,12 @@ function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
   if (!match) return []
 
   const [, from, to] = match
-  const page = getConverterPairPage(from, to)
+  const page = getExtendedConverterPairPage(from, to)
   if (!page) return []
 
   return dedupeLinks(
     [
-      ...getRelatedConverterLinks(from, to),
+      ...getExtendedRelatedConverterLinks(from, to),
       { title: "Browse file converters", href: "/file-converters" },
       { title: "Browse PDF tools", href: "/pdf-tools" },
       { title: "Convert PDF tool", href: "/tools/convert-pdf" },
@@ -495,23 +493,19 @@ function getNetworkOpsRelatedLinks(currentPath: string): RelatedLink[] {
 }
 
 function getCalculatorRelatedLinks(currentPath: string): RelatedLink[] {
-  const match = /^\/calculators\/percentage\/([^/]+)$/.exec(normalisePath(currentPath))
+  const match = /^\/calculators\/([^/]+)\/([^/]+)$/.exec(normalisePath(currentPath))
   if (!match) return []
 
-  const page = getPercentageCalculatorPage(decodeURIComponent(match[1] ?? ""))
-  if (!page) return []
+  const category = decodeURIComponent(match[1] ?? "")
+  const expression = decodeURIComponent(match[2] ?? "")
+  if (!isCalculatorCategory(category)) return []
 
-  const percentMatch = /what-is-([0-9.]+)-percent-of-([0-9.]+)/.exec(page.expression)
-  if (!percentMatch) return CALCULATOR_FALLBACK_LINKS.slice(0, 8)
-  const percent = Number.parseFloat(percentMatch[1] ?? "0")
-  const base = Number.parseFloat(percentMatch[2] ?? "0")
+  const page = getCalculatorPage(category, expression)
+  if (!page) return []
 
   return dedupeLinks(
     [
-      { title: `${Math.max(1, percent - 5)}% of ${base}`, href: `/calculators/percentage/what-is-${Math.max(1, percent - 5)}-percent-of-${base}` },
-      { title: `${percent + 5}% of ${base}`, href: `/calculators/percentage/what-is-${percent + 5}-percent-of-${base}` },
-      { title: `${percent}% of ${Math.max(10, base - 50)}`, href: `/calculators/percentage/what-is-${percent}-percent-of-${Math.max(10, base - 50)}` },
-      { title: `${percent}% of ${base + 50}`, href: `/calculators/percentage/what-is-${percent}-percent-of-${base + 50}` },
+      ...page.relatedLinks,
       { title: "Professional PDF guides", href: "/guides/legal/compress-shared-pdfs" },
       { title: "Privacy-first comparisons", href: "/compare/plain-tools-vs-smallpdf" },
       { title: "File converters", href: "/file-converters" },
@@ -522,7 +516,7 @@ function getCalculatorRelatedLinks(currentPath: string): RelatedLink[] {
 }
 
 function getStatusExtensionLinks(currentPath: string): RelatedLink[] {
-  const trendingMatch = /^\/status\/trending\/([^/]+)$/.exec(normalisePath(currentPath))
+  const trendingMatch = /^\/status\/trending-([^/]+)$/.exec(normalisePath(currentPath))
   if (trendingMatch) {
     const page = getStatusTrendingBundle(decodeURIComponent(trendingMatch[1] ?? ""))
     if (page) {
@@ -532,17 +526,17 @@ function getStatusExtensionLinks(currentPath: string): RelatedLink[] {
           { title: "Status checker", href: "/site-status" },
           { title: "DNS lookup", href: "/dns-lookup" },
           { title: "Ping test", href: "/ping-test" },
-          { title: "Trending social outages", href: "/status/trending/social" },
-          { title: "Trending developer outages", href: "/status/trending/developer" },
-          { title: "Trending cloud and SaaS outages", href: "/status/trending/saas" },
-          { title: "Trending streaming outages", href: "/status/trending/streaming" },
+          { title: "Trending social outages", href: statusTrendingPathForCategory("social") },
+          { title: "Trending cloud outages", href: statusTrendingPathForCategory("cloud") },
+          { title: "Trending gaming outages", href: statusTrendingPathForCategory("gaming") },
+          { title: "Trending finance outages", href: statusTrendingPathForCategory("finance") },
         ],
         currentPath
       ).slice(0, 8)
     }
   }
 
-  const historyMatch = /^\/status\/([^/]+)\/outage-history$/.exec(normalisePath(currentPath))
+  const historyMatch = /^\/status\/([^/]+)-outage-history$/.exec(normalisePath(currentPath))
   if (historyMatch) {
     const domain = decodeURIComponent(historyMatch[1] ?? "")
     const page = getStatusOutageHistoryBundle(domain)

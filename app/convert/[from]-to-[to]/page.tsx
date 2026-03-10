@@ -5,9 +5,9 @@ import { ProgrammaticLayout } from "@/components/ProgrammaticLayout"
 import { FileConverterToolEmbed } from "@/components/seo/file-converter-tool-embed"
 import {
   type ConverterRouteParams,
-  generateAllConverterParams,
-  getConverterPairPage,
-} from "@/lib/converter-pairs"
+  generateAllExtendedConverterParams,
+  getExtendedConverterPairPage,
+} from "@/lib/converter-families"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 type PageProps = {
@@ -25,12 +25,12 @@ function getPrebuildLimit() {
 }
 
 export function generateStaticParams() {
-  return generateAllConverterParams(getPrebuildLimit())
+  return generateAllExtendedConverterParams(getPrebuildLimit())
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { from, to } = await params
-  const page = getConverterPairPage(from, to)
+  const page = getExtendedConverterPairPage(from, to)
 
   if (!page) {
     return buildPageMetadata({
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ConverterPairPageRoute({ params }: PageProps) {
   const { from, to } = await params
-  const pair = getConverterPairPage(from, to)
+  const pair = getExtendedConverterPairPage(from, to)
 
   if (!pair) {
     notFound()

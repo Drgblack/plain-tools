@@ -3,14 +3,18 @@ import Link from "next/link"
 
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
-import {
-  outageHistoryPathForSlug,
-  OUTAGE_HISTORY_PAGES,
-} from "@/lib/outage-history-pages"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import { STATUS_TRENDING_SEGMENTS } from "@/lib/status-extensions"
+import {
+  statusOutageHistoryPathForDomain,
+  statusTrendingPathForCategory,
+  STATUS_TRENDING_SEGMENTS,
+} from "@/lib/status-extensions"
 import { getStatusObservabilityStorageInfo, getStatusTrends } from "@/lib/status-trending"
-import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
+import {
+  STATUS_CATEGORIES,
+  STATUS_CATEGORY_META,
+  STATUS_HIGH_DEMAND_SITES,
+} from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import {
   buildBreadcrumbList,
@@ -31,10 +35,12 @@ export const revalidate = 300
 
 export default async function StatusTrendingPage() {
   const storage = getStatusObservabilityStorageInfo()
-  const [topChecks, developerChecks, socialChecks] = await Promise.all([
+  const [topChecks, socialChecks, cloudChecks, financeChecks, gamingChecks] = await Promise.all([
     getStatusTrends({ limit: 100, segment: "all" }),
-    getStatusTrends({ limit: 12, segment: "developer" }),
     getStatusTrends({ limit: 12, segment: "social" }),
+    getStatusTrends({ limit: 12, segment: "cloud" }),
+    getStatusTrends({ limit: 12, segment: "finance" }),
+    getStatusTrends({ limit: 12, segment: "gaming" }),
   ])
 
   const schema = combineJsonLd([
@@ -158,10 +164,10 @@ export default async function StatusTrendingPage() {
         <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
           <section>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Popular developer service checks
+              Trending social platform checks
             </h2>
             <ul className="mt-3 space-y-2">
-              {developerChecks.map((entry) => (
+              {socialChecks.map((entry) => (
                 <li key={entry.domain}>
                   <Link
                     href={entry.href}
@@ -175,10 +181,49 @@ export default async function StatusTrendingPage() {
           </section>
           <section>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Popular social platform checks
+              Trending cloud platform checks
             </h2>
             <ul className="mt-3 space-y-2">
-              {socialChecks.map((entry) => (
+              {cloudChecks.map((entry) => (
+                <li key={entry.domain}>
+                  <Link
+                    href={entry.href}
+                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
+                  >
+                    Check whether {entry.domain} is down
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
+          <section>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
+              Trending finance platform checks
+            </h2>
+            <ul className="mt-3 space-y-2">
+              {financeChecks.map((entry) => (
+                <li key={entry.domain}>
+                  <Link
+                    href={entry.href}
+                    className="text-sm text-muted-foreground transition hover:text-accent hover:underline"
+                  >
+                    Check whether {entry.domain} is down
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
+              Trending gaming platform checks
+            </h2>
+            <ul className="mt-3 space-y-2">
+              {gamingChecks.map((entry) => (
                 <li key={entry.domain}>
                   <Link
                     href={entry.href}
@@ -202,7 +247,7 @@ export default async function StatusTrendingPage() {
             {STATUS_TRENDING_SEGMENTS.map((entry) => (
               <Link
                 key={entry.segment}
-                href={`/status/trending/${entry.segment}`}
+                href={statusTrendingPathForCategory(entry.segment)}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
               >
                 {entry.label}
@@ -214,20 +259,23 @@ export default async function StatusTrendingPage() {
 
       <section className="border-b border-border/60 px-4 py-8">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Recent outage history
-          </h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {OUTAGE_HISTORY_PAGES.map((entry) => (
-              <Link
-                key={entry.slug}
-                href={outageHistoryPathForSlug(entry.slug)}
-                className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
-              >
-                {entry.name} outage history
-              </Link>
-            ))}
-          </div>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              Recent outage history
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {STATUS_HIGH_DEMAND_SITES.slice(0, 12).map((site) => (
+                <Link
+                  key={site}
+                  href={
+                    statusOutageHistoryPathForDomain(site) ??
+                    `/status/${encodeURIComponent(site)}-outage-history`
+                  }
+                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+                >
+                  {site} outage history
+                </Link>
+              ))}
+            </div>
         </div>
       </section>
 

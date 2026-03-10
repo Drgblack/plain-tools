@@ -6,9 +6,11 @@ import { CalculatorSummary } from "@/components/seo/calculator-summary"
 import { FinancialCalculatorEmbed } from "@/components/seo/financial-calculator-embed"
 import { buildPageMetadata, buildCanonicalUrl } from "@/lib/page-metadata"
 import {
+  type CalculatorRouteParams,
   CALCULATOR_FINANCIAL_METADATA_EXAMPLES,
-  generateCategoryCalculatorParams,
+  generateNonPercentageCalculatorParams,
   getCalculatorPage,
+  isCalculatorCategory,
 } from "@/lib/calculator-financial"
 import {
   buildArticleSchema,
@@ -17,8 +19,8 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 
-type Props = {
-  params: Promise<{ expression: string }>
+type PageProps = {
+  params: Promise<CalculatorRouteParams>
 }
 
 export const revalidate = 86400
@@ -26,30 +28,44 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw =
-    process.env.CALCULATOR_PERCENTAGE_PREBUILD_LIMIT ??
-    process.env.CALCULATOR_PREBUILD_LIMIT
+    process.env.CALCULATOR_FINANCIAL_PREBUILD_LIMIT ??
+    process.env.FINANCIAL_CALCULATOR_PREBUILD_LIMIT
   if (!raw) return 260
   const value = Number.parseInt(raw, 10)
   return Number.isFinite(value) && value > 0 ? value : 260
 }
 
 export function generateStaticParams() {
-  return generateCategoryCalculatorParams("percentage", getPrebuildLimit()).map(
-    ({ expression }) => ({ expression })
-  )
+  return generateNonPercentageCalculatorParams(getPrebuildLimit())
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { expression } = await params
-  const page = getCalculatorPage("percentage", expression)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { category, expression } = await params
+
+  if (!isCalculatorCategory(category)) {
+    const invalid = buildPageMetadata({
+      description: "The requested calculator category is not available.",
+      googleNotranslate: true,
+      image: "/og/default.png",
+      path: `/calculators/${encodeURIComponent(category)}/${encodeURIComponent(expression)}`,
+      title: "Invalid calculator category | Plain Tools",
+    })
+
+    return {
+      ...invalid,
+      robots: { follow: false, index: false },
+    }
+  }
+
+  const page = getCalculatorPage(category, expression)
 
   if (!page) {
     const invalid = buildPageMetadata({
-      description: "The requested percentage calculator expression is not valid.",
+      description: "The requested calculator expression is not valid.",
       googleNotranslate: true,
       image: "/og/default.png",
-      path: `/calculators/percentage/${encodeURIComponent(expression)}`,
-      title: "Invalid percentage calculator expression | Plain Tools",
+      path: `/calculators/${category}/${encodeURIComponent(expression)}`,
+      title: "Invalid calculator expression | Plain Tools",
     })
 
     return {
@@ -73,9 +89,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function PercentageCalculatorPageRoute({ params }: Props) {
-  const { expression } = await params
-  const page = getCalculatorPage("percentage", expression)
+export default async function FinancialCalculatorPageRoute({ params }: PageProps) {
+  const { category, expression } = await params
+
+  if (!isCalculatorCategory(category)) {
+    notFound()
+  }
+
+  const page = getCalculatorPage(category, expression)
 
   if (!page) {
     notFound()
@@ -98,14 +119,14 @@ export default async function PercentageCalculatorPageRoute({ params }: Props) {
       heroBadges={page.heroBadges}
       liveTool={
         <FinancialCalculatorEmbed
-          category="percentage"
+          category={page.category}
           initialValues={page.initialValues}
         />
       }
       liveToolDescription={page.liveToolDescription}
-      liveToolTitle="Try another percentage"
+      liveToolTitle="Try another calculator scenario"
       page={page.page}
-      relatedSectionTitle={`Related percentage checks near ${page.h1.toLowerCase()}`}
+      relatedSectionTitle={`Related ${page.category.replace(/-/g, " ")} calculator pages`}
       schema={combineJsonLd([
         buildWebPageSchema({
           description: page.description,
@@ -118,7 +139,7 @@ export default async function PercentageCalculatorPageRoute({ params }: Props) {
           url: buildCanonicalUrl(page.canonicalPath),
         }),
         buildHowToSchema(
-          "How to use the percentage calculator",
+          `How to use the ${page.category.replace(/-/g, " ")} calculator`,
           page.description,
           page.page.howToSteps
         ),

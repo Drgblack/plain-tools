@@ -5,16 +5,17 @@ import { notFound } from "next/navigation"
 import { ProgrammaticLayout } from "@/components/ProgrammaticLayout"
 import { StatusLookupForm } from "@/components/seo/status-lookup-form"
 import { getStatusTrends } from "@/lib/status-trending"
+import { type StatusTrendingCategory } from "@/lib/status-trending-config"
 import {
   getStatusTrendingBundle,
   STATUS_TRENDING_SEGMENTS,
-  type StatusTrendingSegment,
+  statusTrendingPathForCategory,
 } from "@/lib/status-extensions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import { buildWebPageSchema } from "@/lib/structured-data"
 
 type Props = {
-  params: Promise<{ segment: StatusTrendingSegment }>
+  params: Promise<{ segment: StatusTrendingCategory }>
 }
 
 export const revalidate = 300
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: "The requested trending segment does not exist.",
       googleNotranslate: true,
       image: "/og/default.png",
-      path: `/status/trending/${encodeURIComponent(segment)}`,
+      path: statusTrendingPathForCategory(segment),
       title: "Trending status segment unavailable | Plain Tools",
     })
     return { ...invalid, robots: { follow: false, index: false } }

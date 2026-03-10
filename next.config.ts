@@ -261,6 +261,16 @@ const nextConfig: NextConfig = {
         destination: "/:service-outage-history",
         permanent: true,
       },
+      {
+        source: "/status/trending/:segment(social|cloud|gaming|finance)",
+        destination: "/status/trending-:segment",
+        permanent: true,
+      },
+      {
+        source: "/status/:site([^/]+)/outage-history",
+        destination: "/status/:site-outage-history",
+        permanent: true,
+      },
       // Canonical comparison route migration.
       {
         source: "/compare/plain-vs-adobe-acrobat",
@@ -558,6 +568,14 @@ const nextConfig: NextConfig = {
       {
         source: "/is-:site-down",
         destination: "/is/:site",
+      },
+      {
+        source: "/status/trending-:segment(social|cloud|gaming|finance)",
+        destination: "/status/trending/:segment",
+      },
+      {
+        source: "/status/:site([^/]+)-outage-history",
+        destination: "/status/:site/outage-history",
       },
       {
         source: "/:service(chatgpt|discord|youtube|reddit|github|netflix|spotify|stripe|slack|openai)-outage-history",

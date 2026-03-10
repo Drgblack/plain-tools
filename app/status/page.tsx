@@ -5,10 +5,6 @@ import { AdLayout } from "@/components/ads/ad-layout"
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
-import {
-  outageHistoryPathForSlug,
-  OUTAGE_HISTORY_PAGES,
-} from "@/lib/outage-history-pages"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import {
@@ -16,10 +12,16 @@ import {
   STATUS_CATEGORY_META,
   STATUS_DOMAIN_COUNT,
   STATUS_DOMAINS_BY_CATEGORY,
+  STATUS_HIGH_DEMAND_SITES,
   STATUS_POPULAR_DOMAINS,
   STATUS_PRIMARY_CATEGORIES,
 } from "@/lib/status-domains"
 import { statusPathFor } from "@/lib/site-status"
+import {
+  statusOutageHistoryPathForDomain,
+  statusTrendingPathForCategory,
+  STATUS_TRENDING_SEGMENTS,
+} from "@/lib/status-extensions"
 import {
   buildBreadcrumbList,
   buildItemListSchema,
@@ -109,6 +111,17 @@ export default function StatusDirectoryPage() {
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl">
           <TrendingStatus title="Trending checks today" limit={10} />
+          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+            {STATUS_TRENDING_SEGMENTS.map((entry) => (
+              <Link
+                key={entry.segment}
+                href={statusTrendingPathForCategory(entry.segment)}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                {entry.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -181,16 +194,19 @@ export default function StatusDirectoryPage() {
         <div className="mx-auto max-w-6xl">
           <h2 className="text-lg font-semibold text-foreground">Recent outage history</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Curated outage timeline pages built from aggregated status history only.
+            Flat outage-history pages built from aggregated status history only.
           </p>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {OUTAGE_HISTORY_PAGES.map((entry) => (
-              <li key={entry.slug}>
+            {STATUS_HIGH_DEMAND_SITES.slice(0, 12).map((site) => (
+              <li key={site}>
                 <Link
-                  href={outageHistoryPathForSlug(entry.slug)}
+                  href={
+                    statusOutageHistoryPathForDomain(site) ??
+                    `/status/${encodeURIComponent(site)}-outage-history`
+                  }
                   className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                 >
-                  {entry.name} outage history
+                  {site} outage history
                 </Link>
               </li>
             ))}

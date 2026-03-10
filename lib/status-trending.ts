@@ -8,6 +8,13 @@ import {
   type StatusTrendSegment,
 } from "@/lib/status-domains"
 import { normalizeSiteInput, statusPathFor } from "@/lib/site-status"
+export {
+  getStatusTrendingCategoryEntry,
+  getStatusTrendingPopularSites,
+  isStatusTrendingCategory,
+  STATUS_TRENDING_CATEGORIES,
+  type StatusTrendingCategory,
+} from "@/lib/status-trending-config"
 
 export type TrendingCheck = {
   domain: string

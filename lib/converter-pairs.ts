@@ -60,7 +60,16 @@ export type ConverterPairPage = ConverterPair & {
   wordCount: number
 }
 
-export type ConverterFormatCategory = "document" | "image" | "pdf" | "text"
+export type ConverterFormatCategory =
+  | "archive"
+  | "audio"
+  | "document"
+  | "ebook"
+  | "image"
+  | "pdf"
+  | "subtitle"
+  | "text"
+  | "video"
 
 export type ConverterFormat = {
   browserSupportNote?: string

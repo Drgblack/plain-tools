@@ -10,10 +10,10 @@ import {
   type RegisteredToolComponent,
 } from "@/components/tools/tool-component-registry"
 import {
-  buildPdfVariantProgrammaticBundle,
-  generatePdfVariantStaticParams,
+  buildExtendedPdfVariantProgrammaticBundle,
+  generateExtendedPdfVariantStaticParams,
   type PdfVariantRouteParams,
-} from "@/lib/pdf-variants"
+} from "@/lib/pdf-actions-extended"
 
 type PageProps = {
   params: Promise<PdfVariantRouteParams>
@@ -30,12 +30,12 @@ export function generateStaticParams() {
   const requestedLimit = Number.parseInt(process.env.PDF_VARIANT_PREBUILD_LIMIT ?? "", 10)
   const limit = Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : undefined
 
-  return generatePdfVariantStaticParams({ limit })
+  return generateExtendedPdfVariantStaticParams({ limit })
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { action, variant } = await resolveParams(params)
-  const bundle = buildPdfVariantProgrammaticBundle(action, variant)
+  const bundle = buildExtendedPdfVariantProgrammaticBundle(action, variant)
 
   if (!bundle) {
     return {
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PdfToolVariantRoute({ params }: PageProps) {
   const { action, variant } = await resolveParams(params)
-  const bundle = buildPdfVariantProgrammaticBundle(action, variant)
+  const bundle = buildExtendedPdfVariantProgrammaticBundle(action, variant)
 
   if (!bundle) {
     notFound()
@@ -69,6 +69,8 @@ export default async function PdfToolVariantRoute({ params }: PageProps) {
         { label: bundle.page.tool.name, href: `/tools/${bundle.page.tool.slug}` },
         { label: bundle.seoPage.h1 },
       ]}
+      featureList={bundle.featureList}
+      heroBadges={bundle.heroBadges}
       page={bundle.page}
       relatedSectionTitle="You might also need"
       schema={bundle.schema}

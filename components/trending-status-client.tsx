@@ -14,7 +14,16 @@ type TrendItem = {
 type TrendingStatusClientProps = {
   title: string
   limit: number
-  segment: "all" | "consumer" | "developer" | "social" | "streaming" | "saas"
+  segment:
+    | "all"
+    | "cloud"
+    | "consumer"
+    | "developer"
+    | "finance"
+    | "gaming"
+    | "social"
+    | "streaming"
+    | "saas"
   initialItems: TrendItem[]
   compact?: boolean
   showDescription?: boolean
