@@ -31,6 +31,12 @@ import {
   statusTrendingPathForCategory,
   STATUS_TRENDING_SEGMENTS,
 } from "@/lib/status-extensions"
+import {
+  getStatusIspBundle,
+  getStatusRegionBundle,
+  parseStatusIspFlatSlug,
+  parseStatusRegionFlatSlug,
+} from "@/lib/status-regions"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
 export type RelatedLink = {
@@ -161,7 +167,48 @@ function getStatusRelatedLinks(currentPath: string): RelatedLink[] {
   const match = /^\/status\/([^/]+)$/.exec(normalisePath(currentPath))
   if (!match) return []
 
-  const site = normalizeSiteInput(decodeURIComponent(match[1] ?? ""))
+  const raw = decodeURIComponent(match[1] ?? "")
+  const regionVariant = parseStatusRegionFlatSlug(raw)
+  if (regionVariant) {
+    const page = getStatusRegionBundle(regionVariant.site, regionVariant.country)
+    if (!page) return []
+
+    return dedupeLinks(
+      [
+        { title: `Status for ${regionVariant.site}`, href: `/status/${encodeURIComponent(regionVariant.site)}` },
+        { title: `${regionVariant.site} outage history`, href: `/status/${encodeURIComponent(regionVariant.site)}-outage-history` },
+        { title: "Trending outage checks", href: "/status/trending" },
+        { title: "Status checker", href: "/site-status" },
+        { title: "Ping test", href: "/ping-test" },
+        { title: "DNS lookup", href: `/dns/${encodeURIComponent(regionVariant.site)}` },
+        { title: "What is my IP", href: "/what-is-my-ip" },
+        { title: "Network tools", href: "/network-tools" },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  const ispVariant = parseStatusIspFlatSlug(raw)
+  if (ispVariant) {
+    const page = getStatusIspBundle(ispVariant.isp, ispVariant.country)
+    if (!page) return []
+
+    return dedupeLinks(
+      [
+        { title: "Run another live status check", href: "/site-status" },
+        { title: "Trending outage checks", href: "/status/trending" },
+        { title: "DNS lookup", href: "/dns-lookup" },
+        { title: "Ping test", href: "/ping-test" },
+        { title: "What is my IP", href: "/what-is-my-ip" },
+        { title: "Status directory", href: "/status" },
+        { title: "Network tools", href: "/network-tools" },
+        { title: "AI outage checks", href: statusTrendingPathForCategory("ai-tools") },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  const site = normalizeSiteInput(raw)
   if (!site) return []
 
   const category = STATUS_DOMAINS.find((entry) => entry.domain === site)?.category
@@ -550,6 +597,26 @@ function getStatusExtensionLinks(currentPath: string): RelatedLink[] {
           { title: "What is my IP", href: "/what-is-my-ip" },
           { title: "Network tools", href: "/network-tools" },
           { title: "Status directory", href: "/status" },
+        ],
+        currentPath
+      ).slice(0, 8)
+    }
+  }
+
+  const regionMatch = /^\/status\/(.+)-([a-z0-9-]+)$/.exec(normalisePath(currentPath))
+  if (regionMatch) {
+    const parsed = parseStatusRegionFlatSlug(decodeURIComponent(regionMatch[1] + "-" + regionMatch[2]))
+    if (parsed) {
+      return dedupeLinks(
+        [
+          { title: `Status for ${parsed.site}`, href: `/status/${encodeURIComponent(parsed.site)}` },
+          { title: `${parsed.site} outage history`, href: `/status/${encodeURIComponent(parsed.site)}-outage-history` },
+          { title: "Trending outage checks", href: "/status/trending" },
+          { title: "DNS lookup", href: `/dns/${encodeURIComponent(parsed.site)}` },
+          { title: "Ping test", href: "/ping-test" },
+          { title: "What is my IP", href: "/what-is-my-ip" },
+          { title: "Status directory", href: "/status" },
+          { title: "Network tools", href: "/network-tools" },
         ],
         currentPath
       ).slice(0, 8)

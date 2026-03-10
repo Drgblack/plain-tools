@@ -8,7 +8,7 @@ import {
   type ProfessionalWorkflowRouteParams,
   generateAllProfessionalWorkflowParams,
   getProfessionalWorkflowPage,
-} from "@/lib/professional-workflows-more"
+} from "@/lib/professional-workflows-expanded"
 
 type PageProps = {
   params: Promise<ProfessionalWorkflowRouteParams>

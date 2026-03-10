@@ -290,34 +290,113 @@ const STATUS_HOSTS = [
   "status.auth0.com",
 ] as const
 
+const GLOBAL_MARKET_TLDS = [
+  "com",
+  "co.uk",
+  "de",
+  "fr",
+  "it",
+  "es",
+  "nl",
+  "se",
+  "pl",
+  "com.au",
+  "ca",
+  "com.mx",
+  "in",
+  "co.jp",
+  "sg",
+  "ae",
+  "sa",
+  "com.br",
+  "com.tr",
+  "ie",
+] as const
+
+const LOCALIZED_SEARCH_AND_MARKETPLACE_DOMAINS = uniqueDomains(
+  GLOBAL_MARKET_TLDS.map((tld) => `google.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `amazon.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `ebay.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `bing.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `ikea.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `zara.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `hm.${tld}`),
+  GLOBAL_MARKET_TLDS.map((tld) => `booking.${tld}`)
+)
+
+const SERVICE_SUBDOMAIN_ROOTS = [
+  "openai.com",
+  "anthropic.com",
+  "notion.so",
+  "figma.com",
+  "shopify.com",
+  "stripe.com",
+  "slack.com",
+  "zoom.us",
+  "supabase.com",
+  "vercel.com",
+  "cloudflare.com",
+  "github.com",
+  "gitlab.com",
+  "atlassian.com",
+  "datadoghq.com",
+  "newrelic.com",
+  "auth0.com",
+  "okta.com",
+  "intercom.com",
+  "zendesk.com",
+] as const
+
+const SERVICE_SUBDOMAIN_PREFIXES = [
+  "app",
+  "status",
+  "support",
+  "help",
+  "docs",
+  "console",
+  "portal",
+] as const
+
+const PLATFORM_SERVICE_HOSTS = uniqueDomains(
+  SERVICE_SUBDOMAIN_ROOTS.flatMap((root) =>
+    SERVICE_SUBDOMAIN_PREFIXES.map((prefix) => `${prefix}.${root}`)
+  )
+)
+
 const TRENDING_CATEGORY_SEEDS: TrendingCategorySeed[] = [
   { category: "social", label: "Social Platforms", description: "High-churn consumer social networks and messaging apps where outage spikes create same-day traffic.", popularSites: pickSites([...STATUS_SOCIAL_DOMAINS]) },
+  { category: "social-media", label: "Social Media", description: "Social-media platforms where login, posting, and feed issues create high same-day search demand.", popularSites: pickSites(["facebook.com", "instagram.com", "x.com", "threads.net", "tiktok.com", "snapchat.com", "reddit.com", "linkedin.com", "pinterest.com"]) },
   { category: "social-messaging", label: "Messaging Apps", description: "Messaging apps and chat networks where send failures and reconnect loops create urgent checks.", popularSites: pickSites(["whatsapp.com", "messenger.com", "telegram.org", "signal.org", "viber.com", "line.me", "kakao.com", "discord.com", "slack.com", "teams.microsoft.com", "zoom.us", "wechat.com"]) },
   { category: "social-creators", label: "Creator Platforms", description: "Short-form video and creator platforms where upload, comments, and live-stream outages spike rapidly.", popularSites: pickSites(["tiktok.com", "instagram.com", "youtube.com", "twitch.tv", "kick.com", "patreon.com", "substack.com", "medium.com", "x.com", "threads.net"]) },
   { category: "social-communities", label: "Community Platforms", description: "Forums, communities, and discussion products where login and posting failures trigger repeat search demand.", popularSites: pickSites(["reddit.com", "discord.com", "quora.com", "tumblr.com", "mastodon.social", "blueskyweb.xyz", "fandom.com", "stackoverflow.com"]) },
   { category: "social-enterprise", label: "Work Messaging", description: "Enterprise messaging and workplace collaboration systems with both team and operations search intent.", popularSites: pickSites(["slack.com", "teams.microsoft.com", "zoom.us", "webex.com", "discord.com", "meet.google.com", "skype.com"]) },
   { category: "cloud", label: "Cloud Platforms", description: "Cloud and hosting providers where downtime carries strong developer and business urgency.", popularSites: pickSites([...STATUS_CLOUD_DOMAINS]) },
+  { category: "cloud-infra", label: "Cloud Infrastructure", description: "Infrastructure, edge, and deployment platforms where availability issues immediately affect shipping and operations.", popularSites: pickSites(["aws.amazon.com", "cloud.google.com", "azure.com", "cloudflare.com", "vercel.com", "netlify.com", "render.com", "fly.io", "railway.app", "digitalocean.com"]) },
   { category: "cloud-hosting", label: "Hosting & Deploy", description: "Hosting, deploy, and edge platforms where build and deployment outages create developer spike traffic.", popularSites: pickSites(["vercel.com", "netlify.com", "render.com", "fly.io", "railway.app", "heroku.com", "digitalocean.com", "linode.com", "cloudflare.com"]) },
   { category: "cloud-data", label: "Cloud Databases", description: "Managed database and backend services with incident-driven B2B demand.", popularSites: pickSites(["supabase.com", "neon.tech", "planetscale.com", "mongodb.com", "firebase.google.com", "console.cloud.google.com", "aws.amazon.com"]) },
   { category: "cloud-monitoring", label: "Observability", description: "Monitoring and incident-response tools where failures have direct operational urgency.", popularSites: pickSites(["datadoghq.com", "newrelic.com", "grafana.com", "sentry.io", "splunk.com", "pagerduty.com", "statuspage.io"]) },
   { category: "cloud-devops", label: "DevOps Platforms", description: "CI, orchestration, and automation products used in release and infrastructure workflows.", popularSites: pickSites(["github.com", "gitlab.com", "circleci.com", "travis-ci.com", "jenkins.io", "docker.com", "kubernetes.io", "terraform.io"]) },
   { category: "streaming", label: "Streaming Platforms", description: "Video, music, and creator platforms with playback and login outage demand.", popularSites: pickSites([...STATUS_STREAMING_DOMAINS]) },
+  { category: "streaming-services", label: "Streaming Services", description: "Consumer streaming services where playback, login, and billing issues create immediate volume spikes.", popularSites: pickSites(["netflix.com", "primevideo.com", "disneyplus.com", "hulu.com", "max.com", "spotify.com", "youtube.com", "twitch.tv"]) },
   { category: "streaming-video", label: "Video Streaming", description: "Subscription video services where playback and authentication errors spike quickly.", popularSites: pickSites(["netflix.com", "primevideo.com", "disneyplus.com", "hulu.com", "max.com", "paramountplus.com", "peacocktv.com", "fubo.tv", "sling.com"]) },
   { category: "streaming-music", label: "Music Streaming", description: "Music services where playback, library sync, and billing issues drive repeat checks.", popularSites: pickSites(["spotify.com", "music.apple.com", "soundcloud.com", "deezer.com", "pandora.com", "tidal.com", "bandcamp.com"]) },
   { category: "creator-streaming", label: "Creator Streaming", description: "Live creator and upload platforms where stream health and chat failures dominate search intent.", popularSites: pickSites(["youtube.com", "twitch.tv", "kick.com", "vimeo.com", "dailymotion.com", "obsproject.com"]) },
   { category: "sports-streaming", label: "Sports Streaming", description: "Live sports broadcasters and ticket-linked streaming products with time-sensitive outage demand.", popularSites: pickSites(["espn.com", "dazn.com", "fubo.tv", "peacocktv.com", "foxsports.com", "nbcsports.com"]) },
   { category: "finance", label: "Finance Platforms", description: "Payments, banking, and trading services where downtime has unusually strong urgency and RPM.", popularSites: pickSites([...STATUS_FINANCE_DOMAINS]) },
+  { category: "finance-banking", label: "Banking Platforms", description: "Retail banking and card services where outages block logins, payments, and transfers simultaneously.", popularSites: pickSites(["chase.com", "bankofamerica.com", "wellsfargo.com", "capitalone.com", "americanexpress.com", "visa.com", "mastercard.com", "discover.com"]) },
   { category: "payments", label: "Payments & Checkout", description: "Checkout, wallet, and merchant payment tools where downtime has direct transaction impact.", popularSites: pickSites(["stripe.com", "paypal.com", "squareup.com", "adyen.com", "checkout.com", "klarna.com", "affirm.com", "afterpay.com", "zip.co"]) },
   { category: "banking", label: "Banking & Cards", description: "Retail banking, cards, and money-movement products where login or payments failures drive high-intent checks.", popularSites: pickSites(["chase.com", "bankofamerica.com", "wellsfargo.com", "capitalone.com", "americanexpress.com", "visa.com", "mastercard.com", "discover.com", "cash.app", "venmo.com"]) },
   { category: "trading", label: "Trading & Brokerages", description: "Brokerage and investing platforms with high urgency during market hours.", popularSites: pickSites(["robinhood.com", "etrade.com", "fidelity.com", "schwab.com", "vanguard.com", "coinbase.com", "binance.com", "kraken.com", "gemini.com", "tradingview.com"]) },
   { category: "neobanks", label: "Neobanks", description: "App-first banking and card services where outages affect budgeting, cards, and transfers at once.", popularSites: pickSites(["revolut.com", "monzo.com", "starlingbank.com", "n26.com", "wise.com", "cash.app", "zellepay.com"]) },
   { category: "gaming", label: "Gaming Platforms", description: "Gaming platforms, launchers, and online services with repeatable spike demand during outages.", popularSites: pickSites([...STATUS_GAMING_DOMAINS]) },
+  { category: "gaming-servers", label: "Gaming Servers", description: "Game service and server surfaces where login, matchmaking, or live-service outages are the main user concern.", popularSites: pickSites(["roblox.com", "fortnite.com", "leagueoflegends.com", "valorant.com", "battle.net", "minecraft.net", "epicgames.com", "playstation.com"]) },
   { category: "pc-gaming", label: "PC Gaming", description: "PC gaming platforms, launchers, and publisher services with login and matchmaking incident traffic.", popularSites: pickSites(["store.steampowered.com", "steamcommunity.com", "epicgames.com", "battle.net", "ea.com", "ubisoft.com", "gog.com", "riotgames.com"]) },
   { category: "console-gaming", label: "Console Gaming", description: "Console networks, stores, and platform services where outages interrupt sessions and purchases.", popularSites: pickSites(["playstation.com", "xbox.com", "nintendo.com", "store.playstation.com", "support.xbox.com", "accounts.nintendo.com"]) },
   { category: "mobile-gaming", label: "Mobile Gaming", description: "Mobile-heavy gaming apps and publishers where login and purchase errors create long-tail demand.", popularSites: pickSites(["roblox.com", "supercell.com", "nianticlabs.com", "riotgames.com", "king.com", "scopely.com"]) },
   { category: "game-stores", label: "Game Stores", description: "Game stores and account services where checkout, patching, and downloads fail in visible ways.", popularSites: pickSites(["store.steampowered.com", "epicgames.com", "gog.com", "humblebundle.com", "itch.io", "battle.net"]) },
   { category: "esports", label: "Esports & Competitive", description: "Competitive gaming networks where queue, ladder, and tournament outages drive rapid search demand.", popularSites: pickSites(["leagueoflegends.com", "valorant.com", "faceit.com", "hltv.org", "esl.com"]) },
   { category: "ecommerce", label: "Ecommerce Platforms", description: "Retail, ordering, and marketplace services where outages hit both buyers and merchants.", popularSites: pickSites([...STATUS_ECOMMERCE_DOMAINS]) },
+  { category: "ecommerce-platforms", label: "Ecommerce Platforms", description: "Marketplace and commerce platforms where merchant and checkout failures generate immediate search demand.", popularSites: pickSites(["shopify.com", "amazon.com", "ebay.com", "etsy.com", "walmart.com", "target.com", "bestbuy.com", "costco.com"]) },
   { category: "marketplaces", label: "Marketplaces", description: "General marketplaces where listing, checkout, and delivery issues carry broad search demand.", popularSites: pickSites(["amazon.com", "ebay.com", "etsy.com", "mercadolibre.com", "aliexpress.com", "temu.com", "rakuten.com"]) },
   { category: "retail", label: "Retailers", description: "Large retailers where purchase, account, and order-tracking incidents drive consumer urgency.", popularSites: pickSites(["walmart.com", "target.com", "costco.com", "bestbuy.com", "homedepot.com", "lowes.com", "ikea.com", "wayfair.com"]) },
   { category: "fashion-retail", label: "Fashion Retail", description: "Apparel and fashion commerce brands with high mobile traffic and checkout sensitivity.", popularSites: pickSites(["zara.com", "hm.com", "asos.com", "uniqlo.com", "nike.com", "adidas.com", "shein.com"]) },
@@ -330,10 +409,12 @@ const TRENDING_CATEGORY_SEEDS: TrendingCategorySeed[] = [
   { category: "ai-media", label: "AI Media Tools", description: "Generative media services where rendering, upload, or output failures create fresh long-tail searches.", popularSites: pickSites(["midjourney.com", "runwayml.com", "suno.com", "elevenlabs.io", "stability.ai", "replicate.com", "descript.com"]) },
   { category: "ai-enterprise", label: "Enterprise AI Platforms", description: "AI APIs and enterprise adoption platforms with stronger B2B incident intent.", popularSites: pickSites(["platform.openai.com", "console.anthropic.com", "cohere.com", "mistral.ai", "groq.com", "huggingface.co"]) },
   { category: "developer", label: "Developer Tools", description: "Developer tools and registries where downtime disrupts build and release workflows.", popularSites: pickSites([...DEVELOPER_SERVICE_DOMAINS]) },
+  { category: "developer-platforms", label: "Developer Platforms", description: "Developer platforms where outages block code hosting, package installs, deploys, or build pipelines.", popularSites: pickSites(["github.com", "gitlab.com", "npmjs.com", "pypi.org", "docker.com", "vercel.com", "netlify.com", "supabase.com"]) },
   { category: "dev-repositories", label: "Code Repositories", description: "Hosted code platforms and artifact sources with mission-critical workflow impact.", popularSites: pickSites(["github.com", "gitlab.com", "bitbucket.org", "gist.github.com", "raw.githubusercontent.com"]) },
   { category: "dev-registries", label: "Package Registries", description: "Package registries and runtime ecosystems where outages break install and deployment steps.", popularSites: pickSites(["npmjs.com", "pypi.org", "rubygems.org", "packagist.org", "crates.io", "maven.org"]) },
   { category: "dev-observability", label: "Developer Observability", description: "Monitoring and logging products with strong operational urgency when degraded.", popularSites: pickSites(["datadoghq.com", "newrelic.com", "sentry.io", "grafana.com", "splunk.com", "appdynamics.com"]) },
   { category: "productivity", label: "Productivity Apps", description: "Productivity and collaboration tools where users search during sudden workflow interruptions.", popularSites: pickSites([...PRODUCTIVITY_DOMAINS]) },
+  { category: "collaboration-apps", label: "Collaboration Apps", description: "Review, chat, and project apps used heavily in day-to-day team workflows.", popularSites: pickSites(["slack.com", "teams.microsoft.com", "zoom.us", "notion.so", "figma.com", "miro.com", "airtable.com", "asana.com"]) },
   { category: "design-tools", label: "Design Tools", description: "Design, prototyping, and asset tools with strong creative-team reliance.", popularSites: pickSites(["figma.com", "canva.com", "framer.com", "webflow.com", "miro.com", "invisionapp.com", "sketch.com", "zeplin.io"]) },
   { category: "collaboration", label: "Collaboration Platforms", description: "Cross-functional collaboration tools used in reviews, planning, and work handoffs.", popularSites: pickSites(["notion.so", "slack.com", "teams.microsoft.com", "zoom.us", "meet.google.com", "airtable.com", "coda.io", "miro.com"]) },
   { category: "project-management", label: "Project Management", description: "Project and task platforms where service issues block execution for whole teams.", popularSites: pickSites(["asana.com", "clickup.com", "monday.com", "trello.com", "linear.app", "jira.com"]) },
@@ -365,7 +446,9 @@ const EXTENDED_DOMAIN_SEEDS = uniqueDomains(
   SECURITY_DOMAINS,
   GOVERNMENT_AND_HEALTH_DOMAINS,
   TRAVEL_AND_DELIVERY_DOMAINS,
-  STATUS_HOSTS
+  STATUS_HOSTS,
+  LOCALIZED_SEARCH_AND_MARKETPLACE_DOMAINS,
+  PLATFORM_SERVICE_HOSTS
 )
 
 export const EXTENDED_STATUS_TRENDING_CATEGORIES = TRENDING_CATEGORY_SEEDS.map((entry) => ({

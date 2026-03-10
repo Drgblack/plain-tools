@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next"
 
-import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-specialized"
+import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-specialized-ext"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
-import { getCalculatorPaths } from "@/lib/calculator-financial-ext"
-import { getExtendedConverterSitemapPaths } from "@/lib/converter-specialized"
+import { getCalculatorPaths } from "@/lib/calculator-financial-deep"
+import { getExtendedConverterSitemapPaths } from "@/lib/converter-specialized-ext"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
@@ -12,7 +12,7 @@ import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { getExtendedPdfVariantSitemapPaths } from "@/lib/pdf-actions-extended"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
-import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows-more"
+import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows-expanded"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
 import { expansionSitemapUrls } from "@/lib/seo/expansion-content"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
@@ -24,6 +24,7 @@ import {
   getStatusOutageHistoryPaths,
   getStatusTrendingPaths,
 } from "@/lib/status-extensions"
+import { getStatusIspPaths, getStatusRegionPaths } from "@/lib/status-regions"
 import {
   STATUS_CATEGORIES,
   STATUS_HIGH_DEMAND_SITES,
@@ -326,6 +327,12 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const statusTrendingPages = getStatusTrendingPaths().map((path) =>
     toEntry(path, now, "daily", 0.77)
   )
+  const statusRegionPages = getStatusRegionPaths().map((path) =>
+    toEntry(path, now, "daily", 0.63)
+  )
+  const statusIspPages = getStatusIspPaths().map((path) =>
+    toEntry(path, now, "daily", 0.61)
+  )
   const statusExtensionHistoryPages = getStatusOutageHistoryPaths().map((path) =>
     toEntry(path, now, "daily", 0.76)
   )
@@ -387,6 +394,8 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...networkOpsPages,
     ...statusCategoryPages,
     ...statusTrendingPages,
+    ...statusRegionPages,
+    ...statusIspPages,
     ...statusQueryPages,
     ...outageHistoryPages,
     ...statusExtensionHistoryPages,

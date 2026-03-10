@@ -9,7 +9,7 @@ import {
   CALCULATOR_FINANCIAL_METADATA_EXAMPLES,
   generateCategoryCalculatorParams,
   getCalculatorPage,
-} from "@/lib/calculator-financial-ext"
+} from "@/lib/calculator-financial-deep"
 import {
   buildArticleSchema,
   buildHowToSchema,

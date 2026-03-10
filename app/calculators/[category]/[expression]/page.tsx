@@ -11,7 +11,7 @@ import {
   generateNonPercentageCalculatorParams,
   getCalculatorPage,
   isCalculatorCategory,
-} from "@/lib/calculator-financial-ext"
+} from "@/lib/calculator-financial-deep"
 import {
   buildArticleSchema,
   buildHowToSchema,

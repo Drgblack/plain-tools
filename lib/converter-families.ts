@@ -28,6 +28,7 @@ type FamilyFormat = ConverterFormat & {
 
 type ModifierSeed = {
   desc: string
+  families?: Array<FamilyFormat["family"]>
   headline: string
   keyword: string
   review: string
@@ -57,7 +58,7 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "image", slug: "heif", seoLabel: "HEIF", longLabel: "HEIF image", problem: "HEIF is efficient on mobile devices, but many browser and desktop workflows still expect JPG or PNG.", category: "image" },
   { family: "image", slug: "tiff", seoLabel: "TIFF", longLabel: "TIFF image", problem: "TIFF fits archive and print workflows, but it is too heavy for quick sharing or upload-first systems.", category: "image" },
   { family: "image", slug: "bmp", seoLabel: "BMP", longLabel: "BMP image", problem: "BMP persists in older systems, but the files are large and awkward to deliver or preview.", category: "image" },
-  { family: "image", slug: "gif", seoLabel: "GIF", longLabel: "GIF image", problem: "GIF survives in simple motion and graphics workflows, but it is not ideal for modern quality or file-size targets.", category: "image" },
+  { family: "video", slug: "gif", seoLabel: "GIF", longLabel: "GIF loop video", problem: "GIF works for short loops and previews, but it is not efficient for longer or higher-fidelity video handoffs.", category: "video" },
   { family: "image", slug: "svg", seoLabel: "SVG", longLabel: "SVG image", problem: "SVG is excellent for vectors, but many portals and office tools still want raster image formats instead.", category: "image" },
   { family: "image", slug: "ico", seoLabel: "ICO", longLabel: "ICO icon image", problem: "ICO still matters for app and site icon work, but teams often need a cleaner source format for editing or delivery.", category: "image" },
   { family: "audio", slug: "mp3", seoLabel: "MP3", longLabel: "MP3 audio", problem: "MP3 is portable, but some edit or archive workflows still require a different audio container.", category: "audio" },
@@ -69,6 +70,8 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "audio", slug: "aiff", seoLabel: "AIFF", longLabel: "AIFF audio", problem: "AIFF is familiar in Mac-first audio workflows, but the files are large and not ideal for routine sharing.", category: "audio" },
   { family: "audio", slug: "wma", seoLabel: "WMA", longLabel: "WMA audio", problem: "WMA still appears in older Windows libraries, but compatibility is weak outside that ecosystem.", category: "audio" },
   { family: "audio", slug: "opus", seoLabel: "OPUS", longLabel: "OPUS audio", problem: "OPUS is efficient for modern audio delivery, but many archive and editor workflows still expect MP3 or WAV.", category: "audio" },
+  { family: "audio", slug: "amr", seoLabel: "AMR", longLabel: "AMR audio", problem: "AMR survives in mobile voice-note workflows, but recipients often need MP3 or WAV for broader playback.", category: "audio" },
+  { family: "audio", slug: "alac", seoLabel: "ALAC", longLabel: "ALAC audio", problem: "ALAC preserves quality in Apple-heavy libraries, but many teams still want FLAC, WAV, or MP3 for the next step.", category: "audio" },
   { family: "video", slug: "mp4", seoLabel: "MP4", longLabel: "MP4 video", problem: "MP4 is common, but source files still need reshaping for older players or browser workflows.", category: "video" },
   { family: "video", slug: "mov", seoLabel: "MOV", longLabel: "MOV video", problem: "MOV works well on Apple devices, but cross-platform compatibility is weaker than MP4.", category: "video" },
   { family: "video", slug: "webm", seoLabel: "WEBM", longLabel: "WEBM video", problem: "WEBM is browser-friendly, but some teams still need MP4 or MOV outputs for sharing.", category: "video" },
@@ -77,6 +80,7 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "video", slug: "m4v", seoLabel: "M4V", longLabel: "M4V video", problem: "M4V appears in Apple-heavy libraries, but wider delivery targets still lean toward MP4 or MOV.", category: "video" },
   { family: "video", slug: "wmv", seoLabel: "WMV", longLabel: "WMV video", problem: "WMV remains in older Windows archives, but it is not friendly to current browser or device workflows.", category: "video" },
   { family: "video", slug: "flv", seoLabel: "FLV", longLabel: "FLV video", problem: "FLV survives in legacy video archives, but current players and uploaders generally prefer MP4 or WEBM.", category: "video" },
+  { family: "video", slug: "mpeg", seoLabel: "MPEG", longLabel: "MPEG video", problem: "MPEG still appears in older delivery pipelines, but modern playback and upload targets usually expect MP4 or WEBM.", category: "video" },
   { family: "archive", slug: "zip", seoLabel: "ZIP", longLabel: "ZIP archive", problem: "ZIP is standard, but incoming archives are not always in the format the next system expects.", category: "archive" },
   { family: "archive", slug: "rar", seoLabel: "RAR", longLabel: "RAR archive", problem: "RAR is common, but users often need ZIP or TAR for broader compatibility.", category: "archive" },
   { family: "archive", slug: "7z", seoLabel: "7Z", longLabel: "7Z archive", problem: "7Z compresses well, but not every endpoint or device opens it cleanly.", category: "archive" },
@@ -86,6 +90,7 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "archive", slug: "xz", seoLabel: "XZ", longLabel: "XZ archive", problem: "XZ compresses efficiently, but non-technical recipients and uploaders rarely accept it cleanly.", category: "archive" },
   { family: "archive", slug: "cab", seoLabel: "CAB", longLabel: "CAB archive", problem: "CAB appears in Windows packaging and support workflows, but ZIP is usually the more portable handoff format.", category: "archive" },
   { family: "archive", slug: "tgz", seoLabel: "TGZ", longLabel: "TGZ archive", problem: "TGZ is useful in dev and server workflows, but many users need ZIP or TAR for broader compatibility.", category: "archive" },
+  { family: "archive", slug: "iso", seoLabel: "ISO", longLabel: "ISO disk image archive", problem: "ISO is useful for installers and disk images, but recipients often need a more flexible archive format for ordinary transfer.", category: "archive" },
   { family: "ebook", slug: "epub", seoLabel: "EPUB", longLabel: "EPUB ebook", problem: "EPUB is portable, but some devices and storefronts still demand a different ebook output.", category: "ebook" },
   { family: "ebook", slug: "mobi", seoLabel: "MOBI", longLabel: "MOBI ebook", problem: "MOBI persists in older Kindle workflows, but many teams now need EPUB or AZW3.", category: "ebook" },
   { family: "ebook", slug: "azw3", seoLabel: "AZW3", longLabel: "AZW3 ebook", problem: "AZW3 fits Kindle workflows, but it is less universal than EPUB outside that ecosystem.", category: "ebook" },
@@ -94,6 +99,7 @@ const EXTENDED_FORMATS: FamilyFormat[] = [
   { family: "ebook", slug: "kfx", seoLabel: "KFX", longLabel: "KFX ebook", problem: "KFX improves Kindle delivery, but the format is awkward when the file needs to leave Amazon-centric reading flows.", category: "ebook" },
   { family: "ebook", slug: "lrf", seoLabel: "LRF", longLabel: "LRF ebook", problem: "LRF survives in older Sony Reader libraries, but most modern readers now expect EPUB or MOBI instead.", category: "ebook" },
   { family: "ebook", slug: "pdfebook", seoLabel: "PDF", longLabel: "PDF ebook", problem: "PDF still appears in ebook and manual workflows, but many readers prefer reflowable EPUB or MOBI outputs.", category: "ebook" },
+  { family: "ebook", slug: "djvu", seoLabel: "DJVU", longLabel: "DJVU ebook", problem: "DJVU survives in scanned-book and archive workflows, but general reading tools still prefer EPUB, PDF, or MOBI.", category: "ebook" },
   { family: "raw", slug: "dng", seoLabel: "DNG", longLabel: "DNG raw image", problem: "DNG keeps camera detail, but many everyday review, sharing, and archive workflows still need a more portable output.", category: "image" },
   { family: "raw", slug: "cr2", seoLabel: "CR2", longLabel: "Canon CR2 raw image", problem: "CR2 files are excellent for editing, but they are hard to preview or share outside photography tools.", category: "image" },
   { family: "raw", slug: "nef", seoLabel: "NEF", longLabel: "Nikon NEF raw image", problem: "NEF files preserve camera data, but they block casual review, uploads, and many browser workflows.", category: "image" },
@@ -135,6 +141,21 @@ const EXTENDED_MODIFIERS: ModifierSeed[] = [
   { slug: "archive-ready", headline: "for Archive", keyword: "archive ready", desc: "when the target file needs to be more stable for storage, retention, or handoff into an archive workflow", review: "whether the output is organized, compatible, and sensible for long-term storage" },
   { slug: "portfolio-ready", headline: "for Portfolio Use", keyword: "portfolio ready", desc: "when the output has to look clean in a showcase, sample, or presentation workflow", review: "whether the visible quality and compatibility are good enough for presentation use" },
   { slug: "quick-share", headline: "for Quick Sharing", keyword: "quick share", desc: "when the user needs a faster handoff into chat, email, or a client portal", review: "whether the output is immediately shareable without another conversion or compression step" },
+  { slug: "batch-process", headline: "for Batch Processing", keyword: "batch process", desc: "when the workflow depends on repeating the same conversion across a run of audio, video, archive, or ebook files", review: "whether the outputs stay consistent across the full batch instead of only the first conversion", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "high-fidelity", headline: "for High Fidelity", keyword: "high fidelity", desc: "when preserving as much practical quality as possible matters more than minimizing size immediately", review: "whether the output keeps enough quality for review, archive, or delivery", families: ["audio", "video"] },
+  { slug: "email-attachment-safe", headline: "for Email Attachments", keyword: "email attachment safe", desc: "when the converted file still has to survive an inbox handoff without confusing the recipient", review: "whether the output is compact and compatible enough for email delivery", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "mobile-first", headline: "for Mobile", keyword: "mobile first", desc: "when the next review or share step will happen on a phone or tablet rather than a desktop workflow", review: "whether the output previews, opens, and shares cleanly on mobile devices", families: ["audio", "video", "ebook"] },
+  { slug: "secure-share", headline: "for Secure Sharing", keyword: "secure share", desc: "when the conversion should reduce friction for a sensitive external handoff without introducing another upload-first service", review: "whether the output is polished enough for secure partner, client, or team sharing", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "large-file", headline: "for Large Files", keyword: "large file", desc: "when the source file is heavy and the next step depends on a more manageable target format", review: "whether the output stays usable while reducing the operational pain of a large source file", families: ["audio", "video", "archive"] },
+  { slug: "large-file-split", headline: "for Large File Splits", keyword: "large file split", desc: "when the converted output has to be easier to divide, move, or hand off in pieces", review: "whether the output is easier to split, transfer, or package for the next workflow", families: ["video", "archive"] },
+  { slug: "low-size", headline: "for Smaller Size", keyword: "low size", desc: "when the user wants the output format that is easiest to store, share, or attach after conversion", review: "whether the output reduces size enough without making the result unusable", families: ["audio", "video", "ebook"] },
+  { slug: "review-ready", headline: "for Review", keyword: "review ready", desc: "when the output has to be easy for another person to preview, inspect, or approve quickly", review: "whether the result is convenient for the next reviewer to open and assess", families: ["audio", "video", "ebook"] },
+  { slug: "client-ready", headline: "for Client Delivery", keyword: "client ready", desc: "when the converted file is meant to leave the team and reach a client-facing workflow", review: "whether the output is polished enough for external delivery without extra cleanup", families: ["audio", "video", "ebook", "archive"] },
+  { slug: "browser-only", headline: "Browser Only", keyword: "browser only", desc: "when the conversion should finish in a browser workflow without another installed app or hosted queue", review: "whether the browser can produce a usable output for the next step on its own", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "offline-safe", headline: "Offline Safe", keyword: "offline safe", desc: "when the conversion should stay workable even in a disconnected or low-trust environment", review: "whether the result can be produced locally without a fragile network dependency", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "quick-export", headline: "for Quick Export", keyword: "quick export", desc: "when the job is less about perfect fidelity and more about unblocking the next handoff fast", review: "whether the output is ready to move immediately into the next share or upload step", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "team-handoff", headline: "for Team Handoff", keyword: "team handoff", desc: "when the conversion has to make life easier for the next teammate instead of only the current user", review: "whether the target format is genuinely more usable for the team receiving it", families: ["audio", "video", "archive", "ebook"] },
+  { slug: "transfer-ready", headline: "for Transfer", keyword: "transfer ready", desc: "when the output is being prepared specifically for another system, device, or recipient to receive", review: "whether the new format is easier to move and open in the destination workflow", families: ["audio", "video", "archive", "ebook"] },
 ]
 
 const FORMAT_MAP = new Map(EXTENDED_FORMATS.map((format) => [format.slug, format]))
@@ -147,7 +168,9 @@ const EXTENDED_PAIR_MATRIX = EXTENDED_FORMATS.flatMap((fromFormat) =>
 )
 
 const EXTENDED_MODIFIER_MATRIX = EXTENDED_PAIR_MATRIX.flatMap((pair) =>
-  EXTENDED_MODIFIERS.map((modifier) => ({ ...pair, modifier }))
+  EXTENDED_MODIFIERS.filter(
+    (modifier) => !modifier.families || modifier.families.includes(pair.fromFormat.family)
+  ).map((modifier) => ({ ...pair, modifier }))
 )
 
 function pairPath(from: string, to: string) {

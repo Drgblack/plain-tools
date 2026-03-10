@@ -6,9 +6,6 @@ import {
   STATUS_TRENDING_DEFAULT,
 } from "@/lib/status-domains"
 import { normalizeSiteInput, statusPathFor } from "@/lib/site-status"
-import {
-  EXTENDED_STATUS_TREND_SEGMENT_DOMAINS as STATUS_TREND_SEGMENT_DOMAINS,
-} from "@/lib/status-trends-extended"
 export {
   getStatusTrendingCategoryEntry,
   getStatusTrendingPopularSites,
@@ -16,6 +13,7 @@ export {
   STATUS_TRENDING_CATEGORIES,
   type StatusTrendingCategory,
 } from "@/lib/status-trending-config"
+import { getStatusTrendingPopularSites } from "@/lib/status-trending-config"
 
 export type TrendingCheck = {
   domain: string
@@ -339,8 +337,8 @@ function applyTrendDefaults(entries: TrendingCheck[], day: string) {
 
 function filterByTrendSegment(entries: TrendingCheck[], segment: StatusTrendSegment) {
   if (segment === "all") return entries
-  const segmentDomains = STATUS_TREND_SEGMENT_DOMAINS[segment]
-  if (!segmentDomains) return entries
+  const segmentDomains = getStatusTrendingPopularSites(segment, MAX_TRACKED_DOMAINS)
+  if (!segmentDomains || segmentDomains.length === 0) return entries
   const allowed = new Set(segmentDomains)
   return entries.filter((entry) => allowed.has(entry.domain))
 }

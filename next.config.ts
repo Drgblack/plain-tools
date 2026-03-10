@@ -262,13 +262,23 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/status/trending/:segment(social|cloud|streaming|finance|gaming|ecommerce)",
+        source: "/status/trending/:segment([^/]+)",
         destination: "/status/trending-:segment",
         permanent: true,
       },
       {
         source: "/status/:site([^/]+)/outage-history",
         destination: "/status/:site-outage-history",
+        permanent: true,
+      },
+      {
+        source: "/status/region/:site/:country",
+        destination: "/status/:site-:country",
+        permanent: true,
+      },
+      {
+        source: "/status/access/:isp/:country",
+        destination: "/status/:isp-in-:country",
         permanent: true,
       },
       // Canonical comparison route migration.
@@ -570,12 +580,20 @@ const nextConfig: NextConfig = {
         destination: "/is/:site",
       },
       {
-        source: "/status/trending-:segment(social|cloud|streaming|finance|gaming|ecommerce)",
+        source: "/status/trending-:segment([^/]+)",
         destination: "/status/trending/:segment",
       },
       {
         source: "/status/:site([^/]+)-outage-history",
         destination: "/status/:site/outage-history",
+      },
+      {
+        source: "/status/:isp([a-z0-9-]+)-in-:country([a-z0-9-]+)",
+        destination: "/status/access/:isp/:country",
+      },
+      {
+        source: "/status/:site(.+)-:country([a-z0-9-]+)",
+        destination: "/status/region/:site/:country",
       },
       {
         source: "/:service(chatgpt|discord|youtube|reddit|github|netflix|spotify|stripe|slack|openai)-outage-history",

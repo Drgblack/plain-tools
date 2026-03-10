@@ -14,6 +14,7 @@ export type PublicCalculatorCategory =
   | "salary-to-hourly"
   | "basic-loan"
   | "simple-interest"
+  | "compound-basic"
   | "retirement-basic"
 
 export type LegacyCalculatorCategory =
@@ -108,7 +109,7 @@ type ParsedSimpleInterest = {
 
 type ParsedCompoundInterestIntro = {
   annualRate: number
-  category: "compound-interest-intro"
+  category: "compound-basic"
   expression: string
   futureValue: number
   principal: number
@@ -147,6 +148,7 @@ const calculatorTool: ToolDefinition = {
 
 const CATEGORY_LABELS: Record<CalculatorCategory, string> = {
   "basic-loan": "Basic Loan Calculator",
+  "compound-basic": "Compound Interest Calculator",
   "compound-interest-intro": "Compound Interest Calculator",
   percentage: "Percentage Calculator",
   "retirement-basic": "Basic Retirement Savings Calculator",
@@ -162,6 +164,7 @@ const PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
   "salary-to-hourly",
   "basic-loan",
   "simple-interest",
+  "compound-basic",
   "retirement-basic",
 ]
 
@@ -174,26 +177,28 @@ const CATEGORY_ORDER: CalculatorCategory[] = [
 const PUBLIC_CATEGORY_SET = new Set<PublicCalculatorCategory>(PUBLIC_CATEGORY_ORDER)
 
 const PERCENT_VALUES = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 18, 20, 22, 25, 27, 30, 33, 35, 40,
-  45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 110, 125, 150, 175, 200,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  23, 24, 25, 26, 27, 28, 30, 33, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
+  95, 100, 110, 125, 150, 175, 200,
 ] as const
 const PERCENT_BASE_VALUES = [
-  10, 12, 15, 18, 20, 24, 25, 30, 35, 40, 45, 50, 60, 72, 75, 80, 90, 100, 120,
-  125, 150, 175, 180, 200, 225, 240, 250, 275, 300, 350, 400, 450, 500, 600,
+  10, 12, 15, 18, 20, 24, 25, 30, 35, 40, 45, 50, 60, 72, 75, 80, 90, 95, 100, 110,
+  120, 125, 135, 150, 175, 180, 200, 225, 240, 250, 275, 300, 325, 350, 375, 400,
+  450, 500, 550, 600, 700, 800, 900, 1000,
 ] as const
-const TIP_BILLS = [20, 25, 35, 50, 60, 75, 90, 100, 120, 135, 150, 180, 200, 225, 250, 300, 400, 500] as const
-const TIP_PERCENTS = [10, 12, 15, 18, 20, 22, 25, 30, 35] as const
-const SALARY_VALUES = [30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 80000, 90000, 100000, 110000, 120000, 140000, 150000, 175000, 200000] as const
-const SALARY_HOURS = [30, 32, 35, 37.5, 40, 45] as const
-const LOAN_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 25000, 30000, 35000, 40000, 50000] as const
-const LOAN_RATES = [3, 4, 5, 6, 7, 8, 9] as const
-const LOAN_TERMS = [1, 2, 3, 5] as const
-const INTEREST_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] as const
-const INTEREST_RATES = [2, 3, 4, 5, 6, 7, 8] as const
-const INTEREST_YEARS = [1, 2, 3, 4, 5] as const
-const COMPOUND_PRINCIPALS = [1000, 2500, 5000, 10000, 15000, 25000, 50000, 75000] as const
-const COMPOUND_RATES = [3, 4, 5, 6] as const
-const COMPOUND_YEARS = [3, 5, 10] as const
+const TIP_BILLS = [20, 25, 35, 45, 50, 60, 75, 85, 90, 95, 100, 120, 135, 150, 180, 200, 225, 250, 300, 350, 400, 450, 500, 600, 750] as const
+const TIP_PERCENTS = [10, 12, 15, 16, 18, 20, 22, 25, 30, 35] as const
+const SALARY_VALUES = [24000, 28000, 30000, 32000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 90000, 100000, 110000, 120000, 140000, 150000, 175000, 200000, 225000, 250000] as const
+const SALARY_HOURS = [20, 24, 30, 32, 35, 37.5, 40, 45] as const
+const LOAN_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 25000, 30000, 35000, 40000, 50000, 60000, 75000] as const
+const LOAN_RATES = [3, 4, 5, 6, 7, 8, 9, 10] as const
+const LOAN_TERMS = [1, 2, 3, 4, 5] as const
+const INTEREST_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 60000, 75000, 100000, 150000] as const
+const INTEREST_RATES = [2, 3, 4, 5, 6, 7, 8, 9] as const
+const INTEREST_YEARS = [1, 2, 3, 4, 5, 7] as const
+const COMPOUND_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000, 50000, 75000, 100000, 150000] as const
+const COMPOUND_RATES = [3, 4, 5, 6, 7, 8] as const
+const COMPOUND_YEARS = [1, 3, 5, 7, 10, 15] as const
 const RETIREMENT_MONTHLY = [100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 2000, 2500] as const
 const RETIREMENT_RATES = [4, 5, 6, 7, 8, 9] as const
 const RETIREMENT_YEARS = [10, 15, 20, 30] as const
@@ -284,7 +289,11 @@ export function isCalculatorCategory(value: string): value is CalculatorCategory
 
 export function buildCalculatorPath(category: CalculatorCategory, expression: string) {
   const canonicalCategory =
-    category === "retirement-savings-basic" ? "retirement-basic" : category
+    category === "retirement-savings-basic"
+      ? "retirement-basic"
+      : category === "compound-interest-intro"
+        ? "compound-basic"
+        : category
   return `/calculators/${canonicalCategory}/${expression}`
 }
 
@@ -357,6 +366,7 @@ export function buildCalculatorExpression(
       }
       return simpleInterestExpressionFor(principal, annualRate, years)
     }
+    case "compound-basic":
     case "compound-interest-intro": {
       const principal = readNumber("principal")
       const annualRate = readNumber("annualRate")
@@ -526,7 +536,7 @@ function parseCalculatorExpression(
     }
   }
 
-  if (category === "compound-interest-intro") {
+  if (category === "compound-basic" || category === "compound-interest-intro") {
     const match = /^compound-interest-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)$/.exec(decoded)
     if (!match) return null
     const principal = parseNumberToken(match[1] ?? "")
@@ -545,7 +555,7 @@ function parseCalculatorExpression(
     const futureValue = futureValueCompound(principal, annualRate, years)
     return {
       annualRate,
-      category,
+      category: "compound-basic",
       expression: compoundExpressionFor(principal, annualRate, years),
       futureValue,
       principal,
@@ -688,7 +698,7 @@ function compoundEntries(): CalculatorEntry[] {
   return COMPOUND_PRINCIPALS.flatMap((principal) =>
     COMPOUND_RATES.flatMap((annualRate) =>
       COMPOUND_YEARS.map((years) => ({
-        category: "compound-interest-intro" as const,
+        category: "compound-basic" as const,
         description: buildMetaDescription(
           `Project compound interest on ${formatCurrency(principal)} at ${annualRate}% over ${years} years with a local browser calculator on Plain Tools.`
         ),
@@ -781,10 +791,11 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
         { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, parsed.annualRate, Math.max(1, parsed.years))), title: "Basic loan payment example" },
         { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(250, Math.max(2, parsed.annualRate), Math.max(10, parsed.years * 4))), title: "Basic retirement savings example" },
       ]
+    case "compound-basic":
     case "compound-interest-intro":
       return [
-        { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
-        { href: buildCalculatorPath("compound-interest-intro", compoundExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("compound-basic", compoundExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
+        { href: buildCalculatorPath("compound-basic", compoundExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.years)), title: "Simple interest comparison" },
         { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(500, parsed.annualRate, Math.max(10, parsed.years))), title: "Retirement savings example" },
       ]
@@ -1130,7 +1141,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     initialValues = { annualRate: parsed.annualRate, principal: parsed.principal, years: parsed.years }
   }
 
-  if (parsed.category === "compound-interest-intro") {
+  if (parsed.category === "compound-basic") {
     const scenarioText = `${formatCurrency(parsed.principal)} at ${formatPercent(parsed.annualRate)} for ${parsed.years} years`
     intro = [
       "Compound interest pages are strong long-tail utilities because users want a quick sense of how growth accelerates over time. This cluster keeps the calculation intentionally introductory rather than turning it into a full portfolio-planning product.",
@@ -1233,6 +1244,48 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     ]
     initialValues = { annualRate: parsed.annualRate, monthlyContribution: parsed.monthlyContribution, years: parsed.years }
   }
+
+  explanationBlocks = [
+    ...explanationBlocks,
+    {
+      title: `How to compare nearby ${CATEGORY_LABELS[entry.category].toLowerCase()} scenarios`,
+      paragraphs: [
+        `A page like this becomes more useful when it helps the user move from ${parsed.expression.replace(/-/g, " ")} into the next realistic comparison. In practice, that usually means changing one variable at a time: a nearby percentage, a slightly different bill total, a shorter loan term, or a longer time horizon. Keeping the comparison tight makes the result easier to trust and easier to act on.`,
+        `That is also why the route keeps strong internal links to adjacent calculator pages instead of forcing the user back to a blank hub. The goal is to preserve intent, let the user compare close scenarios quickly, and keep the overall calculator cluster useful rather than repetitive.`,
+      ],
+    },
+    {
+      title: "What to verify before acting on the result",
+      paragraphs: [
+        `This page is designed as a fast first-pass utility. Before using the result in a real budget, payment plan, or savings decision, the user should confirm the assumptions behind the number: whether the rate is annual, whether the amount includes fees, whether the time period is rounded, and whether there are outside factors this basic route intentionally does not model.`,
+        `That scoped approach is deliberate. Plain Tools keeps these calculator pages browser-first, privacy-first, and easy to understand, while the surrounding related links help the user move into the next exact route if they want a different input mix or a more appropriate neighboring calculation.`,
+      ],
+    },
+  ]
+
+  howItWorks = [
+    ...howItWorks,
+    `Because the calculator runs entirely in the browser, you can change the inputs, compare nearby examples, and share the exact canonical URL without creating an account or sending financial details to a remote service. That keeps the workflow aligned with Plain Tools' local, no-upload positioning even on high-intent calculator pages.`,
+  ]
+
+  privacyNote = [
+    ...privacyNote,
+    "All calculations run locally in your browser - nothing is sent anywhere. That matters when you are checking compensation, debt, savings, or payment scenarios on a shared computer, a locked-down work device, or a quick mobile session where privacy and speed both matter.",
+  ]
+
+  faq = [
+    ...faq,
+    {
+      question: "Why does this page have its own exact-match URL?",
+      answer:
+        "Exact-match calculator routes are easier to bookmark, share, revisit, and compare than a blank tool state. They also make the assumptions visible so the next scenario can be opened without re-entering everything from scratch.",
+    },
+    {
+      question: "Is this calculator intended as final financial advice?",
+      answer:
+        "No. It is a fast, local first-pass calculator designed to answer one clear scenario well, then connect you to nearby comparisons. The result is useful for screening and planning, but important decisions should still be checked against your real terms, fees, and constraints.",
+    },
+  ]
 
   const wordCount = countWords([
     entry.title,
@@ -1342,12 +1395,13 @@ export function generateNonPercentageCalculatorParams(limit?: number) {
 
 export function getPrebuildCalculatorParams(limit = 400) {
   const perCategory: Record<PublicCalculatorCategory, number> = {
-    "basic-loan": 64,
-    percentage: 260,
+    "basic-loan": 84,
+    "compound-basic": 72,
+    percentage: 320,
     "retirement-basic": 44,
-    "salary-to-hourly": 36,
-    "simple-interest": 52,
-    tip: 64,
+    "salary-to-hourly": 48,
+    "simple-interest": 72,
+    tip: 84,
   }
 
   const staged = PUBLIC_CATEGORY_ORDER.flatMap((category) =>
@@ -1362,6 +1416,7 @@ export const CALCULATOR_FINANCIAL_METADATA_EXAMPLES = [
   getCalculatorPage("salary-to-hourly", "salary-to-hourly-60000-40"),
   getCalculatorPage("basic-loan", "loan-payment-10000-5-3-years"),
   getCalculatorPage("simple-interest", "simple-interest-10000-5-3"),
+  getCalculatorPage("compound-basic", "compound-interest-10000-5-10"),
   getCalculatorPage("retirement-basic", "retirement-savings-500-monthly-6-20-years"),
 ]
   .filter((entry): entry is CalculatorPage => Boolean(entry))

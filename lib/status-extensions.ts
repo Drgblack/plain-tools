@@ -6,6 +6,7 @@ import type {
   ProgrammaticPageData,
   ProgrammaticRelatedTool,
 } from "@/lib/programmatic-content"
+import { buildStatusHistoryTimelineBlocks } from "@/lib/status-history"
 import { EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS } from "@/lib/status-trends-extended"
 import { normalizeSiteInput } from "@/lib/site-status"
 import {
@@ -138,8 +139,8 @@ export function getStatusTrendingBundle(segment: StatusTrendingCategory): Status
     breadcrumbs: [{ href: "/", label: "Home" }, { href: "/status", label: "Status" }, { href: "/status/trending", label: "Trending" }, { label: entry.label }],
     canonicalPath,
     desc,
-    featureList: ["Trending outage checks by segment", "Direct links into canonical status routes", "DNS, IP, and reachability follow-up paths"],
-    heroBadges: ["trending", "status checks", "privacy-first", "no accounts"],
+    featureList: ["Trending outage checks by segment", "Direct links into canonical status routes", "DNS, IP, and reachability follow-up paths", "Anonymous check - no data stored"],
+    heroBadges: ["trending", "status checks", "anonymous check", "privacy-first"],
     h1: `Trending ${entry.label} Outages Today`,
     liveToolDescription: "Run a fresh status check for any domain while keeping the route inside the same network/status silo.",
     page: buildPageData({
@@ -167,6 +168,20 @@ export function getStatusTrendingBundle(segment: StatusTrendingCategory): Status
           ],
           title: "What to do after spotting a trend",
         },
+        {
+          paragraphs: [
+            `Segment pages also help searchers compare services inside the same operating context. Someone watching ${entry.label.toLowerCase()} outages usually wants to know whether the current problem is isolated to one brand or affecting several adjacent platforms at the same time.`,
+            "That comparative angle is what makes the page more than a sortable list. It provides a ranked starting point, surrounding explanation, and fast handoff into the service-specific routes where the actual diagnosis happens.",
+          ],
+          title: "Why comparison inside a segment matters",
+        },
+        {
+          paragraphs: [
+            "High-traffic outage pages only work long term when they stay operationally useful. That means telling the user what trending can and cannot prove, showing where the next diagnostic step lives, and avoiding the temptation to stretch one incident signal into a fake all-knowing dashboard.",
+            "This route is intentionally narrower than that. It helps the user spot where demand is spiking, then move into the exact status page, outage-history page, or network diagnostic that can confirm whether the issue is real and how broad it looks.",
+          ],
+          title: "Why the page is not just an outage list",
+        },
       ],
       faq: [
         { answer: "These routes rank the domains that are receiving the highest anonymous aggregated status-check activity within the segment.", question: `What makes a ${entry.label.toLowerCase()} service trend here?` },
@@ -175,10 +190,12 @@ export function getStatusTrendingBundle(segment: StatusTrendingCategory): Status
         { answer: "Open the canonical status route, then move into DNS, ping, and IP checks if you need to separate local issues from broader incidents.", question: "What should I do when a service is trending?" },
         { answer: "Because different service groups create different search intent. Segment pages are easier to navigate and easier to index than one undifferentiated mega-page.", question: "Why split trends by segment?" },
         { answer: "The page refreshes on a short ISR window so it can respond to changing demand without turning into a noisy no-cache route.", question: "How often does this page update?" },
+        { answer: "Because a meaningful trend page should rank services, explain why the signal matters, and send the user to the next diagnostic step rather than acting like a dead-end list.", question: "Why does this route have so much context around the trend list?" },
       ],
       howItWorks: [
         "The page requests the latest aggregate trend counts for the selected status segment, then renders the list server-side so it is shareable and indexable.",
         "That gives Plain Tools a useful midpoint between a static directory and a purely client-side dashboard.",
+        "Because the page is server-rendered on a short ISR window, it can stay relevant during incident spikes without forcing the whole route into no-cache behavior.",
       ],
       howToSteps: [
         { name: "Check the top trending services first", text: "The first few results usually capture the strongest current outage or concern signals in the segment." },
@@ -189,12 +206,15 @@ export function getStatusTrendingBundle(segment: StatusTrendingCategory): Status
       intro: [
         `Trending ${entry.label.toLowerCase()} outage pages capture a different search intent from a standard status checker. The user is not asking about one known service yet. They are asking what is breaking right now inside a service group they care about.`,
         "That is why this route is useful. It ranks the checks drawing attention, explains what the trend means, and links directly into the canonical pages needed for follow-up diagnosis.",
+        `For ${entry.label.toLowerCase()} specifically, the value is speed. The page reduces the time between noticing a problem and opening the right diagnostic path, which is exactly what users want during fast-moving outage windows.`,
+        "The page also reduces noise. Instead of forcing the user to guess where to start, it gives them a focused shortlist, enough interpretation to understand the signal, and direct links into the routes that can confirm or challenge the trend.",
       ],
       paramLabel: entry.label,
       paramSlug: segment,
       privacyNote: [
-        "Trending pages are built from anonymous aggregate status-check activity, not user accounts or document data.",
+        "Anonymous check - no data stored. Trending pages are built from aggregate domain-level activity rather than user accounts, uploaded files, or personal identifiers.",
         "That keeps the route useful for outage discovery while staying aligned with the site's privacy-first posture.",
+        "It also means the route can be opened from work devices, shared support stations, and locked-down networks without asking the user to hand over more information than the status question actually requires.",
       ],
       relatedTools: [
         { description: "Run a live check for another service.", href: "/site-status", name: "Site status checker" },
@@ -209,6 +229,7 @@ export function getStatusTrendingBundle(segment: StatusTrendingCategory): Status
       whyUsersNeedThis: [
         "The route is valuable because it narrows discovery. Users do not need to guess which service to check first when a whole platform category feels unstable.",
         "That makes segment trending pages a practical SEO and UX extension of the existing /status system.",
+        `The page also supports operational follow-up. Once a user identifies the likely service, the internal links make it easy to move into history, DNS, and latency checks without dropping back to search.`,
       ],
     }),
     siloLinks: [
@@ -236,8 +257,8 @@ export function getStatusOutageHistoryBundle(domain: string): StatusPageBundle |
     breadcrumbs: [{ href: "/", label: "Home" }, { href: "/status", label: "Status" }, { href: `/status/${encodeURIComponent(normalized)}`, label: normalized }, { label: "Outage History" }],
     canonicalPath,
     desc,
-    featureList: ["Recent outage history guidance", "Timeline-aware status interpretation", "DNS and network follow-up links"],
-    heroBadges: ["outage history", "status timeline", "privacy-first", "no accounts"],
+    featureList: ["Recent outage history guidance", "Timeline-aware status interpretation", "DNS and network follow-up links", "Anonymous check - no data stored"],
+    heroBadges: ["outage history", "status timeline", "anonymous check", "privacy-first"],
     h1: `${normalized} Outage History`,
     liveToolDescription: "Run a fresh status check for the same domain or pivot into DNS and network diagnostics.",
     page: buildPageData({
@@ -265,6 +286,10 @@ export function getStatusOutageHistoryBundle(domain: string): StatusPageBundle |
           ],
           title: "How to use the page operationally",
         },
+        ...buildStatusHistoryTimelineBlocks(normalized, null).map((block) => ({
+          paragraphs: [block.detail],
+          title: block.label,
+        })),
       ],
       faq: [
         { answer: `The page summarizes recent aggregated reachability context for ${normalized} so users can judge whether a current issue looks isolated or part of a wider pattern.`, question: `What does this outage-history page show for ${normalized}?` },
@@ -291,7 +316,7 @@ export function getStatusOutageHistoryBundle(domain: string): StatusPageBundle |
       paramLabel: normalized,
       paramSlug: normalized,
       privacyNote: [
-        "Plain Tools uses anonymous aggregated status observations for this page. It does not require an account or collect file data to render outage-history context.",
+        "Anonymous check - no data stored. Plain Tools uses aggregated status observations for this page and does not require an account or file upload to render outage-history context.",
         "That lighter data model keeps the route useful without turning it into a personal-activity feed.",
       ],
       relatedTools: [

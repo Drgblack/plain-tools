@@ -7,7 +7,7 @@ import {
   type ConverterModifierRouteParams,
   generateAllExtendedConverterModifierParams,
   getExtendedConverterModifierPage,
-} from "@/lib/converter-specialized"
+} from "@/lib/converter-specialized-ext"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 type PageProps = {
