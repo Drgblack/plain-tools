@@ -1,4 +1,12 @@
 import {
+  getComparisonPage,
+  getRelatedComparisonLinks,
+} from "@/lib/compare-matrix"
+import {
+  getConverterPairPage,
+  getRelatedConverterLinks,
+} from "@/lib/converter-pairs"
+import {
   getPdfVariantPage,
   getRelatedPdfVariantPages,
 } from "@/lib/pdf-variants"
@@ -69,6 +77,7 @@ const IP_FALLBACK_LINKS: RelatedLink[] = [
 
 const GLOBAL_FALLBACK_LINKS: RelatedLink[] = [
   { title: "Browse all tools", href: "/tools" },
+  { title: "Browse file converters", href: "/file-converters" },
   { title: "Browse PDF tools", href: "/pdf-tools" },
   { title: "Browse network tools", href: "/network-tools" },
   { title: "Browse learn guides", href: "/learn" },
@@ -254,6 +263,46 @@ function getDnsRelatedLinks(currentPath: string): RelatedLink[] {
   ).slice(0, 8)
 }
 
+function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
+  const match = /^\/convert\/([^/]+)-to-([^/]+)$/.exec(normalisePath(currentPath))
+  if (!match) return []
+
+  const [, from, to] = match
+  const page = getConverterPairPage(from, to)
+  if (!page) return []
+
+  return dedupeLinks(
+    [
+      ...getRelatedConverterLinks(from, to),
+      { title: "Browse file converters", href: "/file-converters" },
+      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Convert PDF tool", href: "/tools/convert-pdf" },
+      { title: "JPG to PDF tool", href: "/tools/jpg-to-pdf" },
+    ],
+    currentPath
+  ).slice(0, 8)
+}
+
+function getCompareRelatedLinks(currentPath: string): RelatedLink[] {
+  const match = /^\/compare\/([^/]+)$/.exec(normalisePath(currentPath))
+  if (!match) return []
+
+  const slug = decodeURIComponent(match[1] ?? "")
+  const page = getComparisonPage(slug)
+  if (!page) return []
+
+  return dedupeLinks(
+    [
+      ...getRelatedComparisonLinks(slug),
+      { title: "Browse all comparisons", href: "/compare" },
+      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Merge PDF locally", href: "/tools/merge-pdf" },
+      { title: "Compress PDF locally", href: "/tools/compress-pdf" },
+    ],
+    currentPath
+  ).slice(0, 8)
+}
+
 function getIpRelatedLinks(currentPath: string): RelatedLink[] {
   const match = /^\/ip\/([^/]+)$/.exec(normalisePath(currentPath))
   if (!match) return []
@@ -300,6 +349,16 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
     return dedupeLinks([...statusLinks, ...STATUS_FALLBACK_LINKS], normalizedPath).slice(0, 8)
   }
 
+  const converterLinks = getConverterRelatedLinks(normalizedPath)
+  if (converterLinks.length >= 6) {
+    return converterLinks
+  }
+
+  const compareLinks = getCompareRelatedLinks(normalizedPath)
+  if (compareLinks.length >= 6) {
+    return compareLinks
+  }
+
   const dnsLinks = getDnsRelatedLinks(normalizedPath)
   if (dnsLinks.length >= 6) {
     return dnsLinks
@@ -316,6 +375,14 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
 
   if (normalizedPath.startsWith("/ip")) {
     return dedupeLinks([...ipLinks, ...IP_FALLBACK_LINKS], normalizedPath).slice(0, 8)
+  }
+
+  if (normalizedPath.startsWith("/convert")) {
+    return dedupeLinks([...converterLinks, ...GLOBAL_FALLBACK_LINKS], normalizedPath).slice(0, 8)
+  }
+
+  if (normalizedPath.startsWith("/compare")) {
+    return dedupeLinks([...compareLinks, ...GLOBAL_FALLBACK_LINKS], normalizedPath).slice(0, 8)
   }
 
   if (normalizedPath.includes("pdf")) {

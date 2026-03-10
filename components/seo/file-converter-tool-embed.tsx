@@ -3,10 +3,11 @@ import { Suspense } from "react"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { FallbackToolComponent, toolComponents } from "@/components/tools/tool-component-registry"
 import UniversalFormatConverterTool from "@/components/tools/universal-format-converter-tool"
+import type { ConverterPairPage } from "@/lib/converter-pairs"
 import type { FileConverterSeoPage } from "@/lib/file-converter-slugs"
 
 type FileConverterToolEmbedProps = {
-  page: FileConverterSeoPage
+  page: Pick<FileConverterSeoPage | ConverterPairPage, "embed" | "from" | "slug" | "to">
 }
 
 export function FileConverterToolEmbed({ page }: FileConverterToolEmbedProps) {

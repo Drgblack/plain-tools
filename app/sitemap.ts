@@ -1,10 +1,11 @@
 import { MetadataRoute } from "next"
 
+import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
+import { getConverterSitemapPaths } from "@/lib/converter-pairs"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
-import { getFileConverterSitemapPaths } from "@/lib/file-converter-slugs"
 import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
@@ -133,8 +134,11 @@ function buildAllEntries(now: Date) {
   const pdfToolVariantPages = getPdfVariantSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
   )
-  const fileConverterPages = getFileConverterSitemapPaths().map((path) =>
+  const fileConverterPages = getConverterSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.8)
+  )
+  const comparisonMatrixPages = getCompareMatrixSitemapPaths().map((path) =>
+    toEntry(path, now, "monthly", 0.79)
   )
   const pdfComparisonPages = getPdfComparisonSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
@@ -197,6 +201,7 @@ function buildAllEntries(now: Date) {
     pdfToolVariantIndex,
     ...pdfToolVariantPages,
     ...fileConverterPages,
+    ...comparisonMatrixPages,
     ...pdfComparisonPages,
     ...toolProblemPages,
     ...toolVariantPages,

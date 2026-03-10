@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/lib/page-metadata"
+import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { trancheCompareSlugs } from "@/lib/seo/tranche1-content"
 import { buildSitemapXml, type SitemapXmlEntry } from "@/lib/seo/sitemap-xml"
 
@@ -8,6 +9,7 @@ export async function GET() {
     "/compare",
     "/compare/smallpdf-alternative",
     ...trancheCompareSlugs.map((slug) => `/compare/${slug}`),
+    ...getCompareMatrixSitemapPaths(),
   ])
 
   const entries: SitemapXmlEntry[] = Array.from(compareUrls)
