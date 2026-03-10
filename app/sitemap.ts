@@ -3,8 +3,10 @@ import { MetadataRoute } from "next"
 import { getConverterModifierSitemapPaths } from "@/lib/converter-modifiers"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
+import { getCalculatorPaths } from "@/lib/calculator-combos"
 import { getConverterSitemapPaths } from "@/lib/converter-pairs"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
+import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { getPdfVariantSitemapPaths } from "@/lib/pdf-variants"
@@ -18,6 +20,10 @@ import { seoMdxSitemapUrls } from "@/lib/seo/mdx-page-registry"
 import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { statusPathFor } from "@/lib/site-status"
+import {
+  getStatusOutageHistoryPaths,
+  getStatusTrendingPaths,
+} from "@/lib/status-extensions"
 import {
   STATUS_CATEGORIES,
   STATUS_HIGH_DEMAND_SITES,
@@ -142,6 +148,9 @@ function buildAllEntries(now: Date) {
   const fileConverterModifierPages = getConverterModifierSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
   )
+  const calculatorPages = getCalculatorPaths().map((path) =>
+    toEntry(path, now, "monthly", 0.78)
+  )
   const comparisonMatrixPages = getCompareMatrixSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.79)
   )
@@ -163,8 +172,17 @@ function buildAllEntries(now: Date) {
   const ipDynamicPages = IP_SITEMAP_ADDRESSES.map((ip) =>
     toEntry(`/ip/${encodeURIComponent(ip)}`, now, "monthly", 0.65)
   )
+  const networkOpsPages = getNetworkOpsPaths().map((path) =>
+    toEntry(path, now, "monthly", 0.73)
+  )
   const statusCategoryPages = STATUS_CATEGORIES.map((category) =>
     toEntry(`/status/${category}`, now, "daily", 0.75)
+  )
+  const statusTrendingPages = getStatusTrendingPaths().map((path) =>
+    toEntry(path, now, "daily", 0.77)
+  )
+  const statusExtensionHistoryPages = getStatusOutageHistoryPaths().map((path) =>
+    toEntry(path, now, "daily", 0.76)
   )
   const statusQueryPages = STATUS_QUERY_PAGES.map((entry) =>
     toEntry(statusQueryPathForSlug(entry.slug), now, "daily", 0.82)
@@ -210,6 +228,7 @@ function buildAllEntries(now: Date) {
     ...pdfToolVariantPages,
     ...fileConverterPages,
     ...fileConverterModifierPages,
+    ...calculatorPages,
     ...comparisonMatrixPages,
     ...professionalWorkflowPages,
     ...pdfComparisonPages,
@@ -217,9 +236,12 @@ function buildAllEntries(now: Date) {
     ...toolVariantPages,
     ...dnsDynamicPages,
     ...ipDynamicPages,
+    ...networkOpsPages,
     ...statusCategoryPages,
+    ...statusTrendingPages,
     ...statusQueryPages,
     ...outageHistoryPages,
+    ...statusExtensionHistoryPages,
     ...blogCategoryPages,
     ...blogPostPages,
     ...staticStatusPages,

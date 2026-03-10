@@ -18,8 +18,13 @@ import {
   getProfessionalWorkflowPage,
   getRelatedProfessionalWorkflowLinks,
 } from "@/lib/professional-workflows"
+import { getPercentageCalculatorPage } from "@/lib/calculator-combos"
 import { getSiteStatusContext, normalizeSiteInput, statusPathFor } from "@/lib/site-status"
 import { STATUS_CATEGORY_META, STATUS_DOMAINS } from "@/lib/status-domains"
+import {
+  getStatusOutageHistoryBundle,
+  getStatusTrendingBundle,
+} from "@/lib/status-extensions"
 import { getToolBySlug } from "@/lib/tools-catalogue"
 
 export type RelatedLink = {
@@ -94,6 +99,28 @@ const GLOBAL_FALLBACK_LINKS: RelatedLink[] = [
   { title: "Verify local-processing claims", href: "/verify-claims" },
 ]
 
+const NETWORK_FALLBACK_LINKS: RelatedLink[] = [
+  { title: "Browse network tools", href: "/network-tools" },
+  { title: "DNS lookup tool", href: "/dns-lookup" },
+  { title: "Ping test", href: "/ping-test" },
+  { title: "What is my IP", href: "/what-is-my-ip" },
+  { title: "MX lookup example", href: "/network/mx/google.com" },
+  { title: "NS lookup example", href: "/network/ns/plain.tools" },
+  { title: "Reverse DNS example", href: "/network/reverse/8.8.8.8" },
+  { title: "WHOIS example", href: "/network/whois/plain.tools" },
+]
+
+const CALCULATOR_FALLBACK_LINKS: RelatedLink[] = [
+  { title: "10% of 100", href: "/calculators/percentage/what-is-10-percent-of-100" },
+  { title: "15% of 200", href: "/calculators/percentage/what-is-15-percent-of-200" },
+  { title: "25% of 400", href: "/calculators/percentage/what-is-25-percent-of-400" },
+  { title: "75% of 120", href: "/calculators/percentage/what-is-75-percent-of-120" },
+  { title: "PDF tools", href: "/pdf-tools" },
+  { title: "File converters", href: "/file-converters" },
+  { title: "Privacy-first comparisons", href: "/compare" },
+  { title: "Professional guides", href: "/guides/legal/compress-shared-pdfs" },
+]
+
 function normalisePath(path: string) {
   const pathname = path.split(/[?#]/, 1)[0]?.trim() || "/"
   if (!pathname.startsWith("/")) return `/${pathname}`
@@ -152,6 +179,10 @@ function getStatusRelatedLinks(currentPath: string): RelatedLink[] {
       {
         title: `DNS lookup for ${site}`,
         href: `/dns/${encodeURIComponent(site)}`,
+      },
+      {
+        title: `${site} outage history`,
+        href: `/status/${encodeURIComponent(site)}/outage-history`,
       },
       {
         title: `Run a fresh status check for ${site}`,
@@ -376,6 +407,165 @@ function getIpRelatedLinks(currentPath: string): RelatedLink[] {
   ).slice(0, 8)
 }
 
+function getNetworkOpsRelatedLinks(currentPath: string): RelatedLink[] {
+  const normalizedPath = normalisePath(currentPath)
+
+  const mxOrNsMatch = /^\/network\/(mx|ns)\/([^/]+)$/.exec(normalizedPath)
+  if (mxOrNsMatch) {
+    const [, kind, target] = mxOrNsMatch
+    const domain = decodeURIComponent(target ?? "")
+    return dedupeLinks(
+      [
+        { title: kind === "mx" ? `NS lookup for ${domain}` : `MX lookup for ${domain}`, href: `/network/${kind === "mx" ? "ns" : "mx"}/${encodeURIComponent(domain)}` },
+        { title: `WHOIS for ${domain}`, href: `/network/whois/${encodeURIComponent(domain)}` },
+        { title: `DNS lookup for ${domain}`, href: `/dns/${encodeURIComponent(domain)}` },
+        { title: `Status for ${domain}`, href: `/status/${encodeURIComponent(domain)}` },
+        { title: "Browse network tools", href: "/network-tools" },
+        { title: "Ping test", href: "/ping-test" },
+        { title: "What is my IP", href: "/what-is-my-ip" },
+        { title: "Trending outage checks", href: "/status/trending" },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  const reverseMatch = /^\/network\/reverse\/([^/]+)$/.exec(normalizedPath)
+  if (reverseMatch) {
+    const ip = decodeURIComponent(reverseMatch[1] ?? "")
+    return dedupeLinks(
+      [
+        { title: `IP lookup for ${ip}`, href: `/ip/${encodeURIComponent(ip)}` },
+        { title: `WHOIS for ${ip}`, href: `/network/whois/${encodeURIComponent(ip)}` },
+        { title: "Reverse DNS for 1.1.1.1", href: "/network/reverse/1.1.1.1" },
+        { title: "Reverse DNS for 8.8.8.8", href: "/network/reverse/8.8.8.8" },
+        { title: "Browse network tools", href: "/network-tools" },
+        { title: "DNS lookup tool", href: "/dns-lookup" },
+        { title: "Ping test", href: "/ping-test" },
+        { title: "Status checker", href: "/site-status" },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  const asnMatch = /^\/network\/asn\/([^/]+)$/.exec(normalizedPath)
+  if (asnMatch) {
+    const asn = decodeURIComponent(asnMatch[1] ?? "").toUpperCase()
+    return dedupeLinks(
+      [
+        { title: "ASN lookup for AS13335", href: "/network/asn/AS13335" },
+        { title: "ASN lookup for AS15169", href: "/network/asn/AS15169" },
+        { title: "WHOIS lookup", href: "/network/whois/plain.tools" },
+        { title: "Reverse DNS example", href: "/network/reverse/8.8.8.8" },
+        { title: "IP lookup example", href: "/ip/8.8.8.8" },
+        { title: "Browse network tools", href: "/network-tools" },
+        { title: `Search ${asn} in comparisons`, href: "/compare/plain-tools-vs-smallpdf" },
+        { title: "Trending outage checks", href: "/status/trending" },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  const whoisMatch = /^\/network\/whois\/([^/]+)$/.exec(normalizedPath)
+  if (whoisMatch) {
+    const query = decodeURIComponent(whoisMatch[1] ?? "")
+    const isIp = /[:\d]/.test(query) && !query.includes(".tools")
+    return dedupeLinks(
+      [
+        ...(isIp
+          ? [
+              { title: `Reverse DNS for ${query}`, href: `/network/reverse/${encodeURIComponent(query)}` },
+              { title: `IP lookup for ${query}`, href: `/ip/${encodeURIComponent(query)}` },
+            ]
+          : [
+              { title: `MX lookup for ${query}`, href: `/network/mx/${encodeURIComponent(query)}` },
+              { title: `NS lookup for ${query}`, href: `/network/ns/${encodeURIComponent(query)}` },
+              { title: `DNS lookup for ${query}`, href: `/dns/${encodeURIComponent(query)}` },
+              { title: `Status for ${query}`, href: `/status/${encodeURIComponent(query)}` },
+            ]),
+        { title: "Browse network tools", href: "/network-tools" },
+        { title: "Ping test", href: "/ping-test" },
+        { title: "What is my IP", href: "/what-is-my-ip" },
+        { title: "ASN lookup example", href: "/network/asn/AS13335" },
+      ],
+      currentPath
+    ).slice(0, 8)
+  }
+
+  return []
+}
+
+function getCalculatorRelatedLinks(currentPath: string): RelatedLink[] {
+  const match = /^\/calculators\/percentage\/([^/]+)$/.exec(normalisePath(currentPath))
+  if (!match) return []
+
+  const page = getPercentageCalculatorPage(decodeURIComponent(match[1] ?? ""))
+  if (!page) return []
+
+  const percentMatch = /what-is-([0-9.]+)-percent-of-([0-9.]+)/.exec(page.expression)
+  if (!percentMatch) return CALCULATOR_FALLBACK_LINKS.slice(0, 8)
+  const percent = Number.parseFloat(percentMatch[1] ?? "0")
+  const base = Number.parseFloat(percentMatch[2] ?? "0")
+
+  return dedupeLinks(
+    [
+      { title: `${Math.max(1, percent - 5)}% of ${base}`, href: `/calculators/percentage/what-is-${Math.max(1, percent - 5)}-percent-of-${base}` },
+      { title: `${percent + 5}% of ${base}`, href: `/calculators/percentage/what-is-${percent + 5}-percent-of-${base}` },
+      { title: `${percent}% of ${Math.max(10, base - 50)}`, href: `/calculators/percentage/what-is-${percent}-percent-of-${Math.max(10, base - 50)}` },
+      { title: `${percent}% of ${base + 50}`, href: `/calculators/percentage/what-is-${percent}-percent-of-${base + 50}` },
+      { title: "Professional PDF guides", href: "/guides/legal/compress-shared-pdfs" },
+      { title: "Privacy-first comparisons", href: "/compare/plain-tools-vs-smallpdf" },
+      { title: "File converters", href: "/file-converters" },
+      { title: "PDF tools", href: "/pdf-tools" },
+    ],
+    currentPath
+  ).slice(0, 8)
+}
+
+function getStatusExtensionLinks(currentPath: string): RelatedLink[] {
+  const trendingMatch = /^\/status\/trending\/([^/]+)$/.exec(normalisePath(currentPath))
+  if (trendingMatch) {
+    const page = getStatusTrendingBundle(decodeURIComponent(trendingMatch[1] ?? ""))
+    if (page) {
+      return dedupeLinks(
+        [
+          { title: "All trending outage checks", href: "/status/trending" },
+          { title: "Status checker", href: "/site-status" },
+          { title: "DNS lookup", href: "/dns-lookup" },
+          { title: "Ping test", href: "/ping-test" },
+          { title: "Trending social outages", href: "/status/trending/social" },
+          { title: "Trending developer outages", href: "/status/trending/developer" },
+          { title: "Trending cloud and SaaS outages", href: "/status/trending/saas" },
+          { title: "Trending streaming outages", href: "/status/trending/streaming" },
+        ],
+        currentPath
+      ).slice(0, 8)
+    }
+  }
+
+  const historyMatch = /^\/status\/([^/]+)\/outage-history$/.exec(normalisePath(currentPath))
+  if (historyMatch) {
+    const domain = decodeURIComponent(historyMatch[1] ?? "")
+    const page = getStatusOutageHistoryBundle(domain)
+    if (page) {
+      return dedupeLinks(
+        [
+          { title: `Status for ${domain}`, href: `/status/${encodeURIComponent(domain)}` },
+          { title: `DNS for ${domain}`, href: `/dns/${encodeURIComponent(domain)}` },
+          { title: "Trending outage checks", href: "/status/trending" },
+          { title: "Site status checker", href: "/site-status" },
+          { title: "Ping test", href: "/ping-test" },
+          { title: "What is my IP", href: "/what-is-my-ip" },
+          { title: "Network tools", href: "/network-tools" },
+          { title: "Status directory", href: "/status" },
+        ],
+        currentPath
+      ).slice(0, 8)
+    }
+  }
+
+  return []
+}
+
 export function getRelatedLinks(currentPath: string): RelatedLink[] {
   const normalizedPath = normalisePath(currentPath)
 
@@ -413,9 +603,24 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
     return dnsLinks
   }
 
+  const networkLinks = getNetworkOpsRelatedLinks(normalizedPath)
+  if (networkLinks.length >= 6) {
+    return networkLinks
+  }
+
   const ipLinks = getIpRelatedLinks(normalizedPath)
   if (ipLinks.length >= 6) {
     return ipLinks
+  }
+
+  const calculatorLinks = getCalculatorRelatedLinks(normalizedPath)
+  if (calculatorLinks.length >= 6) {
+    return calculatorLinks
+  }
+
+  const statusExtensionLinks = getStatusExtensionLinks(normalizedPath)
+  if (statusExtensionLinks.length >= 6) {
+    return statusExtensionLinks
   }
 
   if (normalizedPath.startsWith("/dns")) {
@@ -424,6 +629,15 @@ export function getRelatedLinks(currentPath: string): RelatedLink[] {
 
   if (normalizedPath.startsWith("/ip")) {
     return dedupeLinks([...ipLinks, ...IP_FALLBACK_LINKS], normalizedPath).slice(0, 8)
+  }
+
+  if (normalizedPath.startsWith("/network")) {
+    return dedupeLinks([...networkLinks, ...NETWORK_FALLBACK_LINKS], normalizedPath).slice(0, 8)
+  }
+
+  if (normalizedPath.startsWith("/calculators")) {
+    return dedupeLinks([...calculatorLinks, ...CALCULATOR_FALLBACK_LINKS], normalizedPath)
+      .slice(0, 8)
   }
 
   if (normalizedPath.startsWith("/convert")) {

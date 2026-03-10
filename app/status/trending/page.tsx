@@ -8,6 +8,7 @@ import {
   OUTAGE_HISTORY_PAGES,
 } from "@/lib/outage-history-pages"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { STATUS_TRENDING_SEGMENTS } from "@/lib/status-extensions"
 import { getStatusObservabilityStorageInfo, getStatusTrends } from "@/lib/status-trending"
 import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
@@ -189,6 +190,25 @@ export default async function StatusTrendingPage() {
               ))}
             </ul>
           </section>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Trending segments
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {STATUS_TRENDING_SEGMENTS.map((entry) => (
+              <Link
+                key={entry.segment}
+                href={`/status/trending/${entry.segment}`}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
+              >
+                {entry.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
