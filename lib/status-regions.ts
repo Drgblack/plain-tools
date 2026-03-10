@@ -241,8 +241,8 @@ export const STATUS_ISP_SEEDS: StatusIspSeed[] = [
   { slug: "m1", label: "M1" },
 ] as const
 
-export const STATUS_REGION_BASE_DOMAINS = EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS.slice(0, 1100)
-export const STATUS_REGION_COUNTRY_VARIANTS = STATUS_REGION_MARKETS.slice(0, 132)
+export const STATUS_REGION_BASE_DOMAINS = EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS.slice(0, 1300)
+export const STATUS_REGION_COUNTRY_VARIANTS = STATUS_REGION_MARKETS.slice(0, 150)
 
 function countWords(values: string[]) {
   return values.join(" ").trim().split(/\s+/).filter(Boolean).length
