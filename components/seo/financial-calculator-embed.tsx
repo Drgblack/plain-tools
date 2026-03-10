@@ -5,6 +5,7 @@ import { type FormEvent, useState } from "react"
 
 import {
   buildCalculatorExpression,
+  buildCalculatorPath,
   type CalculatorCategory,
 } from "@/lib/calculator-financial"
 
@@ -17,10 +18,6 @@ const inputClassName =
   "mt-2 w-full rounded-xl border border-border/70 bg-background/70 px-3 py-2 text-sm text-foreground outline-none transition focus:border-accent/50"
 
 const labelClassName = "block text-sm font-medium text-foreground"
-
-function buildCalculatorPath(category: CalculatorCategory, expression: string) {
-  return `/calculators/${category}/${expression}`
-}
 
 function readNumber(value: string) {
   const parsed = Number.parseFloat(value)
@@ -52,7 +49,8 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       if (percent === null || base === null) return "Enter valid numbers to calculate."
       return `${formatNumber(percent)}% of ${formatNumber(base)} = ${roundText((percent / 100) * base)}`
     }
-    case "basic-loan": {
+    case "basic-loan":
+    case "basic-loan-payment": {
       const principal = readNumber(values.principal ?? "")
       const annualRate = readNumber(values.annualRate ?? "")
       const termYears = readNumber(values.termYears ?? "")
@@ -67,18 +65,25 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
           : (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months)
       return `Estimated monthly payment: ${formatCurrency(payment)}`
     }
-    case "compound-interest-intro": {
+    case "compound-basic":
+    case "compound-interest-intro":
+    case "compound-interest-basic": {
       const principal = readNumber(values.principal ?? "")
       const annualRate = readNumber(values.annualRate ?? "")
       const years = readNumber(values.years ?? "")
       if (principal === null || annualRate === null || years === null) {
         return "Enter principal, rate, and years to project growth."
       }
-      const futureValue = principal * (1 + annualRate / 100 / 12) ** (years * 12)
+      const compounding = values.compounding ?? "monthly"
+      const periodsPerYear =
+        compounding === "annual" ? 1 : compounding === "quarterly" ? 4 : 12
+      const futureValue =
+        principal * (1 + annualRate / 100 / periodsPerYear) ** (years * periodsPerYear)
       return `Projected value: ${formatCurrency(futureValue)}`
     }
     case "retirement-basic":
-    case "retirement-savings-basic": {
+    case "retirement-savings-basic":
+    case "retirement-savings-intro": {
       const monthlyContribution = readNumber(values.monthlyContribution ?? "")
       const annualRate = readNumber(values.annualRate ?? "")
       const years = readNumber(values.years ?? "")
@@ -97,7 +102,8 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
           : monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
       return `Projected retirement balance: ${formatCurrency(futureValue)}`
     }
-    case "tip": {
+    case "tip":
+    case "tip-calculator": {
       const bill = readNumber(values.bill ?? "")
       const tipPercent = readNumber(values.tipPercent ?? "")
       if (bill === null || tipPercent === null) {
@@ -125,6 +131,75 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       return `Simple interest: ${formatCurrency(interest)}. Total amount: ${formatCurrency(
         principal + interest
       )}`
+    }
+    case "tax-estimate-simple": {
+      const annualIncome = readNumber(values.annualIncome ?? "")
+      const filingStatus = values.filingStatus ?? "single"
+      if (annualIncome === null) return "Enter annual income and filing status."
+      const rate =
+        filingStatus === "married-joint"
+          ? annualIncome <= 50000
+            ? 10
+            : annualIncome <= 150000
+              ? 16
+              : 22
+          : filingStatus === "head-of-household"
+            ? annualIncome <= 45000
+              ? 10
+              : annualIncome <= 140000
+                ? 17
+                : 23
+            : filingStatus === "self-employed"
+              ? annualIncome <= 45000
+                ? 15
+                : annualIncome <= 140000
+                  ? 23
+                  : 29
+              : annualIncome <= 40000
+                ? 11
+                : annualIncome <= 140000
+                  ? 18
+                  : 24
+      return `Estimated tax: ${formatCurrency((annualIncome * rate) / 100)}. Estimated take-home: ${formatCurrency(annualIncome * (1 - rate / 100))}`
+    }
+    case "credit-card-payoff": {
+      const balance = readNumber(values.balance ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const monthlyPayment = readNumber(values.monthlyPayment ?? "")
+      if (balance === null || annualRate === null || monthlyPayment === null) {
+        return "Enter balance, APR, and monthly payment."
+      }
+      const monthlyRate = annualRate / 100 / 12
+      let remaining = balance
+      let months = 0
+      while (remaining > 0.01 && months < 1200) {
+        const interest = remaining * monthlyRate
+        const principalPaid = monthlyPayment - interest
+        if (principalPaid <= 0) return "Payment is too low to reduce the balance."
+        remaining = Math.max(0, remaining - principalPaid)
+        months += 1
+      }
+      return `Estimated payoff time: ${months} months`
+    }
+    case "savings-goal": {
+      const targetAmount = readNumber(values.targetAmount ?? "")
+      const monthlyContribution = readNumber(values.monthlyContribution ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      if (
+        targetAmount === null ||
+        monthlyContribution === null ||
+        annualRate === null
+      ) {
+        return "Enter target, monthly savings, and annual rate."
+      }
+      const monthlyRate = annualRate / 100 / 12
+      let balance = 0
+      let months = 0
+      while (balance < targetAmount && months < 1200) {
+        balance = balance * (1 + monthlyRate) + monthlyContribution
+        months += 1
+      }
+      return `Estimated time to goal: ${months} months`
     }
   }
 }
@@ -161,6 +236,7 @@ function renderFields(
         </>
       )
     case "basic-loan":
+    case "basic-loan-payment":
       return (
         <>
           <label className={labelClassName}>
@@ -195,7 +271,9 @@ function renderFields(
           </label>
         </>
       )
+    case "compound-basic":
     case "compound-interest-intro":
+    case "compound-interest-basic":
       return (
         <>
           <label className={labelClassName}>
@@ -228,10 +306,23 @@ function renderFields(
               value={values.years ?? ""}
             />
           </label>
+          <label className={labelClassName}>
+            Compounding
+            <select
+              className={inputClassName}
+              onChange={(event) => setValue("compounding", event.target.value)}
+              value={values.compounding ?? "monthly"}
+            >
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </label>
         </>
       )
     case "retirement-basic":
     case "retirement-savings-basic":
+    case "retirement-savings-intro":
       return (
         <>
           <label className={labelClassName}>
@@ -267,6 +358,7 @@ function renderFields(
         </>
       )
     case "tip":
+    case "tip-calculator":
       return (
         <>
           <label className={labelClassName}>
@@ -347,6 +439,104 @@ function renderFields(
               step="1"
               type="number"
               value={values.years ?? ""}
+            />
+          </label>
+        </>
+      )
+    case "tax-estimate-simple":
+      return (
+        <>
+          <label className={labelClassName}>
+            Annual income
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("annualIncome", event.target.value)}
+              step="1"
+              type="number"
+              value={values.annualIncome ?? ""}
+            />
+          </label>
+          <label className={labelClassName}>
+            Filing status
+            <select
+              className={inputClassName}
+              onChange={(event) => setValue("filingStatus", event.target.value)}
+              value={values.filingStatus ?? "single"}
+            >
+              <option value="single">Single</option>
+              <option value="married-joint">Married joint</option>
+              <option value="head-of-household">Head of household</option>
+              <option value="self-employed">Self-employed</option>
+            </select>
+          </label>
+        </>
+      )
+    case "credit-card-payoff":
+      return (
+        <>
+          <label className={labelClassName}>
+            Balance
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("balance", event.target.value)}
+              step="1"
+              type="number"
+              value={values.balance ?? ""}
+            />
+          </label>
+          <label className={labelClassName}>
+            APR (%)
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("annualRate", event.target.value)}
+              step="0.01"
+              type="number"
+              value={values.annualRate ?? ""}
+            />
+          </label>
+          <label className={labelClassName}>
+            Monthly payment
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("monthlyPayment", event.target.value)}
+              step="1"
+              type="number"
+              value={values.monthlyPayment ?? ""}
+            />
+          </label>
+        </>
+      )
+    case "savings-goal":
+      return (
+        <>
+          <label className={labelClassName}>
+            Target amount
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("targetAmount", event.target.value)}
+              step="1"
+              type="number"
+              value={values.targetAmount ?? ""}
+            />
+          </label>
+          <label className={labelClassName}>
+            Monthly savings
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("monthlyContribution", event.target.value)}
+              step="1"
+              type="number"
+              value={values.monthlyContribution ?? ""}
+            />
+          </label>
+          <label className={labelClassName}>
+            Annual rate (%)
+            <input
+              className={inputClassName}
+              onChange={(event) => setValue("annualRate", event.target.value)}
+              step="0.01"
+              type="number"
+              value={values.annualRate ?? ""}
             />
           </label>
         </>

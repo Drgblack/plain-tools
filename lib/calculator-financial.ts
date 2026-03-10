@@ -10,16 +10,23 @@ import type { ToolDefinition } from "@/lib/tools-catalogue"
 
 export type PublicCalculatorCategory =
   | "percentage"
-  | "tip"
+  | "tip-calculator"
   | "salary-to-hourly"
-  | "basic-loan"
+  | "basic-loan-payment"
   | "simple-interest"
-  | "compound-basic"
-  | "retirement-basic"
+  | "compound-interest-basic"
+  | "retirement-savings-intro"
+  | "tax-estimate-simple"
+  | "credit-card-payoff"
+  | "savings-goal"
 
 export type LegacyCalculatorCategory =
+  | "basic-loan"
+  | "compound-basic"
   | "compound-interest-intro"
+  | "retirement-basic"
   | "retirement-savings-basic"
+  | "tip"
 
 export type CalculatorCategory =
   | PublicCalculatorCategory
@@ -67,7 +74,7 @@ type ParsedPercentage = {
 
 type ParsedTip = {
   bill: number
-  category: "tip"
+  category: "tip-calculator"
   expression: string
   split: number
   tipAmount: number
@@ -88,7 +95,7 @@ type ParsedSalary = {
 
 type ParsedBasicLoan = {
   annualRate: number
-  category: "basic-loan"
+  category: "basic-loan-payment"
   expression: string
   monthlyPayment: number
   principal: number
@@ -109,7 +116,8 @@ type ParsedSimpleInterest = {
 
 type ParsedCompoundInterestIntro = {
   annualRate: number
-  category: "compound-basic"
+  category: "compound-interest-basic"
+  compounding: "annual" | "monthly" | "quarterly"
   expression: string
   futureValue: number
   principal: number
@@ -119,7 +127,7 @@ type ParsedCompoundInterestIntro = {
 
 type ParsedRetirementBasic = {
   annualRate: number
-  category: "retirement-basic"
+  category: "retirement-savings-intro"
   expression: string
   futureValue: number
   monthlyContribution: number
@@ -127,13 +135,47 @@ type ParsedRetirementBasic = {
   years: number
 }
 
+type ParsedTaxEstimateSimple = {
+  annualIncome: number
+  category: "tax-estimate-simple"
+  effectiveRate: number
+  estimatedTax: number
+  expression: string
+  filingStatus: "head-of-household" | "married-joint" | "single" | "self-employed"
+  takeHomeAfterTax: number
+}
+
+type ParsedCreditCardPayoff = {
+  annualRate: number
+  balance: number
+  category: "credit-card-payoff"
+  expression: string
+  interestPaid: number
+  monthlyPayment: number
+  monthsToPayoff: number
+  totalPaid: number
+}
+
+type ParsedSavingsGoal = {
+  annualRate: number
+  category: "savings-goal"
+  expression: string
+  monthlyContribution: number
+  monthsToGoal: number
+  targetAmount: number
+  totalContributions: number
+}
+
 type ParsedCalculator =
   | ParsedBasicLoan
   | ParsedCompoundInterestIntro
+  | ParsedCreditCardPayoff
   | ParsedPercentage
   | ParsedRetirementBasic
   | ParsedSalary
+  | ParsedSavingsGoal
   | ParsedSimpleInterest
+  | ParsedTaxEstimateSimple
   | ParsedTip
 
 const calculatorTool: ToolDefinition = {
@@ -146,62 +188,197 @@ const calculatorTool: ToolDefinition = {
   slug: "financial-calculator",
 }
 
-const CATEGORY_LABELS: Record<CalculatorCategory, string> = {
-  "basic-loan": "Basic Loan Calculator",
-  "compound-basic": "Compound Interest Calculator",
+export const CALCULATOR_CATEGORY_LABELS: Record<CalculatorCategory, string> = {
+  "basic-loan": "Basic Loan Payment Calculator",
+  "basic-loan-payment": "Basic Loan Payment Calculator",
+  "compound-basic": "Compound Interest Basic Calculator",
+  "compound-interest-basic": "Compound Interest Basic Calculator",
   "compound-interest-intro": "Compound Interest Calculator",
+  "credit-card-payoff": "Credit Card Payoff Calculator",
   percentage: "Percentage Calculator",
-  "retirement-basic": "Basic Retirement Savings Calculator",
+  "retirement-basic": "Retirement Savings Intro Calculator",
+  "retirement-savings-intro": "Retirement Savings Intro Calculator",
   "retirement-savings-basic": "Retirement Savings Calculator",
+  "savings-goal": "Savings Goal Calculator",
   "salary-to-hourly": "Salary to Hourly Calculator",
   "simple-interest": "Simple Interest Calculator",
+  "tax-estimate-simple": "Simple Tax Estimate Calculator",
   tip: "Tip Calculator",
+  "tip-calculator": "Tip Calculator",
 }
 
-const PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
+export const CALCULATOR_PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
   "percentage",
-  "tip",
+  "tip-calculator",
   "salary-to-hourly",
-  "basic-loan",
+  "basic-loan-payment",
   "simple-interest",
-  "compound-basic",
-  "retirement-basic",
+  "compound-interest-basic",
+  "retirement-savings-intro",
+  "tax-estimate-simple",
+  "credit-card-payoff",
+  "savings-goal",
 ]
+
+const CATEGORY_LABELS = CALCULATOR_CATEGORY_LABELS
+const PUBLIC_CATEGORY_ORDER = CALCULATOR_PUBLIC_CATEGORY_ORDER
 
 const CATEGORY_ORDER: CalculatorCategory[] = [
-  ...PUBLIC_CATEGORY_ORDER,
+  ...CALCULATOR_PUBLIC_CATEGORY_ORDER,
+  "basic-loan",
+  "compound-basic",
   "compound-interest-intro",
+  "retirement-basic",
   "retirement-savings-basic",
+  "tip",
 ]
 
-const PUBLIC_CATEGORY_SET = new Set<PublicCalculatorCategory>(PUBLIC_CATEGORY_ORDER)
+const PUBLIC_CATEGORY_SET = new Set<PublicCalculatorCategory>(CALCULATOR_PUBLIC_CATEGORY_ORDER)
 
-const PERCENT_VALUES = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25, 26, 27, 28, 30, 33, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
-  95, 100, 110, 125, 150, 175, 200,
-] as const
-const PERCENT_BASE_VALUES = [
-  10, 12, 15, 18, 20, 24, 25, 30, 35, 40, 45, 50, 60, 72, 75, 80, 90, 95, 100, 110,
-  120, 125, 135, 150, 175, 180, 200, 225, 240, 250, 275, 300, 325, 350, 375, 400,
-  450, 500, 550, 600, 700, 800, 900, 1000,
-] as const
-const TIP_BILLS = [20, 25, 35, 45, 50, 60, 75, 85, 90, 95, 100, 120, 135, 150, 180, 200, 225, 250, 300, 350, 400, 450, 500, 600, 750] as const
-const TIP_PERCENTS = [10, 12, 15, 16, 18, 20, 22, 25, 30, 35] as const
-const SALARY_VALUES = [24000, 28000, 30000, 32000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 90000, 100000, 110000, 120000, 140000, 150000, 175000, 200000, 225000, 250000] as const
-const SALARY_HOURS = [20, 24, 30, 32, 35, 37.5, 40, 45] as const
-const LOAN_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 25000, 30000, 35000, 40000, 50000, 60000, 75000] as const
-const LOAN_RATES = [3, 4, 5, 6, 7, 8, 9, 10] as const
-const LOAN_TERMS = [1, 2, 3, 4, 5] as const
-const INTEREST_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 60000, 75000, 100000, 150000] as const
-const INTEREST_RATES = [2, 3, 4, 5, 6, 7, 8, 9] as const
-const INTEREST_YEARS = [1, 2, 3, 4, 5, 7] as const
-const COMPOUND_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000, 50000, 75000, 100000, 150000] as const
-const COMPOUND_RATES = [3, 4, 5, 6, 7, 8] as const
-const COMPOUND_YEARS = [1, 3, 5, 7, 10, 15] as const
-const RETIREMENT_MONTHLY = [100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 2000, 2500] as const
-const RETIREMENT_RATES = [4, 5, 6, 7, 8, 9] as const
-const RETIREMENT_YEARS = [10, 15, 20, 30] as const
+function range(start: number, end: number, step = 1) {
+  const values: number[] = []
+  for (let value = start; value <= end; value += step) {
+    values.push(Number.parseFloat(value.toFixed(2)))
+  }
+  return values
+}
+
+function uniqueNumberSeries(values: number[]) {
+  return Array.from(new Set(values)).sort((left, right) => left - right)
+}
+
+const PERCENT_VALUES = uniqueNumberSeries([
+  ...range(1, 30),
+  32,
+  33,
+  35,
+  36,
+  38,
+  40,
+  42,
+  45,
+  48,
+  50,
+  55,
+  60,
+  65,
+  70,
+  75,
+  80,
+  85,
+  90,
+  95,
+  100,
+  110,
+  125,
+  150,
+  175,
+  200,
+  225,
+  250,
+  300,
+  400,
+  500,
+])
+const PERCENT_BASE_VALUES = uniqueNumberSeries([
+  ...range(10, 100, 5),
+  ...range(110, 500, 10),
+  ...range(550, 2500, 50),
+  ...range(2750, 10000, 250),
+  12000,
+  15000,
+  20000,
+])
+const TIP_BILLS = uniqueNumberSeries([
+  ...range(15, 150, 5),
+  ...range(160, 500, 10),
+  ...range(550, 1500, 50),
+  1750,
+  2000,
+])
+const TIP_PERCENTS = uniqueNumberSeries([10, 12, 15, 16, 18, 20, 22, 25, 28, 30, 35, 40])
+const SALARY_VALUES = uniqueNumberSeries([
+  ...range(18000, 100000, 2000),
+  ...range(105000, 200000, 5000),
+  ...range(225000, 500000, 25000),
+])
+const SALARY_HOURS = uniqueNumberSeries([20, 24, 25, 30, 32, 35, 37.5, 40, 42, 45, 48, 50, 55, 60])
+const LOAN_PRINCIPALS = uniqueNumberSeries([
+  ...range(1000, 20000, 1000),
+  ...range(25000, 100000, 5000),
+  ...range(125000, 300000, 25000),
+  350000,
+  400000,
+])
+const LOAN_RATES = uniqueNumberSeries([
+  0,
+  1.5,
+  2,
+  2.5,
+  3,
+  3.5,
+  4,
+  4.25,
+  4.5,
+  4.75,
+  5,
+  5.5,
+  6,
+  6.5,
+  7,
+  7.5,
+  8,
+  8.5,
+  9,
+  10,
+  12,
+])
+const LOAN_TERMS = uniqueNumberSeries([1, 2, 3, 4, 5, 6, 7, 10, 12, 15, 20, 25, 30])
+const INTEREST_PRINCIPALS = uniqueNumberSeries([
+  ...range(1000, 10000, 1000),
+  ...range(12500, 50000, 2500),
+  ...range(60000, 250000, 10000),
+])
+const INTEREST_RATES = uniqueNumberSeries([1, 2, 3, 4, 5, 6, 6.5, 7, 8, 9, 10, 12, 15, 18, 20])
+const INTEREST_YEARS = uniqueNumberSeries([1, 2, 3, 4, 5, 7, 10, 12, 15, 20, 25, 30])
+const COMPOUND_PRINCIPALS = uniqueNumberSeries([
+  ...range(1000, 10000, 1000),
+  ...range(15000, 60000, 5000),
+  ...range(75000, 200000, 25000),
+])
+const COMPOUND_RATES = uniqueNumberSeries([2, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 12])
+const COMPOUND_YEARS = uniqueNumberSeries([1, 2, 3, 5, 7, 10, 12, 15, 20, 25, 30, 35])
+const COMPOUNDING_PERIODS = ["monthly", "quarterly", "annual"] as const
+const RETIREMENT_MONTHLY = uniqueNumberSeries([
+  ...range(50, 500, 25),
+  ...range(550, 2000, 50),
+  ...range(2250, 5000, 250),
+])
+const RETIREMENT_RATES = uniqueNumberSeries([3, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 12])
+const RETIREMENT_YEARS = uniqueNumberSeries([5, 7, 10, 12, 15, 20, 25, 30, 35, 40, 45])
+const TAX_INCOMES = uniqueNumberSeries([
+  ...range(15000, 100000, 2500),
+  ...range(105000, 250000, 5000),
+  ...range(275000, 500000, 25000),
+])
+const TAX_FILING_STATUSES = ["single", "married-joint", "head-of-household", "self-employed"] as const
+const CREDIT_CARD_BALANCES = uniqueNumberSeries([
+  ...range(1000, 10000, 500),
+  ...range(11000, 25000, 1000),
+  ...range(27500, 60000, 2500),
+])
+const CREDIT_CARD_APRS = uniqueNumberSeries([0, 9, 12, 15, 16, 18, 19.9, 21, 22, 24, 25, 27, 29])
+const CREDIT_CARD_PAYMENTS = uniqueNumberSeries([50, 75, 100, 125, 150, 200, 250, 300, 400, 500, 650, 750, 900, 1000, 1250, 1500])
+const SAVINGS_GOAL_TARGETS = uniqueNumberSeries([
+  ...range(1000, 10000, 1000),
+  ...range(15000, 60000, 5000),
+  ...range(75000, 200000, 25000),
+])
+const SAVINGS_GOAL_MONTHLY = uniqueNumberSeries([
+  ...range(50, 500, 50),
+  ...range(600, 2000, 200),
+])
+const SAVINGS_GOAL_RATES = uniqueNumberSeries([0, 1, 2, 3, 4, 4.5, 5, 6, 7, 8, 10])
 
 const EXTERNAL_OVERLAP_NOTE =
   "Plain Tools keeps these pages focused on quick first-pass calculations and browser-local convenience, while deeper planning models remain outside this cluster."
@@ -234,9 +411,16 @@ function monthlyPayment(principal: number, annualRate: number, termYears: number
   return (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months)
 }
 
-function futureValueCompound(principal: number, annualRate: number, years: number) {
-  const monthlyRate = annualRate / 100 / 12
-  return principal * (1 + monthlyRate) ** (years * 12)
+function futureValueCompoundWithFrequency(
+  principal: number,
+  annualRate: number,
+  years: number,
+  compounding: "annual" | "monthly" | "quarterly"
+) {
+  const periodsPerYear =
+    compounding === "annual" ? 1 : compounding === "quarterly" ? 4 : 12
+  const periodicRate = annualRate / 100 / periodsPerYear
+  return principal * (1 + periodicRate) ** (years * periodsPerYear)
 }
 
 function futureValueRetirement(monthlyContribution: number, annualRate: number, years: number) {
@@ -244,6 +428,106 @@ function futureValueRetirement(monthlyContribution: number, annualRate: number, 
   const months = years * 12
   if (monthlyRate === 0) return monthlyContribution * months
   return monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
+}
+
+function monthsToSavingsGoal(
+  targetAmount: number,
+  monthlyContribution: number,
+  annualRate: number
+) {
+  if (monthlyContribution <= 0) return Infinity
+  const monthlyRate = annualRate / 100 / 12
+  let balance = 0
+  let months = 0
+  while (balance < targetAmount && months < 1200) {
+    balance = balance * (1 + monthlyRate) + monthlyContribution
+    months += 1
+  }
+  return months
+}
+
+function monthsToDebtPayoff(balance: number, annualRate: number, monthlyPayment: number) {
+  const monthlyRate = annualRate / 100 / 12
+  let remaining = balance
+  let months = 0
+  let totalPaid = 0
+  while (remaining > 0.01 && months < 1200) {
+    const interest = remaining * monthlyRate
+    const principalPaid = monthlyPayment - interest
+    if (principalPaid <= 0) {
+      return { interestPaid: Infinity, monthsToPayoff: Infinity, totalPaid: Infinity }
+    }
+    remaining = Math.max(0, remaining - principalPaid)
+    totalPaid += monthlyPayment
+    months += 1
+  }
+
+  return {
+    interestPaid: totalPaid - balance,
+    monthsToPayoff: months,
+    totalPaid,
+  }
+}
+
+function effectiveTaxRateFor(
+  filingStatus: "head-of-household" | "married-joint" | "single" | "self-employed",
+  annualIncome: number
+) {
+  const brackets =
+    filingStatus === "married-joint"
+      ? [
+          { threshold: 25000, rate: 8 },
+          { threshold: 50000, rate: 10 },
+          { threshold: 90000, rate: 12 },
+          { threshold: 150000, rate: 16 },
+          { threshold: 250000, rate: 20 },
+          { threshold: Number.POSITIVE_INFINITY, rate: 24 },
+        ]
+      : filingStatus === "head-of-household"
+        ? [
+            { threshold: 22000, rate: 8 },
+            { threshold: 45000, rate: 10 },
+            { threshold: 85000, rate: 13 },
+            { threshold: 140000, rate: 17 },
+            { threshold: 220000, rate: 21 },
+            { threshold: Number.POSITIVE_INFINITY, rate: 25 },
+          ]
+        : filingStatus === "self-employed"
+          ? [
+              { threshold: 20000, rate: 12 },
+              { threshold: 45000, rate: 15 },
+              { threshold: 85000, rate: 19 },
+              { threshold: 140000, rate: 23 },
+              { threshold: 220000, rate: 27 },
+              { threshold: Number.POSITIVE_INFINITY, rate: 31 },
+            ]
+          : [
+              { threshold: 20000, rate: 9 },
+              { threshold: 40000, rate: 11 },
+              { threshold: 85000, rate: 14 },
+              { threshold: 140000, rate: 18 },
+              { threshold: 220000, rate: 22 },
+              { threshold: Number.POSITIVE_INFINITY, rate: 26 },
+            ]
+
+  return brackets.find((entry) => annualIncome <= entry.threshold)?.rate ?? 0
+}
+
+function normalizeCalculatorCategory(category: CalculatorCategory): PublicCalculatorCategory {
+  switch (category) {
+    case "tip":
+      return "tip-calculator"
+    case "basic-loan":
+      return "basic-loan-payment"
+    case "compound-basic":
+    case "compound-interest-intro":
+      return "compound-interest-basic"
+    case "retirement-basic":
+    case "retirement-savings-basic":
+      return "retirement-savings-intro"
+    default:
+      return category
+  }
 }
 
 function parseNumberToken(value: string) {
@@ -256,11 +540,11 @@ function percentageExpressionFor(percent: number, base: number) {
 }
 
 function tipExpressionFor(bill: number, tipPercent: number) {
-  return `tip-calculator-${bill}-${tipPercent}`
+  return `tip-calculator-${bill}-${tipPercent}-percent`
 }
 
 function salaryExpressionFor(annualSalary: number, hoursPerWeek: number) {
-  return `salary-to-hourly-${annualSalary}-${hoursPerWeek}`
+  return `salary-to-hourly-${annualSalary}-${hoursPerWeek}-hours`
 }
 
 function basicLoanExpressionFor(principal: number, annualRate: number, termYears: number) {
@@ -271,8 +555,13 @@ function simpleInterestExpressionFor(principal: number, annualRate: number, year
   return `simple-interest-${principal}-${annualRate}-${years}`
 }
 
-function compoundExpressionFor(principal: number, annualRate: number, years: number) {
-  return `compound-interest-${principal}-${annualRate}-${years}`
+function compoundExpressionFor(
+  principal: number,
+  annualRate: number,
+  years: number,
+  compounding: "annual" | "monthly" | "quarterly"
+) {
+  return `compound-interest-${principal}-${annualRate}-${years}-years-${compounding}`
 }
 
 function retirementExpressionFor(
@@ -283,18 +572,35 @@ function retirementExpressionFor(
   return `retirement-savings-${monthlyContribution}-monthly-${annualRate}-${years}-years`
 }
 
+function taxEstimateExpressionFor(
+  annualIncome: number,
+  filingStatus: "head-of-household" | "married-joint" | "single" | "self-employed"
+) {
+  return `tax-estimate-${annualIncome}-${filingStatus}`
+}
+
+function creditCardPayoffExpressionFor(
+  balance: number,
+  annualRate: number,
+  monthlyPayment: number
+) {
+  return `credit-card-payoff-${balance}-${annualRate}-${monthlyPayment}-monthly`
+}
+
+function savingsGoalExpressionFor(
+  targetAmount: number,
+  monthlyContribution: number,
+  annualRate: number
+) {
+  return `savings-goal-${targetAmount}-target-${monthlyContribution}-monthly-${annualRate}-rate`
+}
+
 export function isCalculatorCategory(value: string): value is CalculatorCategory {
   return CATEGORY_ORDER.includes(value as CalculatorCategory)
 }
 
 export function buildCalculatorPath(category: CalculatorCategory, expression: string) {
-  const canonicalCategory =
-    category === "retirement-savings-basic"
-      ? "retirement-basic"
-      : category === "compound-interest-intro"
-        ? "compound-basic"
-        : category
-  return `/calculators/${canonicalCategory}/${expression}`
+  return `/calculators/${normalizeCalculatorCategory(category)}/${expression}`
 }
 
 export function buildCalculatorExpression(
@@ -315,7 +621,8 @@ export function buildCalculatorExpression(
       if (percent === null || base === null || percent < 0 || base < 0) return null
       return percentageExpressionFor(percent, base)
     }
-    case "tip": {
+    case "tip":
+    case "tip-calculator": {
       const bill = readNumber("bill")
       const tipPercent = readNumber("tipPercent")
       if (bill === null || tipPercent === null || bill < 0 || tipPercent < 0) return null
@@ -334,7 +641,8 @@ export function buildCalculatorExpression(
       }
       return salaryExpressionFor(annualSalary, hoursPerWeek)
     }
-    case "basic-loan": {
+    case "basic-loan":
+    case "basic-loan-payment": {
       const principal = readNumber("principal")
       const annualRate = readNumber("annualRate")
       const termYears = readNumber("termYears")
@@ -367,10 +675,16 @@ export function buildCalculatorExpression(
       return simpleInterestExpressionFor(principal, annualRate, years)
     }
     case "compound-basic":
-    case "compound-interest-intro": {
+    case "compound-interest-intro":
+    case "compound-interest-basic": {
       const principal = readNumber("principal")
       const annualRate = readNumber("annualRate")
       const years = readNumber("years")
+      const compoundingRaw = String(rawValues.compounding ?? "monthly").toLowerCase()
+      const compounding =
+        compoundingRaw === "annual" || compoundingRaw === "quarterly"
+          ? compoundingRaw
+          : "monthly"
       if (
         principal === null ||
         annualRate === null ||
@@ -381,10 +695,11 @@ export function buildCalculatorExpression(
       ) {
         return null
       }
-      return compoundExpressionFor(principal, annualRate, years)
+      return compoundExpressionFor(principal, annualRate, years, compounding)
     }
     case "retirement-basic":
-    case "retirement-savings-basic": {
+    case "retirement-savings-basic":
+    case "retirement-savings-intro": {
       const monthlyContribution = readNumber("monthlyContribution")
       const annualRate = readNumber("annualRate")
       const years = readNumber("years")
@@ -399,6 +714,54 @@ export function buildCalculatorExpression(
         return null
       }
       return retirementExpressionFor(monthlyContribution, annualRate, years)
+    }
+    case "tax-estimate-simple": {
+      const annualIncome = readNumber("annualIncome")
+      const filingStatus = String(rawValues.filingStatus ?? "").toLowerCase() as
+        | "head-of-household"
+        | "married-joint"
+        | "single"
+        | "self-employed"
+      if (
+        annualIncome === null ||
+        annualIncome < 0 ||
+        !TAX_FILING_STATUSES.includes(filingStatus)
+      ) {
+        return null
+      }
+      return taxEstimateExpressionFor(annualIncome, filingStatus)
+    }
+    case "credit-card-payoff": {
+      const balance = readNumber("balance")
+      const annualRate = readNumber("annualRate")
+      const monthlyPayment = readNumber("monthlyPayment")
+      if (
+        balance === null ||
+        annualRate === null ||
+        monthlyPayment === null ||
+        balance <= 0 ||
+        annualRate < 0 ||
+        monthlyPayment <= 0
+      ) {
+        return null
+      }
+      return creditCardPayoffExpressionFor(balance, annualRate, monthlyPayment)
+    }
+    case "savings-goal": {
+      const targetAmount = readNumber("targetAmount")
+      const monthlyContribution = readNumber("monthlyContribution")
+      const annualRate = readNumber("annualRate")
+      if (
+        targetAmount === null ||
+        monthlyContribution === null ||
+        annualRate === null ||
+        targetAmount <= 0 ||
+        monthlyContribution <= 0 ||
+        annualRate < 0
+      ) {
+        return null
+      }
+      return savingsGoalExpressionFor(targetAmount, monthlyContribution, annualRate)
     }
   }
 }
@@ -426,10 +789,11 @@ function parseCalculatorExpression(
     }
   }
 
-  if (category === "tip") {
-    const match = /^tip-calculator-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)$/.exec(
-      decoded
-    )
+  if (category === "tip" || category === "tip-calculator") {
+    const match =
+      /^tip-calculator-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)-percent$/.exec(
+        decoded
+      )
     if (!match) return null
     const bill = parseNumberToken(match[1] ?? "")
     const tipPercent = parseNumberToken(match[2] ?? "")
@@ -439,7 +803,7 @@ function parseCalculatorExpression(
     const totalBill = bill + tipAmount
     return {
       bill,
-      category,
+      category: "tip-calculator",
       expression: tipExpressionFor(bill, tipPercent),
       split,
       tipAmount,
@@ -450,9 +814,10 @@ function parseCalculatorExpression(
   }
 
   if (category === "salary-to-hourly") {
-    const match = /^salary-to-hourly-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)$/.exec(
-      decoded
-    )
+    const match =
+      /^salary-to-hourly-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)-hours$/.exec(
+        decoded
+      )
     if (!match) return null
     const annualSalary = parseNumberToken(match[1] ?? "")
     const hoursPerWeek = parseNumberToken(match[2] ?? "")
@@ -476,7 +841,7 @@ function parseCalculatorExpression(
     }
   }
 
-  if (category === "basic-loan") {
+  if (category === "basic-loan" || category === "basic-loan-payment") {
     const match = /^loan-payment-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years$/.exec(
       decoded
     )
@@ -498,7 +863,7 @@ function parseCalculatorExpression(
     const totalPaid = payment * termYears * 12
     return {
       annualRate,
-      category,
+      category: "basic-loan-payment",
       expression: basicLoanExpressionFor(principal, annualRate, termYears),
       monthlyPayment: payment,
       principal,
@@ -536,62 +901,175 @@ function parseCalculatorExpression(
     }
   }
 
-  if (category === "compound-basic" || category === "compound-interest-intro") {
-    const match = /^compound-interest-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)$/.exec(decoded)
+  if (
+    category === "compound-basic" ||
+    category === "compound-interest-intro" ||
+    category === "compound-interest-basic"
+  ) {
+    const match =
+      /^compound-interest-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years-(monthly|quarterly|annual)$/.exec(
+        decoded
+      )
     if (!match) return null
     const principal = parseNumberToken(match[1] ?? "")
     const annualRate = parseNumberToken(match[2] ?? "")
-    const years = parseNumberToken(match[3] ?? "")
+    const termYears = parseNumberToken(match[3] ?? "")
+    const compounding = (match[4] ?? "monthly") as "annual" | "monthly" | "quarterly"
     if (
       principal === null ||
       annualRate === null ||
-      years === null ||
+      termYears === null ||
       principal <= 0 ||
+      annualRate < 0 ||
+      termYears <= 0
+    ) {
+      return null
+    }
+    const futureValue = futureValueCompoundWithFrequency(
+      principal,
+      annualRate,
+      termYears,
+      compounding
+    )
+    return {
+      annualRate,
+      category: "compound-interest-basic",
+      compounding,
+      expression: compoundExpressionFor(principal, annualRate, termYears, compounding),
+      futureValue,
+      principal,
+      totalGrowth: futureValue - principal,
+      years: termYears,
+    }
+  }
+
+  if (
+    category === "retirement-basic" ||
+    category === "retirement-savings-basic" ||
+    category === "retirement-savings-intro"
+  ) {
+    const match =
+      /^retirement-savings-([0-9]+)-monthly-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const monthlyContribution = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const years = parseNumberToken(match[3] ?? "")
+    if (
+      monthlyContribution === null ||
+      annualRate === null ||
+      years === null ||
+      monthlyContribution < 0 ||
       annualRate < 0 ||
       years <= 0
     ) {
       return null
     }
-    const futureValue = futureValueCompound(principal, annualRate, years)
+    const futureValue = futureValueRetirement(monthlyContribution, annualRate, years)
     return {
       annualRate,
-      category: "compound-basic",
-      expression: compoundExpressionFor(principal, annualRate, years),
+      category: "retirement-savings-intro",
+      expression: retirementExpressionFor(monthlyContribution, annualRate, years),
       futureValue,
-      principal,
-      totalGrowth: futureValue - principal,
+      monthlyContribution,
+      totalContributions: monthlyContribution * years * 12,
       years,
     }
   }
 
-  const match =
-    /^retirement-savings-([0-9]+)-monthly-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years$/.exec(
-      decoded
-    )
-  if (!match) return null
-  const monthlyContribution = parseNumberToken(match[1] ?? "")
-  const annualRate = parseNumberToken(match[2] ?? "")
-  const years = parseNumberToken(match[3] ?? "")
-  if (
-    monthlyContribution === null ||
-    annualRate === null ||
-    years === null ||
-    monthlyContribution < 0 ||
-    annualRate < 0 ||
-    years <= 0
-  ) {
-    return null
+  if (category === "tax-estimate-simple") {
+    const match =
+      /^tax-estimate-([0-9]+(?:\.[0-9]+)*)-(single|married-joint|head-of-household|self-employed)$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const annualIncome = parseNumberToken(match[1] ?? "")
+    const filingStatus = (match[2] ?? "single") as
+      | "head-of-household"
+      | "married-joint"
+      | "single"
+      | "self-employed"
+    if (annualIncome === null || annualIncome < 0) return null
+    const effectiveRate = effectiveTaxRateFor(filingStatus, annualIncome)
+    const estimatedTax = (annualIncome * effectiveRate) / 100
+    return {
+      annualIncome,
+      category,
+      effectiveRate,
+      estimatedTax,
+      expression: taxEstimateExpressionFor(annualIncome, filingStatus),
+      filingStatus,
+      takeHomeAfterTax: annualIncome - estimatedTax,
+    }
   }
-  const futureValue = futureValueRetirement(monthlyContribution, annualRate, years)
-  return {
-    annualRate,
-    category: "retirement-basic",
-    expression: retirementExpressionFor(monthlyContribution, annualRate, years),
-    futureValue,
-    monthlyContribution,
-    totalContributions: monthlyContribution * years * 12,
-    years,
+
+  if (category === "credit-card-payoff") {
+    const match =
+      /^credit-card-payoff-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)-([0-9]+(?:\.[0-9]+)*)-monthly$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const balance = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const monthlyPayment = parseNumberToken(match[3] ?? "")
+    if (
+      balance === null ||
+      annualRate === null ||
+      monthlyPayment === null ||
+      balance <= 0 ||
+      annualRate < 0 ||
+      monthlyPayment <= 0
+    ) {
+      return null
+    }
+    const projection = monthsToDebtPayoff(balance, annualRate, monthlyPayment)
+    if (!Number.isFinite(projection.monthsToPayoff)) return null
+    return {
+      annualRate,
+      balance,
+      category,
+      expression: creditCardPayoffExpressionFor(balance, annualRate, monthlyPayment),
+      interestPaid: projection.interestPaid,
+      monthlyPayment,
+      monthsToPayoff: projection.monthsToPayoff,
+      totalPaid: projection.totalPaid,
+    }
   }
+
+  if (category === "savings-goal") {
+    const match =
+      /^savings-goal-([0-9]+(?:\.[0-9]+)*)-target-([0-9]+(?:\.[0-9]+)*)-monthly-([0-9]+(?:\.[0-9]+)*)-rate$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const targetAmount = parseNumberToken(match[1] ?? "")
+    const monthlyContribution = parseNumberToken(match[2] ?? "")
+    const annualRate = parseNumberToken(match[3] ?? "")
+    if (
+      targetAmount === null ||
+      monthlyContribution === null ||
+      annualRate === null ||
+      targetAmount <= 0 ||
+      monthlyContribution <= 0 ||
+      annualRate < 0
+    ) {
+      return null
+    }
+    const monthsToGoal = monthsToSavingsGoal(targetAmount, monthlyContribution, annualRate)
+    if (!Number.isFinite(monthsToGoal)) return null
+    return {
+      annualRate,
+      category,
+      expression: savingsGoalExpressionFor(targetAmount, monthlyContribution, annualRate),
+      monthlyContribution,
+      monthsToGoal,
+      targetAmount,
+      totalContributions: monthlyContribution * monthsToGoal,
+    }
+  }
+
+  return null
 }
 
 function percentageEntries(): CalculatorEntry[] {
@@ -617,7 +1095,7 @@ function percentageEntries(): CalculatorEntry[] {
 function tipEntries(): CalculatorEntry[] {
   return TIP_BILLS.flatMap((bill) =>
     TIP_PERCENTS.map((tipPercent) => ({
-      category: "tip" as const,
+      category: "tip-calculator" as const,
       description: buildMetaDescription(
         `Calculate a ${tipPercent}% tip on ${formatCurrency(bill)} instantly with a private browser-based tip calculator on Plain Tools.`
       ),
@@ -656,7 +1134,7 @@ function basicLoanEntries(): CalculatorEntry[] {
   return LOAN_PRINCIPALS.flatMap((principal) =>
     LOAN_RATES.flatMap((annualRate) =>
       LOAN_TERMS.map((termYears) => ({
-        category: "basic-loan" as const,
+        category: "basic-loan-payment" as const,
         description: buildMetaDescription(
           `Estimate the payment on a ${formatCurrency(principal)} basic loan at ${annualRate}% over ${termYears} years with a local browser calculator on Plain Tools.`
         ),
@@ -697,20 +1175,22 @@ function simpleInterestEntries(): CalculatorEntry[] {
 function compoundEntries(): CalculatorEntry[] {
   return COMPOUND_PRINCIPALS.flatMap((principal) =>
     COMPOUND_RATES.flatMap((annualRate) =>
-      COMPOUND_YEARS.map((years) => ({
-        category: "compound-basic" as const,
-        description: buildMetaDescription(
-          `Project compound interest on ${formatCurrency(principal)} at ${annualRate}% over ${years} years with a local browser calculator on Plain Tools.`
-        ),
-        expression: compoundExpressionFor(principal, annualRate, years),
-        keywords: [
-          `compound interest ${principal} ${annualRate} ${years}`,
-          "compound interest calculator",
-          "compound growth calculator",
-          "intro compound interest calculator",
-        ],
-        title: `Compound Interest on ${formatCurrency(principal)} at ${annualRate}% for ${years} Years | Plain Tools`,
-      }))
+      COMPOUND_YEARS.flatMap((years) =>
+        COMPOUNDING_PERIODS.map((compounding) => ({
+          category: "compound-interest-basic" as const,
+          description: buildMetaDescription(
+            `Project compound interest on ${formatCurrency(principal)} at ${annualRate}% over ${years} years with ${compounding} compounding in a local browser calculator on Plain Tools.`
+          ),
+          expression: compoundExpressionFor(principal, annualRate, years, compounding),
+          keywords: [
+            `compound interest ${principal} ${annualRate} ${years} ${compounding}`,
+            "compound interest calculator",
+            "compound growth calculator",
+            "intro compound interest calculator",
+          ],
+          title: `Compound Interest on ${formatCurrency(principal)} at ${annualRate}% for ${years} Years (${compounding}) | Plain Tools`,
+        }))
+      )
     )
   )
 }
@@ -719,7 +1199,7 @@ function retirementEntries(): CalculatorEntry[] {
   return RETIREMENT_MONTHLY.flatMap((monthlyContribution) =>
     RETIREMENT_RATES.flatMap((annualRate) =>
       RETIREMENT_YEARS.map((years) => ({
-        category: "retirement-basic" as const,
+        category: "retirement-savings-intro" as const,
         description: buildMetaDescription(
           `Estimate retirement savings from ${formatCurrency(monthlyContribution)} per month at ${annualRate}% over ${years} years with a local browser calculator on Plain Tools.`
         ),
@@ -736,6 +1216,67 @@ function retirementEntries(): CalculatorEntry[] {
   )
 }
 
+function taxEstimateEntries(): CalculatorEntry[] {
+  return TAX_INCOMES.flatMap((annualIncome) =>
+    TAX_FILING_STATUSES.map((filingStatus) => ({
+      category: "tax-estimate-simple" as const,
+      description: buildMetaDescription(
+        `Estimate simple take-home pay on ${formatCurrency(annualIncome)} for ${filingStatus.replace(/-/g, " ")} filers with a browser-first tax estimate calculator on Plain Tools.`
+      ),
+      expression: taxEstimateExpressionFor(annualIncome, filingStatus),
+      keywords: [
+        `tax estimate ${annualIncome} ${filingStatus}`,
+        "simple tax estimate calculator",
+        "take home pay estimate",
+        "basic tax calculator",
+      ],
+      title: `Tax Estimate for ${formatCurrency(annualIncome)} (${filingStatus.replace(/-/g, " ")}) | Plain Tools`,
+    }))
+  )
+}
+
+function creditCardPayoffEntries(): CalculatorEntry[] {
+  return CREDIT_CARD_BALANCES.flatMap((balance) =>
+    CREDIT_CARD_APRS.flatMap((annualRate) =>
+      CREDIT_CARD_PAYMENTS.map((monthlyPayment) => ({
+        category: "credit-card-payoff" as const,
+        description: buildMetaDescription(
+          `Estimate how long it could take to pay off ${formatCurrency(balance)} in credit card debt at ${annualRate}% with ${formatCurrency(monthlyPayment)} monthly payments using a local browser calculator on Plain Tools.`
+        ),
+        expression: creditCardPayoffExpressionFor(balance, annualRate, monthlyPayment),
+        keywords: [
+          `credit card payoff ${balance} ${annualRate} ${monthlyPayment}`,
+          "credit card payoff calculator",
+          "debt payoff estimate",
+          "monthly debt payoff timeline",
+        ],
+        title: `Credit Card Payoff for ${formatCurrency(balance)} at ${annualRate}% with ${formatCurrency(monthlyPayment)}/Month | Plain Tools`,
+      }))
+    )
+  )
+}
+
+function savingsGoalEntries(): CalculatorEntry[] {
+  return SAVINGS_GOAL_TARGETS.flatMap((targetAmount) =>
+    SAVINGS_GOAL_MONTHLY.flatMap((monthlyContribution) =>
+      SAVINGS_GOAL_RATES.map((annualRate) => ({
+        category: "savings-goal" as const,
+        description: buildMetaDescription(
+          `Estimate how long it could take to reach ${formatCurrency(targetAmount)} by saving ${formatCurrency(monthlyContribution)} per month at ${annualRate}% using a local browser calculator on Plain Tools.`
+        ),
+        expression: savingsGoalExpressionFor(targetAmount, monthlyContribution, annualRate),
+        keywords: [
+          `savings goal ${targetAmount} ${monthlyContribution} ${annualRate}`,
+          "savings goal calculator",
+          "how long to save calculator",
+          "monthly savings target",
+        ],
+        title: `Reach ${formatCurrency(targetAmount)} by Saving ${formatCurrency(monthlyContribution)}/Month at ${annualRate}% | Plain Tools`,
+      }))
+    )
+  )
+}
+
 const CALCULATOR_TEMPLATES: CalculatorEntry[] = [
   ...percentageEntries(),
   ...tipEntries(),
@@ -744,6 +1285,9 @@ const CALCULATOR_TEMPLATES: CalculatorEntry[] = [
   ...simpleInterestEntries(),
   ...compoundEntries(),
   ...retirementEntries(),
+  ...taxEstimateEntries(),
+  ...creditCardPayoffEntries(),
+  ...savingsGoalEntries(),
 ]
 
 const PUBLIC_CALCULATOR_TEMPLATES = CALCULATOR_TEMPLATES.filter((entry) =>
@@ -760,13 +1304,13 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
       return [
         { href: buildCalculatorPath("percentage", percentageExpressionFor(15, parsed.base)), title: `What is 15% of ${formatNumber(parsed.base)}?` },
         { href: buildCalculatorPath("percentage", percentageExpressionFor(20, parsed.base)), title: `What is 20% of ${formatNumber(parsed.base)}?` },
-        { href: buildCalculatorPath("tip", tipExpressionFor(Math.max(20, parsed.base), 18)), title: "Tip calculator example" },
+        { href: buildCalculatorPath("tip-calculator", tipExpressionFor(Math.max(20, parsed.base), 18)), title: "Tip calculator example" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(60000, 40)), title: "Salary to hourly example" },
       ]
-    case "tip":
+    case "tip-calculator":
       return [
-        { href: buildCalculatorPath("tip", tipExpressionFor(parsed.bill, 15)), title: `${formatCurrency(parsed.bill)} at 15% tip` },
-        { href: buildCalculatorPath("tip", tipExpressionFor(parsed.bill, 20)), title: `${formatCurrency(parsed.bill)} at 20% tip` },
+        { href: buildCalculatorPath("tip-calculator", tipExpressionFor(parsed.bill, 15)), title: `${formatCurrency(parsed.bill)} at 15% tip` },
+        { href: buildCalculatorPath("tip-calculator", tipExpressionFor(parsed.bill, 20)), title: `${formatCurrency(parsed.bill)} at 20% tip` },
         { href: buildCalculatorPath("percentage", percentageExpressionFor(parsed.tipPercent, parsed.bill)), title: "Percentage breakdown of the bill" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(50000, 40)), title: "Salary to hourly example" },
       ]
@@ -774,37 +1318,57 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
       return [
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(parsed.annualSalary, 35)), title: `${formatCurrency(parsed.annualSalary)} at 35 hours/week` },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(parsed.annualSalary, 40)), title: `${formatCurrency(parsed.annualSalary)} at 40 hours/week` },
-        { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(10000, 5, 3)), title: "Basic loan payment example" },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(10000, 5, 3)), title: "Basic loan payment example" },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(10000, 4, 3)), title: "Simple interest example" },
       ]
-    case "basic-loan":
+    case "basic-loan-payment":
       return [
-        { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
-        { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.termYears)), title: "Compare with simple interest" },
-        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(300, Math.max(1, parsed.annualRate), Math.max(10, parsed.termYears * 2))), title: "Basic retirement savings example" },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(300, Math.max(1, parsed.annualRate), Math.max(10, parsed.termYears * 2))), title: "Basic retirement savings example" },
       ]
     case "simple-interest":
       return [
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
-        { href: buildCalculatorPath("basic-loan", basicLoanExpressionFor(parsed.principal, parsed.annualRate, Math.max(1, parsed.years))), title: "Basic loan payment example" },
-        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(250, Math.max(2, parsed.annualRate), Math.max(10, parsed.years * 4))), title: "Basic retirement savings example" },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.principal, parsed.annualRate, Math.max(1, parsed.years))), title: "Basic loan payment example" },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(250, Math.max(2, parsed.annualRate), Math.max(10, parsed.years * 4))), title: "Basic retirement savings example" },
       ]
-    case "compound-basic":
-    case "compound-interest-intro":
+    case "compound-interest-basic":
       return [
-        { href: buildCalculatorPath("compound-basic", compoundExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
-        { href: buildCalculatorPath("compound-basic", compoundExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("compound-interest-basic", compoundExpressionFor(parsed.principal, Math.max(1, parsed.annualRate - 1), parsed.years, parsed.compounding)), title: `${formatCurrency(parsed.principal)} at ${Math.max(1, parsed.annualRate - 1)}%` },
+        { href: buildCalculatorPath("compound-interest-basic", compoundExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.years, parsed.compounding)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.years)), title: "Simple interest comparison" },
-        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(500, parsed.annualRate, Math.max(10, parsed.years))), title: "Retirement savings example" },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(500, parsed.annualRate, Math.max(10, parsed.years))), title: "Retirement savings example" },
       ]
-    case "retirement-basic":
+    case "retirement-savings-intro":
       return [
-        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(parsed.monthlyContribution, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${Math.max(1, parsed.annualRate - 1)}%` },
-        { href: buildCalculatorPath("retirement-basic", retirementExpressionFor(parsed.monthlyContribution, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(parsed.monthlyContribution, Math.max(1, parsed.annualRate - 1), parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${Math.max(1, parsed.annualRate - 1)}%` },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(parsed.monthlyContribution, parsed.annualRate + 1, parsed.years)), title: `${formatCurrency(parsed.monthlyContribution)}/month at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(10000, Math.max(1, parsed.annualRate - 1), Math.max(1, Math.round(parsed.years / 5)))), title: "Simple interest example" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(90000, 40)), title: "Salary to hourly example" },
+      ]
+    case "tax-estimate-simple":
+      return [
+        { href: buildCalculatorPath("tax-estimate-simple", taxEstimateExpressionFor(Math.max(15000, parsed.annualIncome - 10000), parsed.filingStatus)), title: `Tax estimate on ${formatCurrency(Math.max(15000, parsed.annualIncome - 10000))}` },
+        { href: buildCalculatorPath("tax-estimate-simple", taxEstimateExpressionFor(parsed.annualIncome + 10000, parsed.filingStatus)), title: `Tax estimate on ${formatCurrency(parsed.annualIncome + 10000)}` },
+        { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(parsed.annualIncome, 40)), title: "Gross salary comparison" },
+        { href: buildCalculatorPath("percentage", percentageExpressionFor(parsed.effectiveRate, parsed.annualIncome)), title: "Percentage of income example" },
+      ]
+    case "credit-card-payoff":
+      return [
+        { href: buildCalculatorPath("credit-card-payoff", creditCardPayoffExpressionFor(parsed.balance, Math.max(1, parsed.annualRate - 2), parsed.monthlyPayment)), title: `${formatCurrency(parsed.balance)} at ${Math.max(1, parsed.annualRate - 2)}%` },
+        { href: buildCalculatorPath("credit-card-payoff", creditCardPayoffExpressionFor(parsed.balance, parsed.annualRate, parsed.monthlyPayment + 50)), title: `${formatCurrency(parsed.balance)} with ${formatCurrency(parsed.monthlyPayment + 50)}/month` },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.balance, Math.max(1, parsed.annualRate - 5), 3)), title: "Compare with a basic loan payment" },
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.balance, parsed.monthlyPayment, 4)), title: "Savings goal comparison" },
+      ]
+    case "savings-goal":
+      return [
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.targetAmount, Math.max(25, parsed.monthlyContribution - 50), parsed.annualRate)), title: `${formatCurrency(parsed.targetAmount)} with ${formatCurrency(Math.max(25, parsed.monthlyContribution - 50))}/month` },
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.targetAmount, parsed.monthlyContribution + 50, parsed.annualRate)), title: `${formatCurrency(parsed.targetAmount)} with ${formatCurrency(parsed.monthlyContribution + 50)}/month` },
+        { href: buildCalculatorPath("compound-interest-basic", compoundExpressionFor(parsed.targetAmount / 2, Math.max(1, parsed.annualRate), Math.max(5, Math.round(parsed.monthsToGoal / 12)), "monthly")), title: "Compound growth comparison" },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(parsed.monthlyContribution, Math.max(2, parsed.annualRate), 10)), title: "Retirement savings example" },
       ]
   }
 }
@@ -928,7 +1492,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       h1 = `What Is ${parsed.percent}% of ${parsed.base}?`
       break
     }
-    case "tip": {
+    case "tip-calculator": {
       const scenarioText = `${formatPercent(parsed.tipPercent)} on ${formatCurrency(parsed.bill)}`
       intro = [
         `Tip calculator pages work because the user usually wants an immediate answer at the table or while checking a receipt. This route calculates ${scenarioText} instantly and keeps the math local in the browser.`,
@@ -978,6 +1542,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
         { label: "Two-way split", value: formatCurrency(parsed.totalPerPerson) },
       ]
       initialValues = { bill: parsed.bill, split: parsed.split, tipPercent: parsed.tipPercent }
+      h1 = `Tip on ${formatCurrency(parsed.bill)} at ${parsed.tipPercent}%`
       break
     }
     case "salary-to-hourly": {
@@ -1036,7 +1601,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       break
   }
 
-  if (parsed.category === "basic-loan") {
+  if (parsed.category === "basic-loan-payment") {
     const scenarioText = `${formatCurrency(parsed.principal)} at ${formatPercent(parsed.annualRate)} for ${parsed.termYears} years`
     intro = [
       "Basic loan calculator pages work well for search because users often want a quick payment estimate before they open a larger finance workflow. They want the shape of the payment, not a full underwriting model.",
@@ -1087,6 +1652,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       { label: "Total paid", value: formatCurrency(parsed.totalPaid) },
     ]
     initialValues = { annualRate: parsed.annualRate, principal: parsed.principal, termYears: parsed.termYears }
+    h1 = `Loan Payment for ${formatCurrency(parsed.principal)} at ${parsed.annualRate}% for ${parsed.termYears} Years`
   }
 
   if (parsed.category === "simple-interest") {
@@ -1141,8 +1707,8 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     initialValues = { annualRate: parsed.annualRate, principal: parsed.principal, years: parsed.years }
   }
 
-  if (parsed.category === "compound-basic") {
-    const scenarioText = `${formatCurrency(parsed.principal)} at ${formatPercent(parsed.annualRate)} for ${parsed.years} years`
+  if (parsed.category === "compound-interest-basic") {
+    const scenarioText = `${formatCurrency(parsed.principal)} at ${formatPercent(parsed.annualRate)} for ${parsed.years} years with ${parsed.compounding} compounding`
     intro = [
       "Compound interest pages are strong long-tail utilities because users want a quick sense of how growth accelerates over time. This cluster keeps the calculation intentionally introductory rather than turning it into a full portfolio-planning product.",
       `For ${scenarioText}, the projected value is about ${formatCurrency(parsed.futureValue)}, which means total growth of ${formatCurrency(parsed.totalGrowth)} under the simple compounding assumptions on this page.`,
@@ -1153,7 +1719,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       "It also creates healthy internal links into salary, simple-interest, and retirement-savings pages without pushing beyond the capped scope of this cluster.",
     ]
     howItWorks = [
-      "The calculator compounds the starting amount monthly using the annual rate entered on the page. It is a practical intro model, not an advanced planning tool with taxes, fees, or asset allocation assumptions.",
+      `The calculator compounds the starting amount using ${parsed.compounding} compounding with the annual rate entered on the page. It is a practical intro model, not an advanced planning tool with taxes, fees, or asset allocation assumptions.`,
       "All computation stays on-device in the browser, so the user can test growth scenarios without sending numbers to a remote service.",
     ]
     howToSteps = [
@@ -1187,13 +1753,15 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       { label: "Starting amount", value: formatCurrency(parsed.principal) },
       { label: "Annual rate", value: formatPercent(parsed.annualRate) },
       { label: "Years", value: `${parsed.years}` },
+      { label: "Compounding", value: parsed.compounding },
       { label: "Projected value", value: formatCurrency(parsed.futureValue) },
       { label: "Total growth", value: formatCurrency(parsed.totalGrowth) },
     ]
-    initialValues = { annualRate: parsed.annualRate, principal: parsed.principal, years: parsed.years }
+    initialValues = { annualRate: parsed.annualRate, compounding: parsed.compounding, principal: parsed.principal, years: parsed.years }
+    h1 = `Compound Interest on ${formatCurrency(parsed.principal)} at ${parsed.annualRate}% for ${parsed.years} Years (${parsed.compounding})`
   }
 
-  if (parsed.category === "retirement-basic") {
+  if (parsed.category === "retirement-savings-intro") {
     const scenarioText = `${formatCurrency(parsed.monthlyContribution)} per month at ${formatPercent(parsed.annualRate)} for ${parsed.years} years`
     intro = [
       "Retirement savings pages can still fit this capped cluster when they stay simple and first-pass. The goal here is to estimate how recurring monthly savings might grow, not to replace a full retirement planning platform.",
@@ -1243,6 +1811,169 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
       { label: "Projected value", value: formatCurrency(parsed.futureValue) },
     ]
     initialValues = { annualRate: parsed.annualRate, monthlyContribution: parsed.monthlyContribution, years: parsed.years }
+    h1 = `Retirement Savings for ${formatCurrency(parsed.monthlyContribution)}/Month at ${parsed.annualRate}% for ${parsed.years} Years`
+  }
+
+  if (parsed.category === "tax-estimate-simple") {
+    const scenarioText = `${formatCurrency(parsed.annualIncome)} for ${parsed.filingStatus.replace(/-/g, " ")} filers`
+    intro = [
+      "Simple tax-estimate routes work because many users want a quick directional answer before they open payroll software or a deeper tax-planning workflow. The goal here is not to replace filing advice, but to give a fast gross-to-net check on a specific income scenario.",
+      `For ${scenarioText}, this page uses an estimated effective rate of ${formatPercent(parsed.effectiveRate)}. That implies about ${formatCurrency(parsed.estimatedTax)} in estimated tax and roughly ${formatCurrency(parsed.takeHomeAfterTax)} left after tax.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This kind of route is useful because users often search one exact pay or income level. They want a directional tax estimate, a visible filing-status assumption, and a quick way to compare a nearby salary number without opening a complex planner.",
+      "Keeping the model simple also makes the page safer for programmatic scale. It serves high-intent searchers without promising jurisdiction-specific tax preparation or individualized advice.",
+    ]
+    howItWorks = [
+      "The page applies a simplified effective-rate model based on filing status and income band. That makes it useful for first-pass comparisons while staying well short of advanced tax planning.",
+      "All calculations stay local in the browser, so the user can test income scenarios privately without sending pay data to a remote service.",
+    ]
+    howToSteps = [
+      { name: "Set annual income", text: `This route uses ${formatCurrency(parsed.annualIncome)}.` },
+      { name: "Confirm filing status", text: `The current filing status is ${parsed.filingStatus.replace(/-/g, " ")}.` },
+      { name: "Review the estimated rate", text: `The simple effective rate used here is ${formatPercent(parsed.effectiveRate)}.` },
+      { name: "Compare tax and take-home", text: `Estimated tax is ${formatCurrency(parsed.estimatedTax)} and estimated after-tax income is ${formatCurrency(parsed.takeHomeAfterTax)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why a simple tax estimate still has value",
+      [
+        "A simple tax estimate route is useful when it makes the assumptions visible. The user can see the income, the filing-status lens, and the rough effective rate instead of treating the output as unexplained magic.",
+        "That transparency matters for SEO quality too. The page is not pretending to replace tax software. It is a quick browser-first estimate that helps users compare nearby scenarios before they go deeper.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when you are comparing pay scenarios on a personal device, a shared office machine, or a quick mobile session.",
+      "Plain Tools keeps the page private and lightweight by avoiding accounts, uploads, or server-side finance workflows.",
+    ]
+    faq = [
+      { question: `How much tax might apply to ${formatCurrency(parsed.annualIncome)}?`, answer: `This simplified estimate uses an effective rate of ${formatPercent(parsed.effectiveRate)}, which suggests about ${formatCurrency(parsed.estimatedTax)} in tax.` },
+      { question: "Is this a filing calculator?", answer: "No. It is a first-pass estimate designed for quick comparisons, not tax preparation." },
+      { question: "Why is filing status included?", answer: "Because even a simple estimate becomes more useful when the page shows which household situation the rate assumption is based on." },
+      { question: "Can I compare another income quickly?", answer: "Yes. The related links and embedded calculator make it easy to open nearby salary ranges." },
+      { question: "Does this page send salary details anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "Salary-to-hourly, percentage, and savings-goal routes are common next steps after a quick tax estimate." },
+    ]
+    summaryRows = [
+      { label: "Annual income", value: formatCurrency(parsed.annualIncome) },
+      { label: "Filing status", value: parsed.filingStatus.replace(/-/g, " ") },
+      { label: "Effective rate", value: formatPercent(parsed.effectiveRate) },
+      { label: "Estimated tax", value: formatCurrency(parsed.estimatedTax) },
+      { label: "After-tax income", value: formatCurrency(parsed.takeHomeAfterTax) },
+    ]
+    initialValues = { annualIncome: parsed.annualIncome, filingStatus: parsed.filingStatus }
+    h1 = `Tax Estimate for ${formatCurrency(parsed.annualIncome)} (${parsed.filingStatus.replace(/-/g, " ")})`
+  }
+
+  if (parsed.category === "credit-card-payoff") {
+    const scenarioText = `${formatCurrency(parsed.balance)} at ${formatPercent(parsed.annualRate)} with ${formatCurrency(parsed.monthlyPayment)} monthly payments`
+    intro = [
+      "Credit-card payoff routes capture high-intent utility demand because users want to know whether their current payment will realistically move the balance or simply drag the debt out for too long. This page gives a fast first-pass timeline on one exact scenario.",
+      `For ${scenarioText}, the estimated payoff timeline is about ${formatNumber(parsed.monthsToPayoff)} months. Total paid is roughly ${formatCurrency(parsed.totalPaid)}, of which about ${formatCurrency(parsed.interestPaid)} is interest.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This route works because it makes the trade-off visible: monthly payment versus timeline versus interest cost. Users often know their balance and payment but not the time cost of carrying the debt.",
+      "It also supports stronger RPM than generic math tools because the search intent sits closer to real debt-management decisions.",
+    ]
+    howItWorks = [
+      "The calculator applies a simple monthly interest-and-payment loop until the balance reaches zero. It is intentionally straightforward and is meant for first-pass payoff comparisons, not multi-debt optimization.",
+      "Everything runs locally in the browser, which keeps the workflow private and fast for sensitive debt scenarios.",
+    ]
+    howToSteps = [
+      { name: "Enter the balance", text: `This route starts from ${formatCurrency(parsed.balance)}.` },
+      { name: "Set the APR", text: `The current annual rate is ${formatPercent(parsed.annualRate)}.` },
+      { name: "Set the monthly payment", text: `The example uses ${formatCurrency(parsed.monthlyPayment)} each month.` },
+      { name: "Review timeline and total cost", text: `Estimated payoff time is ${formatNumber(parsed.monthsToPayoff)} months with total paid of ${formatCurrency(parsed.totalPaid)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why payoff timeline pages work for users and search",
+      [
+        "Users often search one exact debt scenario because they need urgency, not theory. A useful page answers the current timeline clearly and then offers the next comparison: a higher payment, a lower rate, or a different debt shape.",
+        "That makes the route practical enough to stand on its own while still fitting a broader finance utility cluster.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters because debt balances and repayment plans are sensitive numbers.",
+      "The page keeps the workflow private, fast, and useful on shared devices or quick mobile sessions.",
+    ]
+    faq = [
+      { question: `How long could ${formatCurrency(parsed.balance)} take to pay off at ${parsed.annualRate}%?`, answer: `At ${formatCurrency(parsed.monthlyPayment)} per month, this route estimates about ${formatNumber(parsed.monthsToPayoff)} months.` },
+      { question: "Does this include late fees or new purchases?", answer: "No. The page models a fixed balance with fixed monthly payments and no new charges." },
+      { question: "Why compare timeline and total paid?", answer: "Because many users focus only on the monthly payment and miss how much interest accumulates over time." },
+      { question: "Can I test a larger monthly payment?", answer: "Yes. The embedded calculator and related links are built around that comparison." },
+      { question: "Does this page send debt values anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "Basic-loan-payment and savings-goal routes are useful next comparisons after a debt payoff estimate." },
+    ]
+    summaryRows = [
+      { label: "Balance", value: formatCurrency(parsed.balance) },
+      { label: "APR", value: formatPercent(parsed.annualRate) },
+      { label: "Monthly payment", value: formatCurrency(parsed.monthlyPayment) },
+      { label: "Months to payoff", value: formatNumber(parsed.monthsToPayoff) },
+      { label: "Interest paid", value: formatCurrency(parsed.interestPaid) },
+      { label: "Total paid", value: formatCurrency(parsed.totalPaid) },
+    ]
+    initialValues = { annualRate: parsed.annualRate, balance: parsed.balance, monthlyPayment: parsed.monthlyPayment }
+    h1 = `Credit Card Payoff for ${formatCurrency(parsed.balance)} at ${parsed.annualRate}% with ${formatCurrency(parsed.monthlyPayment)}/Month`
+  }
+
+  if (parsed.category === "savings-goal") {
+    const yearsToGoal = parsed.monthsToGoal / 12
+    const scenarioText = `reaching ${formatCurrency(parsed.targetAmount)} by saving ${formatCurrency(parsed.monthlyContribution)} per month at ${formatPercent(parsed.annualRate)}`
+    intro = [
+      "Savings-goal routes work because users often know the target before they know the timeline. They want to ask a simple question: if I save this amount each month, roughly how long until I get there?",
+      `For ${scenarioText}, this page estimates about ${formatNumber(parsed.monthsToGoal)} months, or roughly ${formatNumber(yearsToGoal)} years. Direct contributions over that period would total about ${formatCurrency(parsed.totalContributions)}.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The page is useful because it connects a concrete target to a realistic recurring habit. That is more actionable than a generic savings article and still simpler than a full personal finance planner.",
+      "It also fits the browser-first model well because users can compare a few contribution levels privately in seconds.",
+    ]
+    howItWorks = [
+      "The calculator compounds monthly savings at the annual rate entered on the page until the target amount is reached. It is a straightforward goal-timeline estimate intended for first-pass planning.",
+      "All calculations stay local in the browser, so the user can test savings scenarios without sending financial details to a third party.",
+    ]
+    howToSteps = [
+      { name: "Enter the target amount", text: `This route uses ${formatCurrency(parsed.targetAmount)} as the savings goal.` },
+      { name: "Set the monthly contribution", text: `The example contribution is ${formatCurrency(parsed.monthlyContribution)} per month.` },
+      { name: "Set the annual rate", text: `The current annual rate is ${formatPercent(parsed.annualRate)}.` },
+      { name: "Review the estimated timeline", text: `Estimated time to goal is ${formatNumber(parsed.monthsToGoal)} months.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why savings-goal routes are high-intent utility pages",
+      [
+        "A savings-goal page is more practical than a generic savings article because it answers one specific scenario and shows the trade-off between target size, monthly habit, and interest rate.",
+        "That specificity is what makes the route useful enough to index on its own while still connecting naturally to related calculator pages.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That keeps goal planning private and fast even on a shared or work-managed device.",
+      "Plain Tools uses the same browser-first pattern here as it does across other utility clusters: no uploads, no accounts, and no server-side processing to get the answer.",
+    ]
+    faq = [
+      { question: `How long could it take to save ${formatCurrency(parsed.targetAmount)}?`, answer: `At ${formatCurrency(parsed.monthlyContribution)} per month and ${formatPercent(parsed.annualRate)}, this route estimates about ${formatNumber(parsed.monthsToGoal)} months.` },
+      { question: "Does this assume a fixed monthly contribution?", answer: "Yes. This cluster is intentionally simple and keeps the monthly contribution constant." },
+      { question: "Why show total contributions separately?", answer: "It helps the user see how much of the end goal comes from deposits versus growth." },
+      { question: "Can I compare a higher monthly savings amount?", answer: "Yes. Use the embedded calculator or the nearby related links to open the next exact scenario." },
+      { question: "Does the page send savings values anywhere?", answer: "No. All calculations stay local in the browser." },
+      { question: "What should I check next?", answer: "Compound-interest-basic and retirement-savings-intro pages are common next steps after a savings goal estimate." },
+    ]
+    summaryRows = [
+      { label: "Target amount", value: formatCurrency(parsed.targetAmount) },
+      { label: "Monthly contribution", value: formatCurrency(parsed.monthlyContribution) },
+      { label: "Annual rate", value: formatPercent(parsed.annualRate) },
+      { label: "Months to goal", value: formatNumber(parsed.monthsToGoal) },
+      { label: "Years to goal", value: formatNumber(yearsToGoal) },
+      { label: "Direct contributions", value: formatCurrency(parsed.totalContributions) },
+    ]
+    initialValues = { annualRate: parsed.annualRate, monthlyContribution: parsed.monthlyContribution, targetAmount: parsed.targetAmount }
+    h1 = `Reach ${formatCurrency(parsed.targetAmount)} by Saving ${formatCurrency(parsed.monthlyContribution)}/Month at ${parsed.annualRate}%`
   }
 
   explanationBlocks = [
@@ -1393,31 +2124,77 @@ export function generateNonPercentageCalculatorParams(limit?: number) {
   return slice.map((entry) => ({ category: entry.category, expression: entry.expression }))
 }
 
-export function getPrebuildCalculatorParams(limit = 400) {
-  const perCategory: Record<PublicCalculatorCategory, number> = {
-    "basic-loan": 84,
-    "compound-basic": 72,
-    percentage: 320,
-    "retirement-basic": 44,
-    "salary-to-hourly": 48,
-    "simple-interest": 72,
-    tip: 84,
+const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
+  "basic-loan-payment",
+  "credit-card-payoff",
+  "tax-estimate-simple",
+  "retirement-savings-intro",
+  "compound-interest-basic",
+  "savings-goal",
+  "salary-to-hourly",
+  "percentage",
+  "tip-calculator",
+  "simple-interest",
+]
+
+const CALCULATOR_PREBUILD_BUDGETS: Record<PublicCalculatorCategory, number> = {
+  "basic-loan-payment": 900,
+  "compound-interest-basic": 900,
+  "credit-card-payoff": 850,
+  percentage: 1800,
+  "retirement-savings-intro": 650,
+  "salary-to-hourly": 450,
+  "savings-goal": 750,
+  "simple-interest": 700,
+  "tax-estimate-simple": 450,
+  "tip-calculator": 550,
+}
+
+export function getCalculatorClusterRolloutSummary() {
+  return CALCULATOR_PREBUILD_PRIORITY_ORDER.map((category) => {
+    const total = PUBLIC_CALCULATOR_TEMPLATES.filter((entry) => entry.category === category).length
+    return {
+      category,
+      prebuild: CALCULATOR_PREBUILD_BUDGETS[category],
+      total,
+    }
+  })
+}
+
+export function getCalculatorOverlapReport(limit = 25) {
+  const buckets = new Map<string, string[]>()
+
+  for (const entry of PUBLIC_CALCULATOR_TEMPLATES) {
+    const signature = `${entry.category}:${entry.expression.replace(/[0-9.]+/g, "#")}`
+    const existing = buckets.get(signature) ?? []
+    existing.push(entry.expression)
+    buckets.set(signature, existing)
   }
 
-  const staged = PUBLIC_CATEGORY_ORDER.flatMap((category) =>
-    generateCategoryCalculatorParams(category, perCategory[category])
+  return Array.from(buckets.entries())
+    .filter(([, expressions]) => expressions.length > 1)
+    .slice(0, limit)
+    .map(([signature, expressions]) => ({ expressions, signature }))
+}
+
+export function getPrebuildCalculatorParams(limit = 6000) {
+  const staged = CALCULATOR_PREBUILD_PRIORITY_ORDER.flatMap((category) =>
+    generateCategoryCalculatorParams(category, CALCULATOR_PREBUILD_BUDGETS[category])
   )
   return staged.slice(0, limit)
 }
 
 export const CALCULATOR_FINANCIAL_METADATA_EXAMPLES = [
   getCalculatorPage("percentage", "what-is-20-percent-of-500"),
-  getCalculatorPage("tip", "tip-calculator-150-18"),
-  getCalculatorPage("salary-to-hourly", "salary-to-hourly-60000-40"),
-  getCalculatorPage("basic-loan", "loan-payment-10000-5-3-years"),
+  getCalculatorPage("tip-calculator", "tip-calculator-150-18-percent"),
+  getCalculatorPage("salary-to-hourly", "salary-to-hourly-60000-40-hours"),
+  getCalculatorPage("basic-loan-payment", "loan-payment-10000-5-3-years"),
   getCalculatorPage("simple-interest", "simple-interest-10000-5-3"),
-  getCalculatorPage("compound-basic", "compound-interest-10000-5-10"),
-  getCalculatorPage("retirement-basic", "retirement-savings-500-monthly-6-20-years"),
+  getCalculatorPage("compound-interest-basic", "compound-interest-10000-5-10-years-monthly"),
+  getCalculatorPage("retirement-savings-intro", "retirement-savings-500-monthly-6-20-years"),
+  getCalculatorPage("tax-estimate-simple", "tax-estimate-85000-single"),
+  getCalculatorPage("credit-card-payoff", "credit-card-payoff-10000-19.9-300-monthly"),
+  getCalculatorPage("savings-goal", "savings-goal-25000-target-500-monthly-4-rate"),
 ]
   .filter((entry): entry is CalculatorPage => Boolean(entry))
   .map((entry) => ({

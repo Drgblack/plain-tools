@@ -2,14 +2,15 @@ import type { Metadata } from "next"
 import { notFound, permanentRedirect } from "next/navigation"
 
 import { ProgrammaticLayout } from "@/components/ProgrammaticLayout"
+import { FinancialScopeNote } from "@/components/seo/financial-scope-note"
 import { CalculatorSummary } from "@/components/seo/calculator-summary"
 import { FinancialCalculatorEmbed } from "@/components/seo/financial-calculator-embed"
 import { buildPageMetadata, buildCanonicalUrl } from "@/lib/page-metadata"
 import {
   type CalculatorRouteParams,
   CALCULATOR_FINANCIAL_METADATA_EXAMPLES,
-  generateNonPercentageCalculatorParams,
   getCalculatorPage,
+  getPrebuildCalculatorParams,
   isCalculatorCategory,
 } from "@/lib/calculator-financial-deep"
 import {
@@ -30,13 +31,15 @@ function getPrebuildLimit() {
   const raw =
     process.env.CALCULATOR_FINANCIAL_PREBUILD_LIMIT ??
     process.env.FINANCIAL_CALCULATOR_PREBUILD_LIMIT
-  if (!raw) return 250
+  if (!raw) return 4200
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 250
+  return Number.isFinite(value) && value > 0 ? value : 4200
 }
 
 export function generateStaticParams() {
-  return generateNonPercentageCalculatorParams(getPrebuildLimit())
+  return getPrebuildCalculatorParams(getPrebuildLimit()).filter(
+    (entry) => entry.category !== "percentage"
+  )
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -109,11 +112,17 @@ export default async function FinancialCalculatorPageRoute({ params }: PageProps
   return (
     <ProgrammaticLayout
       beforeStructuredContent={
-        <CalculatorSummary
-          rows={page.summaryRows}
-          title={`${page.h1} summary`}
-        />
+        <>
+          <CalculatorSummary
+            rows={page.summaryRows}
+            title={`${page.h1} summary`}
+          />
+          <div className="mt-6">
+            <FinancialScopeNote compact />
+          </div>
+        </>
       }
+      afterStructuredContent={<FinancialScopeNote />}
       breadcrumbs={page.breadcrumbs}
       featureList={page.featureList}
       heroBadges={page.heroBadges}

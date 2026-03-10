@@ -1,1 +1,1 @@
-export * from "@/lib/calculator-financial-ext"
+export * from "@/lib/calculator-financial"

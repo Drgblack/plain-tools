@@ -6,12 +6,12 @@ import {
   STATUS_TRENDING_DEFAULT,
 } from "@/lib/status-domains"
 import { normalizeSiteInput, statusPathFor } from "@/lib/site-status"
+import type { StatusTrendingCategory } from "@/lib/status-trending-config"
 export {
   getStatusTrendingCategoryEntry,
   getStatusTrendingPopularSites,
   isStatusTrendingCategory,
   STATUS_TRENDING_CATEGORIES,
-  type StatusTrendingCategory,
 } from "@/lib/status-trending-config"
 import { getStatusTrendingPopularSites } from "@/lib/status-trending-config"
 

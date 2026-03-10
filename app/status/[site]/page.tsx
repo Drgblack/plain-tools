@@ -28,6 +28,11 @@ import {
 } from "@/components/ui/accordion"
 import { StatusDynamicClient } from './client'
 import {
+  getStatusFlatMetadata,
+  getStatusFlatStaticParams,
+  renderStatusFlatRoute,
+} from "@/lib/status-flat-routes"
+import {
   formatSiteLabel,
   getSiteSpecificStatusContext,
   getSiteStatusContext,
@@ -48,6 +53,8 @@ import {
 interface Props {
   params: Promise<{ site: string }>
 }
+
+export const revalidate = 3600
 
 const BRAND_NAME_OVERRIDES: Record<string, string> = {
   "chatgpt.com": "ChatGPT",
@@ -73,6 +80,17 @@ function toSiteDisplayName(site: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { site } = await params
   const decodedSite = decodeURIComponent(site)
+  const flatMetadata = getStatusFlatMetadata(decodedSite)
+
+  if (flatMetadata) {
+    return buildPageMetadata({
+      title: flatMetadata.title,
+      description: flatMetadata.description,
+      path: flatMetadata.path,
+      image: "/og/default.png",
+    })
+  }
+
   const normalizedSite = normalizeSiteInput(decodedSite)
 
   if (!normalizedSite) {
@@ -102,9 +120,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export function generateStaticParams() {
-  return STATUS_STATIC_DOMAINS.map((site) => ({
-    site: encodeURIComponent(site),
-  }))
+  return [
+    ...STATUS_STATIC_DOMAINS.map((site) => ({
+      site: encodeURIComponent(site),
+    })),
+    ...getStatusFlatStaticParams(),
+  ]
 }
 
 const baseFaqs = [
@@ -157,6 +178,12 @@ const relatedTools = [
 export default async function SiteStatusDynamicPage({ params }: Props) {
   const { site } = await params
   const decodedSite = decodeURIComponent(site)
+  const flatRoute = await renderStatusFlatRoute(decodedSite)
+
+  if (flatRoute) {
+    return flatRoute
+  }
+
   const normalizedSite = normalizeSiteInput(decodedSite)
 
   if (!normalizedSite) {

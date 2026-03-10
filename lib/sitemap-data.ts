@@ -5,6 +5,7 @@ import { getExtendedOpenFormatGuidePaths } from "@/lib/converter-families-ext"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import { getCalculatorPaths } from "@/lib/calculator-financial-deep"
+import { CALCULATOR_PUBLIC_CATEGORY_ORDER } from "@/lib/calculator-financial-deep"
 import { getExtendedConverterSitemapPaths } from "@/lib/converter-specialized-ext"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
@@ -247,6 +248,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     "/diagnosis",
     "/verify-claims",
     "/network-tools",
+    "/calculators",
     "/status",
     "/site-status",
     "/status/trending",
@@ -300,6 +302,9 @@ export function buildSitemapEntries(now: Date = new Date()) {
   )
   const calculatorPages = getCalculatorPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
+  )
+  const calculatorCategoryPages = CALCULATOR_PUBLIC_CATEGORY_ORDER.map((category) =>
+    toEntry(`/calculators/${category}`, now, "weekly", 0.76)
   )
   const comparisonMatrixPages = getCompareMatrixSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.79)
@@ -389,6 +394,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...fileConverterModifierPages,
     ...openFormatGuidePages,
     ...calculatorPages,
+    ...calculatorCategoryPages,
     ...comparisonMatrixPages,
     ...professionalWorkflowPages,
     ...pdfComparisonPages,
