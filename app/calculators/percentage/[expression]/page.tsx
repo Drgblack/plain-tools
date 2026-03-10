@@ -9,7 +9,7 @@ import {
   CALCULATOR_FINANCIAL_METADATA_EXAMPLES,
   generateCategoryCalculatorParams,
   getCalculatorPage,
-} from "@/lib/calculator-financial"
+} from "@/lib/calculator-financial-ext"
 import {
   buildArticleSchema,
   buildHowToSchema,
@@ -28,9 +28,9 @@ function getPrebuildLimit() {
   const raw =
     process.env.CALCULATOR_PERCENTAGE_PREBUILD_LIMIT ??
     process.env.CALCULATOR_PREBUILD_LIMIT
-  if (!raw) return 200
+  if (!raw) return 250
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 200
+  return Number.isFinite(value) && value > 0 ? value : 250
 }
 
 export function generateStaticParams() {

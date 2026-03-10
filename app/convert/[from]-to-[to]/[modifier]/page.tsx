@@ -7,7 +7,7 @@ import {
   type ConverterModifierRouteParams,
   generateAllExtendedConverterModifierParams,
   getExtendedConverterModifierPage,
-} from "@/lib/converter-families"
+} from "@/lib/converter-specialized"
 import { buildPageMetadata } from "@/lib/page-metadata"
 
 type PageProps = {
@@ -19,9 +19,9 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw = process.env.CONVERTER_MODIFIER_PREBUILD_LIMIT
-  if (!raw) return 200
+  if (!raw) return 500
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 200
+  return Number.isFinite(value) && value > 0 ? value : 500
 }
 
 export function generateStaticParams() {

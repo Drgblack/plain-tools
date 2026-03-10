@@ -8,7 +8,7 @@ import {
   type ProfessionalWorkflowRouteParams,
   generateAllProfessionalWorkflowParams,
   getProfessionalWorkflowPage,
-} from "@/lib/professional-workflows"
+} from "@/lib/professional-workflows-more"
 
 type PageProps = {
   params: Promise<ProfessionalWorkflowRouteParams>
@@ -19,9 +19,9 @@ export const dynamicParams = true
 
 function getPrebuildLimit() {
   const raw = process.env.PRO_WORKFLOW_PREBUILD_LIMIT
-  if (!raw) return 300
+  if (!raw) return 500
   const value = Number.parseInt(raw, 10)
-  return Number.isFinite(value) && value > 0 ? value : 300
+  return Number.isFinite(value) && value > 0 ? value : 500
 }
 
 export function generateStaticParams() {

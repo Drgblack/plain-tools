@@ -3,8 +3,9 @@
 /**
  * Sitemap Export Helper
  *
- * Source of truth is app/sitemap.ts (Next.js metadata route).
- * This script exports a static public/sitemap.xml from that route so any
+ * Source of truth is lib/sitemap-data.ts plus the route handlers under
+ * app/sitemap.xml and app/sitemap/[id].xml.
+ * This script exports a static public/sitemap.xml from the same data source so any
  * manual/static workflows stay perfectly in sync with runtime generation.
  */
 
@@ -102,4 +103,4 @@ if (sitemapPayload.chunks.length > 1) {
 }
 
 console.log(`[OK] Wrote ${targetSitemapPath}`)
-console.log(`[OK] Exported ${sitemapPayload.chunks.length} sitemap chunk(s) from app/sitemap.ts.`)
+console.log(`[OK] Exported ${sitemapPayload.chunks.length} sitemap chunk(s) from lib/sitemap-data.ts.`)

@@ -7,6 +7,11 @@ export type SitemapXmlEntry = {
   priority?: number
 }
 
+export type SitemapIndexEntry = {
+  url: string
+  lastModified?: Date
+}
+
 function escapeXml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -34,4 +39,18 @@ export function buildSitemapXml(entries: SitemapXmlEntry[]) {
     .join("")
 
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${xmlEntries}</urlset>`
+}
+
+export function buildSitemapIndexXml(entries: SitemapIndexEntry[]) {
+  const xmlEntries = entries
+    .map((entry) => {
+      const parts = [`<loc>${escapeXml(entry.url)}</loc>`]
+      if (entry.lastModified) {
+        parts.push(`<lastmod>${entry.lastModified.toISOString()}</lastmod>`)
+      }
+      return `<sitemap>${parts.join("")}</sitemap>`
+    })
+    .join("")
+
+  return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${xmlEntries}</sitemapindex>`
 }

@@ -4,10 +4,11 @@ import { Redis } from "@upstash/redis"
 
 import {
   STATUS_TRENDING_DEFAULT,
-  STATUS_TREND_SEGMENT_DOMAINS,
-  type StatusTrendSegment,
 } from "@/lib/status-domains"
 import { normalizeSiteInput, statusPathFor } from "@/lib/site-status"
+import {
+  EXTENDED_STATUS_TREND_SEGMENT_DOMAINS as STATUS_TREND_SEGMENT_DOMAINS,
+} from "@/lib/status-trends-extended"
 export {
   getStatusTrendingCategoryEntry,
   getStatusTrendingPopularSites,
@@ -66,6 +67,8 @@ type GetStatusTrendsOptions = {
   day?: string
   segment?: StatusTrendSegment
 }
+
+type StatusTrendSegment = StatusTrendingCategory | "all"
 
 type GetStatusHistoryOptions = {
   hours?: number

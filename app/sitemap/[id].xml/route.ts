@@ -8,7 +8,7 @@ type RouteProps = {
 }
 
 const XML_HEADERS = {
-  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+  "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
   "Content-Type": "application/xml; charset=utf-8",
 }
 

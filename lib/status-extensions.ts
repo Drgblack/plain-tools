@@ -6,7 +6,7 @@ import type {
   ProgrammaticPageData,
   ProgrammaticRelatedTool,
 } from "@/lib/programmatic-content"
-import { STATUS_DOMAIN_NAMES } from "@/lib/status-domains"
+import { EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS } from "@/lib/status-trends-extended"
 import { normalizeSiteInput } from "@/lib/site-status"
 import {
   getStatusTrendingCategoryEntry,
@@ -25,7 +25,7 @@ export const STATUS_TRENDING_SEGMENTS: Array<{
   segment: entry.category,
 }))
 
-export const STATUS_OUTAGE_HISTORY_DOMAINS = STATUS_DOMAIN_NAMES
+export const STATUS_OUTAGE_HISTORY_DOMAINS = EXTENDED_STATUS_OUTAGE_HISTORY_DOMAINS
 
 export function normalizeStatusHistoryDomain(value: string) {
   return normalizeSiteInput(value)

@@ -174,29 +174,29 @@ const CATEGORY_ORDER: CalculatorCategory[] = [
 const PUBLIC_CATEGORY_SET = new Set<PublicCalculatorCategory>(PUBLIC_CATEGORY_ORDER)
 
 const PERCENT_VALUES = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 22, 25, 30, 33, 35, 40, 45, 50,
-  60, 65, 70, 75, 80, 85, 90, 95,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 18, 20, 22, 25, 27, 30, 33, 35, 40,
+  45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 110, 125, 150, 175, 200,
 ] as const
 const PERCENT_BASE_VALUES = [
-  10, 12, 15, 18, 20, 24, 25, 30, 35, 40, 45, 50, 60, 75, 80, 90, 100, 120, 125,
-  150, 175, 180, 200, 225, 240, 250,
+  10, 12, 15, 18, 20, 24, 25, 30, 35, 40, 45, 50, 60, 72, 75, 80, 90, 100, 120,
+  125, 150, 175, 180, 200, 225, 240, 250, 275, 300, 350, 400, 450, 500, 600,
 ] as const
-const TIP_BILLS = [20, 25, 35, 50, 60, 75, 90, 100, 120, 150, 180, 200] as const
-const TIP_PERCENTS = [10, 12, 15, 18, 20, 22, 25] as const
-const SALARY_VALUES = [35000, 40000, 45000, 50000, 55000, 60000, 70000, 80000, 90000, 100000, 120000, 150000] as const
-const SALARY_HOURS = [35, 37.5, 40, 45] as const
-const LOAN_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000] as const
-const LOAN_RATES = [3, 4, 5, 6] as const
-const LOAN_TERMS = [1, 3, 5] as const
-const INTEREST_PRINCIPALS = [1000, 2500, 5000, 10000, 15000, 20000, 25000, 50000] as const
-const INTEREST_RATES = [2, 3, 4, 5, 6] as const
-const INTEREST_YEARS = [1, 2, 3] as const
+const TIP_BILLS = [20, 25, 35, 50, 60, 75, 90, 100, 120, 135, 150, 180, 200, 225, 250, 300, 400, 500] as const
+const TIP_PERCENTS = [10, 12, 15, 18, 20, 22, 25, 30, 35] as const
+const SALARY_VALUES = [30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 80000, 90000, 100000, 110000, 120000, 140000, 150000, 175000, 200000] as const
+const SALARY_HOURS = [30, 32, 35, 37.5, 40, 45] as const
+const LOAN_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 25000, 30000, 35000, 40000, 50000] as const
+const LOAN_RATES = [3, 4, 5, 6, 7, 8, 9] as const
+const LOAN_TERMS = [1, 2, 3, 5] as const
+const INTEREST_PRINCIPALS = [1000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] as const
+const INTEREST_RATES = [2, 3, 4, 5, 6, 7, 8] as const
+const INTEREST_YEARS = [1, 2, 3, 4, 5] as const
 const COMPOUND_PRINCIPALS = [1000, 2500, 5000, 10000, 15000, 25000, 50000, 75000] as const
 const COMPOUND_RATES = [3, 4, 5, 6] as const
 const COMPOUND_YEARS = [3, 5, 10] as const
-const RETIREMENT_MONTHLY = [100, 200, 300, 400, 500, 750, 1000, 1500] as const
-const RETIREMENT_RATES = [4, 5, 6, 7] as const
-const RETIREMENT_YEARS = [10, 20, 30] as const
+const RETIREMENT_MONTHLY = [100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 2000, 2500] as const
+const RETIREMENT_RATES = [4, 5, 6, 7, 8, 9] as const
+const RETIREMENT_YEARS = [10, 15, 20, 30] as const
 
 const EXTERNAL_OVERLAP_NOTE =
   "Plain Tools keeps these pages focused on quick first-pass calculations and browser-local convenience, while deeper planning models remain outside this cluster."
@@ -1342,12 +1342,12 @@ export function generateNonPercentageCalculatorParams(limit?: number) {
 
 export function getPrebuildCalculatorParams(limit = 400) {
   const perCategory: Record<PublicCalculatorCategory, number> = {
-    "basic-loan": 44,
-    percentage: 200,
-    "retirement-basic": 32,
-    "salary-to-hourly": 28,
-    "simple-interest": 44,
-    tip: 52,
+    "basic-loan": 64,
+    percentage: 260,
+    "retirement-basic": 44,
+    "salary-to-hourly": 36,
+    "simple-interest": 52,
+    tip: 64,
   }
 
   const staged = PUBLIC_CATEGORY_ORDER.flatMap((category) =>

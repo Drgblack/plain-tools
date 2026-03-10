@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next"
 
-import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-families"
+import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-specialized"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
-import { getCalculatorPaths } from "@/lib/calculator-financial"
-import { getExtendedConverterSitemapPaths } from "@/lib/converter-families"
+import { getCalculatorPaths } from "@/lib/calculator-financial-ext"
+import { getExtendedConverterSitemapPaths } from "@/lib/converter-specialized"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
@@ -12,7 +12,7 @@ import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { getExtendedPdfVariantSitemapPaths } from "@/lib/pdf-actions-extended"
 import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
-import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows"
+import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows-more"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
 import { expansionSitemapUrls } from "@/lib/seo/expansion-content"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
@@ -34,8 +34,8 @@ import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
-const BASE_URL = "https://www.plain.tools"
-export const SITEMAP_CHUNK_SIZE = 50000
+export const BASE_URL = "https://www.plain.tools"
+export const SITEMAP_CHUNK_SIZE = 10000
 const firstWavePriorityPathSet = new Set(FIRST_WAVE_PRIORITY_PATHS)
 const POPULAR_MATRIX_SIGNAL_GROUPS = [
   ["primary", "ks2"],
