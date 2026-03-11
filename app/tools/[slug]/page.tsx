@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
+import Link from "next/link"
 import { Suspense } from "react"
 
 import { AdAfterResult, AdContentTop, AdToolSidebar } from "@/components/ads/tool-page-ad-slots"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { CanonicalSelf } from "@/components/seo/canonical-self"
+import { GuideToolCta } from "@/components/seo/guide-tool-cta"
 import { ToolFaqBlock } from "@/components/seo/tool-faq-block"
+import { ToolJsonLd } from "@/components/seo/tool-json-ld"
 import { ToolRelatedLinks } from "@/components/seo/tool-related-links"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { SsrContentDebug } from "@/components/seo/ssr-content-debug"
@@ -198,6 +201,7 @@ export default async function ToolPage({ params }: PageProps) {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
       <CanonicalSelf path={`/tools/${slug}`} />
+      <ToolJsonLd toolSlug={tool.slug} />
       <SsrContentDebug routeId={`/tools/${slug}`} />
       <main className="flex-1">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 md:py-14" data-plain-ssr-content>
@@ -310,13 +314,13 @@ export default async function ToolPage({ params }: PageProps) {
                       </p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {relatedProblemPages.map((page) => (
-                          <a
+                          <Link
                             key={page.slug}
                             href={`/tools/${page.slug}`}
                             className="rounded-full border border-border/70 bg-background/70 px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/40 hover:text-accent/90"
                           >
                             {page.h1}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </section>
@@ -334,13 +338,13 @@ export default async function ToolPage({ params }: PageProps) {
                       </p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {relatedVariantPages.map((page) => (
-                          <a
+                          <Link
                             key={page.slug}
                             href={page.path}
                             className="rounded-full border border-border/70 bg-background/70 px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/40 hover:text-accent/90"
                           >
                             {page.h1}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </section>
@@ -377,14 +381,19 @@ export default async function ToolPage({ params }: PageProps) {
                   ) : null}
 
                   {seo ? (
-                    <div className="mt-6 rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
-                      Learn more about this workflow:{" "}
-                      <a
+                    <div className="mt-6 space-y-4">
+                      <GuideToolCta
                         href={seo.learnHref}
-                        className="font-medium text-accent hover:underline"
-                      >
-                        {seo.learnLabel}
-                      </a>
+                        label={seo.learnLabel}
+                        title="Need the guide first?"
+                        description="If you want a step-by-step explanation before using the live workspace, start with the matching guide and then come back to this tool."
+                      />
+                      <div className="rounded-xl border border-border/70 bg-card/40 p-4 text-sm text-muted-foreground">
+                        Learn more about this workflow:{" "}
+                        <Link href={seo.learnHref} className="font-medium text-accent hover:underline">
+                          {seo.learnLabel}
+                        </Link>
+                      </div>
                     </div>
                   ) : null}
 
@@ -397,9 +406,9 @@ export default async function ToolPage({ params }: PageProps) {
                     <p className="font-medium text-foreground">Before you share the output</p>
                     <p className="mt-2">
                       Check the result, confirm formatting, and use{" "}
-                      <a href="/verify-claims" className="font-medium text-accent hover:underline">
+                      <Link href="/verify-claims" className="font-medium text-accent hover:underline">
                         verify claims
-                      </a>{" "}
+                      </Link>{" "}
                       if you need a repeatable privacy check for local processing.
                     </p>
                   </div>

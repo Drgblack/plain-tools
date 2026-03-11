@@ -58,6 +58,22 @@ export type ProfessionalWorkflowPage = ProfessionalWorkflowEntry & {
   wordCount: number
 }
 
+export type ProfessionalWorkflowIndustryHub = {
+  canonicalPath: string
+  comparePath: string
+  description: string
+  featuredWorkflows: Array<{
+    description: string
+    href: string
+    title: string
+    toolName: string
+  }>
+  label: string
+  relatedToolLinks: Array<{ href: string; label: string }>
+  slug: string
+  workflowCount: number
+}
+
 const INDUSTRIES: IndustryDefinition[] = [
   { slug: "legal", label: "Legal Teams", keyword: "legal", docs: "contracts, exhibit bundles, and client review copies", risk: "matter files often contain privileged language, signatures, and ID data", nextStep: "court filing, outside counsel review, or client delivery", review: "page order, redactions, signatures, and submission size", comparePath: "/compare/plain-tools-vs-adobe-acrobat-online" },
   { slug: "accounting", label: "Accounting Teams", keyword: "accounting", docs: "invoices, statements, and month-end support packs", risk: "the files mix payment details, customer records, and audit evidence", nextStep: "finance approval, audit support, or reporting", review: "totals, legibility, file size, and record completeness", comparePath: "/compare/plain-tools-vs-pdf24" },
@@ -443,8 +459,8 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
     ...entry,
     breadcrumbs: [
       { href: "/", label: "Home" },
-      { href: "/learn", label: "Learn" },
-      { label: industry.label },
+      { href: "/guides", label: "Guides" },
+      { href: `/guides/${industry.slug}`, label: industry.label },
       { label: workflow.title },
     ],
     canonicalPath,
@@ -476,6 +492,7 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
     },
     relatedLinks: relatedLinks(industry, workflow),
     siloLinks: [
+      { href: `/guides/${industry.slug}`, label: `Browse ${industry.label} guides` },
       { href: `/tools/${tool.slug}`, label: `Open ${tool.name}` },
       { href: "/pdf-tools", label: "Browse PDF tools" },
       { href: industry.comparePath, label: "Read the closest privacy comparison" },
@@ -497,6 +514,65 @@ export function getProfessionalWorkflowSitemapPaths() {
 
 export function getRelatedProfessionalWorkflowLinks(industry: string, workflow: string) {
   return getProfessionalWorkflowPage(industry, workflow)?.relatedLinks ?? []
+}
+
+function buildIndustryHubDescription(industry: IndustryDefinition) {
+  return `${industry.label} workflow hub for local PDF preparation across ${industry.docs}. These guides focus on ${industry.review} before the next step: ${industry.nextStep}.`
+}
+
+export function getProfessionalWorkflowIndustryHub(
+  industrySlug: string
+): ProfessionalWorkflowIndustryHub | null {
+  const industry = INDUSTRY_MAP.get(industrySlug)
+  if (!industry) return null
+
+  const entries = PROFESSIONAL_WORKFLOW_MATRIX.filter((entry) => entry.industry === industrySlug)
+  const featuredWorkflows = entries
+    .slice(0, 12)
+    .flatMap((entry) => {
+      const page = getProfessionalWorkflowPage(entry.industry, entry.workflow)
+      if (!page) return []
+
+      return [
+        {
+          description: page.desc,
+          href: page.canonicalPath,
+          title: page.h1,
+          toolName: page.page.tool.name,
+        },
+      ]
+    })
+  const relatedToolLinks = Array.from(
+    new Map(
+      entries.map((entry) => {
+        const tool = mustGetTool(entry.toolSlug)
+        return [
+          tool.slug,
+          {
+            href: `/tools/${tool.slug}`,
+            label: `Use ${tool.name} locally`,
+          },
+        ]
+      })
+    ).values()
+  ).slice(0, 6)
+
+  return {
+    canonicalPath: `/guides/${industry.slug}`,
+    comparePath: industry.comparePath,
+    description: buildIndustryHubDescription(industry),
+    featuredWorkflows,
+    label: industry.label,
+    relatedToolLinks,
+    slug: industry.slug,
+    workflowCount: entries.length,
+  }
+}
+
+export function getProfessionalWorkflowIndustryHubs() {
+  return INDUSTRIES.map((industry) => getProfessionalWorkflowIndustryHub(industry.slug)).filter(
+    (hub): hub is ProfessionalWorkflowIndustryHub => Boolean(hub)
+  )
 }
 
 export const PROFESSIONAL_WORKFLOW_METADATA_EXAMPLES = [

@@ -7,7 +7,7 @@ import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 
 export async function GET() {
   const now = new Date()
-  const seoLandingPages = ["/diagnosis", "/is-chatgpt-down", "/check-if-website-is-down"] as const
+  const seoLandingPages = ["/diagnosis", "/check-if-website-is-down"] as const
 
   const entries: SitemapXmlEntry[] = TOOL_CATALOGUE.filter((tool) => tool.available).map((tool) => ({
     url: `${BASE_URL}/tools/${tool.slug}`,

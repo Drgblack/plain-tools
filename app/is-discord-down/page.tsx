@@ -17,13 +17,25 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 
-export const metadata: Metadata = buildPageMetadata({
+const baseMetadata = buildPageMetadata({
   title: "Is Discord Down Right Now?",
   description:
     "Check whether Discord is down right now with live status, response time, and practical steps to separate a wider outage from local connection issues.",
   path: "/is-discord-down",
   image: "/og/default.png",
 })
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  alternates: {
+    ...baseMetadata.alternates,
+    canonical: `https://plain.tools${statusPathFor("discord.com")}`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+}
 
 const faqs = [
   {
@@ -57,7 +69,7 @@ const pageSchema = combineJsonLd([
     { name: "Status", url: "https://plain.tools/status" },
     { name: "Is Discord Down", url: "https://plain.tools/is-discord-down" },
   ]),
-  buildFaqPageSchema(faqs),
+  buildFaqPageSchema([...faqs]),
   buildItemListSchema(
     "Related outage checks",
     relatedChecks.map((entry) => ({

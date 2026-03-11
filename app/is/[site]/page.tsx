@@ -44,12 +44,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  return buildPageMetadata({
+  const metadata = buildPageMetadata({
     title: `Is ${entry.name} Down Right Now?`,
     description: `Check whether ${entry.name} is currently down. Instant website status check with troubleshooting steps and related network tools.`,
     path: statusQueryPathForSlug(entry.slug),
     image: "/og/default.png",
   })
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata.alternates,
+      canonical: `https://plain.tools${statusPathFor(entry.domain)}`,
+    },
+    robots: {
+      index: false,
+      follow: true,
+    },
+  }
 }
 
 export default async function IsSiteDownPage({ params }: Props) {

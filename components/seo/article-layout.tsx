@@ -1,6 +1,5 @@
-import Link from "next/link"
-
 import { AdSlot } from "@/components/ads/ad-slot"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { type AdPlacement } from "@/lib/ads"
 import { serializeJsonLd } from "@/lib/sanitize"
 
@@ -61,20 +60,12 @@ export function ArticleLayout({
         />
       ))}
       <article className="mx-auto max-w-5xl space-y-10">
-        <nav className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          {breadcrumbs.map((crumb, index) => (
-            <span key={crumb.href} className="inline-flex items-center gap-2">
-              {index > 0 ? <span>/</span> : null}
-              {index < breadcrumbs.length - 1 ? (
-                <Link href={crumb.href} className="hover:text-foreground">
-                  {crumb.label}
-                </Link>
-              ) : (
-                <span className="text-foreground">{crumb.label}</span>
-              )}
-            </span>
-          ))}
-        </nav>
+        <PageBreadcrumbs
+          items={breadcrumbs.map((crumb, index) => ({
+            label: crumb.label,
+            href: index < breadcrumbs.length - 1 ? crumb.href : undefined,
+          }))}
+        />
 
         <header className="space-y-4">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{title}</h1>

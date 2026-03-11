@@ -3,11 +3,14 @@ import Link from "next/link"
 
 import { ArticleLayout } from "@/components/seo/article-layout"
 import { FaqBlock } from "@/components/seo/faq-block"
+import { GuideToolCta } from "@/components/seo/guide-tool-cta"
 import {
   LearnHowToFramework,
   LearnTrustExplainerFramework,
 } from "@/components/seo/learn-intent-framework"
 import { RelatedLinks } from "@/components/seo/related-links"
+import { RelatedGuidesSection } from "@/components/seo/related-guides-section"
+import { RelatedToolsSection } from "@/components/seo/related-tools-section"
 import { TrustBox } from "@/components/seo/trust-box"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 import type { TrancheLearnArticle } from "@/lib/seo/tranche1-content"
@@ -137,6 +140,15 @@ export function LearnArticleTemplate({
       label: "Compare Plain Tools with cloud alternatives",
       href: "/compare/offline-vs-online-pdf-tools",
     }
+  const relatedGuideLinks =
+    links?.relatedLearn ??
+    article.nextSteps.filter((step) => step.href.startsWith("/learn/")).slice(0, 3)
+  const relatedToolLinks = [
+    primaryToolLink,
+    ...article.nextSteps.filter(
+      (step) => step.href.startsWith("/tools/") && step.href !== primaryToolLink.href
+    ),
+  ].slice(0, 3)
 
   return (
     <ArticleLayout
@@ -174,14 +186,16 @@ export function LearnArticleTemplate({
             />
           )}
 
+          <GuideToolCta href={primaryToolLink.href} label={primaryToolLink.label} />
+
           <section className="rounded-xl border border-border/70 bg-card/45 p-4 md:p-5">
             <h2 className="text-lg font-semibold tracking-tight text-foreground">Contextual links</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Apply this guide directly:{" "}
+              Apply this guide directly with{" "}
               <Link href={primaryToolLink.href} className="font-medium text-accent hover:underline">
                 {primaryToolLink.label}
               </Link>
-              , then{" "}
+              , compare alternatives with{" "}
               <Link href={compareLink.href} className="font-medium text-accent hover:underline">
                 {compareLink.label}
               </Link>{" "}
@@ -196,6 +210,14 @@ export function LearnArticleTemplate({
               before deeper troubleshooting.
             </p>
           </section>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <RelatedToolsSection links={relatedToolLinks} heading="Related tools for this guide" />
+            <RelatedGuidesSection
+              links={relatedGuideLinks}
+              heading="Related guides for the same workflow"
+            />
+          </div>
         </div>
       }
       introAdPlacement="guide_content_top"
@@ -212,7 +234,7 @@ export function LearnArticleTemplate({
             },
             {
               title: relatedLabel,
-              links: links ? links.relatedLearn : article.nextSteps.filter((step) => step.href.startsWith("/learn/")).slice(0, 2),
+              links: relatedGuideLinks,
             },
             {
               title: "Privacy guides",

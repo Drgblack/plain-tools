@@ -32,10 +32,10 @@ import {
   STATUS_HIGH_DEMAND_SITES,
   STATUS_STATIC_DOMAINS,
 } from "@/lib/status-domains"
-import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
 import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
+import { getProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
 
 export const BASE_URL = "https://www.plain.tools"
 export const SITEMAP_CHUNK_SIZE = 10000
@@ -251,6 +251,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     "/calculators",
     "/status",
     "/site-status",
+    "/guides",
     "/status/trending",
     "/what-is-my-ip",
     "/dns-lookup",
@@ -312,6 +313,9 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const professionalWorkflowPages = getProfessionalWorkflowSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.82)
   )
+  const professionalWorkflowHubPages = getProfessionalWorkflowIndustryHubs().map((hub) =>
+    toEntry(hub.canonicalPath, now, "weekly", 0.74)
+  )
   const pdfComparisonPages = getPdfComparisonSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
   )
@@ -344,9 +348,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
   )
   const statusExtensionHistoryPages = getStatusOutageHistoryPaths().map((path) =>
     toEntry(path, now, "daily", 0.76)
-  )
-  const statusQueryPages = STATUS_QUERY_PAGES.map((entry) =>
-    toEntry(statusQueryPathForSlug(entry.slug), now, "daily", 0.82)
   )
   const outageHistoryPages = OUTAGE_HISTORY_PAGES.map((entry) =>
     toEntry(outageHistoryPathForSlug(entry.slug), now, "daily", 0.8)
@@ -396,6 +397,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...calculatorPages,
     ...calculatorCategoryPages,
     ...comparisonMatrixPages,
+    ...professionalWorkflowHubPages,
     ...professionalWorkflowPages,
     ...pdfComparisonPages,
     ...toolProblemPages,
@@ -407,7 +409,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...statusTrendingPages,
     ...statusRegionPages,
     ...statusIspPages,
-    ...statusQueryPages,
     ...outageHistoryPages,
     ...statusExtensionHistoryPages,
     ...blogCategoryPages,

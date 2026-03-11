@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { statusPathFor } from "@/lib/site-status"
 import {
   buildBreadcrumbList,
   buildFaqPageSchema,
@@ -52,7 +53,7 @@ const pageSchema = combineJsonLd([
     { name: "Status", url: "https://plain.tools/status" },
     { name: "Check If a Website Is Down", url: "https://plain.tools/check-if-website-is-down" },
   ]),
-  buildFaqPageSchema(faqs),
+  buildFaqPageSchema([...faqs]),
 ])
 
 export default function CheckIfWebsiteIsDownPage() {
@@ -159,9 +160,9 @@ export default function CheckIfWebsiteIsDownPage() {
               {
                 title: "Popular status routes",
                 links: [
-                  { label: "Is ChatGPT down?", href: "/is-chatgpt-down" },
-                  { label: "Is Discord down?", href: "/is-discord-down" },
-                  { label: "Is YouTube down?", href: "/is-youtube-down" },
+                  { label: "Check ChatGPT status", href: statusPathFor("chatgpt.com") },
+                  { label: "Check Discord status", href: statusPathFor("discord.com") },
+                  { label: "Check YouTube status", href: statusPathFor("youtube.com") },
                 ],
               },
               {

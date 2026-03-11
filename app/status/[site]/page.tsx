@@ -5,6 +5,7 @@ import { Globe, Server, Radio, ChevronRight } from "lucide-react"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { InvalidParam } from '@/components/invalid-param'
 import { CanonicalSelf } from "@/components/seo/canonical-self"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { Surface } from '@/components/surface'
 import { ToolCard } from '@/components/tool-card'
 import { TrendingStatus } from "@/components/trending-status"
@@ -284,19 +285,18 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
     <article className="category-network">
       <CanonicalSelf pathname={canonicalStatusPath} />
       {statusPageSchema ? <JsonLd id={`status-page-schema-${schemaId}`} schema={statusPageSchema} /> : null}
-      <nav className="border-b border-border/50" aria-label="Breadcrumb">
+      <div className="border-b border-border/50">
         <div className="mx-auto max-w-6xl px-4 py-3">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground">
-            <li><Link href="/" className="hover:text-foreground">Home</Link></li>
-            <ChevronRight className="h-3 w-3" />
-            <li><Link href="/network-tools" className="hover:text-foreground">Network Tools</Link></li>
-            <ChevronRight className="h-3 w-3" />
-            <li><Link href="/site-status" className="hover:text-foreground">Site Status</Link></li>
-            <ChevronRight className="h-3 w-3" />
-            <li className="text-foreground">{siteLabel}</li>
-          </ol>
+          <PageBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Network Tools", href: "/network-tools" },
+              { label: "Site Status", href: "/site-status" },
+              { label: siteLabel },
+            ]}
+          />
         </div>
-      </nav>
+      </div>
 
       <div className="mx-auto max-w-6xl px-4 py-8">
         <header className="mb-8">

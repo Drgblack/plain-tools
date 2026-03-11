@@ -15,7 +15,8 @@ import {
   STATUS_CATEGORY_META,
   STATUS_HIGH_DEMAND_SITES,
 } from "@/lib/status-domains"
-import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
+import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
+import { statusPathFor } from "@/lib/site-status"
 import {
   buildBreadcrumbList,
   buildItemListSchema,
@@ -231,16 +232,16 @@ export default async function StatusTrendingPage() {
       <section className="border-b border-border/60 px-4 py-8">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Popular “is site down” pages
+            Popular canonical status routes
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {STATUS_QUERY_PAGES.map((entry) => (
               <Link
                 key={entry.slug}
-                href={statusQueryPathForSlug(entry.slug)}
+                href={statusPathFor(entry.domain)}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-accent"
               >
-                Is {entry.name} down?
+                Check {entry.name} status
               </Link>
             ))}
           </div>

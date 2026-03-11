@@ -438,9 +438,16 @@ function getProfessionalWorkflowLinks(currentPath: string): RelatedLink[] {
   return dedupeLinks(
     [
       ...getRelatedProfessionalWorkflowLinks(industry, workflow),
+      { title: "Browse professional workflow hubs", href: "/guides" },
+      { title: `Browse ${page.page.paramLabel} workflow hub`, href: `/guides/${industry}` },
       { title: "Browse PDF tools", href: "/pdf-tools" },
       { title: "Browse learn guides", href: "/learn" },
-      { title: "Compare privacy-first alternatives", href: page.siloLinks[2]?.href ?? "/compare" },
+      {
+        title: "Compare privacy-first alternatives",
+        href:
+          page.siloLinks.find((link) => link.label.toLowerCase().includes("comparison"))?.href ??
+          "/compare",
+      },
     ],
     currentPath
   ).slice(0, 8)

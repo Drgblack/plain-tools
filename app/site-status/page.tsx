@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { AdLayout } from "@/components/ads/ad-layout"
 import { JsonLd } from "@/components/seo/json-ld"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
@@ -14,7 +15,7 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 import { STATUS_TRAFFIC_SITES, statusPathFor } from "@/lib/site-status"
-import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
+import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import { FIRST_WAVE_GUIDE_PAGES } from "@/lib/seo/first-wave-pages"
 import { statusTrendingPathForCategory } from "@/lib/status-extensions"
 
@@ -73,7 +74,7 @@ const siteStatusSchema = combineJsonLd([
       "Canonical status routes for shared checks",
     ],
   }),
-  buildFaqPageSchema(siteStatusFaqs),
+  buildFaqPageSchema([...siteStatusFaqs]),
   buildBreadcrumbList([
     { name: "Home", url: "https://plain.tools/" },
     { name: "Site Status", url: "https://plain.tools/site-status" },
@@ -98,6 +99,13 @@ export default function SiteStatusPage() {
       {siteStatusSchema ? <JsonLd id="site-status-page-schema" schema={siteStatusSchema} /> : null}
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-4">
+          <PageBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Network Tools", href: "/network-tools" },
+              { label: "Site Status" },
+            ]}
+          />
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Site status checker
           </h1>
@@ -158,16 +166,16 @@ export default function SiteStatusPage() {
       <section className="border-b border-border/60 px-4 py-8">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">
-            Popular “is site down” pages
+            Popular canonical status pages
           </h2>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
             {STATUS_QUERY_PAGES.map((entry) => (
               <Link
                 key={entry.slug}
-                href={statusQueryPathForSlug(entry.slug)}
+                href={statusPathFor(entry.domain)}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
               >
-                Is {entry.name} down?
+                Check {entry.name} status
               </Link>
             ))}
           </div>
