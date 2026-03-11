@@ -17,12 +17,22 @@ type Props = {
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   "basic-loan-payment":
     "Monthly payment estimates for exact principal, APR, and term combinations.",
+  "break-even-calculator":
+    "Break-even pages for fixed costs, price, unit cost, and revenue-threshold planning.",
   "compound-interest-basic":
     "Introductory growth scenarios with annual, quarterly, and monthly compounding.",
   "credit-card-payoff":
     "Debt payoff pages that compare balance, APR, monthly payment, and timeline.",
+  "emergency-fund":
+    "Reserve-target pages for monthly expenses and emergency-fund coverage length.",
+  "mortgage-payment":
+    "Home-finance pages for property price, rate, term, and down-payment scenarios.",
   percentage:
     "Exact-match percentage routes for discounts, commissions, grades, and quick math checks.",
+  "paycheck-estimate":
+    "Gross-to-net paycheck estimate pages by salary, pay frequency, and state context.",
+  "refinance-savings":
+    "Refinance pages that compare current rate, new rate, balance, and projected savings.",
   "retirement-savings-intro":
     "Recurring-contribution savings pages for fast first-pass retirement planning.",
   "salary-to-hourly":

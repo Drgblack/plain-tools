@@ -65,6 +65,83 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
           : (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months)
       return `Estimated monthly payment: ${formatCurrency(payment)}`
     }
+    case "mortgage-payment": {
+      const homePrice = readNumber(values.homePrice ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const termYears = readNumber(values.termYears ?? "")
+      const downPaymentPercent = readNumber(values.downPaymentPercent ?? "")
+      if (
+        homePrice === null ||
+        annualRate === null ||
+        termYears === null ||
+        downPaymentPercent === null
+      ) {
+        return "Enter home price, rate, term, and down payment."
+      }
+      const downPaymentAmount = homePrice * (downPaymentPercent / 100)
+      const principal = homePrice - downPaymentAmount
+      const monthlyRate = annualRate / 100 / 12
+      const months = termYears * 12
+      const payment =
+        monthlyRate === 0
+          ? principal / months
+          : (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months)
+      return `Estimated mortgage payment: ${formatCurrency(payment)}`
+    }
+    case "refinance-savings": {
+      const balance = readNumber(values.balance ?? "")
+      const currentRate = readNumber(values.currentRate ?? "")
+      const newRate = readNumber(values.newRate ?? "")
+      const termYears = readNumber(values.termYears ?? "")
+      if (
+        balance === null ||
+        currentRate === null ||
+        newRate === null ||
+        termYears === null
+      ) {
+        return "Enter balance, current rate, new rate, and term."
+      }
+      const currentPayment = ((balance * (currentRate / 100 / 12)) /
+        (1 - (1 + currentRate / 100 / 12) ** -(termYears * 12)))
+      const newPayment = ((balance * (newRate / 100 / 12)) /
+        (1 - (1 + newRate / 100 / 12) ** -(termYears * 12)))
+      return `Estimated monthly savings: ${formatCurrency(currentPayment - newPayment)}`
+    }
+    case "paycheck-estimate": {
+      const annualSalary = readNumber(values.annualSalary ?? "")
+      const payFrequency = values.payFrequency ?? "biweekly"
+      const state = values.state ?? "texas"
+      if (annualSalary === null) {
+        return "Enter annual salary, pay frequency, and state."
+      }
+      const stateRates: Record<string, number> = {
+        california: 6.5,
+        florida: 0,
+        georgia: 4.75,
+        illinois: 4.95,
+        massachusetts: 5,
+        "new-jersey": 5.5,
+        "new-york": 6.2,
+        "north-carolina": 4.5,
+        ohio: 3.5,
+        pennsylvania: 3.07,
+        texas: 0,
+        washington: 0,
+      }
+      const federalRate =
+        annualSalary <= 40000 ? 11 : annualSalary <= 85000 ? 14 : annualSalary <= 140000 ? 18 : 24
+      const periods =
+        payFrequency === "weekly"
+          ? 52
+          : payFrequency === "semimonthly"
+            ? 24
+            : payFrequency === "monthly"
+              ? 12
+              : 26
+      const netPaycheck =
+        (annualSalary * (1 - (federalRate + (stateRates[state] ?? 0)) / 100)) / periods
+      return `Estimated take-home paycheck: ${formatCurrency(netPaycheck)}`
+    }
     case "compound-basic":
     case "compound-interest-intro":
     case "compound-interest-basic": {
@@ -201,6 +278,24 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       }
       return `Estimated time to goal: ${months} months`
     }
+    case "emergency-fund": {
+      const monthlyExpenses = readNumber(values.monthlyExpenses ?? "")
+      const monthsCovered = readNumber(values.monthsCovered ?? "")
+      if (monthlyExpenses === null || monthsCovered === null) {
+        return "Enter monthly expenses and months covered."
+      }
+      return `Emergency fund target: ${formatCurrency(monthlyExpenses * monthsCovered)}`
+    }
+    case "break-even-calculator": {
+      const fixedCosts = readNumber(values.fixedCosts ?? "")
+      const unitPrice = readNumber(values.unitPrice ?? "")
+      const unitCost = readNumber(values.unitCost ?? "")
+      if (fixedCosts === null || unitPrice === null || unitCost === null) {
+        return "Enter fixed costs, unit price, and unit cost."
+      }
+      if (unitPrice <= unitCost) return "Unit price must be greater than unit cost."
+      return `Estimated break-even units: ${Math.ceil(fixedCosts / (unitPrice - unitCost))}`
+    }
   }
 }
 
@@ -268,6 +363,83 @@ function renderFields(
               type="number"
               value={values.termYears ?? ""}
             />
+          </label>
+        </>
+      )
+    case "mortgage-payment":
+      return (
+        <>
+          <label className={labelClassName}>
+            Home price
+            <input className={inputClassName} onChange={(event) => setValue("homePrice", event.target.value)} step="1" type="number" value={values.homePrice ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Annual rate (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Term (years)
+            <input className={inputClassName} onChange={(event) => setValue("termYears", event.target.value)} step="1" type="number" value={values.termYears ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Down payment (%)
+            <input className={inputClassName} onChange={(event) => setValue("downPaymentPercent", event.target.value)} step="0.01" type="number" value={values.downPaymentPercent ?? ""} />
+          </label>
+        </>
+      )
+    case "refinance-savings":
+      return (
+        <>
+          <label className={labelClassName}>
+            Remaining balance
+            <input className={inputClassName} onChange={(event) => setValue("balance", event.target.value)} step="1" type="number" value={values.balance ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Current rate (%)
+            <input className={inputClassName} onChange={(event) => setValue("currentRate", event.target.value)} step="0.01" type="number" value={values.currentRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            New rate (%)
+            <input className={inputClassName} onChange={(event) => setValue("newRate", event.target.value)} step="0.01" type="number" value={values.newRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Term (years)
+            <input className={inputClassName} onChange={(event) => setValue("termYears", event.target.value)} step="1" type="number" value={values.termYears ?? ""} />
+          </label>
+        </>
+      )
+    case "paycheck-estimate":
+      return (
+        <>
+          <label className={labelClassName}>
+            Annual salary
+            <input className={inputClassName} onChange={(event) => setValue("annualSalary", event.target.value)} step="1" type="number" value={values.annualSalary ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Pay frequency
+            <select className={inputClassName} onChange={(event) => setValue("payFrequency", event.target.value)} value={values.payFrequency ?? "biweekly"}>
+              <option value="weekly">Weekly</option>
+              <option value="biweekly">Biweekly</option>
+              <option value="semimonthly">Semimonthly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </label>
+          <label className={labelClassName}>
+            State
+            <select className={inputClassName} onChange={(event) => setValue("state", event.target.value)} value={values.state ?? "texas"}>
+              <option value="california">California</option>
+              <option value="new-york">New York</option>
+              <option value="texas">Texas</option>
+              <option value="florida">Florida</option>
+              <option value="illinois">Illinois</option>
+              <option value="pennsylvania">Pennsylvania</option>
+              <option value="ohio">Ohio</option>
+              <option value="georgia">Georgia</option>
+              <option value="north-carolina">North Carolina</option>
+              <option value="washington">Washington</option>
+              <option value="new-jersey">New Jersey</option>
+              <option value="massachusetts">Massachusetts</option>
+            </select>
           </label>
         </>
       )
@@ -538,6 +710,36 @@ function renderFields(
               type="number"
               value={values.annualRate ?? ""}
             />
+          </label>
+        </>
+      )
+    case "emergency-fund":
+      return (
+        <>
+          <label className={labelClassName}>
+            Monthly expenses
+            <input className={inputClassName} onChange={(event) => setValue("monthlyExpenses", event.target.value)} step="1" type="number" value={values.monthlyExpenses ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Months covered
+            <input className={inputClassName} onChange={(event) => setValue("monthsCovered", event.target.value)} step="1" type="number" value={values.monthsCovered ?? ""} />
+          </label>
+        </>
+      )
+    case "break-even-calculator":
+      return (
+        <>
+          <label className={labelClassName}>
+            Fixed costs
+            <input className={inputClassName} onChange={(event) => setValue("fixedCosts", event.target.value)} step="1" type="number" value={values.fixedCosts ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Unit price
+            <input className={inputClassName} onChange={(event) => setValue("unitPrice", event.target.value)} step="0.01" type="number" value={values.unitPrice ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Unit cost
+            <input className={inputClassName} onChange={(event) => setValue("unitCost", event.target.value)} step="0.01" type="number" value={values.unitCost ?? ""} />
           </label>
         </>
       )

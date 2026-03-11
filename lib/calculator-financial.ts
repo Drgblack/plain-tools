@@ -13,12 +13,17 @@ export type PublicCalculatorCategory =
   | "tip-calculator"
   | "salary-to-hourly"
   | "basic-loan-payment"
+  | "mortgage-payment"
+  | "refinance-savings"
+  | "paycheck-estimate"
   | "simple-interest"
   | "compound-interest-basic"
   | "retirement-savings-intro"
   | "tax-estimate-simple"
   | "credit-card-payoff"
   | "savings-goal"
+  | "emergency-fund"
+  | "break-even-calculator"
 
 export type LegacyCalculatorCategory =
   | "basic-loan"
@@ -104,6 +109,48 @@ type ParsedBasicLoan = {
   totalPaid: number
 }
 
+type ParsedMortgagePayment = {
+  annualRate: number
+  category: "mortgage-payment"
+  downPaymentAmount: number
+  downPaymentPercent: number
+  expression: string
+  homePrice: number
+  loanPrincipal: number
+  monthlyPayment: number
+  termYears: number
+  totalInterest: number
+  totalPaid: number
+}
+
+type ParsedRefinanceSavings = {
+  balance: number
+  category: "refinance-savings"
+  currentMonthlyPayment: number
+  currentRate: number
+  expression: string
+  monthlySavings: number
+  newMonthlyPayment: number
+  newRate: number
+  termYears: number
+  totalSavings: number
+}
+
+type PayFrequency = "biweekly" | "monthly" | "semimonthly" | "weekly"
+
+type ParsedPaycheckEstimate = {
+  annualSalary: number
+  annualTakeHome: number
+  category: "paycheck-estimate"
+  effectiveRate: number
+  expression: string
+  grossPaycheck: number
+  netPaycheck: number
+  payFrequency: PayFrequency
+  state: string
+  stateRate: number
+}
+
 type ParsedSimpleInterest = {
   annualRate: number
   category: "simple-interest"
@@ -166,12 +213,36 @@ type ParsedSavingsGoal = {
   totalContributions: number
 }
 
+type ParsedEmergencyFund = {
+  category: "emergency-fund"
+  emergencyFundTarget: number
+  expression: string
+  monthlyExpenses: number
+  monthsCovered: number
+}
+
+type ParsedBreakEvenCalculator = {
+  category: "break-even-calculator"
+  contributionMargin: number
+  expression: string
+  fixedCosts: number
+  revenueToBreakEven: number
+  unitCost: number
+  unitPrice: number
+  unitsToBreakEven: number
+}
+
 type ParsedCalculator =
   | ParsedBasicLoan
+  | ParsedBreakEvenCalculator
   | ParsedCompoundInterestIntro
   | ParsedCreditCardPayoff
+  | ParsedEmergencyFund
+  | ParsedMortgagePayment
   | ParsedPercentage
+  | ParsedPaycheckEstimate
   | ParsedRetirementBasic
+  | ParsedRefinanceSavings
   | ParsedSalary
   | ParsedSavingsGoal
   | ParsedSimpleInterest
@@ -191,11 +262,16 @@ const calculatorTool: ToolDefinition = {
 export const CALCULATOR_CATEGORY_LABELS: Record<CalculatorCategory, string> = {
   "basic-loan": "Basic Loan Payment Calculator",
   "basic-loan-payment": "Basic Loan Payment Calculator",
+  "break-even-calculator": "Break-Even Calculator",
   "compound-basic": "Compound Interest Basic Calculator",
   "compound-interest-basic": "Compound Interest Basic Calculator",
   "compound-interest-intro": "Compound Interest Calculator",
   "credit-card-payoff": "Credit Card Payoff Calculator",
+  "emergency-fund": "Emergency Fund Calculator",
+  "mortgage-payment": "Mortgage Payment Calculator",
   percentage: "Percentage Calculator",
+  "paycheck-estimate": "Paycheck Estimate Calculator",
+  "refinance-savings": "Refinance Savings Calculator",
   "retirement-basic": "Retirement Savings Intro Calculator",
   "retirement-savings-intro": "Retirement Savings Intro Calculator",
   "retirement-savings-basic": "Retirement Savings Calculator",
@@ -212,12 +288,17 @@ export const CALCULATOR_PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
   "tip-calculator",
   "salary-to-hourly",
   "basic-loan-payment",
+  "mortgage-payment",
+  "refinance-savings",
+  "paycheck-estimate",
   "simple-interest",
   "compound-interest-basic",
   "retirement-savings-intro",
   "tax-estimate-simple",
   "credit-card-payoff",
   "savings-goal",
+  "emergency-fund",
+  "break-even-calculator",
 ]
 
 const CATEGORY_LABELS = CALCULATOR_CATEGORY_LABELS
@@ -333,6 +414,45 @@ const LOAN_RATES = uniqueNumberSeries([
   12,
 ])
 const LOAN_TERMS = uniqueNumberSeries([1, 2, 3, 4, 5, 6, 7, 10, 12, 15, 20, 25, 30])
+const MORTGAGE_HOME_PRICES = uniqueNumberSeries([
+  ...range(100000, 300000, 25000),
+  ...range(350000, 800000, 50000),
+  900000,
+  1000000,
+  1250000,
+])
+const MORTGAGE_RATES = uniqueNumberSeries([3.5, 4, 4.5, 5, 5.5, 6, 6.5, 6.75, 7, 7.5, 8])
+const MORTGAGE_TERMS = uniqueNumberSeries([15, 20, 30])
+const MORTGAGE_DOWN_PAYMENTS = uniqueNumberSeries([3, 5, 10, 15, 20, 25, 30])
+const REFI_BALANCES = uniqueNumberSeries([
+  ...range(100000, 300000, 25000),
+  ...range(350000, 800000, 50000),
+  900000,
+  1000000,
+])
+const REFI_CURRENT_RATES = uniqueNumberSeries([5.5, 6, 6.5, 6.75, 7, 7.5, 8])
+const REFI_NEW_RATES = uniqueNumberSeries([4.5, 5, 5.5, 6, 6.25, 6.5, 6.75])
+const REFI_TERMS = uniqueNumberSeries([15, 20, 30])
+const PAYCHECK_SALARIES = uniqueNumberSeries([
+  ...range(25000, 100000, 2500),
+  ...range(105000, 200000, 5000),
+  ...range(225000, 350000, 25000),
+])
+const PAYCHECK_FREQUENCIES = ["weekly", "biweekly", "semimonthly", "monthly"] as const
+const PAYCHECK_STATE_OPTIONS = [
+  { slug: "california", label: "California", rate: 6.5 },
+  { slug: "new-york", label: "New York", rate: 6.2 },
+  { slug: "texas", label: "Texas", rate: 0 },
+  { slug: "florida", label: "Florida", rate: 0 },
+  { slug: "illinois", label: "Illinois", rate: 4.95 },
+  { slug: "pennsylvania", label: "Pennsylvania", rate: 3.07 },
+  { slug: "ohio", label: "Ohio", rate: 3.5 },
+  { slug: "georgia", label: "Georgia", rate: 4.75 },
+  { slug: "north-carolina", label: "North Carolina", rate: 4.5 },
+  { slug: "washington", label: "Washington", rate: 0 },
+  { slug: "new-jersey", label: "New Jersey", rate: 5.5 },
+  { slug: "massachusetts", label: "Massachusetts", rate: 5 },
+] as const
 const INTEREST_PRINCIPALS = uniqueNumberSeries([
   ...range(1000, 10000, 1000),
   ...range(12500, 50000, 2500),
@@ -378,6 +498,17 @@ const SAVINGS_GOAL_MONTHLY = uniqueNumberSeries([
   ...range(600, 2000, 200),
 ])
 const SAVINGS_GOAL_RATES = uniqueNumberSeries([0, 1, 2, 3, 4, 4.5, 5, 6, 7, 8, 10])
+const EMERGENCY_FUND_EXPENSES = uniqueNumberSeries([
+  ...range(1500, 6000, 250),
+  ...range(6500, 12000, 500),
+])
+const EMERGENCY_FUND_MONTHS = uniqueNumberSeries([3, 4, 5, 6, 7, 8, 9, 12])
+const BREAK_EVEN_FIXED_COSTS = uniqueNumberSeries([
+  ...range(5000, 25000, 2500),
+  ...range(30000, 100000, 10000),
+])
+const BREAK_EVEN_PRICE_POINTS = uniqueNumberSeries([25, 40, 50, 65, 80, 100, 120, 150, 200])
+const BREAK_EVEN_UNIT_COSTS = uniqueNumberSeries([8, 12, 15, 20, 25, 30, 40, 50, 60, 80])
 
 const EXTERNAL_OVERLAP_NOTE =
   "Plain Tools keeps these pages focused on quick first-pass calculations and browser-local convenience, while deeper planning models remain outside this cluster."
@@ -427,6 +558,23 @@ function futureValueRetirement(monthlyContribution: number, annualRate: number, 
   const months = years * 12
   if (monthlyRate === 0) return monthlyContribution * months
   return monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
+}
+
+function stateTaxRateFor(state: string) {
+  return PAYCHECK_STATE_OPTIONS.find((entry) => entry.slug === state)?.rate ?? 0
+}
+
+function payPeriodsPerYear(payFrequency: PayFrequency) {
+  switch (payFrequency) {
+    case "weekly":
+      return 52
+    case "biweekly":
+      return 26
+    case "semimonthly":
+      return 24
+    case "monthly":
+      return 12
+  }
 }
 
 function monthsToSavingsGoal(
@@ -550,6 +698,32 @@ function basicLoanExpressionFor(principal: number, annualRate: number, termYears
   return `loan-payment-${principal}-${annualRate}-${termYears}-years`
 }
 
+function mortgageExpressionFor(
+  homePrice: number,
+  annualRate: number,
+  termYears: number,
+  downPaymentPercent: number
+) {
+  return `mortgage-payment-${homePrice}-${annualRate}-${termYears}-years-${downPaymentPercent}-down`
+}
+
+function refinanceExpressionFor(
+  balance: number,
+  currentRate: number,
+  newRate: number,
+  termYears: number
+) {
+  return `refinance-savings-${balance}-${currentRate}-to-${newRate}-${termYears}-years`
+}
+
+function paycheckEstimateExpressionFor(
+  annualSalary: number,
+  payFrequency: PayFrequency,
+  state: string
+) {
+  return `paycheck-estimate-${annualSalary}-${payFrequency}-${state}`
+}
+
 function simpleInterestExpressionFor(principal: number, annualRate: number, years: number) {
   return `simple-interest-${principal}-${annualRate}-${years}`
 }
@@ -592,6 +766,14 @@ function savingsGoalExpressionFor(
   annualRate: number
 ) {
   return `savings-goal-${targetAmount}-target-${monthlyContribution}-monthly-${annualRate}-rate`
+}
+
+function emergencyFundExpressionFor(monthlyExpenses: number, monthsCovered: number) {
+  return `emergency-fund-${monthlyExpenses}-${monthsCovered}-months`
+}
+
+function breakEvenExpressionFor(fixedCosts: number, unitPrice: number, unitCost: number) {
+  return `break-even-${fixedCosts}-fixed-${unitPrice}-price-${unitCost}-cost`
 }
 
 export function isCalculatorCategory(value: string): value is CalculatorCategory {
@@ -656,6 +838,60 @@ export function buildCalculatorExpression(
         return null
       }
       return basicLoanExpressionFor(principal, annualRate, termYears)
+    }
+    case "mortgage-payment": {
+      const homePrice = readNumber("homePrice")
+      const annualRate = readNumber("annualRate")
+      const termYears = readNumber("termYears")
+      const downPaymentPercent = readNumber("downPaymentPercent")
+      if (
+        homePrice === null ||
+        annualRate === null ||
+        termYears === null ||
+        downPaymentPercent === null ||
+        homePrice <= 0 ||
+        annualRate < 0 ||
+        termYears <= 0 ||
+        downPaymentPercent < 0 ||
+        downPaymentPercent >= 100
+      ) {
+        return null
+      }
+      return mortgageExpressionFor(homePrice, annualRate, termYears, downPaymentPercent)
+    }
+    case "refinance-savings": {
+      const balance = readNumber("balance")
+      const currentRate = readNumber("currentRate")
+      const newRate = readNumber("newRate")
+      const termYears = readNumber("termYears")
+      if (
+        balance === null ||
+        currentRate === null ||
+        newRate === null ||
+        termYears === null ||
+        balance <= 0 ||
+        currentRate <= 0 ||
+        newRate <= 0 ||
+        termYears <= 0 ||
+        newRate >= currentRate
+      ) {
+        return null
+      }
+      return refinanceExpressionFor(balance, currentRate, newRate, termYears)
+    }
+    case "paycheck-estimate": {
+      const annualSalary = readNumber("annualSalary")
+      const payFrequency = String(rawValues.payFrequency ?? "biweekly") as PayFrequency
+      const state = String(rawValues.state ?? "texas").toLowerCase()
+      if (
+        annualSalary === null ||
+        annualSalary <= 0 ||
+        !PAYCHECK_FREQUENCIES.includes(payFrequency) ||
+        !PAYCHECK_STATE_OPTIONS.some((entry) => entry.slug === state)
+      ) {
+        return null
+      }
+      return paycheckEstimateExpressionFor(annualSalary, payFrequency, state)
     }
     case "simple-interest": {
       const principal = readNumber("principal")
@@ -761,6 +997,36 @@ export function buildCalculatorExpression(
         return null
       }
       return savingsGoalExpressionFor(targetAmount, monthlyContribution, annualRate)
+    }
+    case "emergency-fund": {
+      const monthlyExpenses = readNumber("monthlyExpenses")
+      const monthsCovered = readNumber("monthsCovered")
+      if (
+        monthlyExpenses === null ||
+        monthsCovered === null ||
+        monthlyExpenses <= 0 ||
+        monthsCovered <= 0
+      ) {
+        return null
+      }
+      return emergencyFundExpressionFor(monthlyExpenses, monthsCovered)
+    }
+    case "break-even-calculator": {
+      const fixedCosts = readNumber("fixedCosts")
+      const unitPrice = readNumber("unitPrice")
+      const unitCost = readNumber("unitCost")
+      if (
+        fixedCosts === null ||
+        unitPrice === null ||
+        unitCost === null ||
+        fixedCosts <= 0 ||
+        unitPrice <= 0 ||
+        unitCost < 0 ||
+        unitPrice <= unitCost
+      ) {
+        return null
+      }
+      return breakEvenExpressionFor(fixedCosts, unitPrice, unitCost)
     }
   }
 }
@@ -869,6 +1135,123 @@ function parseCalculatorExpression(
       termYears,
       totalInterest: totalPaid - principal,
       totalPaid,
+    }
+  }
+
+  if (category === "mortgage-payment") {
+    const match =
+      /^mortgage-payment-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years-([0-9]+(?:\.[0-9]+)*)-down$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const homePrice = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const termYears = parseNumberToken(match[3] ?? "")
+    const downPaymentPercent = parseNumberToken(match[4] ?? "")
+    if (
+      homePrice === null ||
+      annualRate === null ||
+      termYears === null ||
+      downPaymentPercent === null ||
+      homePrice <= 0 ||
+      annualRate < 0 ||
+      termYears <= 0 ||
+      downPaymentPercent < 0 ||
+      downPaymentPercent >= 100
+    ) {
+      return null
+    }
+    const downPaymentAmount = homePrice * (downPaymentPercent / 100)
+    const loanPrincipal = homePrice - downPaymentAmount
+    const payment = monthlyPayment(loanPrincipal, annualRate, termYears)
+    const totalPaid = payment * termYears * 12
+    return {
+      annualRate,
+      category,
+      downPaymentAmount,
+      downPaymentPercent,
+      expression: mortgageExpressionFor(homePrice, annualRate, termYears, downPaymentPercent),
+      homePrice,
+      loanPrincipal,
+      monthlyPayment: payment,
+      termYears,
+      totalInterest: totalPaid - loanPrincipal,
+      totalPaid,
+    }
+  }
+
+  if (category === "refinance-savings") {
+    const match =
+      /^refinance-savings-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-to-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const balance = parseNumberToken(match[1] ?? "")
+    const currentRate = parseNumberToken(match[2] ?? "")
+    const newRate = parseNumberToken(match[3] ?? "")
+    const termYears = parseNumberToken(match[4] ?? "")
+    if (
+      balance === null ||
+      currentRate === null ||
+      newRate === null ||
+      termYears === null ||
+      balance <= 0 ||
+      currentRate <= 0 ||
+      newRate <= 0 ||
+      termYears <= 0 ||
+      newRate >= currentRate
+    ) {
+      return null
+    }
+    const currentMonthlyPayment = monthlyPayment(balance, currentRate, termYears)
+    const newMonthlyPayment = monthlyPayment(balance, newRate, termYears)
+    const monthlySavings = currentMonthlyPayment - newMonthlyPayment
+    return {
+      balance,
+      category,
+      currentMonthlyPayment,
+      currentRate,
+      expression: refinanceExpressionFor(balance, currentRate, newRate, termYears),
+      monthlySavings,
+      newMonthlyPayment,
+      newRate,
+      termYears,
+      totalSavings: monthlySavings * termYears * 12,
+    }
+  }
+
+  if (category === "paycheck-estimate") {
+    const match =
+      /^paycheck-estimate-([0-9]+)-((?:biweekly)|(?:monthly)|(?:semimonthly)|(?:weekly))-([a-z-]+)$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const annualSalary = parseNumberToken(match[1] ?? "")
+    const payFrequency = (match[2] ?? "biweekly") as PayFrequency
+    const state = match[3] ?? "texas"
+    if (
+      annualSalary === null ||
+      annualSalary <= 0 ||
+      !PAYCHECK_FREQUENCIES.includes(payFrequency) ||
+      !PAYCHECK_STATE_OPTIONS.some((entry) => entry.slug === state)
+    ) {
+      return null
+    }
+    const stateRate = stateTaxRateFor(state)
+    const effectiveRate = effectiveTaxRateFor("single", annualSalary) + stateRate
+    const annualTakeHome = annualSalary * (1 - effectiveRate / 100)
+    const periods = payPeriodsPerYear(payFrequency)
+    return {
+      annualSalary,
+      annualTakeHome,
+      category,
+      effectiveRate,
+      expression: paycheckEstimateExpressionFor(annualSalary, payFrequency, state),
+      grossPaycheck: annualSalary / periods,
+      netPaycheck: annualTakeHome / periods,
+      payFrequency,
+      state,
+      stateRate,
     }
   }
 
@@ -1068,6 +1451,63 @@ function parseCalculatorExpression(
     }
   }
 
+  if (category === "emergency-fund") {
+    const match =
+      /^emergency-fund-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-months$/.exec(decoded)
+    if (!match) return null
+    const monthlyExpenses = parseNumberToken(match[1] ?? "")
+    const monthsCovered = parseNumberToken(match[2] ?? "")
+    if (
+      monthlyExpenses === null ||
+      monthsCovered === null ||
+      monthlyExpenses <= 0 ||
+      monthsCovered <= 0
+    ) {
+      return null
+    }
+    return {
+      category,
+      emergencyFundTarget: monthlyExpenses * monthsCovered,
+      expression: emergencyFundExpressionFor(monthlyExpenses, monthsCovered),
+      monthlyExpenses,
+      monthsCovered,
+    }
+  }
+
+  if (category === "break-even-calculator") {
+    const match =
+      /^break-even-([0-9]+(?:\.[0-9]+)*)-fixed-([0-9]+(?:\.[0-9]+)*)-price-([0-9]+(?:\.[0-9]+)*)-cost$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const fixedCosts = parseNumberToken(match[1] ?? "")
+    const unitPrice = parseNumberToken(match[2] ?? "")
+    const unitCost = parseNumberToken(match[3] ?? "")
+    if (
+      fixedCosts === null ||
+      unitPrice === null ||
+      unitCost === null ||
+      fixedCosts <= 0 ||
+      unitPrice <= 0 ||
+      unitCost < 0 ||
+      unitPrice <= unitCost
+    ) {
+      return null
+    }
+    const contributionMargin = unitPrice - unitCost
+    const unitsToBreakEven = Math.ceil(fixedCosts / contributionMargin)
+    return {
+      category,
+      contributionMargin,
+      expression: breakEvenExpressionFor(fixedCosts, unitPrice, unitCost),
+      fixedCosts,
+      revenueToBreakEven: unitsToBreakEven * unitPrice,
+      unitCost,
+      unitPrice,
+      unitsToBreakEven,
+    }
+  }
+
   return null
 }
 
@@ -1145,6 +1585,83 @@ function basicLoanEntries(): CalculatorEntry[] {
           "monthly loan payment estimate",
         ],
         title: `Loan Payment for ${formatCurrency(principal)} at ${annualRate}% for ${termYears} Years | Plain Tools`,
+      }))
+    )
+  )
+}
+
+function mortgageEntries(): CalculatorEntry[] {
+  return MORTGAGE_HOME_PRICES.flatMap((homePrice) =>
+    MORTGAGE_RATES.flatMap((annualRate) =>
+      MORTGAGE_TERMS.flatMap((termYears) =>
+        MORTGAGE_DOWN_PAYMENTS.map((downPaymentPercent) => ({
+          category: "mortgage-payment" as const,
+          description: buildMetaDescription(
+            `Estimate the monthly payment on a ${formatCurrency(homePrice)} home at ${annualRate}% over ${termYears} years with ${downPaymentPercent}% down using a local browser mortgage calculator on Plain Tools.`
+          ),
+          expression: mortgageExpressionFor(
+            homePrice,
+            annualRate,
+            termYears,
+            downPaymentPercent
+          ),
+          keywords: [
+            `mortgage payment ${homePrice} ${annualRate} ${termYears} ${downPaymentPercent} down`,
+            "mortgage payment calculator",
+            "home loan calculator",
+            "monthly mortgage estimate",
+          ],
+          title: `Mortgage Payment for ${formatCurrency(homePrice)} at ${annualRate}% for ${termYears} Years with ${downPaymentPercent}% Down | Plain Tools`,
+        }))
+      )
+    )
+  )
+}
+
+function refinanceEntries(): CalculatorEntry[] {
+  return REFI_BALANCES.flatMap((balance) =>
+    REFI_CURRENT_RATES.flatMap((currentRate) =>
+      REFI_NEW_RATES.flatMap((newRate) =>
+        REFI_TERMS.flatMap((termYears) => {
+          if (newRate >= currentRate) return []
+          return [
+            {
+              category: "refinance-savings" as const,
+              description: buildMetaDescription(
+                `Estimate refinance savings on ${formatCurrency(balance)} when moving from ${currentRate}% to ${newRate}% over ${termYears} years with a local browser calculator on Plain Tools.`
+              ),
+              expression: refinanceExpressionFor(balance, currentRate, newRate, termYears),
+              keywords: [
+                `refinance savings ${balance} ${currentRate} to ${newRate} ${termYears}`,
+                "refinance savings calculator",
+                "mortgage refinance calculator",
+                "monthly refinance savings",
+              ],
+              title: `Refinance Savings on ${formatCurrency(balance)} from ${currentRate}% to ${newRate}% for ${termYears} Years | Plain Tools`,
+            },
+          ]
+        })
+      )
+    )
+  )
+}
+
+function paycheckEstimateEntries(): CalculatorEntry[] {
+  return PAYCHECK_SALARIES.flatMap((annualSalary) =>
+    PAYCHECK_FREQUENCIES.flatMap((payFrequency) =>
+      PAYCHECK_STATE_OPTIONS.map((state) => ({
+        category: "paycheck-estimate" as const,
+        description: buildMetaDescription(
+          `Estimate ${payFrequency} take-home pay on ${formatCurrency(annualSalary)} in ${state.label} with a local browser paycheck calculator on Plain Tools.`
+        ),
+        expression: paycheckEstimateExpressionFor(annualSalary, payFrequency, state.slug),
+        keywords: [
+          `paycheck estimate ${annualSalary} ${payFrequency} ${state.slug}`,
+          "paycheck calculator",
+          "take home pay estimate",
+          "salary to paycheck calculator",
+        ],
+        title: `${formatCurrency(annualSalary)} ${payFrequency} Paycheck Estimate in ${state.label} | Plain Tools`,
       }))
     )
   )
@@ -1276,17 +1793,67 @@ function savingsGoalEntries(): CalculatorEntry[] {
   )
 }
 
+function emergencyFundEntries(): CalculatorEntry[] {
+  return EMERGENCY_FUND_EXPENSES.flatMap((monthlyExpenses) =>
+    EMERGENCY_FUND_MONTHS.map((monthsCovered) => ({
+      category: "emergency-fund" as const,
+      description: buildMetaDescription(
+        `Estimate how much emergency savings you may need to cover ${monthsCovered} months of ${formatCurrency(monthlyExpenses)} expenses with a local browser calculator on Plain Tools.`
+      ),
+      expression: emergencyFundExpressionFor(monthlyExpenses, monthsCovered),
+      keywords: [
+        `emergency fund ${monthlyExpenses} ${monthsCovered} months`,
+        "emergency fund calculator",
+        "cash reserve calculator",
+        "how much emergency savings",
+      ],
+      title: `Emergency Fund for ${formatCurrency(monthlyExpenses)}/Month Over ${monthsCovered} Months | Plain Tools`,
+    }))
+  )
+}
+
+function breakEvenEntries(): CalculatorEntry[] {
+  return BREAK_EVEN_FIXED_COSTS.flatMap((fixedCosts) =>
+    BREAK_EVEN_PRICE_POINTS.flatMap((unitPrice) =>
+      BREAK_EVEN_UNIT_COSTS.flatMap((unitCost) => {
+        if (unitPrice <= unitCost) return []
+        return [
+          {
+            category: "break-even-calculator" as const,
+            description: buildMetaDescription(
+              `Estimate break-even units on ${formatCurrency(fixedCosts)} in fixed costs with ${formatCurrency(unitPrice)} price and ${formatCurrency(unitCost)} unit cost using a local browser calculator on Plain Tools.`
+            ),
+            expression: breakEvenExpressionFor(fixedCosts, unitPrice, unitCost),
+            keywords: [
+              `break even ${fixedCosts} ${unitPrice} ${unitCost}`,
+              "break even calculator",
+              "break even point calculator",
+              "unit economics calculator",
+            ],
+            title: `Break-Even Point for ${formatCurrency(fixedCosts)} Fixed Costs at ${formatCurrency(unitPrice)} Price and ${formatCurrency(unitCost)} Cost | Plain Tools`,
+          },
+        ]
+      })
+    )
+  )
+}
+
 const CALCULATOR_TEMPLATES: CalculatorEntry[] = [
   ...percentageEntries(),
   ...tipEntries(),
   ...salaryEntries(),
   ...basicLoanEntries(),
+  ...mortgageEntries(),
+  ...refinanceEntries(),
+  ...paycheckEstimateEntries(),
   ...simpleInterestEntries(),
   ...compoundEntries(),
   ...retirementEntries(),
   ...taxEstimateEntries(),
   ...creditCardPayoffEntries(),
   ...savingsGoalEntries(),
+  ...emergencyFundEntries(),
+  ...breakEvenEntries(),
 ]
 
 const PUBLIC_CALCULATOR_TEMPLATES = CALCULATOR_TEMPLATES.filter((entry) =>
@@ -1326,6 +1893,27 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
         { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.principal, parsed.annualRate + 1, parsed.termYears)), title: `${formatCurrency(parsed.principal)} at ${parsed.annualRate + 1}%` },
         { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.principal, parsed.annualRate, parsed.termYears)), title: "Compare with simple interest" },
         { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(300, Math.max(1, parsed.annualRate), Math.max(10, parsed.termYears * 2))), title: "Basic retirement savings example" },
+      ]
+    case "mortgage-payment":
+      return [
+        { href: buildCalculatorPath("mortgage-payment", mortgageExpressionFor(parsed.homePrice, Math.max(2.5, parsed.annualRate - 0.5), parsed.termYears, parsed.downPaymentPercent)), title: `${formatCurrency(parsed.homePrice)} at ${Math.max(2.5, parsed.annualRate - 0.5)}%` },
+        { href: buildCalculatorPath("mortgage-payment", mortgageExpressionFor(parsed.homePrice, parsed.annualRate, parsed.termYears, Math.min(40, parsed.downPaymentPercent + 5))), title: `${formatCurrency(parsed.homePrice)} with ${Math.min(40, parsed.downPaymentPercent + 5)}% down` },
+        { href: buildCalculatorPath("refinance-savings", refinanceExpressionFor(parsed.loanPrincipal, parsed.annualRate + 0.75, parsed.annualRate, parsed.termYears)), title: "Compare with refinance savings" },
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.downPaymentAmount, 1000, 4)), title: "Save for a similar down payment" },
+      ]
+    case "refinance-savings":
+      return [
+        { href: buildCalculatorPath("refinance-savings", refinanceExpressionFor(parsed.balance, parsed.currentRate + 0.5, parsed.newRate, parsed.termYears)), title: `Savings if current rate were ${parsed.currentRate + 0.5}%` },
+        { href: buildCalculatorPath("refinance-savings", refinanceExpressionFor(parsed.balance, parsed.currentRate, Math.max(2.5, parsed.newRate - 0.25), parsed.termYears)), title: `Savings at a ${Math.max(2.5, parsed.newRate - 0.25)}% new rate` },
+        { href: buildCalculatorPath("mortgage-payment", mortgageExpressionFor(parsed.balance * 1.2, parsed.newRate, parsed.termYears, 20)), title: "Compare with a mortgage payment" },
+        { href: buildCalculatorPath("credit-card-payoff", creditCardPayoffExpressionFor(15000, 19.9, 400)), title: "Debt payoff comparison" },
+      ]
+    case "paycheck-estimate":
+      return [
+        { href: buildCalculatorPath("paycheck-estimate", paycheckEstimateExpressionFor(parsed.annualSalary + 5000, parsed.payFrequency, parsed.state)), title: `Paycheck estimate at ${formatCurrency(parsed.annualSalary + 5000)}` },
+        { href: buildCalculatorPath("paycheck-estimate", paycheckEstimateExpressionFor(parsed.annualSalary, "monthly", parsed.state)), title: "Monthly paycheck estimate" },
+        { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(parsed.annualSalary, 40)), title: "Gross salary to hourly comparison" },
+        { href: buildCalculatorPath("tax-estimate-simple", taxEstimateExpressionFor(parsed.annualSalary, "single")), title: "Simple tax estimate comparison" },
       ]
     case "simple-interest":
       return [
@@ -1368,6 +1956,20 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
         { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.targetAmount, parsed.monthlyContribution + 50, parsed.annualRate)), title: `${formatCurrency(parsed.targetAmount)} with ${formatCurrency(parsed.monthlyContribution + 50)}/month` },
         { href: buildCalculatorPath("compound-interest-basic", compoundExpressionFor(parsed.targetAmount / 2, Math.max(1, parsed.annualRate), Math.max(5, Math.round(parsed.monthsToGoal / 12)), "monthly")), title: "Compound growth comparison" },
         { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(parsed.monthlyContribution, Math.max(2, parsed.annualRate), 10)), title: "Retirement savings example" },
+      ]
+    case "emergency-fund":
+      return [
+        { href: buildCalculatorPath("emergency-fund", emergencyFundExpressionFor(parsed.monthlyExpenses, Math.max(3, parsed.monthsCovered - 1))), title: `${formatCurrency(parsed.monthlyExpenses)}/month for ${Math.max(3, parsed.monthsCovered - 1)} months` },
+        { href: buildCalculatorPath("emergency-fund", emergencyFundExpressionFor(parsed.monthlyExpenses, parsed.monthsCovered + 1)), title: `${formatCurrency(parsed.monthlyExpenses)}/month for ${parsed.monthsCovered + 1} months` },
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.emergencyFundTarget, 500, 4)), title: "Turn this target into a savings goal" },
+        { href: buildCalculatorPath("paycheck-estimate", paycheckEstimateExpressionFor(85000, "biweekly", "texas")), title: "Check a paycheck estimate" },
+      ]
+    case "break-even-calculator":
+      return [
+        { href: buildCalculatorPath("break-even-calculator", breakEvenExpressionFor(parsed.fixedCosts, parsed.unitPrice + 10, parsed.unitCost)), title: `Break even with ${formatCurrency(parsed.unitPrice + 10)} price` },
+        { href: buildCalculatorPath("break-even-calculator", breakEvenExpressionFor(parsed.fixedCosts, parsed.unitPrice, Math.max(1, parsed.unitCost - 5))), title: `Break even with ${formatCurrency(Math.max(1, parsed.unitCost - 5))} unit cost` },
+        { href: buildCalculatorPath("percentage", percentageExpressionFor(25, parsed.unitPrice)), title: "Margin percentage example" },
+        { href: buildCalculatorPath("simple-interest", simpleInterestExpressionFor(parsed.fixedCosts, 6, 3)), title: "Financing cost comparison" },
       ]
   }
 }
@@ -1975,6 +2577,296 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     h1 = `Reach ${formatCurrency(parsed.targetAmount)} by Saving ${formatCurrency(parsed.monthlyContribution)}/Month at ${parsed.annualRate}%`
   }
 
+  if (parsed.category === "mortgage-payment") {
+    const scenarioText = `${formatCurrency(parsed.homePrice)} home at ${formatPercent(parsed.annualRate)} for ${formatNumber(parsed.termYears)} years with ${formatPercent(parsed.downPaymentPercent)} down`
+    intro = [
+      "Mortgage-payment routes are some of the strongest finance SEO pages because the user is already close to a real housing decision. They usually want a fast first-pass estimate for one exact home price, rate, term, and down-payment mix.",
+      `For ${scenarioText}, the estimated loan amount is ${formatCurrency(parsed.loanPrincipal)} and the projected monthly principal-and-interest payment is about ${formatCurrency(parsed.monthlyPayment)}. Over the full term, total paid would be about ${formatCurrency(parsed.totalPaid)} with roughly ${formatCurrency(parsed.totalInterest)} in interest.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The page is useful because mortgage affordability questions are rarely abstract. Buyers test one listing price, one down payment, and one rate quote at a time.",
+      "That exact-match structure fits programmatic expansion well and supports stronger RPM than generic math pages because the intent sits close to lenders, refinancing, insurance, and home-search decisions.",
+    ]
+    howItWorks = [
+      "The calculator subtracts the down payment from the home price, then applies the standard amortizing payment formula to the remaining principal over the selected term.",
+      "This page is intentionally first-pass and keeps the model simple. It is useful for comparing scenarios quickly before moving into more detailed property-tax, insurance, or amortization planning.",
+    ]
+    howToSteps = [
+      { name: "Enter the home price", text: `This route starts from ${formatCurrency(parsed.homePrice)}.` },
+      { name: "Set the down payment", text: `The down payment assumption is ${formatPercent(parsed.downPaymentPercent)}, or ${formatCurrency(parsed.downPaymentAmount)}.` },
+      { name: "Set rate and term", text: `The example uses ${formatPercent(parsed.annualRate)} over ${formatNumber(parsed.termYears)} years.` },
+      { name: "Review the monthly payment", text: `Estimated principal-and-interest payment is ${formatCurrency(parsed.monthlyPayment)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why mortgage pages are high-intent utility routes",
+      [
+        "Mortgage pages work because buyers, refinancers, and agents often need one exact scenario instead of a broad explainer. A useful route answers that scenario cleanly and then offers obvious nearby comparisons.",
+        "That makes the page both practical for users and commercially valuable for search because the query sits close to a major financial decision.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when users are comparing home budgets, down payments, or financing options on shared devices.",
+      "The browser-first model also keeps the route fast enough for quick listing-by-listing comparisons.",
+    ]
+    faq = [
+      { question: `What is the mortgage payment on ${formatCurrency(parsed.homePrice)} with ${parsed.downPaymentPercent}% down?`, answer: `At ${formatPercent(parsed.annualRate)} for ${formatNumber(parsed.termYears)} years, this route estimates about ${formatCurrency(parsed.monthlyPayment)} per month before taxes and insurance.` },
+      { question: "Does this include taxes, insurance, or HOA fees?", answer: "No. This page focuses on principal and interest so users can compare financing assumptions quickly." },
+      { question: "Why show down payment and loan amount separately?", answer: "Because buyers often need to compare how a larger down payment changes both the financed balance and the monthly payment." },
+      { question: "Can I compare another rate quickly?", answer: "Yes. The related links and embedded calculator are built around nearby rate and down-payment comparisons." },
+      { question: "Does the page send home-price details anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "Refinance-savings, savings-goal, and paycheck-estimate routes are common next steps after a mortgage estimate." },
+    ]
+    summaryRows = [
+      { label: "Home price", value: formatCurrency(parsed.homePrice) },
+      { label: "Down payment", value: formatCurrency(parsed.downPaymentAmount) },
+      { label: "Loan amount", value: formatCurrency(parsed.loanPrincipal) },
+      { label: "Rate", value: formatPercent(parsed.annualRate) },
+      { label: "Monthly payment", value: formatCurrency(parsed.monthlyPayment) },
+      { label: "Total interest", value: formatCurrency(parsed.totalInterest) },
+    ]
+    initialValues = {
+      homePrice: parsed.homePrice,
+      annualRate: parsed.annualRate,
+      termYears: parsed.termYears,
+      downPaymentPercent: parsed.downPaymentPercent,
+    }
+    h1 = `Mortgage Payment for ${formatCurrency(parsed.homePrice)} at ${parsed.annualRate}% for ${parsed.termYears} Years with ${parsed.downPaymentPercent}% Down`
+  }
+
+  if (parsed.category === "refinance-savings") {
+    const scenarioText = `${formatCurrency(parsed.balance)} refinanced from ${formatPercent(parsed.currentRate)} to ${formatPercent(parsed.newRate)} over ${formatNumber(parsed.termYears)} years`
+    intro = [
+      "Refinance-savings routes work because homeowners usually want to know whether a new quote is worth taking seriously before they spend time on lender paperwork. The key question is simple: how much could the monthly payment move if the rate drops?",
+      `For ${scenarioText}, the estimated payment falls from about ${formatCurrency(parsed.currentMonthlyPayment)} to ${formatCurrency(parsed.newMonthlyPayment)}. That is a monthly difference of roughly ${formatCurrency(parsed.monthlySavings)} and a term-level savings estimate near ${formatCurrency(parsed.totalSavings)} if the assumptions hold.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The route is useful because it translates a rate quote into a concrete monthly and total savings number. That is much easier to act on than comparing APRs in isolation.",
+      "It also captures high-value refinance intent without pretending to replace a full closing-cost or lender-fee analysis.",
+    ]
+    howItWorks = [
+      "The calculator runs the payment formula twice on the same balance and term: once with the current rate and once with the new rate. The difference becomes the estimated monthly savings.",
+      "This is intentionally a first-pass savings page. It does not model closing costs, escrow resets, or term changes beyond the selected years.",
+    ]
+    howToSteps = [
+      { name: "Enter the current balance", text: `This route uses ${formatCurrency(parsed.balance)}.` },
+      { name: "Compare current and new rate", text: `The rate change here is ${formatPercent(parsed.currentRate)} down to ${formatPercent(parsed.newRate)}.` },
+      { name: "Keep the term in view", text: `The selected term is ${formatNumber(parsed.termYears)} years.` },
+      { name: "Review monthly and total savings", text: `Estimated monthly savings are ${formatCurrency(parsed.monthlySavings)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why refinance-savings pages convert well",
+      [
+        "A refinance page works when it turns one lender quote into a decision-ready savings estimate. Users usually need that screen before they decide whether to ask for a full offer.",
+        "That makes the route commercially valuable while still staying narrow, fast, and honest about what it does not include.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That keeps mortgage balances and quote comparisons private.",
+      "It also makes quick lender-to-lender comparisons easier on mobile or during a fast rate-shopping session.",
+    ]
+    faq = [
+      { question: `How much could I save by refinancing ${formatCurrency(parsed.balance)}?`, answer: `This route estimates about ${formatCurrency(parsed.monthlySavings)} per month when moving from ${formatPercent(parsed.currentRate)} to ${formatPercent(parsed.newRate)} over ${formatNumber(parsed.termYears)} years.` },
+      { question: "Does this include closing costs?", answer: "No. The page compares payment differences only and is meant as a first-pass savings check." },
+      { question: "Why compare monthly savings and total savings?", answer: "Because some borrowers care about immediate cash-flow relief while others want to see the longer-term impact." },
+      { question: "Can I compare another new rate quickly?", answer: "Yes. The related links and embedded calculator are built for that exact follow-up." },
+      { question: "Does the page send refinance details anywhere?", answer: "No. All calculations stay local in the browser." },
+      { question: "What should I check next?", answer: "Mortgage-payment and paycheck-estimate pages are common next steps after a refinance comparison." },
+    ]
+    summaryRows = [
+      { label: "Balance", value: formatCurrency(parsed.balance) },
+      { label: "Current payment", value: formatCurrency(parsed.currentMonthlyPayment) },
+      { label: "New payment", value: formatCurrency(parsed.newMonthlyPayment) },
+      { label: "Monthly savings", value: formatCurrency(parsed.monthlySavings) },
+      { label: "Term", value: `${formatNumber(parsed.termYears)} years` },
+      { label: "Total savings", value: formatCurrency(parsed.totalSavings) },
+    ]
+    initialValues = {
+      balance: parsed.balance,
+      currentRate: parsed.currentRate,
+      newRate: parsed.newRate,
+      termYears: parsed.termYears,
+    }
+    h1 = `Refinance Savings on ${formatCurrency(parsed.balance)} from ${parsed.currentRate}% to ${parsed.newRate}% for ${parsed.termYears} Years`
+  }
+
+  if (parsed.category === "paycheck-estimate") {
+    const stateLabel =
+      PAYCHECK_STATE_OPTIONS.find((entry) => entry.slug === parsed.state)?.label ?? parsed.state
+    const scenarioText = `${formatCurrency(parsed.annualSalary)} paid ${parsed.payFrequency} in ${stateLabel}`
+    intro = [
+      "Paycheck-estimate routes work because users often think in per-paycheck cash flow, not just annual salary. They want a quick gross-to-net view for one exact income, pay schedule, and state context.",
+      `For ${scenarioText}, the estimated gross paycheck is about ${formatCurrency(parsed.grossPaycheck)} and the estimated take-home paycheck is about ${formatCurrency(parsed.netPaycheck)} using a simple combined rate model of ${formatPercent(parsed.effectiveRate)}.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This page is useful because offer comparisons, raise discussions, and freelance-to-payroll decisions often depend more on paycheck cadence than on annual salary alone.",
+      "It also fits high-RPM finance intent well because the user is closer to payroll, tax, budgeting, banking, and employment decisions than on a generic salary page.",
+    ]
+    howItWorks = [
+      "The calculator estimates an effective federal rate, adds a simple state rate assumption, then divides annual gross and annual net across the selected pay frequency.",
+      "It is intentionally simplified and meant for first-pass planning. Withholding settings, benefits, pre-tax deductions, and local taxes can change the real paycheck.",
+    ]
+    howToSteps = [
+      { name: "Enter the annual salary", text: `This route starts from ${formatCurrency(parsed.annualSalary)}.` },
+      { name: "Choose the pay frequency", text: `The selected pay schedule is ${parsed.payFrequency}.` },
+      { name: "Choose the state context", text: `This example uses ${stateLabel}.` },
+      { name: "Review gross and estimated net pay", text: `Estimated take-home per paycheck is ${formatCurrency(parsed.netPaycheck)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why paycheck pages are practical finance utilities",
+      [
+        "A paycheck page works when it connects salary intent to real budgeting. Users want to know what lands in the account, not only what sits in the offer letter.",
+        "That makes the route more actionable than a generic tax explainer while still staying simpler than payroll software or a full withholding worksheet.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when users are comparing offers, promotions, or compensation scenarios.",
+      "The browser-only model keeps the route private enough for quick checks on work devices and fast enough for repeated comparisons.",
+    ]
+    faq = [
+      { question: `What is the paycheck estimate on ${formatCurrency(parsed.annualSalary)} in ${stateLabel}?`, answer: `At ${parsed.payFrequency} pay, this route estimates about ${formatCurrency(parsed.netPaycheck)} take-home per paycheck before deductions and withholding details are customized further.` },
+      { question: "Does this include benefits or pre-tax deductions?", answer: "No. The page uses a simplified effective-rate model and should be treated as a first-pass estimate." },
+      { question: "Why show gross and net paycheck?", answer: "Because users often need to compare the paycheck reduction directly rather than only the annual after-tax total." },
+      { question: "Can I compare a different state or pay schedule quickly?", answer: "Yes. The embedded calculator and related links are designed for that exact next step." },
+      { question: "Does the page send salary details anywhere?", answer: "No. All calculations stay local in the browser." },
+      { question: "What should I check next?", answer: "Tax-estimate-simple, salary-to-hourly, and emergency-fund pages are common next steps after a paycheck estimate." },
+    ]
+    summaryRows = [
+      { label: "Annual salary", value: formatCurrency(parsed.annualSalary) },
+      { label: "Pay frequency", value: parsed.payFrequency },
+      { label: "State rate", value: formatPercent(parsed.stateRate) },
+      { label: "Estimated effective rate", value: formatPercent(parsed.effectiveRate) },
+      { label: "Gross paycheck", value: formatCurrency(parsed.grossPaycheck) },
+      { label: "Net paycheck", value: formatCurrency(parsed.netPaycheck) },
+    ]
+    initialValues = {
+      annualSalary: parsed.annualSalary,
+      payFrequency: parsed.payFrequency,
+      state: parsed.state,
+    }
+    h1 = `${formatCurrency(parsed.annualSalary)} ${parsed.payFrequency} Paycheck Estimate in ${stateLabel}`
+  }
+
+  if (parsed.category === "emergency-fund") {
+    const scenarioText = `${formatCurrency(parsed.monthlyExpenses)} in monthly expenses over ${formatNumber(parsed.monthsCovered)} months`
+    intro = [
+      "Emergency-fund routes work because the user usually starts with one simple question: how much cash reserve would cover a realistic number of months if income stopped or dropped?",
+      `For ${scenarioText}, the target reserve is about ${formatCurrency(parsed.emergencyFundTarget)}. That gives the user one concrete savings number they can compare against current cash, savings-goal plans, and paycheck capacity.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The page is practical because it converts a generic emergency-fund rule into a scenario the user can actually budget around.",
+      "It also fits strong finance intent since it naturally leads into savings, banking, insurance, and household-budget decisions.",
+    ]
+    howItWorks = [
+      "The calculator multiplies monthly expenses by the number of months the user wants to cover. It stays intentionally simple so the result is easy to understand and compare quickly.",
+      "This route is not trying to be a complete household budget model. It is a fast reserve target calculator for first-pass planning.",
+    ]
+    howToSteps = [
+      { name: "Enter monthly essential expenses", text: `This route uses ${formatCurrency(parsed.monthlyExpenses)} per month.` },
+      { name: "Choose the number of months to cover", text: `The selected reserve length is ${formatNumber(parsed.monthsCovered)} months.` },
+      { name: "Read the target fund size", text: `Estimated emergency fund target is ${formatCurrency(parsed.emergencyFundTarget)}.` },
+      { name: "Compare with a savings path", text: "Use nearby savings-goal and paycheck pages to see how quickly the reserve could be built." },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why emergency-fund pages are useful planning routes",
+      [
+        "An emergency-fund page works because it gives the user a direct reserve target without forcing them into a full financial planning workflow first.",
+        "That makes the route useful enough to stand on its own while still connecting naturally to savings and paycheck calculators.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That keeps household expense planning private and fast.",
+      "The route stays useful on a shared device or quick mobile session where users still want basic financial privacy.",
+    ]
+    faq = [
+      { question: `How much emergency fund do I need for ${parsed.monthsCovered} months?`, answer: `At ${formatCurrency(parsed.monthlyExpenses)} in monthly expenses, this route estimates about ${formatCurrency(parsed.emergencyFundTarget)}.` },
+      { question: "Does this include every optional expense?", answer: "Not necessarily. Most users treat this as an essentials-based reserve estimate rather than a full lifestyle-spending model." },
+      { question: "Why compare three months, six months, or more?", answer: "Because the right reserve length depends on income stability, household obligations, and risk tolerance." },
+      { question: "Can I turn this into a savings goal?", answer: "Yes. That is one of the most common follow-up actions after an emergency-fund estimate." },
+      { question: "Does the page send expense values anywhere?", answer: "No. All calculations stay local in the browser." },
+      { question: "What should I check next?", answer: "Savings-goal and paycheck-estimate pages are common next steps after an emergency-fund target." },
+    ]
+    summaryRows = [
+      { label: "Monthly expenses", value: formatCurrency(parsed.monthlyExpenses) },
+      { label: "Months covered", value: formatNumber(parsed.monthsCovered) },
+      { label: "Target reserve", value: formatCurrency(parsed.emergencyFundTarget) },
+    ]
+    initialValues = {
+      monthlyExpenses: parsed.monthlyExpenses,
+      monthsCovered: parsed.monthsCovered,
+    }
+    h1 = `Emergency Fund for ${formatCurrency(parsed.monthlyExpenses)}/Month Over ${parsed.monthsCovered} Months`
+  }
+
+  if (parsed.category === "break-even-calculator") {
+    const scenarioText = `${formatCurrency(parsed.fixedCosts)} in fixed costs with ${formatCurrency(parsed.unitPrice)} price and ${formatCurrency(parsed.unitCost)} unit cost`
+    intro = [
+      "Break-even pages work because the user wants one concrete answer fast: how many units need to sell before the business covers fixed costs? That is a strong small-business and side-hustle planning query.",
+      `For ${scenarioText}, the contribution margin is ${formatCurrency(parsed.contributionMargin)} per unit. The estimated break-even point is about ${formatNumber(parsed.unitsToBreakEven)} units, or roughly ${formatCurrency(parsed.revenueToBreakEven)} in revenue.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The route is useful because it converts fixed costs and unit economics into a decision-ready threshold. That is more actionable than reading a generic margin article.",
+      "It also fits good advertiser demand around accounting, invoicing, small-business banking, and operating software.",
+    ]
+    howItWorks = [
+      "The calculator subtracts unit cost from unit price to get contribution margin, then divides fixed costs by that margin to estimate the number of units needed to break even.",
+      "This route is intentionally a simple unit-economics screen. It does not model taxes, discounts, churn, financing, or multiple product lines.",
+    ]
+    howToSteps = [
+      { name: "Enter fixed costs", text: `This route uses ${formatCurrency(parsed.fixedCosts)} in fixed costs.` },
+      { name: "Enter price and unit cost", text: `The example assumes ${formatCurrency(parsed.unitPrice)} price and ${formatCurrency(parsed.unitCost)} cost per unit.` },
+      { name: "Read the contribution margin", text: `Contribution margin is ${formatCurrency(parsed.contributionMargin)} per unit.` },
+      { name: "Review units and revenue to break even", text: `Estimated break-even point is ${formatNumber(parsed.unitsToBreakEven)} units.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why break-even pages are strong business-finance utilities",
+      [
+        "A break-even page works because the user usually has a real pricing or launch decision in front of them. They need the threshold fast, not a long textbook explanation.",
+        "That makes the route practical for founders, freelancers, and operators while staying narrow enough for programmatic scale.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when users are testing pricing, margin, or cost assumptions they do not want to share broadly.",
+      "The local model also makes quick scenario comparison easier during planning meetings or mobile checks.",
+    ]
+    faq = [
+      { question: "How do you calculate break-even units?", answer: "Subtract unit cost from unit price to get contribution margin, then divide fixed costs by that margin." },
+      { question: `What is the break-even point on ${formatCurrency(parsed.fixedCosts)} in fixed costs?`, answer: `At ${formatCurrency(parsed.unitPrice)} price and ${formatCurrency(parsed.unitCost)} cost, this route estimates about ${formatNumber(parsed.unitsToBreakEven)} units.` },
+      { question: "Why show both units and revenue?", answer: "Because some users think in sales volume while others need a revenue target for planning and forecasting." },
+      { question: "Can I compare another price or cost quickly?", answer: "Yes. The related links and embedded calculator are built for nearby pricing comparisons." },
+      { question: "Does the page send cost assumptions anywhere?", answer: "No. All calculations stay local in the browser." },
+      { question: "What should I check next?", answer: "Simple-interest and percentage pages are useful follow-ups when funding cost or margin percentage questions come next." },
+    ]
+    summaryRows = [
+      { label: "Fixed costs", value: formatCurrency(parsed.fixedCosts) },
+      { label: "Unit price", value: formatCurrency(parsed.unitPrice) },
+      { label: "Unit cost", value: formatCurrency(parsed.unitCost) },
+      { label: "Contribution margin", value: formatCurrency(parsed.contributionMargin) },
+      { label: "Break-even units", value: formatNumber(parsed.unitsToBreakEven) },
+      { label: "Break-even revenue", value: formatCurrency(parsed.revenueToBreakEven) },
+    ]
+    initialValues = {
+      fixedCosts: parsed.fixedCosts,
+      unitPrice: parsed.unitPrice,
+      unitCost: parsed.unitCost,
+    }
+    h1 = `Break-Even Point for ${formatCurrency(parsed.fixedCosts)} Fixed Costs at ${formatCurrency(parsed.unitPrice)} Price and ${formatCurrency(parsed.unitCost)} Cost`
+  }
+
   explanationBlocks = [
     ...explanationBlocks,
     {
@@ -2124,12 +3016,17 @@ export function generateNonPercentageCalculatorParams(limit?: number) {
 }
 
 const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
+  "mortgage-payment",
+  "refinance-savings",
+  "paycheck-estimate",
   "basic-loan-payment",
   "credit-card-payoff",
   "tax-estimate-simple",
   "retirement-savings-intro",
   "compound-interest-basic",
   "savings-goal",
+  "emergency-fund",
+  "break-even-calculator",
   "salary-to-hourly",
   "percentage",
   "tip-calculator",
@@ -2138,9 +3035,14 @@ const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
 
 const CALCULATOR_PREBUILD_BUDGETS: Record<PublicCalculatorCategory, number> = {
   "basic-loan-payment": 120,
+  "break-even-calculator": 24,
   "compound-interest-basic": 60,
   "credit-card-payoff": 80,
+  "emergency-fund": 24,
+  "mortgage-payment": 96,
+  "paycheck-estimate": 72,
   percentage: 120,
+  "refinance-savings": 72,
   "retirement-savings-intro": 40,
   "salary-to-hourly": 30,
   "savings-goal": 50,
@@ -2188,12 +3090,17 @@ export const CALCULATOR_FINANCIAL_METADATA_EXAMPLES = [
   getCalculatorPage("tip-calculator", "tip-calculator-150-18-percent"),
   getCalculatorPage("salary-to-hourly", "salary-to-hourly-60000-40-hours"),
   getCalculatorPage("basic-loan-payment", "loan-payment-10000-5-3-years"),
+  getCalculatorPage("mortgage-payment", "mortgage-payment-450000-6.25-30-years-20-down"),
+  getCalculatorPage("refinance-savings", "refinance-savings-320000-7.25-to-6.25-30-years"),
+  getCalculatorPage("paycheck-estimate", "paycheck-estimate-85000-biweekly-texas"),
   getCalculatorPage("simple-interest", "simple-interest-10000-5-3"),
   getCalculatorPage("compound-interest-basic", "compound-interest-10000-5-10-years-monthly"),
   getCalculatorPage("retirement-savings-intro", "retirement-savings-500-monthly-6-20-years"),
   getCalculatorPage("tax-estimate-simple", "tax-estimate-85000-single"),
   getCalculatorPage("credit-card-payoff", "credit-card-payoff-10000-19.9-300-monthly"),
   getCalculatorPage("savings-goal", "savings-goal-25000-target-500-monthly-4-rate"),
+  getCalculatorPage("emergency-fund", "emergency-fund-4500-6-months"),
+  getCalculatorPage("break-even-calculator", "break-even-25000-fixed-120-price-45-cost"),
 ]
   .filter((entry): entry is CalculatorPage => Boolean(entry))
   .map((entry) => ({
