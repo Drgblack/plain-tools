@@ -201,6 +201,9 @@ const WORKFLOWS: WorkflowDefinition[] = [
 
 const INDUSTRY_MAP = new Map(INDUSTRIES.map((industry) => [industry.slug, industry]))
 const WORKFLOW_MAP = new Map(WORKFLOWS.map((workflow) => [workflow.slug, workflow]))
+const TOOL_SLUG_ALIASES: Record<string, string> = {
+  "ai-summarize-pdf": "summarize-pdf",
+}
 
 function countWords(values: string[]) {
   return values.join(" ").trim().split(/\s+/).filter(Boolean).length
@@ -210,8 +213,12 @@ function workflowPath(industry: string, workflow: string) {
   return `/guides/${industry}/${workflow}`
 }
 
+function resolveWorkflowToolSlug(toolSlug: string) {
+  return TOOL_SLUG_ALIASES[toolSlug] ?? toolSlug
+}
+
 function mustGetTool(toolSlug: string) {
-  const tool = getToolBySlug(toolSlug)
+  const tool = getToolBySlug(resolveWorkflowToolSlug(toolSlug))
   if (!tool) throw new Error(`Missing tool ${toolSlug}`)
   return tool
 }
@@ -230,7 +237,7 @@ function buildEntry(industry: IndustryDefinition, workflow: WorkflowDefinition):
       "local browser processing",
     ],
     title: `${workflow.title} for ${industry.label} (Local, No Upload, Private) | Plain Tools`,
-    toolSlug: workflow.toolSlug,
+    toolSlug: resolveWorkflowToolSlug(workflow.toolSlug),
     workflow: workflow.slug,
   }
 }
