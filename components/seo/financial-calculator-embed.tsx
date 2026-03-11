@@ -7,6 +7,7 @@ import {
   buildCalculatorExpression,
   buildCalculatorPath,
   type CalculatorCategory,
+  PAYCHECK_STATE_OPTIONS,
 } from "@/lib/calculator-financial"
 
 type FinancialCalculatorEmbedProps = {
@@ -114,20 +115,9 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       if (annualSalary === null) {
         return "Enter annual salary, pay frequency, and state."
       }
-      const stateRates: Record<string, number> = {
-        california: 6.5,
-        florida: 0,
-        georgia: 4.75,
-        illinois: 4.95,
-        massachusetts: 5,
-        "new-jersey": 5.5,
-        "new-york": 6.2,
-        "north-carolina": 4.5,
-        ohio: 3.5,
-        pennsylvania: 3.07,
-        texas: 0,
-        washington: 0,
-      }
+      const stateRates = Object.fromEntries(
+        PAYCHECK_STATE_OPTIONS.map((entry) => [entry.slug, entry.rate])
+      ) as Record<string, number>
       const federalRate =
         annualSalary <= 40000 ? 11 : annualSalary <= 85000 ? 14 : annualSalary <= 140000 ? 18 : 24
       const periods =
@@ -141,6 +131,128 @@ function calculateSummary(category: CalculatorCategory, values: Record<string, s
       const netPaycheck =
         (annualSalary * (1 - (federalRate + (stateRates[state] ?? 0)) / 100)) / periods
       return `Estimated take-home paycheck: ${formatCurrency(netPaycheck)}`
+    }
+    case "401k-growth": {
+      const annualSalary = readNumber(values.annualSalary ?? "")
+      const contributionPercent = readNumber(values.contributionPercent ?? "")
+      const employerMatchPercent = readNumber(values.employerMatchPercent ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const years = readNumber(values.years ?? "")
+      if (
+        annualSalary === null ||
+        contributionPercent === null ||
+        employerMatchPercent === null ||
+        annualRate === null ||
+        years === null
+      ) {
+        return "Enter salary, contribution rates, return, and years."
+      }
+      const annualContribution =
+        annualSalary * ((contributionPercent + employerMatchPercent) / 100)
+      const monthlyRate = annualRate / 100 / 12
+      const months = years * 12
+      const monthlyContribution = annualContribution / 12
+      const futureValue =
+        monthlyRate === 0
+          ? monthlyContribution * months
+          : monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
+      return `Projected 401(k) value: ${formatCurrency(futureValue)}`
+    }
+    case "auto-loan-payment": {
+      const vehiclePrice = readNumber(values.vehiclePrice ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const termMonths = readNumber(values.termMonths ?? "")
+      const downPaymentAmount = readNumber(values.downPaymentAmount ?? "")
+      if (
+        vehiclePrice === null ||
+        annualRate === null ||
+        termMonths === null ||
+        downPaymentAmount === null
+      ) {
+        return "Enter vehicle price, APR, term, and down payment."
+      }
+      const principal = vehiclePrice - downPaymentAmount
+      const monthlyRate = annualRate / 100 / 12
+      const payment =
+        monthlyRate === 0
+          ? principal / termMonths
+          : (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -termMonths)
+      return `Estimated auto payment: ${formatCurrency(payment)}`
+    }
+    case "student-loan-payment": {
+      const balance = readNumber(values.balance ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const termYears = readNumber(values.termYears ?? "")
+      const extraPayment = readNumber(values.extraPayment ?? "")
+      if (
+        balance === null ||
+        annualRate === null ||
+        termYears === null ||
+        extraPayment === null
+      ) {
+        return "Enter balance, rate, term, and any extra payment."
+      }
+      const monthlyRate = annualRate / 100 / 12
+      const basePayment =
+        monthlyRate === 0
+          ? balance / (termYears * 12)
+          : (balance * monthlyRate) / (1 - (1 + monthlyRate) ** -(termYears * 12))
+      return `Estimated monthly payment with extra: ${formatCurrency(basePayment + extraPayment)}`
+    }
+    case "debt-to-income": {
+      const annualIncome = readNumber(values.annualIncome ?? "")
+      const monthlyDebt = readNumber(values.monthlyDebt ?? "")
+      const housingPayment = readNumber(values.housingPayment ?? "")
+      if (annualIncome === null || monthlyDebt === null || housingPayment === null) {
+        return "Enter annual income, monthly debt, and housing payment."
+      }
+      const ratio = ((monthlyDebt + housingPayment) / (annualIncome / 12)) * 100
+      return `Estimated DTI ratio: ${formatNumber(ratio)}%`
+    }
+    case "cd-calculator": {
+      const deposit = readNumber(values.deposit ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const termMonths = readNumber(values.termMonths ?? "")
+      if (deposit === null || annualRate === null || termMonths === null) {
+        return "Enter deposit, annual rate, and term."
+      }
+      const compounding = values.compounding ?? "monthly"
+      const periodsPerYear =
+        compounding === "annual" ? 1 : compounding === "quarterly" ? 4 : 12
+      const maturityValue =
+        deposit *
+        (1 + annualRate / 100 / periodsPerYear) ** ((termMonths / 12) * periodsPerYear)
+      return `Estimated CD maturity value: ${formatCurrency(maturityValue)}`
+    }
+    case "apy-calculator": {
+      const deposit = readNumber(values.deposit ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const years = readNumber(values.years ?? "")
+      if (deposit === null || annualRate === null || years === null) {
+        return "Enter deposit, annual rate, and years."
+      }
+      const compounding = values.compounding ?? "monthly"
+      const periodsPerYear =
+        compounding === "annual" ? 1 : compounding === "quarterly" ? 4 : 12
+      const futureValue =
+        deposit * (1 + annualRate / 100 / periodsPerYear) ** (years * periodsPerYear)
+      return `Estimated APY growth value: ${formatCurrency(futureValue)}`
+    }
+    case "ira-growth": {
+      const annualContribution = readNumber(values.annualContribution ?? "")
+      const annualRate = readNumber(values.annualRate ?? "")
+      const years = readNumber(values.years ?? "")
+      if (annualContribution === null || annualRate === null || years === null) {
+        return "Enter annual contribution, annual rate, and years."
+      }
+      const monthlyContribution = annualContribution / 12
+      const monthlyRate = annualRate / 100 / 12
+      const months = years * 12
+      const futureValue =
+        monthlyRate === 0
+          ? monthlyContribution * months
+          : monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
+      return `Projected IRA value: ${formatCurrency(futureValue)}`
     }
     case "compound-basic":
     case "compound-interest-intro":
@@ -427,18 +539,169 @@ function renderFields(
           <label className={labelClassName}>
             State
             <select className={inputClassName} onChange={(event) => setValue("state", event.target.value)} value={values.state ?? "texas"}>
-              <option value="california">California</option>
-              <option value="new-york">New York</option>
-              <option value="texas">Texas</option>
-              <option value="florida">Florida</option>
-              <option value="illinois">Illinois</option>
-              <option value="pennsylvania">Pennsylvania</option>
-              <option value="ohio">Ohio</option>
-              <option value="georgia">Georgia</option>
-              <option value="north-carolina">North Carolina</option>
-              <option value="washington">Washington</option>
-              <option value="new-jersey">New Jersey</option>
-              <option value="massachusetts">Massachusetts</option>
+              {PAYCHECK_STATE_OPTIONS.map((state) => (
+                <option key={state.slug} value={state.slug}>
+                  {state.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </>
+      )
+    case "401k-growth":
+      return (
+        <>
+          <label className={labelClassName}>
+            Annual salary
+            <input className={inputClassName} onChange={(event) => setValue("annualSalary", event.target.value)} step="1" type="number" value={values.annualSalary ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Employee contribution (%)
+            <input className={inputClassName} onChange={(event) => setValue("contributionPercent", event.target.value)} step="0.1" type="number" value={values.contributionPercent ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Employer match (%)
+            <input className={inputClassName} onChange={(event) => setValue("employerMatchPercent", event.target.value)} step="0.1" type="number" value={values.employerMatchPercent ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Annual return (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Years
+            <input className={inputClassName} onChange={(event) => setValue("years", event.target.value)} step="1" type="number" value={values.years ?? ""} />
+          </label>
+        </>
+      )
+    case "auto-loan-payment":
+      return (
+        <>
+          <label className={labelClassName}>
+            Vehicle price
+            <input className={inputClassName} onChange={(event) => setValue("vehiclePrice", event.target.value)} step="1" type="number" value={values.vehiclePrice ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            APR (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Term (months)
+            <input className={inputClassName} onChange={(event) => setValue("termMonths", event.target.value)} step="1" type="number" value={values.termMonths ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Down payment
+            <input className={inputClassName} onChange={(event) => setValue("downPaymentAmount", event.target.value)} step="1" type="number" value={values.downPaymentAmount ?? ""} />
+          </label>
+        </>
+      )
+    case "student-loan-payment":
+      return (
+        <>
+          <label className={labelClassName}>
+            Balance
+            <input className={inputClassName} onChange={(event) => setValue("balance", event.target.value)} step="1" type="number" value={values.balance ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            APR (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Term (years)
+            <input className={inputClassName} onChange={(event) => setValue("termYears", event.target.value)} step="1" type="number" value={values.termYears ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Extra monthly payment
+            <input className={inputClassName} onChange={(event) => setValue("extraPayment", event.target.value)} step="1" type="number" value={values.extraPayment ?? ""} />
+          </label>
+        </>
+      )
+    case "debt-to-income":
+      return (
+        <>
+          <label className={labelClassName}>
+            Annual income
+            <input className={inputClassName} onChange={(event) => setValue("annualIncome", event.target.value)} step="1" type="number" value={values.annualIncome ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Monthly debt
+            <input className={inputClassName} onChange={(event) => setValue("monthlyDebt", event.target.value)} step="1" type="number" value={values.monthlyDebt ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Housing payment
+            <input className={inputClassName} onChange={(event) => setValue("housingPayment", event.target.value)} step="1" type="number" value={values.housingPayment ?? ""} />
+          </label>
+        </>
+      )
+    case "cd-calculator":
+      return (
+        <>
+          <label className={labelClassName}>
+            Deposit
+            <input className={inputClassName} onChange={(event) => setValue("deposit", event.target.value)} step="1" type="number" value={values.deposit ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Annual rate (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Term (months)
+            <input className={inputClassName} onChange={(event) => setValue("termMonths", event.target.value)} step="1" type="number" value={values.termMonths ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Compounding
+            <select className={inputClassName} onChange={(event) => setValue("compounding", event.target.value)} value={values.compounding ?? "monthly"}>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </label>
+        </>
+      )
+    case "apy-calculator":
+      return (
+        <>
+          <label className={labelClassName}>
+            Deposit
+            <input className={inputClassName} onChange={(event) => setValue("deposit", event.target.value)} step="1" type="number" value={values.deposit ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Annual rate (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Years
+            <input className={inputClassName} onChange={(event) => setValue("years", event.target.value)} step="1" type="number" value={values.years ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Compounding
+            <select className={inputClassName} onChange={(event) => setValue("compounding", event.target.value)} value={values.compounding ?? "monthly"}>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </label>
+        </>
+      )
+    case "ira-growth":
+      return (
+        <>
+          <label className={labelClassName}>
+            Annual contribution
+            <input className={inputClassName} onChange={(event) => setValue("annualContribution", event.target.value)} step="1" type="number" value={values.annualContribution ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Annual return (%)
+            <input className={inputClassName} onChange={(event) => setValue("annualRate", event.target.value)} step="0.01" type="number" value={values.annualRate ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Years
+            <input className={inputClassName} onChange={(event) => setValue("years", event.target.value)} step="1" type="number" value={values.years ?? ""} />
+          </label>
+          <label className={labelClassName}>
+            Account type
+            <select className={inputClassName} onChange={(event) => setValue("accountType", event.target.value)} value={values.accountType ?? "roth"}>
+              <option value="roth">Roth IRA</option>
+              <option value="traditional">Traditional IRA</option>
             </select>
           </label>
         </>

@@ -16,6 +16,13 @@ export type PublicCalculatorCategory =
   | "mortgage-payment"
   | "refinance-savings"
   | "paycheck-estimate"
+  | "401k-growth"
+  | "auto-loan-payment"
+  | "student-loan-payment"
+  | "debt-to-income"
+  | "cd-calculator"
+  | "apy-calculator"
+  | "ira-growth"
   | "simple-interest"
   | "compound-interest-basic"
   | "retirement-savings-intro"
@@ -151,6 +158,92 @@ type ParsedPaycheckEstimate = {
   stateRate: number
 }
 
+type ParsedRetirement401kGrowth = {
+  annualRate: number
+  annualSalary: number
+  category: "401k-growth"
+  employeeAnnualContribution: number
+  employerAnnualMatch: number
+  employerMatchPercent: number
+  expression: string
+  futureValue: number
+  totalAnnualContribution: number
+  totalContributions: number
+  contributionPercent: number
+  years: number
+}
+
+type ParsedAutoLoanPayment = {
+  annualRate: number
+  category: "auto-loan-payment"
+  downPaymentAmount: number
+  expression: string
+  loanPrincipal: number
+  monthlyPayment: number
+  termMonths: number
+  totalInterest: number
+  totalPaid: number
+  vehiclePrice: number
+}
+
+type ParsedStudentLoanPayment = {
+  annualRate: number
+  balance: number
+  baseMonthlyPayment: number
+  category: "student-loan-payment"
+  expression: string
+  extraPayment: number
+  interestPaid: number
+  monthlyPayment: number
+  monthsToPayoff: number
+  termYears: number
+  totalPaid: number
+}
+
+type ParsedDebtToIncome = {
+  annualIncome: number
+  category: "debt-to-income"
+  dtiRatio: number
+  expression: string
+  housingPayment: number
+  monthlyDebt: number
+  monthlyGrossIncome: number
+  totalMonthlyObligations: number
+}
+
+type ParsedCdCalculator = {
+  annualRate: number
+  category: "cd-calculator"
+  compounding: "annual" | "monthly" | "quarterly"
+  deposit: number
+  expression: string
+  interestEarned: number
+  maturityValue: number
+  termMonths: number
+}
+
+type ParsedApyCalculator = {
+  annualRate: number
+  category: "apy-calculator"
+  compounding: "annual" | "monthly" | "quarterly"
+  deposit: number
+  expression: string
+  futureValue: number
+  interestEarned: number
+  years: number
+}
+
+type ParsedIraGrowth = {
+  accountType: "roth" | "traditional"
+  annualContribution: number
+  annualRate: number
+  category: "ira-growth"
+  expression: string
+  futureValue: number
+  totalContributions: number
+  years: number
+}
+
 type ParsedSimpleInterest = {
   annualRate: number
   category: "simple-interest"
@@ -233,19 +326,26 @@ type ParsedBreakEvenCalculator = {
 }
 
 type ParsedCalculator =
+  | ParsedApyCalculator
+  | ParsedAutoLoanPayment
   | ParsedBasicLoan
   | ParsedBreakEvenCalculator
+  | ParsedCdCalculator
   | ParsedCompoundInterestIntro
   | ParsedCreditCardPayoff
+  | ParsedDebtToIncome
   | ParsedEmergencyFund
+  | ParsedIraGrowth
   | ParsedMortgagePayment
   | ParsedPercentage
   | ParsedPaycheckEstimate
+  | ParsedRetirement401kGrowth
   | ParsedRetirementBasic
   | ParsedRefinanceSavings
   | ParsedSalary
   | ParsedSavingsGoal
   | ParsedSimpleInterest
+  | ParsedStudentLoanPayment
   | ParsedTaxEstimateSimple
   | ParsedTip
 
@@ -260,14 +360,20 @@ const calculatorTool: ToolDefinition = {
 }
 
 export const CALCULATOR_CATEGORY_LABELS: Record<CalculatorCategory, string> = {
+  "401k-growth": "401(k) Growth Calculator",
+  "apy-calculator": "APY Growth Calculator",
+  "auto-loan-payment": "Auto Loan Payment Calculator",
   "basic-loan": "Basic Loan Payment Calculator",
   "basic-loan-payment": "Basic Loan Payment Calculator",
   "break-even-calculator": "Break-Even Calculator",
+  "cd-calculator": "CD Calculator",
   "compound-basic": "Compound Interest Basic Calculator",
   "compound-interest-basic": "Compound Interest Basic Calculator",
   "compound-interest-intro": "Compound Interest Calculator",
   "credit-card-payoff": "Credit Card Payoff Calculator",
+  "debt-to-income": "Debt-to-Income Calculator",
   "emergency-fund": "Emergency Fund Calculator",
+  "ira-growth": "IRA Growth Calculator",
   "mortgage-payment": "Mortgage Payment Calculator",
   percentage: "Percentage Calculator",
   "paycheck-estimate": "Paycheck Estimate Calculator",
@@ -278,6 +384,7 @@ export const CALCULATOR_CATEGORY_LABELS: Record<CalculatorCategory, string> = {
   "savings-goal": "Savings Goal Calculator",
   "salary-to-hourly": "Salary to Hourly Calculator",
   "simple-interest": "Simple Interest Calculator",
+  "student-loan-payment": "Student Loan Payment Calculator",
   "tax-estimate-simple": "Simple Tax Estimate Calculator",
   tip: "Tip Calculator",
   "tip-calculator": "Tip Calculator",
@@ -291,6 +398,13 @@ export const CALCULATOR_PUBLIC_CATEGORY_ORDER: PublicCalculatorCategory[] = [
   "mortgage-payment",
   "refinance-savings",
   "paycheck-estimate",
+  "401k-growth",
+  "auto-loan-payment",
+  "student-loan-payment",
+  "debt-to-income",
+  "cd-calculator",
+  "apy-calculator",
+  "ira-growth",
   "simple-interest",
   "compound-interest-basic",
   "retirement-savings-intro",
@@ -439,20 +553,147 @@ const PAYCHECK_SALARIES = uniqueNumberSeries([
   ...range(225000, 350000, 25000),
 ])
 const PAYCHECK_FREQUENCIES = ["weekly", "biweekly", "semimonthly", "monthly"] as const
-const PAYCHECK_STATE_OPTIONS = [
+export const PAYCHECK_STATE_OPTIONS = [
+  { slug: "alabama", label: "Alabama", rate: 4.5 },
+  { slug: "alaska", label: "Alaska", rate: 0 },
+  { slug: "arizona", label: "Arizona", rate: 2.5 },
+  { slug: "arkansas", label: "Arkansas", rate: 4.4 },
   { slug: "california", label: "California", rate: 6.5 },
-  { slug: "new-york", label: "New York", rate: 6.2 },
-  { slug: "texas", label: "Texas", rate: 0 },
+  { slug: "colorado", label: "Colorado", rate: 4.4 },
+  { slug: "connecticut", label: "Connecticut", rate: 5.5 },
+  { slug: "delaware", label: "Delaware", rate: 5.2 },
+  { slug: "district-of-columbia", label: "District of Columbia", rate: 6.0 },
   { slug: "florida", label: "Florida", rate: 0 },
-  { slug: "illinois", label: "Illinois", rate: 4.95 },
-  { slug: "pennsylvania", label: "Pennsylvania", rate: 3.07 },
-  { slug: "ohio", label: "Ohio", rate: 3.5 },
   { slug: "georgia", label: "Georgia", rate: 4.75 },
-  { slug: "north-carolina", label: "North Carolina", rate: 4.5 },
-  { slug: "washington", label: "Washington", rate: 0 },
+  { slug: "hawaii", label: "Hawaii", rate: 7.0 },
+  { slug: "idaho", label: "Idaho", rate: 5.8 },
+  { slug: "illinois", label: "Illinois", rate: 4.95 },
+  { slug: "indiana", label: "Indiana", rate: 3.0 },
+  { slug: "iowa", label: "Iowa", rate: 4.8 },
+  { slug: "kansas", label: "Kansas", rate: 5.3 },
+  { slug: "kentucky", label: "Kentucky", rate: 4.0 },
+  { slug: "louisiana", label: "Louisiana", rate: 4.0 },
+  { slug: "maine", label: "Maine", rate: 6.2 },
+  { slug: "maryland", label: "Maryland", rate: 5.0 },
+  { slug: "massachusetts", label: "Massachusetts", rate: 5.0 },
+  { slug: "michigan", label: "Michigan", rate: 4.25 },
+  { slug: "minnesota", label: "Minnesota", rate: 6.8 },
+  { slug: "mississippi", label: "Mississippi", rate: 4.7 },
+  { slug: "missouri", label: "Missouri", rate: 4.8 },
+  { slug: "montana", label: "Montana", rate: 5.5 },
+  { slug: "nebraska", label: "Nebraska", rate: 5.3 },
+  { slug: "nevada", label: "Nevada", rate: 0 },
+  { slug: "new-hampshire", label: "New Hampshire", rate: 0 },
   { slug: "new-jersey", label: "New Jersey", rate: 5.5 },
-  { slug: "massachusetts", label: "Massachusetts", rate: 5 },
+  { slug: "new-mexico", label: "New Mexico", rate: 4.9 },
+  { slug: "new-york", label: "New York", rate: 6.2 },
+  { slug: "north-carolina", label: "North Carolina", rate: 4.5 },
+  { slug: "north-dakota", label: "North Dakota", rate: 2.9 },
+  { slug: "ohio", label: "Ohio", rate: 3.5 },
+  { slug: "oklahoma", label: "Oklahoma", rate: 4.4 },
+  { slug: "oregon", label: "Oregon", rate: 7.0 },
+  { slug: "pennsylvania", label: "Pennsylvania", rate: 3.07 },
+  { slug: "rhode-island", label: "Rhode Island", rate: 4.8 },
+  { slug: "south-carolina", label: "South Carolina", rate: 4.9 },
+  { slug: "south-dakota", label: "South Dakota", rate: 0 },
+  { slug: "tennessee", label: "Tennessee", rate: 0 },
+  { slug: "texas", label: "Texas", rate: 0 },
+  { slug: "utah", label: "Utah", rate: 4.6 },
+  { slug: "vermont", label: "Vermont", rate: 6.2 },
+  { slug: "virginia", label: "Virginia", rate: 4.9 },
+  { slug: "washington", label: "Washington", rate: 0 },
+  { slug: "west-virginia", label: "West Virginia", rate: 4.7 },
+  { slug: "wisconsin", label: "Wisconsin", rate: 5.0 },
+  { slug: "wyoming", label: "Wyoming", rate: 0 },
 ] as const
+const RETIREMENT_401K_SALARIES = uniqueNumberSeries([
+  40000,
+  50000,
+  60000,
+  70000,
+  80000,
+  90000,
+  100000,
+  110000,
+  125000,
+  150000,
+  175000,
+  200000,
+])
+const RETIREMENT_401K_CONTRIBUTION_PERCENTS = uniqueNumberSeries([4, 5, 6, 7, 8, 10, 12, 15, 18, 20])
+const RETIREMENT_401K_MATCH_PERCENTS = uniqueNumberSeries([0, 2, 3, 4, 5, 6])
+const RETIREMENT_401K_RATES = uniqueNumberSeries([4, 5, 6, 7, 8, 9, 10])
+const RETIREMENT_401K_YEARS = uniqueNumberSeries([5, 10, 15, 20, 25, 30, 35])
+const AUTO_LOAN_VEHICLE_PRICES = uniqueNumberSeries([
+  ...range(10000, 40000, 2500),
+  ...range(45000, 80000, 5000),
+  90000,
+  100000,
+])
+const AUTO_LOAN_RATES = uniqueNumberSeries([2.9, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10])
+const AUTO_LOAN_TERMS_MONTHS = uniqueNumberSeries([24, 36, 48, 60, 72, 84])
+const AUTO_LOAN_DOWN_PAYMENTS = uniqueNumberSeries([0, 1000, 2500, 5000, 7500, 10000, 15000])
+const STUDENT_LOAN_BALANCES = uniqueNumberSeries([
+  ...range(5000, 30000, 2500),
+  ...range(35000, 100000, 5000),
+  125000,
+  150000,
+])
+const STUDENT_LOAN_RATES = uniqueNumberSeries([3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8])
+const STUDENT_LOAN_TERMS_YEARS = uniqueNumberSeries([5, 7, 10, 15, 20, 25])
+const STUDENT_LOAN_EXTRA_PAYMENTS = uniqueNumberSeries([0, 25, 50, 100, 150, 200])
+const DEBT_TO_INCOME_ANNUAL_INCOMES = uniqueNumberSeries([
+  ...range(30000, 100000, 5000),
+  ...range(110000, 200000, 10000),
+  225000,
+  250000,
+  300000,
+])
+const DEBT_TO_INCOME_MONTHLY_DEBT = uniqueNumberSeries([
+  250,
+  500,
+  750,
+  1000,
+  1250,
+  1500,
+  1750,
+  2000,
+  2500,
+  3000,
+  3500,
+  4000,
+  5000,
+  6000,
+  7500,
+])
+const DEBT_TO_INCOME_HOUSING_PAYMENTS = uniqueNumberSeries([
+  800,
+  1000,
+  1200,
+  1400,
+  1600,
+  1800,
+  2000,
+  2500,
+  3000,
+  3500,
+  4000,
+  5000,
+])
+const CD_DEPOSITS = uniqueNumberSeries([
+  ...range(1000, 10000, 1000),
+  ...range(12500, 50000, 2500),
+  ...range(60000, 100000, 10000),
+])
+const CD_RATES = uniqueNumberSeries([2.5, 3, 3.5, 4, 4.25, 4.5, 4.75, 5, 5.25, 5.5, 6])
+const CD_TERM_MONTHS = uniqueNumberSeries([3, 6, 9, 12, 18, 24, 36, 48, 60, 84])
+const APY_DEPOSITS = CD_DEPOSITS
+const APY_RATES = uniqueNumberSeries([2.5, 3, 3.5, 4, 4.25, 4.5, 4.75, 5, 5.25, 5.5, 6])
+const APY_YEARS = uniqueNumberSeries([1, 2, 3, 4, 5, 7, 10, 12, 15, 20])
+const IRA_ANNUAL_CONTRIBUTIONS = uniqueNumberSeries([1000, 2000, 3000, 4000, 5000, 6000, 6500, 7000, 7500, 8000])
+const IRA_RATES = uniqueNumberSeries([4, 5, 6, 7, 8, 9, 10])
+const IRA_YEARS = uniqueNumberSeries([5, 10, 15, 20, 25, 30, 35, 40])
+const IRA_ACCOUNT_TYPES = ["traditional", "roth"] as const
 const INTEREST_PRINCIPALS = uniqueNumberSeries([
   ...range(1000, 10000, 1000),
   ...range(12500, 50000, 2500),
@@ -558,6 +799,14 @@ function futureValueRetirement(monthlyContribution: number, annualRate: number, 
   const months = years * 12
   if (monthlyRate === 0) return monthlyContribution * months
   return monthlyContribution * (((1 + monthlyRate) ** months - 1) / monthlyRate)
+}
+
+function futureValueFromAnnualContribution(
+  annualContribution: number,
+  annualRate: number,
+  years: number
+) {
+  return futureValueRetirement(annualContribution / 12, annualRate, years)
 }
 
 function stateTaxRateFor(state: string) {
@@ -722,6 +971,69 @@ function paycheckEstimateExpressionFor(
   state: string
 ) {
   return `paycheck-estimate-${annualSalary}-${payFrequency}-${state}`
+}
+
+function retirement401kExpressionFor(
+  annualSalary: number,
+  contributionPercent: number,
+  employerMatchPercent: number,
+  annualRate: number,
+  years: number
+) {
+  return `401k-growth-${annualSalary}-salary-${contributionPercent}-contribution-${employerMatchPercent}-match-${annualRate}-rate-${years}-years`
+}
+
+function autoLoanExpressionFor(
+  vehiclePrice: number,
+  annualRate: number,
+  termMonths: number,
+  downPaymentAmount: number
+) {
+  return `auto-loan-${vehiclePrice}-${annualRate}-${termMonths}-months-${downPaymentAmount}-down`
+}
+
+function studentLoanExpressionFor(
+  balance: number,
+  annualRate: number,
+  termYears: number,
+  extraPayment: number
+) {
+  return `student-loan-${balance}-${annualRate}-${termYears}-years-${extraPayment}-extra`
+}
+
+function debtToIncomeExpressionFor(
+  annualIncome: number,
+  monthlyDebt: number,
+  housingPayment: number
+) {
+  return `debt-to-income-${annualIncome}-income-${monthlyDebt}-debt-${housingPayment}-housing`
+}
+
+function cdExpressionFor(
+  deposit: number,
+  annualRate: number,
+  termMonths: number,
+  compounding: "annual" | "monthly" | "quarterly"
+) {
+  return `cd-calculator-${deposit}-${annualRate}-${termMonths}-months-${compounding}`
+}
+
+function apyExpressionFor(
+  deposit: number,
+  annualRate: number,
+  years: number,
+  compounding: "annual" | "monthly" | "quarterly"
+) {
+  return `apy-calculator-${deposit}-${annualRate}-${years}-years-${compounding}`
+}
+
+function iraExpressionFor(
+  annualContribution: number,
+  annualRate: number,
+  years: number,
+  accountType: "roth" | "traditional"
+) {
+  return `ira-growth-${annualContribution}-${annualRate}-${years}-years-${accountType}`
 }
 
 function simpleInterestExpressionFor(principal: number, annualRate: number, years: number) {
@@ -892,6 +1204,151 @@ export function buildCalculatorExpression(
         return null
       }
       return paycheckEstimateExpressionFor(annualSalary, payFrequency, state)
+    }
+    case "401k-growth": {
+      const annualSalary = readNumber("annualSalary")
+      const contributionPercent = readNumber("contributionPercent")
+      const employerMatchPercent = readNumber("employerMatchPercent")
+      const annualRate = readNumber("annualRate")
+      const years = readNumber("years")
+      if (
+        annualSalary === null ||
+        contributionPercent === null ||
+        employerMatchPercent === null ||
+        annualRate === null ||
+        years === null ||
+        annualSalary <= 0 ||
+        contributionPercent < 0 ||
+        employerMatchPercent < 0 ||
+        annualRate < 0 ||
+        years <= 0
+      ) {
+        return null
+      }
+      return retirement401kExpressionFor(
+        annualSalary,
+        contributionPercent,
+        employerMatchPercent,
+        annualRate,
+        years
+      )
+    }
+    case "auto-loan-payment": {
+      const vehiclePrice = readNumber("vehiclePrice")
+      const annualRate = readNumber("annualRate")
+      const termMonths = readNumber("termMonths")
+      const downPaymentAmount = readNumber("downPaymentAmount")
+      if (
+        vehiclePrice === null ||
+        annualRate === null ||
+        termMonths === null ||
+        downPaymentAmount === null ||
+        vehiclePrice <= 0 ||
+        annualRate < 0 ||
+        termMonths <= 0 ||
+        downPaymentAmount < 0 ||
+        downPaymentAmount >= vehiclePrice
+      ) {
+        return null
+      }
+      return autoLoanExpressionFor(vehiclePrice, annualRate, termMonths, downPaymentAmount)
+    }
+    case "student-loan-payment": {
+      const balance = readNumber("balance")
+      const annualRate = readNumber("annualRate")
+      const termYears = readNumber("termYears")
+      const extraPayment = readNumber("extraPayment")
+      if (
+        balance === null ||
+        annualRate === null ||
+        termYears === null ||
+        extraPayment === null ||
+        balance <= 0 ||
+        annualRate < 0 ||
+        termYears <= 0 ||
+        extraPayment < 0
+      ) {
+        return null
+      }
+      return studentLoanExpressionFor(balance, annualRate, termYears, extraPayment)
+    }
+    case "debt-to-income": {
+      const annualIncome = readNumber("annualIncome")
+      const monthlyDebt = readNumber("monthlyDebt")
+      const housingPayment = readNumber("housingPayment")
+      if (
+        annualIncome === null ||
+        monthlyDebt === null ||
+        housingPayment === null ||
+        annualIncome <= 0 ||
+        monthlyDebt < 0 ||
+        housingPayment < 0
+      ) {
+        return null
+      }
+      return debtToIncomeExpressionFor(annualIncome, monthlyDebt, housingPayment)
+    }
+    case "cd-calculator": {
+      const deposit = readNumber("deposit")
+      const annualRate = readNumber("annualRate")
+      const termMonths = readNumber("termMonths")
+      const compoundingRaw = String(rawValues.compounding ?? "monthly").toLowerCase()
+      const compounding =
+        compoundingRaw === "annual" || compoundingRaw === "quarterly"
+          ? compoundingRaw
+          : "monthly"
+      if (
+        deposit === null ||
+        annualRate === null ||
+        termMonths === null ||
+        deposit <= 0 ||
+        annualRate < 0 ||
+        termMonths <= 0
+      ) {
+        return null
+      }
+      return cdExpressionFor(deposit, annualRate, termMonths, compounding)
+    }
+    case "apy-calculator": {
+      const deposit = readNumber("deposit")
+      const annualRate = readNumber("annualRate")
+      const years = readNumber("years")
+      const compoundingRaw = String(rawValues.compounding ?? "monthly").toLowerCase()
+      const compounding =
+        compoundingRaw === "annual" || compoundingRaw === "quarterly"
+          ? compoundingRaw
+          : "monthly"
+      if (
+        deposit === null ||
+        annualRate === null ||
+        years === null ||
+        deposit <= 0 ||
+        annualRate < 0 ||
+        years <= 0
+      ) {
+        return null
+      }
+      return apyExpressionFor(deposit, annualRate, years, compounding)
+    }
+    case "ira-growth": {
+      const annualContribution = readNumber("annualContribution")
+      const annualRate = readNumber("annualRate")
+      const years = readNumber("years")
+      const accountType = String(rawValues.accountType ?? "roth").toLowerCase() as
+        | "roth"
+        | "traditional"
+      if (
+        annualContribution === null ||
+        annualRate === null ||
+        years === null ||
+        annualContribution < 0 ||
+        annualRate < 0 ||
+        years <= 0 ||
+        !IRA_ACCOUNT_TYPES.includes(accountType)
+      ) {
+        return null
+      }
+      return iraExpressionFor(annualContribution, annualRate, years, accountType)
     }
     case "simple-interest": {
       const principal = readNumber("principal")
@@ -1252,6 +1709,279 @@ function parseCalculatorExpression(
       payFrequency,
       state,
       stateRate,
+    }
+  }
+
+  if (category === "401k-growth") {
+    const match =
+      /^401k-growth-([0-9]+)-salary-([0-9]+(?:\.[0-9]+)*)-contribution-([0-9]+(?:\.[0-9]+)*)-match-([0-9]+(?:\.[0-9]+)*)-rate-([0-9]+)-years$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const annualSalary = parseNumberToken(match[1] ?? "")
+    const contributionPercent = parseNumberToken(match[2] ?? "")
+    const employerMatchPercent = parseNumberToken(match[3] ?? "")
+    const annualRate = parseNumberToken(match[4] ?? "")
+    const years = parseNumberToken(match[5] ?? "")
+    if (
+      annualSalary === null ||
+      contributionPercent === null ||
+      employerMatchPercent === null ||
+      annualRate === null ||
+      years === null ||
+      annualSalary <= 0 ||
+      contributionPercent < 0 ||
+      employerMatchPercent < 0 ||
+      annualRate < 0 ||
+      years <= 0
+    ) {
+      return null
+    }
+    const employeeAnnualContribution = annualSalary * (contributionPercent / 100)
+    const employerAnnualMatch = annualSalary * (employerMatchPercent / 100)
+    const totalAnnualContribution = employeeAnnualContribution + employerAnnualMatch
+    const futureValue = futureValueFromAnnualContribution(
+      totalAnnualContribution,
+      annualRate,
+      years
+    )
+    return {
+      annualRate,
+      annualSalary,
+      category,
+      contributionPercent,
+      employeeAnnualContribution,
+      employerAnnualMatch,
+      employerMatchPercent,
+      expression: retirement401kExpressionFor(
+        annualSalary,
+        contributionPercent,
+        employerMatchPercent,
+        annualRate,
+        years
+      ),
+      futureValue,
+      totalAnnualContribution,
+      totalContributions: totalAnnualContribution * years,
+      years,
+    }
+  }
+
+  if (category === "auto-loan-payment") {
+    const match =
+      /^auto-loan-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-months-([0-9]+(?:\.[0-9]+)*)-down$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const vehiclePrice = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const termMonths = parseNumberToken(match[3] ?? "")
+    const downPaymentAmount = parseNumberToken(match[4] ?? "")
+    if (
+      vehiclePrice === null ||
+      annualRate === null ||
+      termMonths === null ||
+      downPaymentAmount === null ||
+      vehiclePrice <= 0 ||
+      annualRate < 0 ||
+      termMonths <= 0 ||
+      downPaymentAmount < 0 ||
+      downPaymentAmount >= vehiclePrice
+    ) {
+      return null
+    }
+    const termYears = termMonths / 12
+    const loanPrincipal = vehiclePrice - downPaymentAmount
+    const payment = monthlyPayment(loanPrincipal, annualRate, termYears)
+    const totalPaid = payment * termMonths
+    return {
+      annualRate,
+      category,
+      downPaymentAmount,
+      expression: autoLoanExpressionFor(vehiclePrice, annualRate, termMonths, downPaymentAmount),
+      loanPrincipal,
+      monthlyPayment: payment,
+      termMonths,
+      totalInterest: totalPaid - loanPrincipal,
+      totalPaid,
+      vehiclePrice,
+    }
+  }
+
+  if (category === "student-loan-payment") {
+    const match =
+      /^student-loan-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years-([0-9]+(?:\.[0-9]+)*)-extra$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const balance = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const termYears = parseNumberToken(match[3] ?? "")
+    const extraPayment = parseNumberToken(match[4] ?? "")
+    if (
+      balance === null ||
+      annualRate === null ||
+      termYears === null ||
+      extraPayment === null ||
+      balance <= 0 ||
+      annualRate < 0 ||
+      termYears <= 0 ||
+      extraPayment < 0
+    ) {
+      return null
+    }
+    const baseMonthlyPayment = monthlyPayment(balance, annualRate, termYears)
+    const projection = monthsToDebtPayoff(balance, annualRate, baseMonthlyPayment + extraPayment)
+    if (!Number.isFinite(projection.monthsToPayoff)) return null
+    return {
+      annualRate,
+      balance,
+      baseMonthlyPayment,
+      category,
+      expression: studentLoanExpressionFor(balance, annualRate, termYears, extraPayment),
+      extraPayment,
+      interestPaid: projection.interestPaid,
+      monthlyPayment: baseMonthlyPayment + extraPayment,
+      monthsToPayoff: projection.monthsToPayoff,
+      termYears,
+      totalPaid: projection.totalPaid,
+    }
+  }
+
+  if (category === "debt-to-income") {
+    const match =
+      /^debt-to-income-([0-9]+)-income-([0-9]+(?:\.[0-9]+)*)-debt-([0-9]+(?:\.[0-9]+)*)-housing$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const annualIncome = parseNumberToken(match[1] ?? "")
+    const monthlyDebt = parseNumberToken(match[2] ?? "")
+    const housingPayment = parseNumberToken(match[3] ?? "")
+    if (
+      annualIncome === null ||
+      monthlyDebt === null ||
+      housingPayment === null ||
+      annualIncome <= 0 ||
+      monthlyDebt < 0 ||
+      housingPayment < 0
+    ) {
+      return null
+    }
+    const monthlyGrossIncome = annualIncome / 12
+    const totalMonthlyObligations = monthlyDebt + housingPayment
+    return {
+      annualIncome,
+      category,
+      dtiRatio: (totalMonthlyObligations / monthlyGrossIncome) * 100,
+      expression: debtToIncomeExpressionFor(annualIncome, monthlyDebt, housingPayment),
+      housingPayment,
+      monthlyDebt,
+      monthlyGrossIncome,
+      totalMonthlyObligations,
+    }
+  }
+
+  if (category === "cd-calculator") {
+    const match =
+      /^cd-calculator-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-months-(monthly|quarterly|annual)$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const deposit = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const termMonths = parseNumberToken(match[3] ?? "")
+    const compounding = (match[4] ?? "monthly") as "annual" | "monthly" | "quarterly"
+    if (
+      deposit === null ||
+      annualRate === null ||
+      termMonths === null ||
+      deposit <= 0 ||
+      annualRate < 0 ||
+      termMonths <= 0
+    ) {
+      return null
+    }
+    const maturityValue = futureValueCompoundWithFrequency(
+      deposit,
+      annualRate,
+      termMonths / 12,
+      compounding
+    )
+    return {
+      annualRate,
+      category,
+      compounding,
+      deposit,
+      expression: cdExpressionFor(deposit, annualRate, termMonths, compounding),
+      interestEarned: maturityValue - deposit,
+      maturityValue,
+      termMonths,
+    }
+  }
+
+  if (category === "apy-calculator") {
+    const match =
+      /^apy-calculator-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years-(monthly|quarterly|annual)$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const deposit = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const years = parseNumberToken(match[3] ?? "")
+    const compounding = (match[4] ?? "monthly") as "annual" | "monthly" | "quarterly"
+    if (
+      deposit === null ||
+      annualRate === null ||
+      years === null ||
+      deposit <= 0 ||
+      annualRate < 0 ||
+      years <= 0
+    ) {
+      return null
+    }
+    const futureValue = futureValueCompoundWithFrequency(deposit, annualRate, years, compounding)
+    return {
+      annualRate,
+      category,
+      compounding,
+      deposit,
+      expression: apyExpressionFor(deposit, annualRate, years, compounding),
+      futureValue,
+      interestEarned: futureValue - deposit,
+      years,
+    }
+  }
+
+  if (category === "ira-growth") {
+    const match =
+      /^ira-growth-([0-9]+)-([0-9]+(?:\.[0-9]+)*)-([0-9]+)-years-(roth|traditional)$/.exec(
+        decoded
+      )
+    if (!match) return null
+    const annualContribution = parseNumberToken(match[1] ?? "")
+    const annualRate = parseNumberToken(match[2] ?? "")
+    const years = parseNumberToken(match[3] ?? "")
+    const accountType = (match[4] ?? "roth") as "roth" | "traditional"
+    if (
+      annualContribution === null ||
+      annualRate === null ||
+      years === null ||
+      annualContribution < 0 ||
+      annualRate < 0 ||
+      years <= 0
+    ) {
+      return null
+    }
+    const futureValue = futureValueFromAnnualContribution(annualContribution, annualRate, years)
+    return {
+      accountType,
+      annualContribution,
+      annualRate,
+      category,
+      expression: iraExpressionFor(annualContribution, annualRate, years, accountType),
+      futureValue,
+      totalContributions: annualContribution * years,
+      years,
     }
   }
 
@@ -1667,6 +2397,183 @@ function paycheckEstimateEntries(): CalculatorEntry[] {
   )
 }
 
+function retirement401kEntries(): CalculatorEntry[] {
+  return RETIREMENT_401K_SALARIES.flatMap((annualSalary) =>
+    RETIREMENT_401K_CONTRIBUTION_PERCENTS.flatMap((contributionPercent) =>
+      RETIREMENT_401K_MATCH_PERCENTS.flatMap((employerMatchPercent) =>
+        RETIREMENT_401K_RATES.flatMap((annualRate) =>
+          RETIREMENT_401K_YEARS.map((years) => ({
+            category: "401k-growth" as const,
+            description: buildMetaDescription(
+              `Estimate 401(k) growth on ${formatCurrency(annualSalary)} salary with ${contributionPercent}% employee contributions, ${employerMatchPercent}% employer match, and ${annualRate}% annual growth over ${years} years using a local browser calculator on Plain Tools.`
+            ),
+            expression: retirement401kExpressionFor(
+              annualSalary,
+              contributionPercent,
+              employerMatchPercent,
+              annualRate,
+              years
+            ),
+            keywords: [
+              `401k growth ${annualSalary} salary ${contributionPercent} contribution ${employerMatchPercent} match ${annualRate} ${years}`,
+              "401k calculator",
+              "retirement contribution calculator",
+              "employer match calculator",
+            ],
+            title: `401(k) Growth on ${formatCurrency(annualSalary)} Salary with ${contributionPercent}% Contribution, ${employerMatchPercent}% Match, and ${annualRate}% for ${years} Years | Plain Tools`,
+          }))
+        )
+      )
+    )
+  )
+}
+
+function autoLoanEntries(): CalculatorEntry[] {
+  return AUTO_LOAN_VEHICLE_PRICES.flatMap((vehiclePrice) =>
+    AUTO_LOAN_RATES.flatMap((annualRate) =>
+      AUTO_LOAN_TERMS_MONTHS.flatMap((termMonths) =>
+        AUTO_LOAN_DOWN_PAYMENTS.flatMap((downPaymentAmount) => {
+          if (downPaymentAmount >= vehiclePrice) return []
+          return [
+            {
+              category: "auto-loan-payment" as const,
+              description: buildMetaDescription(
+                `Estimate the auto loan payment on ${formatCurrency(vehiclePrice)} at ${annualRate}% over ${termMonths} months with ${formatCurrency(downPaymentAmount)} down using a local browser calculator on Plain Tools.`
+              ),
+              expression: autoLoanExpressionFor(
+                vehiclePrice,
+                annualRate,
+                termMonths,
+                downPaymentAmount
+              ),
+              keywords: [
+                `auto loan ${vehiclePrice} ${annualRate} ${termMonths} ${downPaymentAmount} down`,
+                "car payment calculator",
+                "auto loan calculator",
+                "vehicle financing estimate",
+              ],
+              title: `Auto Loan Payment for ${formatCurrency(vehiclePrice)} at ${annualRate}% for ${termMonths} Months with ${formatCurrency(downPaymentAmount)} Down | Plain Tools`,
+            },
+          ]
+        })
+      )
+    )
+  )
+}
+
+function studentLoanEntries(): CalculatorEntry[] {
+  return STUDENT_LOAN_BALANCES.flatMap((balance) =>
+    STUDENT_LOAN_RATES.flatMap((annualRate) =>
+      STUDENT_LOAN_TERMS_YEARS.flatMap((termYears) =>
+        STUDENT_LOAN_EXTRA_PAYMENTS.map((extraPayment) => ({
+          category: "student-loan-payment" as const,
+          description: buildMetaDescription(
+            `Estimate student loan payoff on ${formatCurrency(balance)} at ${annualRate}% over ${termYears} years with ${formatCurrency(extraPayment)} extra paid each month using a local browser calculator on Plain Tools.`
+          ),
+          expression: studentLoanExpressionFor(balance, annualRate, termYears, extraPayment),
+          keywords: [
+            `student loan ${balance} ${annualRate} ${termYears} ${extraPayment} extra`,
+            "student loan calculator",
+            "student debt payoff calculator",
+            "monthly student loan payment",
+          ],
+          title: `Student Loan Payment for ${formatCurrency(balance)} at ${annualRate}% for ${termYears} Years with ${formatCurrency(extraPayment)} Extra | Plain Tools`,
+        }))
+      )
+    )
+  )
+}
+
+function debtToIncomeEntries(): CalculatorEntry[] {
+  return DEBT_TO_INCOME_ANNUAL_INCOMES.flatMap((annualIncome) =>
+    DEBT_TO_INCOME_MONTHLY_DEBT.flatMap((monthlyDebt) =>
+      DEBT_TO_INCOME_HOUSING_PAYMENTS.map((housingPayment) => ({
+        category: "debt-to-income" as const,
+        description: buildMetaDescription(
+          `Estimate debt-to-income ratio on ${formatCurrency(annualIncome)} income with ${formatCurrency(monthlyDebt)} in monthly debt and ${formatCurrency(housingPayment)} housing cost using a local browser calculator on Plain Tools.`
+        ),
+        expression: debtToIncomeExpressionFor(annualIncome, monthlyDebt, housingPayment),
+        keywords: [
+          `debt to income ${annualIncome} income ${monthlyDebt} debt ${housingPayment} housing`,
+          "debt to income calculator",
+          "DTI calculator",
+          "mortgage qualification ratio",
+        ],
+        title: `Debt-to-Income Ratio on ${formatCurrency(annualIncome)} Income with ${formatCurrency(monthlyDebt)} Debt and ${formatCurrency(housingPayment)} Housing | Plain Tools`,
+      }))
+    )
+  )
+}
+
+function cdEntries(): CalculatorEntry[] {
+  return CD_DEPOSITS.flatMap((deposit) =>
+    CD_RATES.flatMap((annualRate) =>
+      CD_TERM_MONTHS.flatMap((termMonths) =>
+        COMPOUNDING_PERIODS.map((compounding) => ({
+          category: "cd-calculator" as const,
+          description: buildMetaDescription(
+            `Estimate CD maturity on ${formatCurrency(deposit)} at ${annualRate}% over ${termMonths} months with ${compounding} compounding using a local browser calculator on Plain Tools.`
+          ),
+          expression: cdExpressionFor(deposit, annualRate, termMonths, compounding),
+          keywords: [
+            `cd calculator ${deposit} ${annualRate} ${termMonths} ${compounding}`,
+            "certificate of deposit calculator",
+            "cd maturity calculator",
+            "bank CD growth",
+          ],
+          title: `CD Growth on ${formatCurrency(deposit)} at ${annualRate}% for ${termMonths} Months (${compounding}) | Plain Tools`,
+        }))
+      )
+    )
+  )
+}
+
+function apyEntries(): CalculatorEntry[] {
+  return APY_DEPOSITS.flatMap((deposit) =>
+    APY_RATES.flatMap((annualRate) =>
+      APY_YEARS.flatMap((years) =>
+        COMPOUNDING_PERIODS.map((compounding) => ({
+          category: "apy-calculator" as const,
+          description: buildMetaDescription(
+            `Estimate APY growth on ${formatCurrency(deposit)} at ${annualRate}% over ${years} years with ${compounding} compounding using a local browser calculator on Plain Tools.`
+          ),
+          expression: apyExpressionFor(deposit, annualRate, years, compounding),
+          keywords: [
+            `apy calculator ${deposit} ${annualRate} ${years} ${compounding}`,
+            "APY calculator",
+            "savings growth calculator",
+            "interest growth calculator",
+          ],
+          title: `APY Growth on ${formatCurrency(deposit)} at ${annualRate}% for ${years} Years (${compounding}) | Plain Tools`,
+        }))
+      )
+    )
+  )
+}
+
+function iraEntries(): CalculatorEntry[] {
+  return IRA_ANNUAL_CONTRIBUTIONS.flatMap((annualContribution) =>
+    IRA_RATES.flatMap((annualRate) =>
+      IRA_YEARS.flatMap((years) =>
+        IRA_ACCOUNT_TYPES.map((accountType) => ({
+          category: "ira-growth" as const,
+          description: buildMetaDescription(
+            `Estimate ${accountType} IRA growth on ${formatCurrency(annualContribution)} contributed annually at ${annualRate}% over ${years} years using a local browser calculator on Plain Tools.`
+          ),
+          expression: iraExpressionFor(annualContribution, annualRate, years, accountType),
+          keywords: [
+            `${accountType} ira ${annualContribution} ${annualRate} ${years}`,
+            "IRA calculator",
+            "roth IRA calculator",
+            "traditional IRA calculator",
+          ],
+          title: `${accountType === "roth" ? "Roth" : "Traditional"} IRA Growth on ${formatCurrency(annualContribution)}/Year at ${annualRate}% for ${years} Years | Plain Tools`,
+        }))
+      )
+    )
+  )
+}
+
 function simpleInterestEntries(): CalculatorEntry[] {
   return INTEREST_PRINCIPALS.flatMap((principal) =>
     INTEREST_RATES.flatMap((annualRate) =>
@@ -1846,6 +2753,13 @@ const CALCULATOR_TEMPLATES: CalculatorEntry[] = [
   ...mortgageEntries(),
   ...refinanceEntries(),
   ...paycheckEstimateEntries(),
+  ...retirement401kEntries(),
+  ...autoLoanEntries(),
+  ...studentLoanEntries(),
+  ...debtToIncomeEntries(),
+  ...cdEntries(),
+  ...apyEntries(),
+  ...iraEntries(),
   ...simpleInterestEntries(),
   ...compoundEntries(),
   ...retirementEntries(),
@@ -1914,6 +2828,55 @@ function getCalculatedRelatedLinks(parsed: ParsedCalculator) {
         { href: buildCalculatorPath("paycheck-estimate", paycheckEstimateExpressionFor(parsed.annualSalary, "monthly", parsed.state)), title: "Monthly paycheck estimate" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(parsed.annualSalary, 40)), title: "Gross salary to hourly comparison" },
         { href: buildCalculatorPath("tax-estimate-simple", taxEstimateExpressionFor(parsed.annualSalary, "single")), title: "Simple tax estimate comparison" },
+      ]
+    case "401k-growth":
+      return [
+        { href: buildCalculatorPath("401k-growth", retirement401kExpressionFor(parsed.annualSalary, parsed.contributionPercent + 1, parsed.employerMatchPercent, parsed.annualRate, parsed.years)), title: `401(k) at ${parsed.contributionPercent + 1}% employee contribution` },
+        { href: buildCalculatorPath("401k-growth", retirement401kExpressionFor(parsed.annualSalary, parsed.contributionPercent, parsed.employerMatchPercent, parsed.annualRate + 1, parsed.years)), title: `401(k) at ${parsed.annualRate + 1}% annual growth` },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(Math.round(parsed.totalAnnualContribution / 12), Math.max(2, parsed.annualRate), parsed.years)), title: "Retirement savings comparison" },
+        { href: buildCalculatorPath("ira-growth", iraExpressionFor(Math.min(8000, Math.round(parsed.employeeAnnualContribution)), parsed.annualRate, parsed.years, "roth")), title: "Compare with a Roth IRA scenario" },
+      ]
+    case "auto-loan-payment":
+      return [
+        { href: buildCalculatorPath("auto-loan-payment", autoLoanExpressionFor(parsed.vehiclePrice, Math.max(1.9, parsed.annualRate - 0.5), parsed.termMonths, parsed.downPaymentAmount)), title: `${formatCurrency(parsed.vehiclePrice)} at ${Math.max(1.9, parsed.annualRate - 0.5)}%` },
+        { href: buildCalculatorPath("auto-loan-payment", autoLoanExpressionFor(parsed.vehiclePrice, parsed.annualRate, parsed.termMonths, parsed.downPaymentAmount + 2500)), title: `${formatCurrency(parsed.vehiclePrice)} with ${formatCurrency(parsed.downPaymentAmount + 2500)} down` },
+        { href: buildCalculatorPath("basic-loan-payment", basicLoanExpressionFor(parsed.loanPrincipal, parsed.annualRate, Math.max(1, Math.round(parsed.termMonths / 12)))), title: "Basic loan comparison" },
+        { href: buildCalculatorPath("debt-to-income", debtToIncomeExpressionFor(90000, 850, parsed.monthlyPayment)), title: "Check debt-to-income impact" },
+      ]
+    case "student-loan-payment":
+      return [
+        { href: buildCalculatorPath("student-loan-payment", studentLoanExpressionFor(parsed.balance, parsed.annualRate, parsed.termYears, parsed.extraPayment + 50)), title: `Add ${formatCurrency(parsed.extraPayment + 50)} extra each month` },
+        { href: buildCalculatorPath("student-loan-payment", studentLoanExpressionFor(parsed.balance, Math.max(2, parsed.annualRate - 0.5), parsed.termYears, parsed.extraPayment)), title: `${formatCurrency(parsed.balance)} at ${Math.max(2, parsed.annualRate - 0.5)}%` },
+        { href: buildCalculatorPath("credit-card-payoff", creditCardPayoffExpressionFor(Math.min(60000, parsed.balance), Math.max(9, parsed.annualRate + 6), Math.max(100, Math.round(parsed.monthlyPayment)))), title: "Credit card payoff comparison" },
+        { href: buildCalculatorPath("paycheck-estimate", paycheckEstimateExpressionFor(85000, "biweekly", "texas")), title: "Compare against a paycheck estimate" },
+      ]
+    case "debt-to-income":
+      return [
+        { href: buildCalculatorPath("debt-to-income", debtToIncomeExpressionFor(parsed.annualIncome + 10000, parsed.monthlyDebt, parsed.housingPayment)), title: `Debt-to-income on ${formatCurrency(parsed.annualIncome + 10000)}` },
+        { href: buildCalculatorPath("debt-to-income", debtToIncomeExpressionFor(parsed.annualIncome, parsed.monthlyDebt, parsed.housingPayment + 250)), title: `Debt-to-income with ${formatCurrency(parsed.housingPayment + 250)} housing` },
+        { href: buildCalculatorPath("mortgage-payment", mortgageExpressionFor(450000, 6.25, 30, 20)), title: "Mortgage payment comparison" },
+        { href: buildCalculatorPath("auto-loan-payment", autoLoanExpressionFor(35000, 6.5, 72, 5000)), title: "Auto loan comparison" },
+      ]
+    case "cd-calculator":
+      return [
+        { href: buildCalculatorPath("cd-calculator", cdExpressionFor(parsed.deposit, Math.max(1, parsed.annualRate - 0.25), parsed.termMonths, parsed.compounding)), title: `${formatCurrency(parsed.deposit)} at ${Math.max(1, parsed.annualRate - 0.25)}%` },
+        { href: buildCalculatorPath("cd-calculator", cdExpressionFor(parsed.deposit, parsed.annualRate, parsed.termMonths + 6, parsed.compounding)), title: `${formatCurrency(parsed.deposit)} for ${parsed.termMonths + 6} months` },
+        { href: buildCalculatorPath("apy-calculator", apyExpressionFor(parsed.deposit, parsed.annualRate, Math.max(1, Math.round(parsed.termMonths / 12)), parsed.compounding)), title: "APY growth comparison" },
+        { href: buildCalculatorPath("savings-goal", savingsGoalExpressionFor(parsed.deposit * 2, Math.max(100, Math.round(parsed.deposit / 24)), parsed.annualRate)), title: "Savings goal comparison" },
+      ]
+    case "apy-calculator":
+      return [
+        { href: buildCalculatorPath("apy-calculator", apyExpressionFor(parsed.deposit, Math.max(1, parsed.annualRate - 0.25), parsed.years, parsed.compounding)), title: `${formatCurrency(parsed.deposit)} at ${Math.max(1, parsed.annualRate - 0.25)}%` },
+        { href: buildCalculatorPath("apy-calculator", apyExpressionFor(parsed.deposit, parsed.annualRate, parsed.years + 2, parsed.compounding)), title: `${formatCurrency(parsed.deposit)} for ${parsed.years + 2} years` },
+        { href: buildCalculatorPath("cd-calculator", cdExpressionFor(parsed.deposit, parsed.annualRate, Math.max(12, parsed.years * 12), parsed.compounding)), title: "CD maturity comparison" },
+        { href: buildCalculatorPath("compound-interest-basic", compoundExpressionFor(parsed.deposit, parsed.annualRate, parsed.years, parsed.compounding)), title: "Compound growth comparison" },
+      ]
+    case "ira-growth":
+      return [
+        { href: buildCalculatorPath("ira-growth", iraExpressionFor(Math.min(8000, parsed.annualContribution + 500), parsed.annualRate, parsed.years, parsed.accountType)), title: `${formatCurrency(Math.min(8000, parsed.annualContribution + 500))}/year in the same IRA` },
+        { href: buildCalculatorPath("ira-growth", iraExpressionFor(parsed.annualContribution, parsed.annualRate + 1, parsed.years, parsed.accountType)), title: `${parsed.accountType === "roth" ? "Roth" : "Traditional"} IRA at ${parsed.annualRate + 1}%` },
+        { href: buildCalculatorPath("401k-growth", retirement401kExpressionFor(90000, 8, 4, parsed.annualRate, Math.min(35, parsed.years))), title: "401(k) growth comparison" },
+        { href: buildCalculatorPath("retirement-savings-intro", retirementExpressionFor(Math.round(parsed.annualContribution / 12), parsed.annualRate, parsed.years)), title: "Retirement savings comparison" },
       ]
     case "simple-interest":
       return [
@@ -2755,6 +3718,414 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     h1 = `${formatCurrency(parsed.annualSalary)} ${parsed.payFrequency} Paycheck Estimate in ${stateLabel}`
   }
 
+  if (parsed.category === "401k-growth") {
+    const scenarioText = `${formatCurrency(parsed.annualSalary)} salary with ${formatPercent(parsed.contributionPercent)} employee contributions, ${formatPercent(parsed.employerMatchPercent)} employer match, and ${formatPercent(parsed.annualRate)} annual growth over ${parsed.years} years`
+    intro = [
+      "401(k) growth pages capture high-value finance intent because the user is usually thinking about retirement readiness, employer benefits, and contribution decisions at the same time. They want a fast directional answer before moving into a full planning stack.",
+      `For ${scenarioText}, this route estimates about ${formatCurrency(parsed.futureValue)} in projected 401(k) value. The model assumes annual employee contributions of ${formatCurrency(parsed.employeeAnnualContribution)} and employer match contributions of ${formatCurrency(parsed.employerAnnualMatch)} for a combined annual contribution of ${formatCurrency(parsed.totalAnnualContribution)}.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The useful part of a 401(k) page is not only the future balance. It is the visibility into how employee contribution rate, employer match, and market-return assumptions interact in one exact scenario.",
+      "That makes this cluster a strong RPM fit because it sits near retirement planning, payroll benefits, brokerages, and workplace finance research without trying to replace professional advice.",
+    ]
+    howItWorks = [
+      "The calculator converts annual employee and employer contributions into a monthly savings stream, then applies the chosen annual growth rate over the selected time horizon. It is intentionally a first-pass compounding model rather than a full plan simulator.",
+      "That scope keeps the page clear enough for long-tail SEO while still giving the user a meaningful number they can compare against nearby contribution and match assumptions.",
+    ]
+    howToSteps = [
+      { name: "Enter annual salary", text: `This route starts from ${formatCurrency(parsed.annualSalary)} per year.` },
+      { name: "Set employee and employer contribution rates", text: `The example uses ${formatPercent(parsed.contributionPercent)} employee contributions and ${formatPercent(parsed.employerMatchPercent)} employer match.` },
+      { name: "Set return and time horizon", text: `The page assumes ${formatPercent(parsed.annualRate)} annual growth across ${parsed.years} years.` },
+      { name: "Review total annual contributions and projected value", text: `Combined annual contributions are ${formatCurrency(parsed.totalAnnualContribution)} and the projected account value is about ${formatCurrency(parsed.futureValue)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why 401(k) pages are strong high-intent retirement utilities",
+      [
+        "The user usually arrives with one concrete question: what happens if I contribute a little more, get a better match, or keep the same plan running for longer? Exact-match routes answer that faster than a generic retirement explainer.",
+        "These pages are also naturally useful to revisit after a raise, a benefits enrollment window, or a compensation review, which creates stronger repeat utility than a one-time article read.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when users are modeling salary, employer benefits, and retirement assumptions on a work device.",
+      "The local workflow keeps the page fast enough for quick scenario comparisons during open enrollment or offer review.",
+    ]
+    faq = [
+      { question: "How is 401(k) growth estimated on this page?", answer: "The route estimates employee contributions from salary and contribution percentage, adds a simple employer match percentage, and then projects the total using the selected annual return assumption. It is intended as a first-pass growth screen rather than a full retirement plan simulation with vesting, fees, and tax detail." },
+      { question: `What does ${formatPercent(parsed.employerMatchPercent)} employer match mean here?`, answer: `On this page it acts as an additional contribution percentage tied to salary, which keeps the estimate easy to compare across nearby scenarios. Real employer match rules can be more specific, so the result should be treated as directional rather than final plan advice.` },
+      { question: "Why compare employee contribution rate and growth rate separately?", answer: "Because those are usually the two fastest levers the user can sanity-check without changing jobs or redesigning the whole retirement plan. A strong programmatic page makes those adjacent comparisons easy instead of hiding them behind a blank form." },
+      { question: "Does this page send salary or retirement data anywhere?", answer: "No. All calculations happen locally in the browser with nothing uploaded, stored, or synced." },
+      { question: "What should I check next?", answer: "IRA-growth, retirement-savings-intro, and paycheck-estimate pages are common follow-up routes after a 401(k) estimate." },
+    ]
+    summaryRows = [
+      { label: "Annual salary", value: formatCurrency(parsed.annualSalary) },
+      { label: "Employee contribution", value: formatPercent(parsed.contributionPercent) },
+      { label: "Employer match", value: formatPercent(parsed.employerMatchPercent) },
+      { label: "Combined annual contribution", value: formatCurrency(parsed.totalAnnualContribution) },
+      { label: "Years", value: `${parsed.years}` },
+      { label: "Projected value", value: formatCurrency(parsed.futureValue) },
+    ]
+    initialValues = {
+      annualSalary: parsed.annualSalary,
+      contributionPercent: parsed.contributionPercent,
+      employerMatchPercent: parsed.employerMatchPercent,
+      annualRate: parsed.annualRate,
+      years: parsed.years,
+    }
+    h1 = `401(k) Growth on ${formatCurrency(parsed.annualSalary)} Salary with ${parsed.contributionPercent}% Contribution, ${parsed.employerMatchPercent}% Match, and ${parsed.annualRate}% for ${parsed.years} Years`
+  }
+
+  if (parsed.category === "auto-loan-payment") {
+    const scenarioText = `${formatCurrency(parsed.vehiclePrice)} financed at ${formatPercent(parsed.annualRate)} over ${parsed.termMonths} months with ${formatCurrency(parsed.downPaymentAmount)} down`
+    intro = [
+      "Auto-loan pages work because the user usually wants to translate sticker price into a payment they can compare against budget immediately. They are not looking for a dealership flow; they want a fast, exact first-pass answer.",
+      `For ${scenarioText}, the financed amount is ${formatCurrency(parsed.loanPrincipal)} and the estimated monthly payment is about ${formatCurrency(parsed.monthlyPayment)}. Total interest across the term is about ${formatCurrency(parsed.totalInterest)}.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This route is useful because it makes the tradeoff between price, down payment, and term explicit in one exact scenario. That is more actionable than a generic auto-finance article.",
+      "It also fits strong lender, insurance, and budgeting advertiser demand while staying simple enough for a browser-first utility page.",
+    ]
+    howItWorks = [
+      "The calculator subtracts the down payment from the vehicle price to find the financed principal, then applies the standard amortized monthly payment formula across the selected term length.",
+      "It does not attempt to model taxes, registration, dealer add-ons, or insurance. The goal is a fast directional payment estimate tied to one exact financing setup.",
+    ]
+    howToSteps = [
+      { name: "Enter vehicle price", text: `This route starts from ${formatCurrency(parsed.vehiclePrice)}.` },
+      { name: "Set the down payment", text: `The example uses ${formatCurrency(parsed.downPaymentAmount)} down, leaving ${formatCurrency(parsed.loanPrincipal)} financed.` },
+      { name: "Set APR and loan term", text: `The page assumes ${formatPercent(parsed.annualRate)} across ${parsed.termMonths} months.` },
+      { name: "Review monthly payment and total interest", text: `Estimated monthly payment is ${formatCurrency(parsed.monthlyPayment)} with about ${formatCurrency(parsed.totalInterest)} in total interest.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why auto-loan pages convert well",
+      [
+        "The searcher often has a real purchase in front of them and needs to know whether a slightly cheaper vehicle, bigger down payment, or shorter term changes the monthly payment enough to matter.",
+        "That practical intent makes exact-match auto-loan routes more useful than thin rate tables, especially when the page also surfaces debt-to-income and nearby financing comparisons.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That helps when users are comparing price and financing assumptions on a dealership floor or shared device.",
+      "The local model also keeps the page quick for repeated what-if checks across nearby prices and down-payment amounts.",
+    ]
+    faq = [
+      { question: `What is the auto loan payment on ${formatCurrency(parsed.vehiclePrice)} with ${formatCurrency(parsed.downPaymentAmount)} down?`, answer: `At ${formatPercent(parsed.annualRate)} over ${parsed.termMonths} months, this page estimates about ${formatCurrency(parsed.monthlyPayment)} per month on a financed amount of ${formatCurrency(parsed.loanPrincipal)}. It is a fast directional estimate and does not include taxes, fees, or insurance.` },
+      { question: "Why show total interest as well as monthly payment?", answer: "Because many users can make a payment fit by stretching the term, but the interest cost can change materially. A useful page makes that tradeoff visible instead of hiding it." },
+      { question: "Should I compare a higher down payment or a shorter term first?", answer: "Both can matter, but they change the result differently. A larger down payment reduces the amount financed immediately, while a shorter term usually lowers total interest but can raise the monthly payment." },
+      { question: "Does this page send my financing scenario anywhere?", answer: "No. All calculations happen locally in the browser with nothing uploaded." },
+      { question: "What should I check next?", answer: "Debt-to-income and paycheck-estimate pages are common next steps after an auto-loan estimate." },
+    ]
+    summaryRows = [
+      { label: "Vehicle price", value: formatCurrency(parsed.vehiclePrice) },
+      { label: "Down payment", value: formatCurrency(parsed.downPaymentAmount) },
+      { label: "Loan principal", value: formatCurrency(parsed.loanPrincipal) },
+      { label: "APR", value: formatPercent(parsed.annualRate) },
+      { label: "Monthly payment", value: formatCurrency(parsed.monthlyPayment) },
+      { label: "Total interest", value: formatCurrency(parsed.totalInterest) },
+    ]
+    initialValues = {
+      vehiclePrice: parsed.vehiclePrice,
+      annualRate: parsed.annualRate,
+      termMonths: parsed.termMonths,
+      downPaymentAmount: parsed.downPaymentAmount,
+    }
+    h1 = `Auto Loan Payment for ${formatCurrency(parsed.vehiclePrice)} at ${parsed.annualRate}% for ${parsed.termMonths} Months with ${formatCurrency(parsed.downPaymentAmount)} Down`
+  }
+
+  if (parsed.category === "student-loan-payment") {
+    const scenarioText = `${formatCurrency(parsed.balance)} at ${formatPercent(parsed.annualRate)} over ${parsed.termYears} years with ${formatCurrency(parsed.extraPayment)} extra each month`
+    intro = [
+      "Student-loan pages work because borrowers usually want to understand how term length and extra monthly payments change the path out of debt. They are often comparing one real balance against a few nearby payoff strategies.",
+      `For ${scenarioText}, the estimated monthly payment is about ${formatCurrency(parsed.monthlyPayment)} and the projected payoff time is about ${formatNumber(parsed.monthsToPayoff)} months. Interest paid over that payoff path is roughly ${formatCurrency(parsed.interestPaid)}.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This route is more useful than a generic debt article because it ties the payoff math to one exact balance, rate, term, and extra-payment decision.",
+      "That makes it a strong fit for high-RPM finance traffic around refinancing, debt payoff, employer benefits, and budgeting decisions.",
+    ]
+    howItWorks = [
+      "The calculator first estimates the standard payment for the selected balance, rate, and term. It then adds the chosen extra monthly payment and simulates payoff month by month to estimate interest paid and total time to zero.",
+      "This is still a simple consumer calculator. It does not model deferment, income-driven plans, capitalization events, or multiple separate loan tranches.",
+    ]
+    howToSteps = [
+      { name: "Enter the loan balance", text: `This route starts from ${formatCurrency(parsed.balance)}.` },
+      { name: "Set rate and term", text: `The page assumes ${formatPercent(parsed.annualRate)} over ${parsed.termYears} years.` },
+      { name: "Add optional extra payment", text: `The example includes ${formatCurrency(parsed.extraPayment)} extra each month, taking the total payment to ${formatCurrency(parsed.monthlyPayment)}.` },
+      { name: "Review payoff timeline and interest", text: `Projected payoff time is about ${formatNumber(parsed.monthsToPayoff)} months with roughly ${formatCurrency(parsed.interestPaid)} in interest.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why student-loan pages need payoff framing",
+      [
+        "The interesting part is usually not the scheduled payment by itself. It is whether a modest extra payment meaningfully changes the payoff date and total interest cost.",
+        "That is why exact-match student-loan routes can support better engagement than generic educational content: the user is acting on a real debt-management decision.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That matters when users are reviewing debt payoff options on a work device or shared computer.",
+      "The browser-only approach also makes it easier to test nearby extra-payment scenarios without handing account data to a third party.",
+    ]
+    faq = [
+      { question: "How is the student-loan payoff time estimated?", answer: "The page estimates a base monthly payment from the selected balance, rate, and term, then adds any extra monthly payment and simulates the balance month by month until it reaches zero. That gives a directional payoff timeline and total interest estimate." },
+      { question: `What does ${formatCurrency(parsed.extraPayment)} extra per month do in this scenario?`, answer: `It raises the monthly payment from about ${formatCurrency(parsed.baseMonthlyPayment)} to about ${formatCurrency(parsed.monthlyPayment)}, which can shorten the payoff timeline and reduce total interest. The page is meant to make that tradeoff visible quickly.` },
+      { question: "Does this page model student-loan forgiveness or special repayment plans?", answer: "No. This cluster is intentionally limited to straightforward payoff math so the result stays clear and comparable across nearby scenarios." },
+      { question: "Does the page send debt information anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "Credit-card-payoff, refinance-savings, and paycheck-estimate pages are common next steps after a student-loan estimate." },
+    ]
+    summaryRows = [
+      { label: "Balance", value: formatCurrency(parsed.balance) },
+      { label: "APR", value: formatPercent(parsed.annualRate) },
+      { label: "Base payment", value: formatCurrency(parsed.baseMonthlyPayment) },
+      { label: "Extra payment", value: formatCurrency(parsed.extraPayment) },
+      { label: "Total monthly payment", value: formatCurrency(parsed.monthlyPayment) },
+      { label: "Payoff time", value: `${formatNumber(parsed.monthsToPayoff)} months` },
+    ]
+    initialValues = {
+      balance: parsed.balance,
+      annualRate: parsed.annualRate,
+      termYears: parsed.termYears,
+      extraPayment: parsed.extraPayment,
+    }
+    h1 = `Student Loan Payment for ${formatCurrency(parsed.balance)} at ${parsed.annualRate}% for ${parsed.termYears} Years with ${formatCurrency(parsed.extraPayment)} Extra`
+  }
+
+  if (parsed.category === "debt-to-income") {
+    const scenarioText = `${formatCurrency(parsed.annualIncome)} income with ${formatCurrency(parsed.monthlyDebt)} monthly debt and ${formatCurrency(parsed.housingPayment)} housing payment`
+    intro = [
+      "Debt-to-income pages work because users often need a quick approval-style ratio before they apply for a mortgage, auto loan, or refinance. They want to see how current obligations compare with gross monthly income without opening a lender portal.",
+      `For ${scenarioText}, the total monthly obligation is ${formatCurrency(parsed.totalMonthlyObligations)} and the estimated debt-to-income ratio is ${formatPercent(parsed.dtiRatio)}. That gives the user a simple screening number for comparing nearby income and housing scenarios.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The value of a DTI page is its clarity. It turns income and recurring obligations into one ratio the user can compare against qualification rules, underwriting guidance, or personal budget limits.",
+      "This cluster also supports high-RPM lending intent because it sits close to mortgage qualification, refinancing, credit, and auto-finance research.",
+    ]
+    howItWorks = [
+      "The calculator divides total monthly obligations by gross monthly income. In this simplified version, total obligations are the sum of recurring monthly debt and the selected housing payment.",
+      "The route is meant for fast screening rather than final underwriting. Real lenders may include or exclude additional obligations depending on the product and borrower profile.",
+    ]
+    howToSteps = [
+      { name: "Enter annual income", text: `This example starts from ${formatCurrency(parsed.annualIncome)} per year, or about ${formatCurrency(parsed.monthlyGrossIncome)} gross per month.` },
+      { name: "Enter recurring monthly debt", text: `The page uses ${formatCurrency(parsed.monthlyDebt)} in non-housing monthly debt.` },
+      { name: "Add the housing payment", text: `The housing cost assumption is ${formatCurrency(parsed.housingPayment)} per month.` },
+      { name: "Review the ratio", text: `Total monthly obligations are ${formatCurrency(parsed.totalMonthlyObligations)}, which implies a DTI near ${formatPercent(parsed.dtiRatio)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why debt-to-income pages help with lending decisions",
+      [
+        "The user usually needs a fast pass-fail style signal: is this payment level in the range that feels workable or qualifying? An exact-match DTI route answers that immediately.",
+        "It also creates a natural bridge into mortgage, refinance, and auto-loan pages, which makes the cluster more useful than a one-off ratio widget.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That is useful when users are screening borrowing scenarios with private income and debt values.",
+      "The local workflow also keeps the route convenient for repeated comparisons across different housing-payment assumptions.",
+    ]
+    faq = [
+      { question: "How is debt-to-income ratio calculated on this page?", answer: "The route adds monthly debt and housing payment, then divides that total by gross monthly income derived from the annual income input. The result is shown as a percentage for quick qualification-style screening." },
+      { question: "Why use gross income instead of take-home pay?", answer: "Debt-to-income is usually discussed as a gross-income ratio in lending contexts, which makes the comparison more consistent with typical mortgage and loan qualification discussions. Budget planning may still require a separate take-home or cash-flow check." },
+      { question: "Does this page guarantee loan approval?", answer: "No. It is a first-pass ratio calculator, not a lending decision engine. Underwriting can depend on credit, reserves, loan program rules, and other details this page does not model." },
+      { question: "Does the page send income or debt values anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "Mortgage-payment, refinance-savings, and auto-loan-payment pages are common follow-up routes after a DTI estimate." },
+    ]
+    summaryRows = [
+      { label: "Annual income", value: formatCurrency(parsed.annualIncome) },
+      { label: "Gross monthly income", value: formatCurrency(parsed.monthlyGrossIncome) },
+      { label: "Monthly debt", value: formatCurrency(parsed.monthlyDebt) },
+      { label: "Housing payment", value: formatCurrency(parsed.housingPayment) },
+      { label: "Monthly obligations", value: formatCurrency(parsed.totalMonthlyObligations) },
+      { label: "DTI ratio", value: formatPercent(parsed.dtiRatio) },
+    ]
+    initialValues = {
+      annualIncome: parsed.annualIncome,
+      monthlyDebt: parsed.monthlyDebt,
+      housingPayment: parsed.housingPayment,
+    }
+    h1 = `Debt-to-Income Ratio on ${formatCurrency(parsed.annualIncome)} Income with ${formatCurrency(parsed.monthlyDebt)} Debt and ${formatCurrency(parsed.housingPayment)} Housing`
+  }
+
+  if (parsed.category === "cd-calculator") {
+    const years = parsed.termMonths / 12
+    const scenarioText = `${formatCurrency(parsed.deposit)} at ${formatPercent(parsed.annualRate)} for ${parsed.termMonths} months with ${parsed.compounding} compounding`
+    intro = [
+      "CD calculator pages work because the user usually wants to compare one deposit amount, one term, and one yield without logging into a bank or opening a spreadsheet. They want to know what the certificate may be worth at maturity.",
+      `For ${scenarioText}, the estimated maturity value is about ${formatCurrency(parsed.maturityValue)} and the interest earned is about ${formatCurrency(parsed.interestEarned)}. That gives the user a quick first-pass maturity number for comparing nearby CD terms and rates.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "A strong CD route helps the user compare term tradeoffs and maturity outcomes without pretending to be a full deposit marketplace.",
+      "This is attractive finance traffic because the intent often overlaps with banking, savings products, and rate-shopping behavior.",
+    ]
+    howItWorks = [
+      "The calculator applies compound growth to the selected deposit for the selected number of months using the chosen compounding frequency. It assumes the deposit stays in place for the full term.",
+      "This cluster does not model early-withdrawal penalties, step-up rates, or changing rate environments. It is a clean maturity estimate for one exact CD setup.",
+    ]
+    howToSteps = [
+      { name: "Enter the deposit amount", text: `This route uses ${formatCurrency(parsed.deposit)} as the opening deposit.` },
+      { name: "Set the rate and term", text: `The selected rate is ${formatPercent(parsed.annualRate)} across ${parsed.termMonths} months.` },
+      { name: "Choose compounding frequency", text: `The example uses ${parsed.compounding} compounding.` },
+      { name: "Review maturity value and interest earned", text: `Estimated maturity value is ${formatCurrency(parsed.maturityValue)} with about ${formatCurrency(parsed.interestEarned)} in interest.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why CD routes are useful bank-product pages",
+      [
+        "The user usually needs a maturity estimate fast enough to compare several term options side by side. Exact-match routes make those comparisons bookmarkable and easy to revisit.",
+        "These pages also connect naturally to APY, savings-goal, and compound-growth routes instead of becoming dead-end banking content.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That makes the route practical for quick savings-product checks on a personal or shared device.",
+      "The local workflow also keeps it fast enough to compare multiple deposit and term combinations in sequence.",
+    ]
+    faq = [
+      { question: "How is CD maturity value calculated on this page?", answer: "The route applies compound growth to the selected deposit using the chosen annual rate, term length, and compounding frequency. The result is a simple maturity estimate for one CD scenario." },
+      { question: `How much interest does ${formatCurrency(parsed.deposit)} earn over ${parsed.termMonths} months?`, answer: `At ${formatPercent(parsed.annualRate)} with ${parsed.compounding} compounding, this page estimates about ${formatCurrency(parsed.interestEarned)} in interest by maturity. The exact bank product can still differ if penalties or rate features apply.` },
+      { question: "Why compare CD and APY pages?", answer: "Because many users want to know whether a fixed term product or a more flexible savings-style growth assumption looks better for the same deposit. Keeping both routes nearby makes that comparison easier." },
+      { question: "Does the page send deposit values anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "APY-calculator and savings-goal pages are common next steps after a CD maturity estimate." },
+    ]
+    summaryRows = [
+      { label: "Deposit", value: formatCurrency(parsed.deposit) },
+      { label: "Annual rate", value: formatPercent(parsed.annualRate) },
+      { label: "Term", value: `${parsed.termMonths} months` },
+      { label: "Compounding", value: parsed.compounding },
+      { label: "Maturity value", value: formatCurrency(parsed.maturityValue) },
+      { label: "Interest earned", value: formatCurrency(parsed.interestEarned) },
+    ]
+    initialValues = {
+      deposit: parsed.deposit,
+      annualRate: parsed.annualRate,
+      termMonths: parsed.termMonths,
+      compounding: parsed.compounding,
+    }
+    h1 = `CD Growth on ${formatCurrency(parsed.deposit)} at ${parsed.annualRate}% for ${formatNumber(years)} Years (${parsed.compounding})`
+  }
+
+  if (parsed.category === "apy-calculator") {
+    const scenarioText = `${formatCurrency(parsed.deposit)} at ${formatPercent(parsed.annualRate)} for ${parsed.years} years with ${parsed.compounding} compounding`
+    intro = [
+      "APY growth pages work because savers often want one direct answer: what could this deposit grow to if it stays parked and compounds for a given period? They do not want a general interest article when they already know the starting amount and rate assumption.",
+      `For ${scenarioText}, the estimated future value is about ${formatCurrency(parsed.futureValue)} and the estimated interest earned is about ${formatCurrency(parsed.interestEarned)}. That gives the user a clean benchmark for comparing deposits, rates, and time horizons.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "This route makes rate-shopping and savings planning more concrete because it turns one deposit and one yield assumption into a future-value estimate the user can act on.",
+      "It also supports strong banking and personal-finance advertiser demand while staying within a browser-first, no-upload utility model.",
+    ]
+    howItWorks = [
+      "The calculator compounds the starting deposit at the selected annual rate over the chosen number of years using the selected compounding frequency. It is intentionally a first-pass growth model with no additional contributions.",
+      "That scope keeps the page clean enough for exact-match SEO while still useful for comparing savings-product assumptions.",
+    ]
+    howToSteps = [
+      { name: "Enter the deposit", text: `This route starts with ${formatCurrency(parsed.deposit)}.` },
+      { name: "Choose the annual rate", text: `The example uses ${formatPercent(parsed.annualRate)}.` },
+      { name: "Set the time horizon and compounding", text: `The page assumes ${parsed.years} years with ${parsed.compounding} compounding.` },
+      { name: "Review future value and interest earned", text: `Estimated future value is ${formatCurrency(parsed.futureValue)} with about ${formatCurrency(parsed.interestEarned)} in growth.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why APY pages are useful planning routes",
+      [
+        "Exact-match APY routes help the user compare the effect of small changes in rate or time horizon without building a custom spreadsheet first.",
+        "They also create a natural bridge into CD, savings-goal, and retirement-intro pages, which makes the cluster more useful than a single isolated formula.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That keeps deposit and savings assumptions private while still making the page fast enough for repeated comparisons.",
+      "The browser-only workflow also matches the privacy-first positioning across the rest of Plain Tools.",
+    ]
+    faq = [
+      { question: "How is APY growth estimated on this page?", answer: "The route compounds the selected deposit using the chosen annual rate, time horizon, and compounding frequency. It is designed as a first-pass savings-growth estimate rather than a bank-account simulator with changing rates or ongoing deposits." },
+      { question: `What does ${formatPercent(parsed.annualRate)} growth mean on ${formatCurrency(parsed.deposit)}?`, answer: `Over ${parsed.years} years with ${parsed.compounding} compounding, this page estimates about ${formatCurrency(parsed.futureValue)} in total value. The interest portion of that estimate is about ${formatCurrency(parsed.interestEarned)}.` },
+      { question: "Should I use a CD page or an APY page?", answer: "Use the CD page when you want to model a fixed deposit term, and use the APY page when you want a simpler savings-growth view over a chosen number of years. They answer closely related but slightly different questions." },
+      { question: "Does the page send my deposit amount anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "CD-calculator, savings-goal, and compound-interest-basic pages are common follow-up routes after an APY estimate." },
+    ]
+    summaryRows = [
+      { label: "Deposit", value: formatCurrency(parsed.deposit) },
+      { label: "Annual rate", value: formatPercent(parsed.annualRate) },
+      { label: "Years", value: `${parsed.years}` },
+      { label: "Compounding", value: parsed.compounding },
+      { label: "Future value", value: formatCurrency(parsed.futureValue) },
+      { label: "Interest earned", value: formatCurrency(parsed.interestEarned) },
+    ]
+    initialValues = {
+      deposit: parsed.deposit,
+      annualRate: parsed.annualRate,
+      years: parsed.years,
+      compounding: parsed.compounding,
+    }
+    h1 = `APY Growth on ${formatCurrency(parsed.deposit)} at ${parsed.annualRate}% for ${parsed.years} Years (${parsed.compounding})`
+  }
+
+  if (parsed.category === "ira-growth") {
+    const accountLabel = parsed.accountType === "roth" ? "Roth IRA" : "Traditional IRA"
+    const scenarioText = `${accountLabel} contributions of ${formatCurrency(parsed.annualContribution)} per year at ${formatPercent(parsed.annualRate)} over ${parsed.years} years`
+    intro = [
+      "IRA pages work because the user usually wants to compare one contribution level and one return assumption without opening a full retirement planning app. The exact account type also matters, so a route that keeps that context visible is more useful than a generic retirement article.",
+      `For ${scenarioText}, this route estimates a future value of about ${formatCurrency(parsed.futureValue)} on total contributions of ${formatCurrency(parsed.totalContributions)}. That gives the user a direct savings-growth benchmark for one exact IRA scenario.`,
+      EXTERNAL_OVERLAP_NOTE,
+    ]
+    whyUsersNeedThis = [
+      "The route is useful because it turns an annual contribution habit into a projected long-term account value without forcing the user into a deeper retirement workflow first.",
+      "It also fits strong investing and retirement-intent traffic while staying simple enough for privacy-first, browser-only execution.",
+    ]
+    howItWorks = [
+      "The calculator converts annual contributions into a monthly contribution stream and compounds that savings flow at the selected annual return over the chosen time horizon.",
+      "The page intentionally does not model income limits, tax rules, distribution requirements, or changing contribution caps. It is a first-pass IRA growth estimate.",
+    ]
+    howToSteps = [
+      { name: "Choose account type", text: `This example uses a ${accountLabel}.` },
+      { name: "Enter annual contribution", text: `The route assumes ${formatCurrency(parsed.annualContribution)} contributed each year.` },
+      { name: "Set annual growth and time horizon", text: `The page uses ${formatPercent(parsed.annualRate)} across ${parsed.years} years.` },
+      { name: "Review projected account value", text: `Projected value is about ${formatCurrency(parsed.futureValue)} on total contributions of ${formatCurrency(parsed.totalContributions)}.` },
+    ]
+    explanationBlocks = buildCommonBlocks(
+      CATEGORY_LABELS[parsed.category],
+      scenarioText,
+      "Why IRA pages complement 401(k) content",
+      [
+        "Many users move between workplace-plan and IRA questions as they compare contribution priorities. A good IRA page makes that next step obvious instead of isolating the calculation.",
+        "Exact-match IRA routes also work well because contribution level and horizon are usually the variables the user already has in mind when searching.",
+      ]
+    )
+    privacyNote = [
+      "All calculations run locally in your browser - nothing is sent anywhere. That keeps retirement contribution assumptions private and makes the page practical on a work device or quick mobile session.",
+      "The local model also makes it easy to test nearby contribution and growth assumptions without creating an account.",
+    ]
+    faq = [
+      { question: `How is ${accountLabel} growth estimated on this page?`, answer: "The route converts the annual contribution into a monthly savings stream and compounds it using the selected annual return over the chosen number of years. It is a directional retirement-growth estimate, not a full tax or account-eligibility tool." },
+      { question: "Why keep Roth and traditional IRA scenarios separate?", answer: "Because the search intent is often account-type specific, and keeping that visible in the page and URL makes comparisons easier. The growth math here is similar, but the surrounding planning context is different." },
+      { question: `What does ${formatCurrency(parsed.annualContribution)} per year become over ${parsed.years} years?`, answer: `At ${formatPercent(parsed.annualRate)}, this page estimates about ${formatCurrency(parsed.futureValue)} by the end of the period. Total contributions across the full horizon would be ${formatCurrency(parsed.totalContributions)}.` },
+      { question: "Does the page send retirement values anywhere?", answer: "No. All calculations happen locally in the browser." },
+      { question: "What should I check next?", answer: "401k-growth and retirement-savings-intro pages are common next steps after an IRA estimate." },
+    ]
+    summaryRows = [
+      { label: "Account type", value: accountLabel },
+      { label: "Annual contribution", value: formatCurrency(parsed.annualContribution) },
+      { label: "Annual rate", value: formatPercent(parsed.annualRate) },
+      { label: "Years", value: `${parsed.years}` },
+      { label: "Total contributions", value: formatCurrency(parsed.totalContributions) },
+      { label: "Projected value", value: formatCurrency(parsed.futureValue) },
+    ]
+    initialValues = {
+      annualContribution: parsed.annualContribution,
+      annualRate: parsed.annualRate,
+      years: parsed.years,
+      accountType: parsed.accountType,
+    }
+    h1 = `${accountLabel} Growth on ${formatCurrency(parsed.annualContribution)}/Year at ${parsed.annualRate}% for ${parsed.years} Years`
+  }
+
   if (parsed.category === "emergency-fund") {
     const scenarioText = `${formatCurrency(parsed.monthlyExpenses)} in monthly expenses over ${formatNumber(parsed.monthsCovered)} months`
     intro = [
@@ -3019,6 +4390,13 @@ const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
   "mortgage-payment",
   "refinance-savings",
   "paycheck-estimate",
+  "401k-growth",
+  "auto-loan-payment",
+  "student-loan-payment",
+  "cd-calculator",
+  "apy-calculator",
+  "ira-growth",
+  "debt-to-income",
   "basic-loan-payment",
   "credit-card-payoff",
   "tax-estimate-simple",
@@ -3034,11 +4412,17 @@ const CALCULATOR_PREBUILD_PRIORITY_ORDER: PublicCalculatorCategory[] = [
 ]
 
 const CALCULATOR_PREBUILD_BUDGETS: Record<PublicCalculatorCategory, number> = {
+  "401k-growth": 84,
+  "apy-calculator": 48,
+  "auto-loan-payment": 60,
   "basic-loan-payment": 120,
   "break-even-calculator": 24,
+  "cd-calculator": 48,
   "compound-interest-basic": 60,
   "credit-card-payoff": 80,
+  "debt-to-income": 36,
   "emergency-fund": 24,
+  "ira-growth": 24,
   "mortgage-payment": 96,
   "paycheck-estimate": 72,
   percentage: 120,
@@ -3047,6 +4431,7 @@ const CALCULATOR_PREBUILD_BUDGETS: Record<PublicCalculatorCategory, number> = {
   "salary-to-hourly": 30,
   "savings-goal": 50,
   "simple-interest": 40,
+  "student-loan-payment": 60,
   "tax-estimate-simple": 60,
   "tip-calculator": 40,
 }
@@ -3093,6 +4478,13 @@ export const CALCULATOR_FINANCIAL_METADATA_EXAMPLES = [
   getCalculatorPage("mortgage-payment", "mortgage-payment-450000-6.25-30-years-20-down"),
   getCalculatorPage("refinance-savings", "refinance-savings-320000-7.25-to-6.25-30-years"),
   getCalculatorPage("paycheck-estimate", "paycheck-estimate-85000-biweekly-texas"),
+  getCalculatorPage("401k-growth", "401k-growth-90000-salary-8-contribution-4-match-7-rate-30-years"),
+  getCalculatorPage("auto-loan-payment", "auto-loan-35000-6.5-72-months-5000-down"),
+  getCalculatorPage("student-loan-payment", "student-loan-45000-5.5-10-years-100-extra"),
+  getCalculatorPage("debt-to-income", "debt-to-income-90000-income-850-debt-1800-housing"),
+  getCalculatorPage("cd-calculator", "cd-calculator-10000-4.75-12-months-monthly"),
+  getCalculatorPage("apy-calculator", "apy-calculator-10000-4.5-5-years-monthly"),
+  getCalculatorPage("ira-growth", "ira-growth-7000-7-25-years-roth"),
   getCalculatorPage("simple-interest", "simple-interest-10000-5-3"),
   getCalculatorPage("compound-interest-basic", "compound-interest-10000-5-10-years-monthly"),
   getCalculatorPage("retirement-savings-intro", "retirement-savings-500-monthly-6-20-years"),

@@ -15,16 +15,28 @@ type Props = {
 }
 
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  "401k-growth":
+    "Retirement-growth pages for salary, contribution rate, employer match, return, and time horizon.",
+  "apy-calculator":
+    "Savings-growth pages for deposit amount, annual yield, compounding, and time horizon.",
+  "auto-loan-payment":
+    "Vehicle-financing pages for price, APR, term length, down payment, and monthly payment checks.",
   "basic-loan-payment":
     "Monthly payment estimates for exact principal, APR, and term combinations.",
   "break-even-calculator":
     "Break-even pages for fixed costs, price, unit cost, and revenue-threshold planning.",
+  "cd-calculator":
+    "Certificate-of-deposit pages for deposit size, rate, term length, and maturity value checks.",
   "compound-interest-basic":
     "Introductory growth scenarios with annual, quarterly, and monthly compounding.",
   "credit-card-payoff":
     "Debt payoff pages that compare balance, APR, monthly payment, and timeline.",
+  "debt-to-income":
+    "Qualification-style ratio pages for annual income, monthly debt, and housing payment assumptions.",
   "emergency-fund":
     "Reserve-target pages for monthly expenses and emergency-fund coverage length.",
+  "ira-growth":
+    "IRA-growth pages for annual contribution, return, account type, and time horizon.",
   "mortgage-payment":
     "Home-finance pages for property price, rate, term, and down-payment scenarios.",
   percentage:
@@ -41,6 +53,8 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
     "Goal-timeline pages for target amount, monthly contribution, and interest-rate scenarios.",
   "simple-interest":
     "Linear interest pages for classroom, business, and first-pass finance calculations.",
+  "student-loan-payment":
+    "Student-debt pages for balance, APR, term, extra payments, and payoff timeline comparisons.",
   "tax-estimate-simple":
     "Quick effective-rate tax estimate pages for gross-to-net comparisons.",
   "tip-calculator":

@@ -11,7 +11,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Financial calculator hub | Plain Tools",
   description:
-    "Browse browser-only financial calculators for mortgages, refinance savings, paycheck estimates, loans, tax checks, debt payoff, savings goals, emergency funds, and break-even planning.",
+    "Browse browser-only financial calculators for mortgages, paychecks, 401(k)s, IRAs, auto loans, student loans, savings growth, CDs, debt ratios, tax checks, and debt payoff planning.",
   path: "/calculators",
   image: "/og/default.png",
 })
