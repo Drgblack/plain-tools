@@ -7,6 +7,7 @@
     "build": "next build",
     "postbuild": "node scripts/generate-sitemap.mjs",
     "start": "next start",
+    "audit:internal-links": "node scripts/audit-internal-links.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:unit": "vitest run --coverage"

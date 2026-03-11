@@ -17,7 +17,7 @@ import {
   formatOutageDuration,
   getRecentOutageIncidents,
 } from "@/lib/outage-history"
-import { statusQueryPathForSlug, STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
+import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import { getSiteStatusContext, statusPathFor } from "@/lib/site-status"
 import {
   buildBreadcrumbList,
@@ -169,7 +169,7 @@ export default async function OutageHistoryPage({ params }: Props) {
         },
         {
           name: `Is ${entry.name} down`,
-          url: `${BASE_URL}${statusQueryPathForSlug(entry.slug)}`,
+          url: `${BASE_URL}${canonicalStatusPath}`,
         },
         ...relatedOutagePages.map((value) => ({
           name: `${value.name} outage history`,
@@ -209,7 +209,7 @@ export default async function OutageHistoryPage({ params }: Props) {
           </p>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
-              href={statusQueryPathForSlug(entry.slug)}
+              href={canonicalStatusPath}
               className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent"
             >
               Is {entry.name} down?
@@ -341,7 +341,7 @@ export default async function OutageHistoryPage({ params }: Props) {
             <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               <li>
                 <Link
-                  href={statusQueryPathForSlug(entry.slug)}
+                  href={canonicalStatusPath}
                   className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                 >
                   Is {entry.name} down?
@@ -350,7 +350,7 @@ export default async function OutageHistoryPage({ params }: Props) {
               {relatedStatusChecks.map((value) => (
                 <li key={value.slug}>
                   <Link
-                    href={statusQueryPathForSlug(value.slug)}
+                    href={statusPathFor(value.domain)}
                     className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                   >
                     Is {value.name} down?

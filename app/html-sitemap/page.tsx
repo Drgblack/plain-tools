@@ -12,7 +12,7 @@ import {
 import { trancheCompareSlugs, trancheLearnSlugs } from "@/lib/seo/tranche1-content"
 import { workflowRouteSlugs } from "@/lib/seo/workflows-content"
 import { STATUS_POPULAR_SITES, statusPathFor } from "@/lib/site-status"
-import { STATUS_QUERY_PAGES, statusQueryPathForSlug } from "@/lib/status-query-pages"
+import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import { STATUS_CATEGORIES, STATUS_CATEGORY_META } from "@/lib/status-domains"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { PDF_INTENT_PAGES } from "@/lib/pdf-intent-pages"
@@ -126,8 +126,8 @@ const popularStatusLinks: SitemapLink[] = STATUS_POPULAR_SITES.slice(0, 12).map(
 }))
 
 const statusQueryLinks: SitemapLink[] = STATUS_QUERY_PAGES.map((entry) => ({
-  label: `Is ${entry.name} down?`,
-  href: statusQueryPathForSlug(entry.slug),
+  label: `Check ${entry.name} status`,
+  href: statusPathFor(entry.domain),
 }))
 
 const statusCategoryLinks: SitemapLink[] = STATUS_CATEGORIES.map((category) => ({
@@ -230,7 +230,7 @@ export default function HtmlSitemapPage() {
         <SitemapSectionList section={{ title: "Network tools", links: networkLinks }} />
         <SitemapSectionList section={{ title: "Status categories", links: statusCategoryLinks }} />
         <SitemapSectionList section={{ title: "Popular status checks", links: popularStatusLinks }} />
-        <SitemapSectionList section={{ title: "Status query pages", links: statusQueryLinks }} />
+        <SitemapSectionList section={{ title: "Popular status routes", links: statusQueryLinks }} />
         <SitemapSectionList section={{ title: "Trust and verification", links: trustLinks }} />
         <SitemapSectionList section={{ title: "Learn guides", links: learnHighlights }} />
         <SitemapSectionList section={{ title: "Glossary guides", links: glossaryLinks }} />

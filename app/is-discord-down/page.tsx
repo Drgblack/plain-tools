@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import { statusQueryPathForSlug, STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
+import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import { statusPathFor } from "@/lib/site-status"
 import {
   buildBreadcrumbList,
@@ -74,7 +74,7 @@ const pageSchema = combineJsonLd([
     "Related outage checks",
     relatedChecks.map((entry) => ({
       name: `Is ${entry.name} down?`,
-      url: `https://plain.tools${statusQueryPathForSlug(entry.slug)}`,
+      url: `https://plain.tools${statusPathFor(entry.domain)}`,
     })),
     "https://plain.tools/is-discord-down"
   ),
@@ -191,7 +191,7 @@ export default function IsDiscordDownPage() {
                 title: "Related status checks",
                 links: relatedChecks.map((entry) => ({
                   label: `Is ${entry.name} down?`,
-                  href: statusQueryPathForSlug(entry.slug),
+                  href: statusPathFor(entry.domain),
                 })),
               },
               {

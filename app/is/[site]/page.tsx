@@ -110,7 +110,7 @@ export default async function IsSiteDownPage({ params }: Props) {
       `Related checks for ${entry.name}`,
       relatedChecks.map((value) => ({
         name: `Is ${value.name} down?`,
-        url: `https://plain.tools${statusQueryPathForSlug(value.slug)}`,
+        url: `https://plain.tools${statusPathFor(value.domain)}`,
       })),
       `https://plain.tools${pagePath}`
     ),
@@ -233,7 +233,7 @@ export default async function IsSiteDownPage({ params }: Props) {
             {relatedChecks.map((value) => (
               <li key={value.slug}>
                 <Link
-                  href={statusQueryPathForSlug(value.slug)}
+                  href={statusPathFor(value.domain)}
                   className="block rounded-md border border-border/60 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition hover:border-accent/40 hover:text-accent"
                 >
                   Is {value.name} down?
