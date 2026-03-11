@@ -8,6 +8,7 @@ import { CompareFrameworkBlock } from "@/components/seo/compare-framework-block"
 import { FaqBlock } from "@/components/seo/faq-block"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { TrustBox } from "@/components/seo/trust-box"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import { getCompareSeoLinks } from "@/lib/seo/tranche1-link-map"
 import type { TrancheComparePage } from "@/lib/seo/tranche1-content"
 import { getToolBySlug } from "@/lib/tools-catalogue"
@@ -15,18 +16,19 @@ import { getToolBySlug } from "@/lib/tools-catalogue"
 const BASE_URL = "https://plain.tools"
 
 export function buildComparePageMetadata(page: TrancheComparePage): Metadata {
-  const canonical = `${BASE_URL}/compare/${page.slug}`
   const title = page.metaTitle.replace("Plain.tools", "Plain Tools")
-  return {
+  const baseMetadata = buildPageMetadata({
     title,
     description: page.metaDescription,
-    alternates: {
-      canonical,
-    },
+    path: `/compare/${page.slug}`,
+    image: "/og/compare.png",
+    type: "article",
+  })
+
+  return {
+    ...baseMetadata,
     openGraph: {
-      title,
-      description: page.metaDescription,
-      url: canonical,
+      ...baseMetadata.openGraph,
       type: "article",
       images: [
         {
@@ -38,9 +40,8 @@ export function buildComparePageMetadata(page: TrancheComparePage): Metadata {
       ],
     },
     twitter: {
+      ...baseMetadata.twitter,
       card: "summary_large_image",
-      title,
-      description: page.metaDescription,
       images: ["/og/compare.png"],
     },
   }

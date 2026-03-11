@@ -4,6 +4,7 @@ import Script from "next/script"
 import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import { buildStandardPageTitle } from "@/lib/page-title"
 import {
   combineSchemas,
@@ -63,7 +64,6 @@ export const buildLearnArticleMetadata = (
   options?: MetadataOptions
 ): Metadata => {
   const basePath = options?.basePath ?? article.basePath ?? "/learn"
-  const canonicalUrl = `${SITE_URL}${basePath}/${article.slug}`
   const standardTitle = buildStandardPageTitle(article.title)
   const socialImage =
     basePath === "/compare"
@@ -72,22 +72,19 @@ export const buildLearnArticleMetadata = (
         ? "/og/tools.png"
         : "/og/learn.png"
 
-  return {
+  const baseMetadata = buildPageMetadata({
     title: standardTitle,
     description: article.description,
+    path: `${basePath}/${article.slug}`,
+    image: socialImage,
+    type: "article",
+  })
+
+  return {
+    ...baseMetadata,
     keywords: article.keywords,
-    alternates: {
-      canonical: canonicalUrl,
-      languages: {
-        en: canonicalUrl,
-        de: canonicalUrl,
-        "x-default": canonicalUrl,
-      },
-    },
     openGraph: {
-      title: standardTitle,
-      description: article.description,
-      url: canonicalUrl,
+      ...baseMetadata.openGraph,
       type: "article",
       images: [
         {
@@ -99,9 +96,8 @@ export const buildLearnArticleMetadata = (
       ],
     },
     twitter: {
+      ...baseMetadata.twitter,
       card: "summary_large_image",
-      title: standardTitle,
-      description: article.description,
       images: [socialImage],
     },
   }

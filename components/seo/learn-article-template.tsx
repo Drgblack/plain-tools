@@ -13,6 +13,7 @@ import { RelatedGuidesSection } from "@/components/seo/related-guides-section"
 import { RelatedToolsSection } from "@/components/seo/related-tools-section"
 import { TrustBox } from "@/components/seo/trust-box"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
+import { buildPageMetadata } from "@/lib/page-metadata"
 import type { TrancheLearnArticle } from "@/lib/seo/tranche1-content"
 import { getLearnSeoLinks } from "@/lib/seo/tranche1-link-map"
 import {
@@ -41,20 +42,22 @@ export function buildLearnArticleMetadata(
   options?: LearnTemplateOptions
 ): Metadata {
   const basePath = options?.basePath ?? "/learn"
-  const canonical = `${BASE_URL}${basePath}/${article.slug}`
+  const canonicalPath = `${basePath}/${article.slug}`
   const title = buildStandardPageTitle(
     normalizeBrandCapitalization(article.title || titleCase(article.primaryQuery))
   )
-  return {
+  const baseMetadata = buildPageMetadata({
     title,
     description: article.metaDescription,
-    alternates: {
-      canonical,
-    },
+    path: canonicalPath,
+    image: "/og/learn.png",
+    type: "article",
+  })
+
+  return {
+    ...baseMetadata,
     openGraph: {
-      title,
-      description: article.metaDescription,
-      url: canonical,
+      ...baseMetadata.openGraph,
       type: "article",
       images: [
         {
@@ -66,9 +69,8 @@ export function buildLearnArticleMetadata(
       ],
     },
     twitter: {
+      ...baseMetadata.twitter,
       card: "summary_large_image",
-      title,
-      description: article.metaDescription,
       images: ["/og/learn.png"],
     },
   }

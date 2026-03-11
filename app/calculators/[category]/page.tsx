@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { JsonLd } from "@/components/seo/json-ld"
+import { LinkGridSection } from "@/components/seo/link-grid-section"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   CALCULATOR_CATEGORY_LABELS,
@@ -9,6 +12,12 @@ import {
   generateCategoryCalculatorParams,
   isCalculatorCategory,
 } from "@/lib/calculator-financial-deep"
+import {
+  buildBreadcrumbList,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 
 type Props = {
   params: Promise<{ category: string }>
@@ -61,6 +70,60 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
     "Tip pages for bill total, gratuity amount, and simple split scenarios.",
 }
 
+const CATEGORY_GUIDES: Record<string, Array<{ description: string; href: string; label: string }>> = {
+  default: [
+    {
+      label: "How we verify no-upload claims",
+      href: "/blog/how-we-verify-no-upload-claims",
+      description: "Review how Plain Tools documents local processing and trust claims.",
+    },
+    {
+      label: "How to verify a tool does not upload your files",
+      href: "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+      description: "Apply the same browser-verification workflow to other utility categories.",
+    },
+    {
+      label: "Topical map",
+      href: "/topics",
+      description: "Jump into adjacent clusters such as status checks, file converters, and guides.",
+    },
+  ],
+  "mortgage-payment": [
+    {
+      label: "Break-even calculator hub",
+      href: "/calculators/break-even-calculator",
+      description: "Compare fixed-cost thresholds when a housing or business decision needs a quick revenue line.",
+    },
+    {
+      label: "Refinance savings hub",
+      href: "/calculators/refinance-savings",
+      description: "Move from purchase scenarios into refinance comparisons for the same balance range.",
+    },
+    {
+      label: "Financial calculator hub",
+      href: "/calculators",
+      description: "Return to the wider calculator cluster when the task shifts to savings, paychecks, or debt.",
+    },
+  ],
+  "paycheck-estimate": [
+    {
+      label: "Salary to hourly hub",
+      href: "/calculators/salary-to-hourly",
+      description: "Move from gross-to-net estimates into compensation comparison math.",
+    },
+    {
+      label: "Tax estimate hub",
+      href: "/calculators/tax-estimate-simple",
+      description: "Use a quick effective-rate check when the main question is taxes rather than payroll cadence.",
+    },
+    {
+      label: "Financial calculator hub",
+      href: "/calculators",
+      description: "Browse other money-planning clusters without leaving the local-calculation environment.",
+    },
+  ],
+}
+
 export function generateStaticParams() {
   return CALCULATOR_PUBLIC_CATEGORY_ORDER.map((category) => ({ category }))
 }
@@ -102,13 +165,46 @@ export default async function CalculatorCategoryHubPage({ params }: Props) {
   }
 
   const examples = generateCategoryCalculatorParams(category, 36)
+  const siblingCategories = CALCULATOR_PUBLIC_CATEGORY_ORDER.filter((entry) => entry !== category)
+    .slice(0, 6)
+    .map((entry) => ({
+      label: CALCULATOR_CATEGORY_LABELS[entry],
+      href: `/calculators/${entry}`,
+      description: CATEGORY_DESCRIPTIONS[entry],
+    }))
+  const guideLinks = CATEGORY_GUIDES[category] ?? CATEGORY_GUIDES.default
+  const categorySchema = combineJsonLd([
+    buildCollectionPageSchema({
+      name: CALCULATOR_CATEGORY_LABELS[category],
+      description: CATEGORY_DESCRIPTIONS[category] ?? "Browse exact-match calculator scenarios.",
+      url: `https://plain.tools/calculators/${category}`,
+    }),
+    buildBreadcrumbList([
+      { name: "Home", url: "https://plain.tools/" },
+      { name: "Calculators", url: "https://plain.tools/calculators" },
+      { name: CALCULATOR_CATEGORY_LABELS[category], url: `https://plain.tools/calculators/${category}` },
+    ]),
+    buildItemListSchema(
+      `${CALCULATOR_CATEGORY_LABELS[category]} scenarios`,
+      examples.map((entry) => ({
+        name: entry.expression.replace(/-/g, " "),
+        url: `https://plain.tools/calculators/${category}/${entry.expression}`,
+      })),
+      `https://plain.tools/calculators/${category}`
+    ),
+  ])
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
+      {categorySchema ? <JsonLd id={`calculator-category-${category}-schema`} schema={categorySchema} /> : null}
       <header className="max-w-3xl space-y-4">
-        <Link href="/calculators" className="text-sm text-accent hover:underline">
-          Financial calculator hub
-        </Link>
+        <PageBreadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Calculators", href: "/calculators" },
+            { label: CALCULATOR_CATEGORY_LABELS[category] },
+          ]}
+        />
         <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
           {CALCULATOR_CATEGORY_LABELS[category]}
         </h1>
@@ -118,6 +214,15 @@ export default async function CalculatorCategoryHubPage({ params }: Props) {
           form.
         </p>
       </header>
+
+      <div className="mt-10 grid gap-6">
+        <LinkGridSection
+          title="Related calculator categories"
+          description="Keep the cluster shallow by moving between nearby finance intents instead of restarting from the main directory each time."
+          items={siblingCategories}
+          columns="3"
+        />
+      </div>
 
       <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
         <h2 className="text-xl font-semibold tracking-tight text-foreground">
@@ -135,6 +240,15 @@ export default async function CalculatorCategoryHubPage({ params }: Props) {
           ))}
         </div>
       </section>
+
+      <div className="mt-10 grid gap-6">
+        <LinkGridSection
+          title="Support pages for this calculator cluster"
+          description="These links reinforce the privacy model, hub structure, and nearby finance sections without diluting the intent of the category itself."
+          items={guideLinks}
+          columns="3"
+        />
+      </div>
     </main>
   )
 }

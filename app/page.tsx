@@ -182,6 +182,13 @@ const popularTools = [
     tags: ["File", "Convert"],
     icon: <FileText className="h-5 w-5" />,
   },
+  {
+    name: "Topics",
+    description: "Browse the main site clusters from one shallow topical map",
+    href: "/topics",
+    tags: ["SEO", "Hub"],
+    icon: <Shield className="h-5 w-5" />,
+  },
 ]
 
 const homepageMostPopularTools = [
@@ -426,6 +433,11 @@ const richSections = [
     name: "Compare",
     href: "/compare",
     description: "Neutral comparisons against common cloud PDF alternatives.",
+  },
+  {
+    name: "Topics",
+    href: "/topics",
+    description: "A topical map for tools, converters, calculators, guides, and status checks.",
   },
   {
     name: "Blog",

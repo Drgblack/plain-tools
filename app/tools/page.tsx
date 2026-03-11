@@ -166,6 +166,7 @@ export default function ToolsPage() {
   ]
 
   const subtleCtas = [
+    { label: "Explore topical clusters", href: "/topics" },
     { label: "Verify local-processing claims", href: "/verify-claims" },
     { label: "Read practical PDF guides", href: "/learn" },
     { label: "Compare Plain Tools with alternatives", href: "/compare" },
@@ -299,6 +300,15 @@ export default function ToolsPage() {
       links: [
         { label: "Plain Tools vs Smallpdf", href: "/compare/plain-tools-vs-smallpdf" },
         { label: "Offline vs online PDF tools", href: "/compare/offline-vs-online-pdf-tools" },
+      ],
+    },
+    {
+      title: "Topical map",
+      description: "A user-facing navigation layer for the main SEO and utility clusters.",
+      href: "/topics",
+      links: [
+        { label: "Browse topic map", href: "/topics" },
+        { label: "Open calculator hub", href: "/calculators" },
       ],
     },
   ]

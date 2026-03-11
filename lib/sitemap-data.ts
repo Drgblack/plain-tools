@@ -239,6 +239,7 @@ function filterLongtailSitemapUrls(candidates: LongtailCandidate[]) {
 export function buildSitemapEntries(now: Date = new Date()) {
   const staticHighPriority = ["/", "/tools", "/learn", "/compare"]
   const staticCorePages = [
+    "/topics",
     "/blog",
     "/pdf-tools",
     "/pdf-tools/compare",

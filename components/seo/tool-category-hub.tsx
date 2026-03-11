@@ -17,15 +17,31 @@ type GuideLink = {
   description: string
 }
 
+type HubLink = {
+  label: string
+  href: string
+  description: string
+}
+
 type ToolCategoryHubProps = {
   title: string
   path: string
   intro: string
   tools: ToolCardProps[]
   guides: GuideLink[]
+  featuredTasks?: HubLink[]
+  relatedHubs?: HubLink[]
 }
 
-export function ToolCategoryHub({ title, path, intro, tools, guides }: ToolCategoryHubProps) {
+export function ToolCategoryHub({
+  title,
+  path,
+  intro,
+  tools,
+  guides,
+  featuredTasks = [],
+  relatedHubs = [],
+}: ToolCategoryHubProps) {
   const url = `https://plain.tools${path}`
   const schema = combineJsonLd([
     buildWebPageSchema({
@@ -80,6 +96,30 @@ export function ToolCategoryHub({ title, path, intro, tools, guides }: ToolCateg
           </div>
         </section>
 
+        {featuredTasks.length > 0 ? (
+          <section className="border-b border-border px-4 py-12">
+            <div className="mx-auto max-w-6xl">
+              <h2 className="text-lg font-semibold text-foreground">Popular tasks in this cluster</h2>
+              <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+                Start with the closest matching workflow route, then move into related guides if you
+                need more context on privacy, quality limits, or follow-up steps.
+              </p>
+              <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {featuredTasks.map((task) => (
+                  <li key={task.href} className="rounded-lg border border-border bg-card/40 p-4">
+                    <Link href={task.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                      {task.label}
+                    </Link>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {task.description}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ) : null}
+
         <section className="px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-lg font-semibold text-foreground">Relevant guides</h2>
@@ -101,6 +141,30 @@ export function ToolCategoryHub({ title, path, intro, tools, guides }: ToolCateg
             </ul>
           </div>
         </section>
+
+        {relatedHubs.length > 0 ? (
+          <section className="border-t border-border px-4 py-12">
+            <div className="mx-auto max-w-6xl">
+              <h2 className="text-lg font-semibold text-foreground">Related clusters</h2>
+              <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+                Move across adjacent Plain Tools sections when your job shifts from conversion to
+                editing, OCR, privacy verification, or troubleshooting.
+              </p>
+              <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedHubs.map((hub) => (
+                  <li key={hub.href} className="rounded-lg border border-border bg-card/40 p-4">
+                    <Link href={hub.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                      {hub.label}
+                    </Link>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {hub.description}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ) : null}
       </main>
     </div>
   )
