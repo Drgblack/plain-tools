@@ -76,3 +76,113 @@ When adding a new public SEO page:
 5. Confirm page is crawlable in server-rendered HTML.
 6. Run `pnpm run build` before merging.
 
+## Measurement Scripts
+- `pnpm run audit:internal-links`
+  - Fails if templates or hubs start linking to legacy routes that should consolidate into canonical URLs.
+- `pnpm run audit:seo-structure`
+  - Checks hub coverage, breadcrumb/canonical template expectations, and critical-link presence in major cluster hubs.
+- `pnpm run audit:rendered-crawl`
+  - Local crawl against a running production build, defaulting to `http://127.0.0.1:3000`.
+  - Use this before deployment when you want rendered HTML checks for canonicals, noindex pages, and shallow-link reachability.
+- `pnpm run audit:production-crawl`
+  - Production crawl against `https://www.plain.tools` by default.
+  - Writes a JSON report to `generated/seo/production-crawl-report.json`.
+  - Override defaults with:
+    - `PROD_AUDIT_BASE_URL`
+    - `PROD_AUDIT_MAX_PAGES`
+
+## Weekly GSC Checklist
+Run this once per week and again after major sitemap, canonical, or cluster-template changes.
+
+1. Open Search Console coverage for the property and review:
+   - Indexed
+   - Crawled - currently not indexed
+   - Discovered - currently not indexed
+   - Duplicate without user-selected canonical
+   - Alternate page with proper canonical tag
+2. Check the main clusters separately:
+   - `/tools/*`
+   - `/guides/*`
+   - `/learn/*`
+   - `/status/*`
+   - `/calculators/*`
+   - `/convert/*`
+3. Inspect at least 3 sample URLs per cluster:
+   - one top performer
+   - one newly added or recently changed page
+   - one page with weak impressions or excluded coverage
+4. Confirm:
+   - canonical selected by Google matches the intended URL
+   - the page is in the right sitemap
+   - the last crawl date is reasonably current for priority pages
+5. Review the Performance report:
+   - impressions
+   - clicks
+   - CTR
+   - average position
+6. Compare query drift for key money pages:
+   - merge PDF
+   - split PDF
+   - compress PDF
+   - PDF to Word
+   - Word to PDF
+   - site status checker
+   - DNS lookup
+7. Flag any cluster where Google is preferring non-canonical, thinner, or legacy routes.
+
+## Cluster Monitoring Spec
+Track SEO health by cluster rather than only sitewide totals. The minimum dashboard view should include:
+
+### Recommended clusters
+- `tools_core`
+  - `/tools/*` primary money pages
+- `tools_variants`
+  - `/tools/[toolSlug]/[modifierSlug]`
+- `guides`
+  - `/guides/*`
+- `learn`
+  - `/learn/*`
+- `compare`
+  - `/compare/*`
+- `status`
+  - `/status/*`, `/site-status`, `/check-if-website-is-down`
+- `network`
+  - `/dns/*`, `/network/*`, `/ip/*`, `/what-is-my-ip`, `/ping-test`
+- `calculators`
+  - `/calculators/*`
+- `converters`
+  - `/convert/*`, `/file-converters/*`
+- `trust`
+  - `/about`, `/verify-claims`, `/editorial-policy`, `/methodology/*`
+
+### Metrics to track per cluster
+- submitted URLs
+- indexed URLs
+- excluded URLs
+- impressions
+- clicks
+- CTR
+- average position
+- pages with impressions but not indexed cleanly
+- pages with canonical mismatch
+- crawl frequency for representative pages
+
+### Suggested reporting cadence
+- Daily:
+  - production crawl audit
+  - uptime check on sitemap routes
+- Weekly:
+  - GSC cluster review
+  - inspect 3 to 5 sample URLs per cluster
+- Monthly:
+  - review overlap/cannibalization candidates
+  - review low-value pages for potential `noindex, follow`
+  - refresh top hub internal links if cluster priorities changed
+
+## Dashboard Implementation Notes
+- Keep dashboards privacy-light and aggregate only route-level/search-level metrics.
+- Do not add invasive page-level behavioural tracking just to support SEO reporting.
+- The crawl report JSON from `audit:production-crawl` is meant to feed:
+  - a CI artifact
+  - a simple notebook/report
+  - or a log/metrics pipeline such as Axiom if already available

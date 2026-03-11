@@ -1,0 +1,1065 @@
+{
+  "auditedAt": "2026-03-11T10:46:02.497Z",
+  "baseUrl": "https://www.plain.tools",
+  "maxPages": 120,
+  "visitedCount": 123,
+  "seeds": [
+    "/",
+    "/tools",
+    "/topics",
+    "/learn",
+    "/guides",
+    "/status",
+    "/site-status",
+    "/network-tools",
+    "/file-converters",
+    "/calculators",
+    "/compare",
+    "/editorial-policy",
+    "/methodology/status-checks"
+  ],
+  "criticalPages": [
+    "/tools/merge-pdf",
+    "/tools/split-pdf",
+    "/tools/compress-pdf",
+    "/tools/pdf-to-word",
+    "/tools/word-to-pdf",
+    "/status/chatgpt.com",
+    "/dns-lookup",
+    "/ping-test",
+    "/calculators",
+    "/file-converters",
+    "/topics",
+    "/editorial-policy",
+    "/methodology/status-checks"
+  ],
+  "expectedNoindex": [
+    "/faq",
+    "/html-sitemap",
+    "/labs"
+  ],
+  "criticalDepths": {
+    "/tools/merge-pdf": 1,
+    "/tools/split-pdf": 1,
+    "/tools/compress-pdf": 1,
+    "/tools/pdf-to-word": 1,
+    "/tools/word-to-pdf": 1,
+    "/status/chatgpt.com": 1,
+    "/dns-lookup": 1,
+    "/ping-test": 1,
+    "/calculators": 0,
+    "/file-converters": 0,
+    "/topics": 0,
+    "/editorial-policy": 0,
+    "/methodology/status-checks": 0
+  },
+  "noindexChecks": {
+    "/faq": {
+      "robots": "noindex, follow",
+      "status": 200
+    },
+    "/html-sitemap": {
+      "robots": "noindex, follow",
+      "status": 200
+    },
+    "/labs": {
+      "robots": "noindex, follow",
+      "status": 200
+    }
+  },
+  "sitemapChecks": {
+    "noindexPathsPresent": []
+  },
+  "errors": [],
+  "warnings": [
+    "/tools/pdf-to-png redirected to /tools/pdf-to-jpg",
+    "/tools/png-to-pdf redirected to /tools/jpg-to-pdf",
+    "/sitemap redirected to /html-sitemap"
+  ],
+  "visited": {
+    "/": {
+      "canonical": "/",
+      "depth": 0,
+      "finalPath": "/",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 84
+    },
+    "/tools": {
+      "canonical": "/tools",
+      "depth": 0,
+      "finalPath": "/tools",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 120
+    },
+    "/topics": {
+      "canonical": "/topics",
+      "depth": 0,
+      "finalPath": "/topics",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 30
+    },
+    "/learn": {
+      "canonical": "/learn",
+      "depth": 0,
+      "finalPath": "/learn",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 66
+    },
+    "/guides": {
+      "canonical": "/guides",
+      "depth": 0,
+      "finalPath": "/guides",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 309
+    },
+    "/status": {
+      "canonical": "/status",
+      "depth": 0,
+      "finalPath": "/status",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 181
+    },
+    "/site-status": {
+      "canonical": "/site-status",
+      "depth": 0,
+      "finalPath": "/site-status",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 150
+    },
+    "/network-tools": {
+      "canonical": "/network-tools",
+      "depth": 0,
+      "finalPath": "/network-tools",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 36
+    },
+    "/file-converters": {
+      "canonical": "/file-converters",
+      "depth": 0,
+      "finalPath": "/file-converters",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 34
+    },
+    "/calculators": {
+      "canonical": "/calculators",
+      "depth": 0,
+      "finalPath": "/calculators",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 110
+    },
+    "/compare": {
+      "canonical": "/compare",
+      "depth": 0,
+      "finalPath": "/compare",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 34
+    },
+    "/editorial-policy": {
+      "canonical": "/editorial-policy",
+      "depth": 0,
+      "finalPath": "/editorial-policy",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 20
+    },
+    "/methodology/status-checks": {
+      "canonical": "/methodology/status-checks",
+      "depth": 0,
+      "finalPath": "/methodology/status-checks",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 21
+    },
+    "/blog": {
+      "canonical": "/blog",
+      "depth": 1,
+      "finalPath": "/blog",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 29
+    },
+    "/about": {
+      "canonical": "/about",
+      "depth": 1,
+      "finalPath": "/about",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 20
+    },
+    "/verify-claims": {
+      "canonical": "/verify-claims",
+      "depth": 1,
+      "finalPath": "/verify-claims",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/pdf-tools": {
+      "canonical": "/pdf-tools",
+      "depth": 1,
+      "finalPath": "/pdf-tools",
+      "robots": "noindex, nofollow, nocache",
+      "status": 200,
+      "linkCount": 33
+    },
+    "/image-tools": {
+      "canonical": "/image-tools",
+      "depth": 1,
+      "finalPath": "/image-tools",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 29
+    },
+    "/sign-pdf-online": {
+      "canonical": "/sign-pdf-online",
+      "depth": 1,
+      "finalPath": "/sign-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/protect-pdf-with-password": {
+      "canonical": "/protect-pdf-with-password",
+      "depth": 1,
+      "finalPath": "/protect-pdf-with-password",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/compare-pdf-files": {
+      "canonical": "/compare-pdf-files",
+      "depth": 1,
+      "finalPath": "/compare-pdf-files",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/ocr-pdf": {
+      "canonical": "/ocr-pdf",
+      "depth": 1,
+      "finalPath": "/ocr-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/support": {
+      "canonical": "/support",
+      "depth": 1,
+      "finalPath": "/support",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 18
+    },
+    "/tools/merge-pdf": {
+      "canonical": "/tools/merge-pdf",
+      "depth": 1,
+      "finalPath": "/tools/merge-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 37
+    },
+    "/tools/split-pdf": {
+      "canonical": "/tools/split-pdf",
+      "depth": 1,
+      "finalPath": "/tools/split-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 33
+    },
+    "/tools/compress-pdf": {
+      "canonical": "/tools/compress-pdf",
+      "depth": 1,
+      "finalPath": "/tools/compress-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 35
+    },
+    "/tools/pdf-to-word": {
+      "canonical": "/tools/pdf-to-word",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-word",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 34
+    },
+    "/tools/word-to-pdf": {
+      "canonical": "/tools/word-to-pdf",
+      "depth": 1,
+      "finalPath": "/tools/word-to-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 33
+    },
+    "/tools/pdf-to-jpg": {
+      "canonical": "/tools/pdf-to-jpg",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-jpg",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 36
+    },
+    "/tools/jpg-to-pdf": {
+      "canonical": "/tools/jpg-to-pdf",
+      "depth": 1,
+      "finalPath": "/tools/jpg-to-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 36
+    },
+    "/tools/pdf-to-png": {
+      "canonical": "/tools/pdf-to-jpg",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-jpg",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 36
+    },
+    "/tools/png-to-pdf": {
+      "canonical": "/tools/jpg-to-pdf",
+      "depth": 1,
+      "finalPath": "/tools/jpg-to-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 36
+    },
+    "/compress-pdf-online": {
+      "canonical": "/compress-pdf-online",
+      "depth": 1,
+      "finalPath": "/compress-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/merge-pdf-online": {
+      "canonical": "/merge-pdf-online",
+      "depth": 1,
+      "finalPath": "/merge-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/split-pdf-online": {
+      "canonical": "/split-pdf-online",
+      "depth": 1,
+      "finalPath": "/split-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/pdf-to-word-online": {
+      "canonical": "/pdf-to-word-online",
+      "depth": 1,
+      "finalPath": "/pdf-to-word-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/word-to-pdf-online": {
+      "canonical": "/word-to-pdf-online",
+      "depth": 1,
+      "finalPath": "/word-to-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/pdf-to-jpg-online": {
+      "canonical": "/pdf-to-jpg-online",
+      "depth": 1,
+      "finalPath": "/pdf-to-jpg-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/jpg-to-pdf-online": {
+      "canonical": "/jpg-to-pdf-online",
+      "depth": 1,
+      "finalPath": "/jpg-to-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/pdf-to-png-online": {
+      "canonical": "/pdf-to-png-online",
+      "depth": 1,
+      "finalPath": "/pdf-to-png-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/png-to-pdf-online": {
+      "canonical": "/png-to-pdf-online",
+      "depth": 1,
+      "finalPath": "/png-to-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/rotate-pdf-online": {
+      "canonical": "/rotate-pdf-online",
+      "depth": 1,
+      "finalPath": "/rotate-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/merge-pdf-mac": {
+      "canonical": "/tools/merge-pdf-mac",
+      "depth": 1,
+      "finalPath": "/tools/merge-pdf-mac",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/merge-pdf-offline": {
+      "canonical": "/tools/merge-pdf-offline",
+      "depth": 1,
+      "finalPath": "/tools/merge-pdf-offline",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/compress-pdf-large-files": {
+      "canonical": "/tools/compress-pdf-large-files",
+      "depth": 1,
+      "finalPath": "/tools/compress-pdf-large-files",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/sign-pdf-online": {
+      "canonical": "/tools/sign-pdf-online",
+      "depth": 1,
+      "finalPath": "/tools/sign-pdf-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/make-pdf-searchable": {
+      "canonical": "/tools/make-pdf-searchable",
+      "depth": 1,
+      "finalPath": "/tools/make-pdf-searchable",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/pdf-to-word-no-upload": {
+      "canonical": "/tools/pdf-to-word-no-upload",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-word-no-upload",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/compress-pdf/for-email": {
+      "canonical": "/tools/compress-pdf/for-email",
+      "depth": 1,
+      "finalPath": "/tools/compress-pdf/for-email",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/compress-pdf/under-1mb": {
+      "canonical": "/tools/compress-pdf/under-1mb",
+      "depth": 1,
+      "finalPath": "/tools/compress-pdf/under-1mb",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/merge-pdf/offline": {
+      "canonical": "/tools/merge-pdf/offline",
+      "depth": 1,
+      "finalPath": "/tools/merge-pdf/offline",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/pdf-to-word/no-upload": {
+      "canonical": "/tools/pdf-to-word/no-upload",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-word/no-upload",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/jpg-to-pdf/iphone": {
+      "canonical": "/tools/jpg-to-pdf/iphone",
+      "depth": 1,
+      "finalPath": "/tools/jpg-to-pdf/iphone",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/ocr-pdf/searchable": {
+      "canonical": "/tools/ocr-pdf/searchable",
+      "depth": 1,
+      "finalPath": "/tools/ocr-pdf/searchable",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 33
+    },
+    "/status/chatgpt.com": {
+      "canonical": "/status/chatgpt.com",
+      "depth": 1,
+      "finalPath": "/status/chatgpt.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 47
+    },
+    "/status/reddit.com": {
+      "canonical": "/status/reddit.com",
+      "depth": 1,
+      "finalPath": "/status/reddit.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 46
+    },
+    "/dns-lookup": {
+      "canonical": "/dns-lookup",
+      "depth": 1,
+      "finalPath": "/dns-lookup",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 93
+    },
+    "/ping-test": {
+      "canonical": "/ping-test",
+      "depth": 1,
+      "finalPath": "/ping-test",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 21
+    },
+    "/learn/no-uploads-explained": {
+      "canonical": "/learn/no-uploads-explained",
+      "depth": 1,
+      "finalPath": "/learn/no-uploads-explained",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/learn/how-to-merge-pdfs-offline": {
+      "canonical": "/learn/how-to-merge-pdfs-offline",
+      "depth": 1,
+      "finalPath": "/learn/how-to-merge-pdfs-offline",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/compare/plain-tools-vs-smallpdf": {
+      "canonical": "/compare/plain-tools-vs-smallpdf",
+      "depth": 1,
+      "finalPath": "/compare/plain-tools-vs-smallpdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/compare/offline-vs-online-pdf-tools": {
+      "canonical": "/compare/offline-vs-online-pdf-tools",
+      "depth": 1,
+      "finalPath": "/compare/offline-vs-online-pdf-tools",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/status/discord.com": {
+      "canonical": "/status/discord.com",
+      "depth": 1,
+      "finalPath": "/status/discord.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 46
+    },
+    "/status/youtube.com": {
+      "canonical": "/status/youtube.com",
+      "depth": 1,
+      "finalPath": "/status/youtube.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 46
+    },
+    "/status/netflix.com": {
+      "canonical": "/status/netflix.com",
+      "depth": 1,
+      "finalPath": "/status/netflix.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 45
+    },
+    "/status/github.com": {
+      "canonical": "/status/github.com",
+      "depth": 1,
+      "finalPath": "/status/github.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 47
+    },
+    "/status/stripe.com": {
+      "canonical": "/status/stripe.com",
+      "depth": 1,
+      "finalPath": "/status/stripe.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 45
+    },
+    "/status/google.com": {
+      "canonical": "/status/google.com",
+      "depth": 1,
+      "finalPath": "/status/google.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 45
+    },
+    "/status/trending": {
+      "canonical": "/status/trending",
+      "depth": 1,
+      "finalPath": "/status/trending",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 165
+    },
+    "/tools/sign-pdf": {
+      "canonical": "/tools/sign-pdf",
+      "depth": 1,
+      "finalPath": "/tools/sign-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/ocr-pdf": {
+      "canonical": "/tools/ocr-pdf",
+      "depth": 1,
+      "finalPath": "/tools/ocr-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 35
+    },
+    "/status/gmail.com": {
+      "canonical": "/status/gmail.com",
+      "depth": 1,
+      "finalPath": "/status/gmail.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 45
+    },
+    "/status/amazon.com": {
+      "canonical": "/status/amazon.com",
+      "depth": 1,
+      "finalPath": "/status/amazon.com",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 45
+    },
+    "/learn/compress-pdf-without-upload": {
+      "canonical": "/learn/compress-pdf-without-upload",
+      "depth": 1,
+      "finalPath": "/learn/compress-pdf-without-upload",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/learn/why-pdf-uploads-are-risky": {
+      "canonical": "/learn/why-pdf-uploads-are-risky",
+      "depth": 1,
+      "finalPath": "/learn/why-pdf-uploads-are-risky",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/learn/compress-pdf-without-losing-quality": {
+      "canonical": "/learn/compress-pdf-without-losing-quality",
+      "depth": 1,
+      "finalPath": "/learn/compress-pdf-without-losing-quality",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/learn/is-it-down-for-everyone-or-just-me": {
+      "canonical": "/learn/is-it-down-for-everyone-or-just-me",
+      "depth": 1,
+      "finalPath": "/learn/is-it-down-for-everyone-or-just-me",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/learn/how-dns-lookup-works": {
+      "canonical": "/learn/how-dns-lookup-works",
+      "depth": 1,
+      "finalPath": "/learn/how-dns-lookup-works",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/compare/smallpdf-alternative": {
+      "canonical": "/compare/smallpdf-alternative",
+      "depth": 1,
+      "finalPath": "/compare/smallpdf-alternative",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/compare/plain-tools-vs-ilovepdf": {
+      "canonical": "/compare/plain-tools-vs-ilovepdf",
+      "depth": 1,
+      "finalPath": "/compare/plain-tools-vs-ilovepdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/compare/plain-tools-vs-adobe-acrobat-online": {
+      "canonical": "/compare/plain-tools-vs-adobe-acrobat-online",
+      "depth": 1,
+      "finalPath": "/compare/plain-tools-vs-adobe-acrobat-online",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/file-tools": {
+      "canonical": "/file-tools",
+      "depth": 1,
+      "finalPath": "/file-tools",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 22
+    },
+    "/roadmap": {
+      "canonical": "/roadmap",
+      "depth": 1,
+      "finalPath": "/roadmap",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 20
+    },
+    "/changelog": {
+      "canonical": "/changelog",
+      "depth": 1,
+      "finalPath": "/changelog",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 19
+    },
+    "/sitemap": {
+      "canonical": "/html-sitemap",
+      "depth": 1,
+      "finalPath": "/html-sitemap",
+      "robots": "noindex, follow",
+      "status": 200,
+      "linkCount": 239
+    },
+    "/what-is-my-ip": {
+      "canonical": "/what-is-my-ip",
+      "depth": 1,
+      "finalPath": "/what-is-my-ip",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/privacy": {
+      "canonical": "/privacy",
+      "depth": 1,
+      "finalPath": "/privacy",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 18
+    },
+    "/terms": {
+      "canonical": "/terms",
+      "depth": 1,
+      "finalPath": "/terms",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 18
+    },
+    "/tools/dns-lookup": {
+      "canonical": "/tools/dns-lookup",
+      "depth": 1,
+      "finalPath": "/tools/dns-lookup",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/ping-test": {
+      "canonical": "/tools/ping-test",
+      "depth": 1,
+      "finalPath": "/tools/ping-test",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files": {
+      "canonical": "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+      "depth": 1,
+      "finalPath": "/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/tools/pdf-to-html": {
+      "canonical": "/tools/pdf-to-html",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-html",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/html-to-pdf": {
+      "canonical": "/tools/html-to-pdf",
+      "depth": 1,
+      "finalPath": "/tools/html-to-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/pdf-to-markdown": {
+      "canonical": "/tools/pdf-to-markdown",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-markdown",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/compare-pdf": {
+      "canonical": "/tools/compare-pdf",
+      "depth": 1,
+      "finalPath": "/tools/compare-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/rotate-pdf": {
+      "canonical": "/tools/rotate-pdf",
+      "depth": 1,
+      "finalPath": "/tools/rotate-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/tools/annotate-pdf": {
+      "canonical": "/tools/annotate-pdf",
+      "depth": 1,
+      "finalPath": "/tools/annotate-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/reorder-pdf": {
+      "canonical": "/tools/reorder-pdf",
+      "depth": 1,
+      "finalPath": "/tools/reorder-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 29
+    },
+    "/tools/extract-pdf": {
+      "canonical": "/tools/extract-pdf",
+      "depth": 1,
+      "finalPath": "/tools/extract-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 30
+    },
+    "/tools/watermark-pdf": {
+      "canonical": "/tools/watermark-pdf",
+      "depth": 1,
+      "finalPath": "/tools/watermark-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/protect-pdf": {
+      "canonical": "/tools/protect-pdf",
+      "depth": 1,
+      "finalPath": "/tools/protect-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/unlock-pdf": {
+      "canonical": "/tools/unlock-pdf",
+      "depth": 1,
+      "finalPath": "/tools/unlock-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 32
+    },
+    "/tools/metadata-purge": {
+      "canonical": "/tools/metadata-purge",
+      "depth": 1,
+      "finalPath": "/tools/metadata-purge",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/compression-preview": {
+      "canonical": "/tools/compression-preview",
+      "depth": 1,
+      "finalPath": "/tools/compression-preview",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/offline-ocr": {
+      "canonical": "/tools/offline-ocr",
+      "depth": 1,
+      "finalPath": "/tools/offline-ocr",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/tools/json-formatter": {
+      "canonical": "/tools/json-formatter",
+      "depth": 1,
+      "finalPath": "/tools/json-formatter",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/uuid-generator": {
+      "canonical": "/tools/uuid-generator",
+      "depth": 1,
+      "finalPath": "/tools/uuid-generator",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/regex-tester": {
+      "canonical": "/tools/regex-tester",
+      "depth": 1,
+      "finalPath": "/tools/regex-tester",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/image-compress": {
+      "canonical": "/tools/image-compress",
+      "depth": 1,
+      "finalPath": "/tools/image-compress",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/zip-tool": {
+      "canonical": "/tools/zip-tool",
+      "depth": 1,
+      "finalPath": "/tools/zip-tool",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/base64-encoder": {
+      "canonical": "/tools/base64-encoder",
+      "depth": 1,
+      "finalPath": "/tools/base64-encoder",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/file-hash": {
+      "canonical": "/tools/file-hash",
+      "depth": 1,
+      "finalPath": "/tools/file-hash",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/qr-code": {
+      "canonical": "/tools/qr-code",
+      "depth": 1,
+      "finalPath": "/tools/qr-code",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/qr-scanner": {
+      "canonical": "/tools/qr-scanner",
+      "depth": 1,
+      "finalPath": "/tools/qr-scanner",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/site-status-checker": {
+      "canonical": "/tools/site-status-checker",
+      "depth": 1,
+      "finalPath": "/tools/site-status-checker",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/what-is-my-ip": {
+      "canonical": "/tools/what-is-my-ip",
+      "depth": 1,
+      "finalPath": "/tools/what-is-my-ip",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/tools/convert-pdf": {
+      "canonical": "/tools/convert-pdf",
+      "depth": 1,
+      "finalPath": "/tools/convert-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/fill-pdf": {
+      "canonical": "/tools/fill-pdf",
+      "depth": 1,
+      "finalPath": "/tools/fill-pdf",
+      "robots": "noindex, nofollow",
+      "status": 200,
+      "linkCount": 26
+    },
+    "/tools/pdf-to-excel": {
+      "canonical": "/tools/pdf-to-excel",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-excel",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/tools/pdf-to-ppt": {
+      "canonical": "/tools/pdf-to-ppt",
+      "depth": 1,
+      "finalPath": "/tools/pdf-to-ppt",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 27
+    },
+    "/faq": {
+      "canonical": "/faq",
+      "depth": null,
+      "finalPath": "/faq",
+      "robots": "noindex, follow",
+      "status": 200,
+      "linkCount": 34
+    },
+    "/html-sitemap": {
+      "canonical": "/html-sitemap",
+      "depth": null,
+      "finalPath": "/html-sitemap",
+      "robots": "noindex, follow",
+      "status": 200,
+      "linkCount": 254
+    },
+    "/labs": {
+      "canonical": "/",
+      "depth": null,
+      "finalPath": "/labs",
+      "robots": "noindex, follow",
+      "status": 200,
+      "linkCount": 32
+    }
+  }
+}

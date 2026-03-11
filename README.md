@@ -23,6 +23,7 @@ Preferred method: DNS TXT verification. Alternative: HTML file verification (do 
 3. Download the verification file and replace `public/google-search-console-verify.html` with the actual file content from Google
 4. Deploy, then click Verify in Search Console
 5. Once verified, submit https://plain.tools/sitemap.xml under Sitemaps
+6. Use the SEO maintenance runbook in `docs/SEO_GEO_MAINTENANCE.md` for weekly GSC review and crawl checks
 
 ### Bing Webmaster Tools
 
@@ -113,6 +114,18 @@ This project sets strict browser security headers at the framework level via `ne
 API routes also emit structured JSON error and warning logs (`lib/logger.ts`) suitable for production ingestion. On Vercel, these logs are captured automatically and can be forwarded through log drains. For production monitoring, connect a drain provider such as Axiom, Logtail, or Papertrail.
 
 ## Monitoring
+
+### SEO Audits
+
+Run these before or after major SEO changes:
+
+```bash
+pnpm run audit:internal-links
+pnpm run audit:seo-structure
+pnpm run audit:production-crawl
+```
+
+`audit:production-crawl` writes a JSON report to `generated/seo/production-crawl-report.json`.
 
 ### Axiom Log Drain
 
