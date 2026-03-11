@@ -151,6 +151,44 @@ export default function StatusDirectoryPage() {
 
       <section className="border-b border-border/60 px-4 py-10">
         <div className="mx-auto max-w-6xl">
+          <h2 className="text-lg font-semibold text-foreground">Methodology and trust</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            These pages explain what the status system measures, why canonical domain routes are
+            preferred, and how Plain Tools documents trust claims across the site.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                href: "/methodology/status-checks",
+                title: "Status-check methodology",
+                description: "How status routes, query-intent pages, and outage-history pages are maintained.",
+              },
+              {
+                href: "/editorial-policy",
+                title: "Editorial policy",
+                description: "How Plain Tools reviews guides, methodology documents, and trust-sensitive claims.",
+              },
+              {
+                href: "/verify-claims",
+                title: "Verify claims",
+                description: "How to validate privacy and local-processing claims with your own browser tools.",
+              },
+            ].map((item) => (
+              <article key={item.href} className="rounded-lg border border-border bg-card/40 p-4">
+                <Link href={item.href} className="text-sm font-semibold text-foreground transition hover:text-accent hover:underline">
+                  {item.title}
+                </Link>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
           <h2 className="text-lg font-semibold text-foreground">Popular checks</h2>
           <ul className="mt-4 grid gap-2 md:grid-cols-2 lg:grid-cols-4">
             {STATUS_POPULAR_DOMAINS.slice(0, 24).map((domain) => (

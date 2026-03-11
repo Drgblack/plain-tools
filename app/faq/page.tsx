@@ -2,18 +2,28 @@ import { Metadata } from "next"
 import Script from "next/script"
 import Link from "next/link"
 import { serializeJsonLd } from "@/lib/sanitize"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
+import { buildPageMetadata } from "@/lib/page-metadata"
 
-export const metadata: Metadata = {
+const baseMetadata = buildPageMetadata({
   title: "FAQ",
-  description: "Plain answers common questions about offline PDF processing, file privacy, and how browser-based tools work. Built for private, offline-first PDF workflows.",
-  openGraph: {
-    title: "FAQ - Plain",
-    description: "Plain answers common questions about offline PDF processing and file privacy.",
+  description:
+    "Plain answers common questions about offline PDF processing, file privacy, and how browser-based tools work. Built for private, offline-first PDF workflows.",
+  path: "/faq",
+  image: "/og/default.png",
+})
+
+export const metadata: Metadata = applyIndexationPolicy(
+  {
+    ...baseMetadata,
+    openGraph: {
+      ...baseMetadata.openGraph,
+      title: "FAQ - Plain",
+      description: "Plain answers common questions about offline PDF processing and file privacy.",
+    },
   },
-  alternates: {
-    canonical: "https://plain.tools/faq",
-  },
-}
+  "/faq"
+)
 
 const faqs = [
   {

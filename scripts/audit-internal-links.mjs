@@ -7,11 +7,18 @@ const ALLOWED_ROUTE_FILES = new Set([
   path.normalize("app/is/[site]/page.tsx"),
   path.normalize("app/is-chatgpt-down/page.tsx"),
   path.normalize("app/is-discord-down/page.tsx"),
+  path.normalize("app/compress-pdf/page.tsx"),
+  path.normalize("app/pdf-merge/page.tsx"),
+  path.normalize("app/pdf-to-word/page.tsx"),
+  path.normalize("lib/seo/legacy-route-canonicals.ts"),
   path.normalize("lib/status-query-pages.ts"),
   path.normalize("scripts/audit-internal-links.mjs"),
 ])
 
 const issues = []
+const LEGACY_STATUS_ROUTE_PATTERN = /(?:^|["'`\s(=])\/is-[a-z0-9-]+-down\b/
+const LEGACY_TOOL_ROUTE_PATTERN =
+  /(?:^|["'`\s(=])(\/compress-pdf|\/pdf-merge|\/pdf-to-word)(?!-)\b/
 
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true })
@@ -34,10 +41,12 @@ async function walk(dir) {
 
     lines.forEach((line, index) => {
       const lineNumber = index + 1
-      const hasLegacyHref = /(?:^|["'`\s(=])\/is-[a-z0-9-]+-down\b/.test(line)
+      const hasLegacyStatusHref = LEGACY_STATUS_ROUTE_PATTERN.test(line)
+      const hasLegacyToolHref = LEGACY_TOOL_ROUTE_PATTERN.test(line)
       const usesLegacyHelper = line.includes("statusQueryPathForSlug(")
+      const usesLegacyToolHelper = line.includes("getLegacyCanonicalRedirect(")
 
-      if (!hasLegacyHref && !usesLegacyHelper) {
+      if (!hasLegacyStatusHref && !hasLegacyToolHref && !usesLegacyHelper && !usesLegacyToolHelper) {
         return
       }
 
@@ -59,7 +68,7 @@ for (const dir of SCAN_DIRS) {
 }
 
 if (issues.length > 0) {
-  console.error("Found internal links pointing at legacy /is-* status routes:")
+  console.error("Found internal links pointing at legacy routes that should consolidate to canonical pages:")
 
   for (const issue of issues) {
     console.error(`- ${issue.file}:${issue.line} ${issue.content}`)

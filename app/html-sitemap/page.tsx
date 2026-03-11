@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 import { JsonLd } from "@/components/seo/json-ld"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
 import {
@@ -25,13 +26,16 @@ import {
   combineJsonLd,
 } from "@/lib/structured-data"
 
-export const metadata: Metadata = buildPageMetadata({
-  title: "HTML sitemap",
-  description:
-    "Browse a human-friendly map of Plain Tools sections, including tools, learn guides, comparison pages, blog entries, and legal support routes.",
-  path: "/html-sitemap",
-  image: "/og/default.png",
-})
+export const metadata: Metadata = applyIndexationPolicy(
+  buildPageMetadata({
+    title: "HTML sitemap",
+    description:
+      "Browse a human-friendly map of Plain Tools sections, including tools, learn guides, comparison pages, blog entries, and legal support routes.",
+    path: "/html-sitemap",
+    image: "/og/default.png",
+  }),
+  "/html-sitemap"
+)
 
 type SitemapLink = {
   label: string
@@ -68,6 +72,8 @@ const mainSections: SitemapSection[] = [
     title: "Legal and support",
     links: [
       { label: "About", href: "/about" },
+      { label: "Editorial Policy", href: "/editorial-policy" },
+      { label: "Status-Check Methodology", href: "/methodology/status-checks" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
       { label: "Support", href: "/support" },

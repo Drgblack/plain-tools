@@ -1,14 +1,7 @@
-import type { Metadata } from 'next'
-import { generateToolMetadata } from '@/lib/seo'
-import { PDFMergeClient } from './client'
+import { permanentRedirect } from "next/navigation"
 
-export const metadata: Metadata = generateToolMetadata({
-  name: 'Merge PDF',
-  description: 'Combine multiple PDF files into a single document. Drag and drop to reorder pages. All processing happens locally in your browser.',
-  slug: 'pdf-merge',
-  category: 'PDF Tools',
-})
+import { getLegacyCanonicalRedirect } from "@/lib/seo/legacy-route-canonicals"
 
-export default function PDFMergePage() {
-  return <PDFMergeClient />
+export default function PdfMergeLegacyPage() {
+  permanentRedirect(getLegacyCanonicalRedirect("/pdf-merge") ?? "/tools/merge-pdf")
 }

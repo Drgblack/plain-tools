@@ -3,12 +3,15 @@ import { PerformanceBenchmark } from "@/components/performance-benchmark"
 import { ArrowLeft, FlaskConical } from "lucide-react"
 import Link from "next/link"
 import { buildStandardPageTitle } from "@/lib/page-title"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: buildStandardPageTitle("Labs"),
   description:
     "Experimental diagnostics and exploratory prototypes for Plain Tools. Includes local benchmark tooling and transparent status labels.",
 }
+
+export const metadata: Metadata = applyIndexationPolicy(baseMetadata, "/labs")
 
 const exploratoryTracks = [
   {

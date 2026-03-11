@@ -9,6 +9,7 @@
     "start": "next start",
     "audit:internal-links": "node scripts/audit-internal-links.mjs",
     "audit:seo-structure": "node scripts/audit-seo-structure.mjs",
+    "audit:rendered-crawl": "node scripts/audit-rendered-crawl.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:unit": "vitest run --coverage"

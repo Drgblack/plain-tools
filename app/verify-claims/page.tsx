@@ -32,6 +32,9 @@ export default function VerifyClaimsPage() {
               <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
                 Do Online PDF Tools Upload Your Files?
               </h1>
+              <div className="inline-flex rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+                Last reviewed: March 11, 2026
+              </div>
               <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
                 Many online PDF tools do upload files to remote servers because the conversion,
                 compression, OCR, or page-editing step happens in cloud infrastructure. That means
@@ -69,6 +72,14 @@ export default function VerifyClaimsPage() {
               Want deeper technical context? See{" "}
               <Link href="/learn/how-to-verify-a-pdf-tool-doesnt-upload-your-files" className="font-medium text-accent hover:underline">
                 verification guidance
+              </Link>{" "}
+              , review the{" "}
+              <Link href="/editorial-policy" className="font-medium text-accent hover:underline">
+                editorial policy
+              </Link>
+              , or read the{" "}
+              <Link href="/methodology/status-checks" className="font-medium text-accent hover:underline">
+                status-check methodology
               </Link>{" "}
               or inspect the public repository on{" "}
               <a
@@ -229,6 +240,14 @@ Result: no Fetch/XHR upload request containing file bytes`}
                 AI features are explicitly opt-in and may send extracted text for processing. Core
                 local tools are the no-upload workflows verified on this page.
               </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                <Link href="/editorial-policy" className="rounded-full border border-border bg-background px-3 py-1.5 transition hover:border-accent/40 hover:text-accent">
+                  Editorial policy
+                </Link>
+                <Link href="/about" className="rounded-full border border-border bg-background px-3 py-1.5 transition hover:border-accent/40 hover:text-accent">
+                  About Plain Tools
+                </Link>
+              </div>
             </div>
           </div>
         </section>

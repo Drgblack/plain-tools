@@ -1,7 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ChevronRight, Shield, Zap, Globe, Code } from "lucide-react"
+import { Shield, Zap, Globe, Code } from "lucide-react"
+import { JsonLd } from "@/components/seo/json-ld"
+import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import {
+  buildBreadcrumbList,
+  buildWebPageSchema,
+  combineJsonLd,
+} from "@/lib/structured-data"
 
 export const metadata: Metadata = buildPageMetadata({
   title: "About",
@@ -10,6 +17,19 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/about",
   image: "/og/default.png",
 })
+
+const aboutSchema = combineJsonLd([
+  buildWebPageSchema({
+    name: "About | Plain Tools",
+    description:
+      "Learn how Plain Tools is built for local browser processing, no-upload workflows, and transparent privacy claims.",
+    url: "https://plain.tools/about",
+  }),
+  buildBreadcrumbList([
+    { name: "Home", url: "https://plain.tools/" },
+    { name: "About", url: "https://plain.tools/about" },
+  ]),
+])
 
 const principles = [
   {
@@ -41,16 +61,13 @@ const principles = [
 export default function AboutPage() {
   return (
     <div className="flex flex-col">
+      {aboutSchema ? <JsonLd id="about-page-schema" schema={aboutSchema} /> : null}
       <section className="border-b border-border">
           <div className="mx-auto max-w-6xl px-4 py-12">
-            {/* Breadcrumb */}
-            <nav className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">
-              <Link href="/" className="hover:text-foreground">
-                Home
-              </Link>
-              <ChevronRight className="h-3.5 w-3.5" />
-              <span className="text-foreground">About</span>
-            </nav>
+            <PageBreadcrumbs
+              items={[{ label: "Home", href: "/" }, { label: "About" }]}
+              className="mb-6"
+            />
 
             <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               About plain.tools
@@ -59,6 +76,17 @@ export default function AboutPage() {
               We build tools that respect your privacy and run entirely in your
               browser. No uploads. No tracking. No compromises.
             </p>
+            <div className="mt-5 flex flex-wrap gap-2 text-xs">
+              <Link href="/editorial-policy" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Editorial policy
+              </Link>
+              <Link href="/methodology/status-checks" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Status methodology
+              </Link>
+              <Link href="/verify-claims" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+                Verify privacy claims
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -116,6 +144,37 @@ export default function AboutPage() {
 
         <section>
           <div className="mx-auto max-w-6xl px-4 py-12">
+            <h2 className="mb-4 text-lg font-medium text-foreground">
+              Transparency routes
+            </h2>
+            <div className="mb-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  href: "/editorial-policy",
+                  title: "Editorial policy",
+                  description: "How Plain Tools reviews guide content, methodology pages, and trust claims.",
+                },
+                {
+                  href: "/methodology/status-checks",
+                  title: "Status-check methodology",
+                  description: "What the status pages measure, what they infer, and how to interpret results.",
+                },
+                {
+                  href: "/verify-claims",
+                  title: "Verify claims",
+                  description: "Use DevTools and live examples to validate the no-upload privacy claim yourself.",
+                },
+              ].map((item) => (
+                <article key={item.href} className="rounded-xl border border-border/70 bg-card/40 p-4">
+                  <Link href={item.href} className="text-sm font-semibold text-foreground hover:text-accent hover:underline">
+                    {item.title}
+                  </Link>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {item.description}
+                  </p>
+                </article>
+              ))}
+            </div>
             <h2 className="mb-4 text-lg font-medium text-foreground">
               Contact
             </h2>

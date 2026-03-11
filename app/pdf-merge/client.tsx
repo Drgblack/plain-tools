@@ -33,14 +33,14 @@ const relatedTools = [
   {
     name: "Compress PDF",
     description: "Reduce PDF file size while maintaining quality",
-    href: "/compress-pdf",
+    href: "/tools/compress-pdf",
     tags: ["Local", "WASM"],
     icon: <FileText className="h-5 w-5" />,
   },
   {
     name: "PDF to Word",
     description: "Convert PDF documents to editable Word files",
-    href: "/pdf-to-word",
+    href: "/tools/pdf-to-word",
     tags: ["Local", "WASM"],
     icon: <FileText className="h-5 w-5" />,
   },

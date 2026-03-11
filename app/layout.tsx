@@ -35,6 +35,8 @@ const rootSchema = combineJsonLd([
     url: "https://www.plain.tools",
     logoUrl: "https://www.plain.tools/icon-512x512.png",
     contactEmail: "hello@plain.tools",
+    foundingDate: "2026-01-01",
+    publishingPrinciples: "https://www.plain.tools/editorial-policy",
     sameAs: ["https://github.com/Drgblack/plain-tools"],
   }),
 ])

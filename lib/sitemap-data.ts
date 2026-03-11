@@ -36,6 +36,7 @@ import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
+import { isIndexablePath } from "@/lib/seo/indexation-policy"
 
 export const BASE_URL = "https://www.plain.tools"
 export const SITEMAP_CHUNK_SIZE = 10000
@@ -266,8 +267,10 @@ export function buildSitemapEntries(now: Date = new Date()) {
     "/labs",
     "/roadmap",
     "/changelog",
+    "/editorial-policy",
+    "/methodology/status-checks",
     "/html-sitemap",
-  ]
+  ].filter(isIndexablePath)
   const curatedLandingPages = [
     "/compare/smallpdf-alternative",
     "/learn/compress-pdf-without-upload",

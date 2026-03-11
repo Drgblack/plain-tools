@@ -52,6 +52,8 @@ type OrganizationInput = {
   logoUrl?: string
   sameAs?: string[]
   contactEmail?: string
+  foundingDate?: string
+  publishingPrinciples?: string
 }
 
 type WebApplicationInput = {
@@ -153,6 +155,10 @@ export function buildOrganizationSchema(input: OrganizationInput): JsonLdObject 
       : {}),
     ...(input.sameAs && input.sameAs.length > 0 ? { sameAs: input.sameAs } : {}),
     ...(input.contactEmail ? { email: input.contactEmail } : {}),
+    ...(input.foundingDate ? { foundingDate: input.foundingDate } : {}),
+    ...(input.publishingPrinciples
+      ? { publishingPrinciples: input.publishingPrinciples }
+      : {}),
   })
 }
 

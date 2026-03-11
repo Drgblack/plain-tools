@@ -323,6 +323,12 @@ export default function SiteStatusPage() {
             <Link href="/verify-claims" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               Verify local-processing claims
             </Link>
+            <Link href="/methodology/status-checks" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Status-check methodology
+            </Link>
+            <Link href="/editorial-policy" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
+              Editorial policy
+            </Link>
             <Link href="/learn/how-to-audit-pdf-tool-network-requests" className="rounded-full border border-border bg-card px-3 py-1.5 text-muted-foreground transition hover:border-accent/40 hover:text-accent">
               Learn how to audit network requests
             </Link>
