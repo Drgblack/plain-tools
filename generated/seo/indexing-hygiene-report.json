@@ -1,0 +1,26 @@
+{
+  "auditedAt": "2026-03-12T06:44:07.646Z",
+  "baseUrl": "https://www.plain.tools",
+  "counts": {
+    "blockedInRobots": 0,
+    "duplicates": 0,
+    "missingRequiredPaths": 0,
+    "noindexInSitemap": 0,
+    "redirectPathsInSitemap": 0,
+    "sitemapPaths": 205448
+  },
+  "disallowRules": [
+    "/api/",
+    "/sign-in",
+    "/sign-up",
+    "/pro/",
+    "/pdf-tools"
+  ],
+  "blockedInRobots": [],
+  "duplicatePaths": [],
+  "excludedPrefixesInSitemap": [],
+  "missingRequiredPaths": [],
+  "noindexInSitemap": [],
+  "redirectPathsInSitemap": [],
+  "errors": []
+}

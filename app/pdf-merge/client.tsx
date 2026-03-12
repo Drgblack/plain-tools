@@ -220,7 +220,7 @@ export function PDFMergeClient() {
     <ToolShell
       name="Merge PDF"
       description="Combine multiple PDF files into a single document"
-      category={{ name: "PDF Tools", href: "/pdf-tools", type: "pdf" }}
+      category={{ name: "PDF Tools", href: "/tools", type: "pdf" }}
       tags={["Local", "WASM"]}
       explanation="This tool merges multiple PDF files into a single document entirely in your browser. Using WebAssembly-powered PDF processing, your files are combined locally without being uploaded to any server. Drag and drop to reorder pages before merging."
       faqs={faqs}

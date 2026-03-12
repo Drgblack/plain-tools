@@ -608,7 +608,7 @@ export function getRelatedComparisonLinks(slug: string) {
   return [
     ...relatedPairs,
     { href: "/compare", title: "Browse all comparisons" },
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: "/tools/merge-pdf", title: "Try Merge PDF locally" },
     { href: "/tools/compress-pdf", title: "Try Compress PDF locally" },
   ]

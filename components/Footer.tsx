@@ -33,7 +33,7 @@ const footerSections: FooterSection[] = [
       { label: "Trending Checks", href: "/status/trending" },
       { label: "Roadmap", href: "/roadmap" },
       { label: "Changelog", href: "/changelog" },
-      { label: "HTML Sitemap", href: "/sitemap" },
+      { label: "HTML Sitemap", href: "/html-sitemap" },
       { label: "Support", href: "/support" },
     ],
   },

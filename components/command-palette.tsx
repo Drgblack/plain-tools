@@ -43,7 +43,7 @@ const commands: CommandItem[] = [
   { id: "home", name: "Home", description: "Go to homepage", href: "/", icon: <Home className="h-4 w-4" />, category: "Navigation" },
   { id: "network-tools", name: "Network Tools", description: "IP, DNS, ping and more", href: "/network-tools", icon: <Globe className="h-4 w-4" />, category: "Navigation" },
   { id: "file-tools", name: "File Tools", description: "Convert and transform files", href: "/file-tools", icon: <FileCode className="h-4 w-4" />, category: "Navigation" },
-  { id: "pdf-tools", name: "PDF Tools", description: "Compress, merge, split PDFs", href: "/pdf-tools", icon: <FileType className="h-4 w-4" />, category: "Navigation" },
+  { id: "pdf-tools", name: "PDF Tools", description: "Compress, merge, split PDFs", href: "/tools", icon: <FileType className="h-4 w-4" />, category: "Navigation" },
   
   // Network Tools
   { id: "what-is-my-ip", name: "What is My IP", description: "See your public IP address", href: "/tools/what-is-my-ip", icon: <Network className="h-4 w-4" />, category: "Network Tools" },

@@ -112,7 +112,7 @@ const categories = [
   {
     name: "Work with PDFs",
     description: "Merge, split, compress, convert, OCR, and sign PDFs locally in your browser",
-    href: "/pdf-tools",
+    href: "/tools",
     icon: <FileType className="h-6 w-6" />,
     toolCount: TOOL_CATALOGUE.filter((tool) => tool.available).length,
   },
@@ -235,15 +235,15 @@ const homepageMostPopularTools = [
     icon: <FileText className="h-5 w-5" />,
   },
   {
-    name: "PDF to PNG",
-    description: "Open the image-export workflow for clean page snapshots and transparent-friendly output.",
-    href: "/tools/pdf-to-png",
+    name: "Extract PDF Pages",
+    description: "Pull out selected pages when you need a smaller PDF instead of an image export.",
+    href: "/tools/extract-pdf",
     icon: <Eye className="h-5 w-5" />,
   },
   {
-    name: "PNG to PDF",
-    description: "Use the image-to-PDF workflow to combine PNG assets into one portable document.",
-    href: "/tools/png-to-pdf",
+    name: "Protect PDF",
+    description: "Add password protection locally before you share or archive a sensitive document.",
+    href: "/tools/protect-pdf",
     icon: <FileText className="h-5 w-5" />,
   },
   {
@@ -364,7 +364,7 @@ const privacyClaims = [
 const browseCategories = [
   { 
     name: "PDF Tools", 
-    href: "/pdf-tools", 
+    href: "/tools", 
     count: TOOL_CATALOGUE.filter((tool) => tool.available).length,
     description: "Conversion, organisation, and secure document workflows",
     icon: <FileType className="h-5 w-5" />,
@@ -612,7 +612,7 @@ export default function HomePage() {
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Link
-                href="/pdf-tools"
+                href="/tools"
                 className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
                 PDF tools
@@ -1016,7 +1016,7 @@ export default function HomePage() {
               <Link href="/changelog" className="text-muted-foreground hover:text-foreground hover:underline">
                 Changelog
               </Link>
-              <Link href="/sitemap" className="text-muted-foreground hover:text-foreground hover:underline">
+              <Link href="/html-sitemap" className="text-muted-foreground hover:text-foreground hover:underline">
                 HTML sitemap
               </Link>
             </div>

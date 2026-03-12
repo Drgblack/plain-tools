@@ -64,8 +64,8 @@ const STATUS_FALLBACK_LINKS: RelatedLink[] = [
 ]
 
 const PDF_FALLBACK_LINKS: RelatedLink[] = [
-  { title: "Browse PDF tools", href: "/pdf-tools" },
-  { title: "Browse PDF variants", href: "/pdf-tools/variants" },
+  { title: "Browse PDF tools", href: "/tools" },
+  { title: "Open tools directory", href: "/tools" },
   { title: "Merge PDF", href: "/tools/merge-pdf" },
   { title: "Split PDF", href: "/tools/split-pdf" },
   { title: "Compress PDF", href: "/tools/compress-pdf" },
@@ -105,7 +105,7 @@ const IP_FALLBACK_LINKS: RelatedLink[] = [
 const GLOBAL_FALLBACK_LINKS: RelatedLink[] = [
   { title: "Browse all tools", href: "/tools" },
   { title: "Browse file converters", href: "/file-converters" },
-  { title: "Browse PDF tools", href: "/pdf-tools" },
+  { title: "Browse PDF tools", href: "/tools" },
   { title: "Browse network tools", href: "/network-tools" },
   { title: "Browse learn guides", href: "/learn" },
   { title: "Browse comparisons", href: "/compare" },
@@ -129,7 +129,7 @@ const CALCULATOR_FALLBACK_LINKS: RelatedLink[] = [
   { title: "15% of 200", href: "/calculators/percentage/what-is-15-percent-of-200" },
   { title: "25% of 400", href: "/calculators/percentage/what-is-25-percent-of-400" },
   { title: "75% of 120", href: "/calculators/percentage/what-is-75-percent-of-120" },
-  { title: "PDF tools", href: "/pdf-tools" },
+  { title: "PDF tools", href: "/tools" },
   { title: "File converters", href: "/file-converters" },
   { title: "Privacy-first comparisons", href: "/compare" },
   { title: "Professional guides", href: "/guides/legal/compress-shared-pdfs" },
@@ -290,8 +290,8 @@ function getPdfVariantRelatedLinks(currentPath: string): RelatedLink[] {
         title: tool?.name ?? formatPathTitle(page.toolSlug),
         href: `/tools/${page.toolSlug}`,
       },
-      { title: "Browse PDF tools", href: "/pdf-tools" },
-      { title: "Browse PDF variants", href: "/pdf-tools/variants" },
+      { title: "Browse PDF tools", href: "/tools" },
+      { title: "Open tools directory", href: "/tools" },
       ...siblingVariants,
       { title: "Privacy-first PDF comparisons", href: "/compare/plain-tools-vs-smallpdf" },
       { title: "Professional PDF guides", href: "/guides/legal/compress-shared-pdfs" },
@@ -306,16 +306,16 @@ function getKeywordPdfLinks(currentPath: string): RelatedLink[] {
   }
 
   return dedupeLinks(
-    [
-      ...PDF_FALLBACK_LINKS,
-      ...(currentPath.includes("compress")
+        [
+          ...PDF_FALLBACK_LINKS,
+          ...(currentPath.includes("compress")
         ? [
-            { title: "Compress PDF for email", href: "/pdf-tools/compress-pdf/for-email" },
-            { title: "Compress PDF for large files", href: "/pdf-tools/compress-pdf/large-files" },
+            { title: "Compress PDF for email", href: "/tools/compress-pdf/for-email" },
+            { title: "Compress PDF for large files", href: "/tools/compress-pdf/large-files" },
           ]
         : []),
       ...(currentPath.includes("merge")
-        ? [{ title: "Merge PDF on Mac", href: "/pdf-tools/merge-pdf/mac" }]
+        ? [{ title: "Merge PDF on Mac", href: "/tools/merge-pdf/mac" }]
         : []),
       ...(currentPath.includes("jpg") || currentPath.includes("image")
         ? [{ title: "JPG to PDF", href: "/tools/jpg-to-pdf" }]
@@ -364,7 +364,7 @@ function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
             href: `/convert/${page.format.slug}-to-${page.suggestedOutput.slug}`,
           },
           { title: "Browse file converters", href: "/file-converters" },
-          { title: "Browse PDF tools", href: "/pdf-tools" },
+          { title: "Browse PDF tools", href: "/tools" },
         ],
         currentPath
       ).slice(0, 10)
@@ -380,7 +380,7 @@ function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
         [
           ...getExtendedRelatedConverterModifierLinks(from, to, modifier),
           { title: "Browse file converters", href: "/file-converters" },
-          { title: "Browse PDF tools", href: "/pdf-tools" },
+          { title: "Browse PDF tools", href: "/tools" },
           { title: "Compare privacy-first alternatives", href: "/compare/plain-tools-vs-smallpdf" },
         ],
         currentPath
@@ -399,7 +399,7 @@ function getConverterRelatedLinks(currentPath: string): RelatedLink[] {
     [
       ...getExtendedRelatedConverterLinks(from, to),
       { title: "Browse file converters", href: "/file-converters" },
-      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Browse PDF tools", href: "/tools" },
       { title: "Convert PDF tool", href: "/tools/convert-pdf" },
       { title: "JPG to PDF tool", href: "/tools/jpg-to-pdf" },
     ],
@@ -419,7 +419,7 @@ function getCompareRelatedLinks(currentPath: string): RelatedLink[] {
     [
       ...getRelatedComparisonLinks(slug),
       { title: "Browse all comparisons", href: "/compare" },
-      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Browse PDF tools", href: "/tools" },
       { title: "Merge PDF locally", href: "/tools/merge-pdf" },
       { title: "Compress PDF locally", href: "/tools/compress-pdf" },
     ],
@@ -440,7 +440,7 @@ function getProfessionalWorkflowLinks(currentPath: string): RelatedLink[] {
       ...getRelatedProfessionalWorkflowLinks(industry, workflow),
       { title: "Browse professional workflow hubs", href: "/guides" },
       { title: `Browse ${page.page.paramLabel} workflow hub`, href: `/guides/${industry}` },
-      { title: "Browse PDF tools", href: "/pdf-tools" },
+      { title: "Browse PDF tools", href: "/tools" },
       { title: "Browse learn guides", href: "/learn" },
       {
         title: "Compare privacy-first alternatives",
@@ -586,7 +586,7 @@ function getCalculatorRelatedLinks(currentPath: string): RelatedLink[] {
       { title: "Professional PDF guides", href: "/guides/legal/compress-shared-pdfs" },
       { title: "Privacy-first comparisons", href: "/compare/plain-tools-vs-smallpdf" },
       { title: "File converters", href: "/file-converters" },
-      { title: "PDF tools", href: "/pdf-tools" },
+      { title: "PDF tools", href: "/tools" },
     ],
     currentPath
   ).slice(0, 8)

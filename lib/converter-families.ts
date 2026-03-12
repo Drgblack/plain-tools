@@ -288,7 +288,7 @@ function buildRelatedLinks(fromFormat: FamilyFormat, toFormat: FamilyFormat) {
   return [
     ...siblings,
     { href: "/file-converters", title: "Browse file converters" },
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: "/compare/plain-tools-vs-smallpdf", title: "Compare privacy-first PDF alternatives" },
     { href: "/guides/legal/compress-shared-pdfs", title: "Professional privacy-first workflows" },
   ]
@@ -610,7 +610,7 @@ function buildOpenGuidePage(format: FamilyFormat): ConverterOpenGuidePage {
         title: `${format.seoLabel} to ${entry.seoLabel} converter`,
       })),
     { href: "/file-converters", title: "Browse file converters" },
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: "/compare/plain-tools-vs-smallpdf", title: "Compare privacy-first alternatives" },
   ]
   const wordCount = countWords([

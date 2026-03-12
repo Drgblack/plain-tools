@@ -113,7 +113,7 @@ function relatedTools(percent: number, base: number): ProgrammaticRelatedTool[] 
     },
     {
       description: "Open the full PDF tools hub for adjacent document tasks.",
-      href: "/pdf-tools",
+      href: "/tools",
       name: "PDF tools",
     },
   ].slice(0, 6)
@@ -270,7 +270,7 @@ export function getPercentageCalculatorPage(
     siloLinks: [
       { href: "/calculators/percentage/what-is-10-percent-of-100", label: "Common percentage example" },
       { href: "/compare/plain-tools-vs-smallpdf", label: "Privacy-first PDF comparison" },
-      { href: "/pdf-tools", label: "PDF tools hub" },
+      { href: "/tools", label: "PDF tools hub" },
       { href: "/convert/pdf-to-word/offline", label: "Offline converter example" },
     ],
     title,

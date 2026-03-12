@@ -5,7 +5,7 @@ const footerSections = [
   {
     title: "Categories",
     links: [
-      { name: "PDF Tools", href: "/pdf-tools" },
+      { name: "PDF Tools", href: "/tools" },
       { name: "File Converters", href: "/file-converters" },
       { name: "Image Tools", href: "/image-tools" },
       { name: "Site Status", href: "/site-status" },
@@ -30,7 +30,7 @@ const footerSections = [
     title: "Resources",
     links: [
       { name: "Tools Hub", href: "/tools" },
-      { name: "PDF Hub", href: "/pdf-tools" },
+      { name: "PDF Hub", href: "/tools" },
       { name: "Image Hub", href: "/image-tools" },
       { name: "Network Hub", href: "/network-tools" },
       { name: "File Converter Hub", href: "/file-converters" },

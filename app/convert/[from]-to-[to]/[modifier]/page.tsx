@@ -111,7 +111,7 @@ export default async function ConverterModifierRoute({ params }: PageProps) {
       siloLinks={[
         { href: page.proxyPage.canonicalPath, label: "Open the base converter page" },
         { href: "/file-converters", label: "Browse file converters" },
-        { href: "/pdf-tools", label: "Browse PDF tools" },
+        { href: "/tools", label: "Browse PDF tools" },
         { href: "/compare/plain-tools-vs-smallpdf", label: "Compare privacy-first alternatives" },
       ]}
       titleOverride={page.h1}

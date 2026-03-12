@@ -7,6 +7,7 @@
     "build": "next build",
     "postbuild": "node scripts/generate-sitemap.mjs",
     "start": "next start",
+    "audit:indexing-hygiene": "node scripts/audit-indexing-hygiene.mjs",
     "audit:internal-links": "node scripts/audit-internal-links.mjs",
     "audit:production-crawl": "node scripts/audit-production-crawl.mjs",
     "audit:seo-structure": "node scripts/audit-seo-structure.mjs",

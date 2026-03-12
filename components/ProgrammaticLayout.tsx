@@ -98,8 +98,8 @@ export function ProgrammaticLayout({
   const resolvedSiloLinks =
     siloLinks ??
     [
-      { label: "PDF hub", href: "/pdf-tools" },
-      { label: "Variant index", href: "/pdf-tools/variants" },
+      { label: "PDF hub", href: "/tools" },
+      { label: "Tools directory", href: "/tools" },
       { label: `Open ${page.tool.name}`, href: `/tools/${page.tool.slug}` },
     ]
 

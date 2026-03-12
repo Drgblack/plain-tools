@@ -6,7 +6,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/sign-in", "/sign-up", "/pro/"],
+        // Private, transactional, and legacy duplicate surfaces should stay out of crawl paths.
+        disallow: [
+          "/api/",
+          "/sign-in",
+          "/sign-up",
+          "/pro/",
+          "/pdf-tools",
+        ],
       },
     ],
     host: "https://plain.tools",

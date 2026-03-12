@@ -631,7 +631,7 @@ export function getRelatedConverterLinks(from: string, to: string) {
   ).slice(0, 4)
   const supportLinks = [
     { href: "/file-converters", title: "Browse file converters" },
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: "/image-tools", title: "Browse image tools" },
     { href: "/compare", title: "Compare PDF tools" },
   ]

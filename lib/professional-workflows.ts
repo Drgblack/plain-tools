@@ -396,7 +396,7 @@ function relatedLinks(industry: IndustryDefinition, workflow: WorkflowDefinition
     .map((entry) => ({ href: workflowPath(entry.slug, workflow.slug), title: `${workflow.title} for ${entry.label}` }))
   const support = [
     { href: `/tools/${workflow.toolSlug}`, title: `Open ${mustGetTool(workflow.toolSlug).name}` },
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: industry.comparePath, title: "Read the closest privacy comparison" },
     ...(workflow.canonicalVariantPath ? [{ href: workflow.canonicalVariantPath, title: "Open the matching PDF variant" }] : []),
   ]
@@ -501,7 +501,7 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
     siloLinks: [
       { href: `/guides/${industry.slug}`, label: `Browse ${industry.label} guides` },
       { href: `/tools/${tool.slug}`, label: `Open ${tool.name}` },
-      { href: "/pdf-tools", label: "Browse PDF tools" },
+      { href: "/tools", label: "Browse PDF tools" },
       { href: industry.comparePath, label: "Read the closest privacy comparison" },
       ...(workflow.canonicalVariantPath ? [{ href: workflow.canonicalVariantPath, label: "Open the matching PDF variant" }] : []),
     ],

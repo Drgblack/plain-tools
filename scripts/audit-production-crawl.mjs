@@ -39,6 +39,12 @@ const CRITICAL_PAGES = [
 ]
 
 const EXPECTED_NOINDEX = ["/faq", "/html-sitemap", "/labs"]
+const EXPECTED_SITEMAP_EXCLUSIONS = [
+  ...EXPECTED_NOINDEX,
+  "/pdf-tools",
+  "/pdf-tools/compare",
+  "/pdf-tools/variants",
+]
 
 function normalizePath(input) {
   const url = new URL(input, BASE_URL)
@@ -76,6 +82,10 @@ function extractCanonical(html) {
 function extractRobots(html) {
   const match = html.match(/<meta[^>]+name=["']robots["'][^>]+content=["']([^"']+)["']/i)
   return match ? match[1].toLowerCase() : null
+}
+
+function shouldSelfCanonical(pathname) {
+  return !EXPECTED_NOINDEX.includes(pathname)
 }
 
 async function fetchText(targetPath) {
@@ -159,11 +169,33 @@ for (const [targetPath, record] of visited.entries()) {
   }
 
   if (!record.canonical) {
-    warnings.push(`${targetPath} is missing a canonical tag in rendered HTML`)
+    if (CRITICAL_PAGES.includes(targetPath)) {
+      errors.push(`${targetPath} is missing a canonical tag in rendered HTML`)
+    } else {
+      warnings.push(`${targetPath} is missing a canonical tag in rendered HTML`)
+    }
   }
 
   if (record.finalPath && record.finalPath !== targetPath) {
     warnings.push(`${targetPath} redirected to ${record.finalPath}`)
+  }
+
+  if (
+    CRITICAL_PAGES.includes(targetPath) &&
+    record.finalPath === targetPath &&
+    shouldSelfCanonical(targetPath) &&
+    record.canonical &&
+    record.canonical !== targetPath
+  ) {
+    errors.push(`${targetPath} renders canonical ${record.canonical} instead of self-canonicalising`)
+  }
+
+  if (
+    CRITICAL_PAGES.includes(targetPath) &&
+    record.finalPath === targetPath &&
+    record.robots?.includes("noindex")
+  ) {
+    errors.push(`${targetPath} is a critical page but rendered robots were "${record.robots}"`)
   }
 }
 
@@ -216,15 +248,22 @@ for (const noindexPath of EXPECTED_NOINDEX) {
   }
 }
 
-let sitemapChecks = { noindexPathsPresent: [] }
+let sitemapChecks = { excludedPathsPresent: [], missingCriticalPaths: [] }
 try {
   const sitemapPaths = await fetchSitemapPaths()
   sitemapChecks = {
-    noindexPathsPresent: EXPECTED_NOINDEX.filter((targetPath) => sitemapPaths.includes(targetPath)),
+    excludedPathsPresent: EXPECTED_SITEMAP_EXCLUSIONS.filter((targetPath) =>
+      sitemapPaths.includes(targetPath)
+    ),
+    missingCriticalPaths: CRITICAL_PAGES.filter((targetPath) => !sitemapPaths.includes(targetPath)),
   }
 
-  for (const targetPath of sitemapChecks.noindexPathsPresent) {
+  for (const targetPath of sitemapChecks.excludedPathsPresent) {
     errors.push(`${targetPath} appears in sitemap.xml but should be excluded`)
+  }
+
+  for (const targetPath of sitemapChecks.missingCriticalPaths) {
+    errors.push(`${targetPath} is a critical page but was missing from sitemap.xml`)
   }
 } catch (error) {
   warnings.push(`Could not fetch sitemap.xml during production crawl audit: ${String(error)}`)

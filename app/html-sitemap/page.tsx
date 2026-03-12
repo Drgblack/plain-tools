@@ -53,7 +53,7 @@ const mainSections: SitemapSection[] = [
     links: [
       { label: "Home", href: "/" },
       { label: "Tools", href: "/tools" },
-      { label: "PDF Tools", href: "/pdf-tools" },
+      { label: "PDF tools directory", href: "/tools" },
       { label: "File Converters", href: "/file-converters" },
       { label: "Financial Calculators", href: "/calculators" },
       { label: "Image Tools", href: "/image-tools" },
@@ -65,7 +65,6 @@ const mainSections: SitemapSection[] = [
       { label: "Verify Claims", href: "/verify-claims" },
       { label: "Roadmap", href: "/roadmap" },
       { label: "Changelog", href: "/changelog" },
-      { label: "Labs", href: "/labs" },
     ],
   },
   {

@@ -95,7 +95,7 @@ export default async function ConverterPairPageRoute({ params }: PageProps) {
       relatedSectionTitle={`Related tools for ${pair.from.toUpperCase()} to ${pair.to.toUpperCase()}`}
       siloLinks={[
         { href: "/file-converters", label: "Browse file converters" },
-        { href: "/pdf-tools", label: "Browse PDF tools" },
+        { href: "/tools", label: "Browse PDF tools" },
         { href: "/image-tools", label: "Browse image tools" },
         { href: "/compare", label: "Browse comparisons" },
       ]}

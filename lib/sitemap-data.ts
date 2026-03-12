@@ -11,8 +11,6 @@ import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
-import { getExtendedPdfVariantSitemapPaths } from "@/lib/pdf-actions-extended"
-import { getPdfComparisonSitemapPaths } from "@/lib/pdf-tool-comparisons"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
 import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows-expanded"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
@@ -26,7 +24,6 @@ import {
   getStatusOutageHistoryPaths,
   getStatusTrendingPaths,
 } from "@/lib/status-extensions"
-import { getStatusIspPaths, getStatusRegionPaths } from "@/lib/status-regions"
 import {
   STATUS_CATEGORIES,
   STATUS_HIGH_DEMAND_SITES,
@@ -91,20 +88,7 @@ function normalizeCanonicalUrl(url: string) {
   const pathname =
     parsed.pathname !== "/" ? parsed.pathname.replace(/\/+$/, "") || "/" : "/"
 
-  if (pathname.startsWith("/pdf-tools/")) {
-    const isPdfVariantIndex = pathname === "/pdf-tools/variants"
-    const isPdfComparisonIndex = pathname === "/pdf-tools/compare"
-    const isPdfVariantRoute = /^\/pdf-tools\/[^/]+\/[^/]+$/.test(pathname)
-    const isPdfComparisonRoute = /^\/pdf-tools\/compare\/[^/]+$/.test(pathname)
-    if (
-      !isPdfVariantIndex &&
-      !isPdfComparisonIndex &&
-      !isPdfVariantRoute &&
-      !isPdfComparisonRoute
-    ) {
-      return null
-    }
-  }
+  if (pathname === "/pdf-tools" || pathname.startsWith("/pdf-tools/")) return null
   if (pathname.startsWith("/file-converters/")) return null
 
   return `${BASE_URL}${pathname}`
@@ -242,8 +226,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const staticCorePages = [
     "/topics",
     "/blog",
-    "/pdf-tools",
-    "/pdf-tools/compare",
     "/file-converters",
     "/image-tools",
     "/file-tools",
@@ -292,10 +274,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const pdfIntentPages = PDF_INTENT_PAGES.map((page) =>
     toEntry(pdfIntentPathFor(page.slug), now, "monthly", 0.82)
   )
-  const pdfToolVariantIndex = toEntry("/pdf-tools/variants", now, "monthly", 0.8)
-  const pdfToolVariantPages = getExtendedPdfVariantSitemapPaths().map((path) =>
-    toEntry(path, now, "monthly", 0.78)
-  )
   const fileConverterPages = getExtendedConverterSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.8)
   )
@@ -320,9 +298,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const professionalWorkflowHubPages = getProfessionalWorkflowIndustryHubs().map((hub) =>
     toEntry(hub.canonicalPath, now, "weekly", 0.74)
   )
-  const pdfComparisonPages = getPdfComparisonSitemapPaths().map((path) =>
-    toEntry(path, now, "daily", 0.79)
-  )
   const toolProblemPages = TOOL_PROBLEM_PAGES.map((page) =>
     toEntry(`/tools/${page.slug}`, now, "monthly", 0.84)
   )
@@ -343,12 +318,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
   )
   const statusTrendingPages = getStatusTrendingPaths().map((path) =>
     toEntry(path, now, "daily", 0.77)
-  )
-  const statusRegionPages = getStatusRegionPaths().map((path) =>
-    toEntry(path, now, "daily", 0.63)
-  )
-  const statusIspPages = getStatusIspPaths().map((path) =>
-    toEntry(path, now, "daily", 0.61)
   )
   const statusExtensionHistoryPages = getStatusOutageHistoryPaths().map((path) =>
     toEntry(path, now, "daily", 0.76)
@@ -393,8 +362,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...toolPages,
     ...programmaticPages,
     ...pdfIntentPages,
-    pdfToolVariantIndex,
-    ...pdfToolVariantPages,
     ...fileConverterPages,
     ...fileConverterModifierPages,
     ...openFormatGuidePages,
@@ -403,7 +370,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...comparisonMatrixPages,
     ...professionalWorkflowHubPages,
     ...professionalWorkflowPages,
-    ...pdfComparisonPages,
     ...toolProblemPages,
     ...toolVariantPages,
     ...dnsDynamicPages,
@@ -411,8 +377,6 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...networkOpsPages,
     ...statusCategoryPages,
     ...statusTrendingPages,
-    ...statusRegionPages,
-    ...statusIspPages,
     ...outageHistoryPages,
     ...statusExtensionHistoryPages,
     ...blogCategoryPages,

@@ -2975,7 +2975,7 @@ function buildCommonBlocks(
 function relatedToolsForCalculator(parsed: ParsedCalculator): ProgrammaticRelatedTool[] {
   return [
     { description: "Run another local calculator scenario.", href: buildCalculatorPath(parsed.category, parsed.expression), name: CATEGORY_LABELS[parsed.category] },
-    { description: "Open privacy-first PDF tools.", href: "/pdf-tools", name: "PDF tools" },
+    { description: "Open privacy-first PDF tools.", href: "/tools", name: "PDF tools" },
     { description: "Browse file converters.", href: "/file-converters", name: "File converters" },
     { description: "Compare privacy-first alternatives.", href: "/compare/plain-tools-vs-smallpdf", name: "Privacy-first comparisons" },
     { description: "Use a PDF workflow guide.", href: "/guides/legal/compress-shared-pdfs", name: "Professional guides" },
@@ -2987,7 +2987,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
   const canonicalPath = buildCalculatorPath(entry.category, parsed.expression)
   const pageRelatedLinks = [
     ...getCalculatedRelatedLinks(parsed),
-    { href: "/pdf-tools", title: "Browse PDF tools" },
+    { href: "/tools", title: "Browse PDF tools" },
     { href: "/file-converters", title: "Browse file converters" },
     { href: "/compare/plain-tools-vs-smallpdf", title: "Privacy-first comparisons" },
     { href: "/guides/legal/compress-shared-pdfs", title: "Professional workflow guides" },
@@ -4335,7 +4335,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     relatedLinks: pageRelatedLinks,
     siloLinks: [
       { href: "/calculators", label: "Calculator hub" },
-      { href: "/pdf-tools", label: "PDF tools" },
+      { href: "/tools", label: "PDF tools" },
       { href: "/file-converters", label: "File converters" },
       { href: "/compare/plain-tools-vs-smallpdf", label: "Privacy-first comparisons" },
     ],

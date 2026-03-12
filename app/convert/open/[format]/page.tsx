@@ -125,7 +125,7 @@ export default async function ConverterOpenFormatGuideRoute({ params }: PageProp
           label: `${page.format.seoLabel} to ${page.suggestedOutput.seoLabel}`,
         },
         { href: "/file-converters", label: "Browse file converters" },
-        { href: "/pdf-tools", label: "Browse PDF tools" },
+        { href: "/tools", label: "Browse PDF tools" },
         {
           href: "/compare/plain-tools-vs-smallpdf",
           label: "Compare privacy-first alternatives",

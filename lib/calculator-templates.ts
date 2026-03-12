@@ -704,7 +704,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("mortgage", mortgageExpressionFor(350000, 6, 30)), title: "Mortgage payment calculator" },
         { href: buildCalculatorPath("tax-estimate", taxExpressionFor(100000, "single", "california")), title: "Tax estimate calculator" },
         { href: "/compare/plain-tools-vs-smallpdf", title: "Privacy-first comparisons" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/convert/pdf-to-word/offline", title: "Offline converters" },
       ]
     case "loan":
@@ -715,7 +715,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("compound-interest", compoundExpressionFor(10000, 7, 10)), title: "Compound interest calculator" },
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(90000, 40, 52)), title: "Salary to hourly calculator" },
         { href: "/guides/accounting/merge-document-packets", title: "Accounting workflows" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/compare/plain-tools-vs-adobe-acrobat-online", title: "Tool comparisons" },
       ]
     case "mortgage":
@@ -726,7 +726,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("tax-estimate", taxExpressionFor(150000, "married", "texas")), title: "Tax estimate calculator" },
         { href: buildCalculatorPath("retirement", retirementExpressionFor(500, 7, 30)), title: "Retirement calculator" },
         { href: "/guides/real-estate/prepare-client-evidence-bundles", title: "Real-estate workflows" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/compare/plain-tools-vs-pdf24", title: "Privacy-first comparisons" },
       ]
     case "compound-interest":
@@ -738,7 +738,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(120000, 40, 52)), title: "Salary to hourly calculator" },
         { href: "/compare/plain-tools-vs-smallpdf", title: "Privacy-first comparisons" },
         { href: "/file-converters", title: "File converters" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
       ]
     case "retirement":
       return [
@@ -748,7 +748,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("salary-to-hourly", salaryExpressionFor(100000, 40, 52)), title: "Salary to hourly calculator" },
         { href: buildCalculatorPath("tax-estimate", taxExpressionFor(100000, "single", "california")), title: "Tax estimate calculator" },
         { href: "/guides/executive/mark-approval-drafts", title: "Executive workflows" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/compare/plain-tools-vs-sejda", title: "Tool comparisons" },
       ]
     case "tax-estimate":
@@ -759,7 +759,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("loan", loanExpressionFor(50000, 6, 5)), title: "Loan payment calculator" },
         { href: buildCalculatorPath("retirement", retirementExpressionFor(500, 7, 30)), title: "Retirement calculator" },
         { href: "/guides/accounting/merge-document-packets", title: "Accounting workflows" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/compare/plain-tools-vs-smallpdf", title: "Privacy-first comparisons" },
       ]
     case "tip":
@@ -771,7 +771,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("tax-estimate", taxExpressionFor(75000, "single", "illinois")), title: "Tax estimate calculator" },
         { href: "/compare/plain-tools-vs-pdf24", title: "Privacy-first comparisons" },
         { href: "/file-converters", title: "File converters" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
       ]
     case "salary-to-hourly":
       return [
@@ -781,7 +781,7 @@ function relatedCalculatorLinks(parsed: ParsedCalculator): Array<{ href: string;
         { href: buildCalculatorPath("retirement", retirementExpressionFor(500, 7, 30)), title: "Retirement calculator" },
         { href: buildCalculatorPath("loan", loanExpressionFor(50000, 6, 5)), title: "Loan payment calculator" },
         { href: "/guides/hr/sign-final-copy", title: "HR workflows" },
-        { href: "/pdf-tools", title: "PDF tools" },
+        { href: "/tools", title: "PDF tools" },
         { href: "/compare/plain-tools-vs-ilovepdf", title: "Tool comparisons" },
       ]
   }
@@ -1374,7 +1374,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     },
     relatedLinks,
     siloLinks: [
-      { href: "/pdf-tools", label: "PDF tools" },
+      { href: "/tools", label: "PDF tools" },
       { href: "/file-converters", label: "File converters" },
       { href: "/compare/plain-tools-vs-smallpdf", label: "Privacy-first comparisons" },
       { href: relatedLinks[0]?.href ?? "/calculators/percentage/what-is-10-percent-of-100", label: relatedLinks[0]?.title ?? "Related calculator" },
