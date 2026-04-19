@@ -6,6 +6,7 @@ type FooterLink = {
   label: string
   href: string
   external?: boolean
+  title?: string
 }
 
 type FooterSection = {
@@ -35,6 +36,17 @@ const footerSections: FooterSection[] = [
       { label: "Changelog", href: "/changelog" },
       { label: "HTML Sitemap", href: "/html-sitemap" },
       { label: "Support", href: "/support" },
+    ],
+  },
+  {
+    title: "Related Tools",
+    links: [
+      {
+        label: "ZeroPaste - Invoice Data Extraction",
+        href: "https://zeropaste.io",
+        external: true,
+        title: "ZeroPaste - Invoice Data Extraction Tool",
+      },
     ],
   },
   {
@@ -86,7 +98,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-10">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h2 className="text-sm font-semibold tracking-tight text-foreground">{section.title}</h2>
@@ -97,16 +109,21 @@ export function Footer() {
                       href={link.href}
                       target={link.external ? "_blank" : undefined}
                       rel={link.external ? "noopener noreferrer" : undefined}
+                      title={link.title}
                       className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                       translate={
                         link.href.startsWith("mailto:") ||
                         link.label.includes("Plain") ||
-                        link.label.includes("TimeMeaning")
+                        link.label.includes("TimeMeaning") ||
+                        link.label.includes("ZeroPaste")
                           ? "no"
                           : undefined
                       }
                     >
-                      {link.label.includes("Plain") || link.label.includes("TimeMeaning") || link.href.startsWith("mailto:") ? (
+                      {link.label.includes("Plain") ||
+                      link.label.includes("TimeMeaning") ||
+                      link.label.includes("ZeroPaste") ||
+                      link.href.startsWith("mailto:") ? (
                         <NoTranslate>{link.label}</NoTranslate>
                       ) : (
                         link.label
