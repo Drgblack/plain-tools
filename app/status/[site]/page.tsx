@@ -14,6 +14,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
+  applyIndexationPolicy,
+  getIndexableStatusDomains,
+  isIndexableStatusDomain,
+} from "@/lib/seo/indexation-policy"
+import {
   buildBreadcrumbList,
   buildFaqPageSchema,
   buildHowToSchema,
@@ -48,7 +53,6 @@ import {
   STATUS_CATEGORY_META,
   STATUS_DOMAINS,
   STATUS_HIGH_DEMAND_SITES,
-  STATUS_STATIC_DOMAINS,
 } from "@/lib/status-domains"
 
 interface Props {
@@ -126,17 +130,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  return buildPageMetadata({
-    title: `Is ${toSiteDisplayName(normalizedSite)} Down Right Now?`,
-    description: `Check whether ${toSiteDisplayName(normalizedSite)} is currently down or experiencing issues. Fast website availability check with troubleshooting steps.`,
-    path: statusPathFor(normalizedSite),
-    image: "/og/default.png",
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      title: `Is ${toSiteDisplayName(normalizedSite)} Down Right Now?`,
+      description: `Check whether ${toSiteDisplayName(normalizedSite)} is currently down or experiencing issues. Fast website availability check with troubleshooting steps.`,
+      path: statusPathFor(normalizedSite),
+      image: "/og/default.png",
+    }),
+    statusPathFor(normalizedSite)
+  )
 }
 
 export function generateStaticParams() {
   return [
-    ...STATUS_STATIC_DOMAINS.slice(0, getSitePrebuildLimit()).map((site) => ({
+    ...getIndexableStatusDomains().slice(0, getSitePrebuildLimit()).map((site) => ({
       site: encodeURIComponent(site),
     })),
     ...getStatusFlatStaticParams(getFlatPrebuildLimit()),
@@ -236,6 +243,7 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
       ...STATUS_TRAFFIC_SITES,
     ])
   )
+    .filter((value) => isIndexableStatusDomain(value))
     .filter((value) => value !== normalizedSite)
     .slice(0, 8)
   const faqs = [

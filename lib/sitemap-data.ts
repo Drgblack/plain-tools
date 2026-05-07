@@ -8,7 +8,6 @@ import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
 import { DNS_SITEMAP_DOMAINS } from "@/lib/network-dns"
 import { PDF_INTENT_PAGES, pdfIntentPathFor } from "@/lib/pdf-intent-pages"
-import { getProfessionalWorkflowSitemapPaths } from "@/lib/professional-workflows-expanded"
 import { getProgrammaticSitemapPaths } from "@/lib/programmatic-content"
 import { expansionSitemapUrls } from "@/lib/seo/expansion-content"
 import { FIRST_WAVE_PRIORITY_PATHS } from "@/lib/seo/first-wave-pages"
@@ -17,23 +16,26 @@ import { trancheSitemapUrls } from "@/lib/seo/tranche1-content"
 import { workflowSitemapUrls } from "@/lib/seo/workflows-content"
 import { statusPathFor } from "@/lib/site-status"
 import {
-  getStatusOutageHistoryPaths,
-  getStatusTrendingPaths,
+  statusOutageHistoryPathForDomain,
+  statusTrendingPathForCategory,
 } from "@/lib/status-extensions"
 import {
   STATUS_CATEGORIES,
   STATUS_HIGH_DEMAND_SITES,
-  STATUS_STATIC_DOMAINS,
 } from "@/lib/status-domains"
 import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
-import { getProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
+import { getIndexableProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
 import {
+  getIndexableGuideWorkflowSitemapPaths,
   getIndexableCalculatorSitemapPaths,
   getIndexableConverterModifierSitemapPaths,
   getIndexableConverterPairSitemapPaths,
   getIndexableOpenFormatGuideSitemapPaths,
+  getIndexableStatusDomains,
+  getIndexableStatusOutageHistoryDomains,
+  getIndexableStatusTrendingSegments,
   isIndexablePath,
 } from "@/lib/seo/indexation-policy"
 
@@ -294,10 +296,10 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const comparisonMatrixPages = getCompareMatrixSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.79)
   )
-  const professionalWorkflowPages = getProfessionalWorkflowSitemapPaths().map((path) =>
+  const professionalWorkflowPages = getIndexableGuideWorkflowSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.82)
   )
-  const professionalWorkflowHubPages = getProfessionalWorkflowIndustryHubs().map((hub) =>
+  const professionalWorkflowHubPages = getIndexableProfessionalWorkflowIndustryHubs().map((hub) =>
     toEntry(hub.canonicalPath, now, "weekly", 0.74)
   )
   const toolProblemPages = TOOL_PROBLEM_PAGES.map((page) =>
@@ -318,12 +320,13 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const statusCategoryPages = STATUS_CATEGORIES.map((category) =>
     toEntry(`/status/${category}`, now, "daily", 0.75)
   )
-  const statusTrendingPages = getStatusTrendingPaths().map((path) =>
-    toEntry(path, now, "daily", 0.77)
+  const statusTrendingPages = getIndexableStatusTrendingSegments().map((segment) =>
+    toEntry(statusTrendingPathForCategory(segment), now, "daily", 0.77)
   )
-  const statusExtensionHistoryPages = getStatusOutageHistoryPaths().map((path) =>
-    toEntry(path, now, "daily", 0.76)
-  )
+  const statusExtensionHistoryPages = getIndexableStatusOutageHistoryDomains().flatMap((domain) => {
+    const path = statusOutageHistoryPathForDomain(domain)
+    return path ? [toEntry(path, now, "daily", 0.76)] : []
+  })
   const outageHistoryPages = OUTAGE_HISTORY_PAGES.map((entry) =>
     toEntry(outageHistoryPathForSlug(entry.slug), now, "daily", 0.8)
   )
@@ -336,7 +339,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     priority: 0.7,
     url: `${BASE_URL}/blog/${post.slug}`,
   }))
-  const staticStatusPages = STATUS_STATIC_DOMAINS.map((site) =>
+  const prioritizedStatusPages = getIndexableStatusDomains().map((site) =>
     toEntry(
       statusPathFor(site),
       now,
@@ -383,7 +386,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     ...statusExtensionHistoryPages,
     ...blogCategoryPages,
     ...blogPostPages,
-    ...staticStatusPages,
+    ...prioritizedStatusPages,
     ...tranchePages,
   ]
 

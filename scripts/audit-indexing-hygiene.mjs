@@ -54,6 +54,10 @@ const REQUIRED_PRIORITY_PATHS = [
   "/guides",
   "/calculators",
 ]
+const FAMILY_BASELINES = {
+  guides: 3596,
+  status: 2929,
+}
 
 function runTsx(code) {
   return execSync(`npx tsx -e ${JSON.stringify(code)}`, {
@@ -112,8 +116,38 @@ function countByFamily(paths) {
   return Object.fromEntries([...buckets.entries()].sort((a, b) => b[1] - a[1]))
 }
 
+function buildGuideBuckets(paths) {
+  return {
+    industryHubs: paths.filter((path) => /^\/guides\/[^/]+$/.test(path)).length,
+    workflowPages: paths.filter((path) => /^\/guides\/[^/]+\/[^/]+$/.test(path)).length,
+  }
+}
+
+function buildStatusBuckets(paths) {
+  return {
+    categories: paths.filter((path) =>
+      /^\/status\/(social|messaging|streaming|developer-tools|saas|ai|finance|ecommerce|productivity|cloud|gaming|news|education|design)$/.test(
+        path
+      )
+    ).length,
+    domainPages: paths.filter(
+      (path) =>
+        /^\/status\/[^/]+$/.test(path) &&
+        path !== "/status/trending" &&
+        !path.endsWith("-outage-history") &&
+        !/^\/status\/trending-/.test(path) &&
+        !/^\/status\/(social|messaging|streaming|developer-tools|saas|ai|finance|ecommerce|productivity|cloud|gaming|news|education|design)$/.test(
+          path
+        )
+    ).length,
+    outageHistory: paths.filter((path) => /^\/status\/[^/]+-outage-history$/.test(path)).length,
+    trendingOverview: paths.filter((path) => path === "/status/trending").length,
+    trendingSegments: paths.filter((path) => /^\/status\/trending-[^/]+$/.test(path)).length,
+  }
+}
+
 runTsx(
-  `import fs from "node:fs"; import robots from "./app/robots.ts"; import { buildSitemapEntries } from "./lib/sitemap-data.ts"; import { EXCLUDED_URL_PATTERNS, NOINDEX_EXACT_PATHS, NOINDEX_URL_PATTERNS, SEO_INDEXATION_LIMITS, getIndexationPolicy } from "./lib/seo/indexation-policy.ts"; const entries = buildSitemapEntries(new Date()).map((entry) => entry.url); const robotsConfig = robots(); const noindexPaths = Array.from(NOINDEX_EXACT_PATHS); const nonIndexableEntries = entries.map((entry) => new URL(entry).pathname).filter((path) => Boolean(getIndexationPolicy(path))); fs.writeFileSync(${JSON.stringify(PAYLOAD_PATH)}, JSON.stringify({ entries, excludedPatterns: EXCLUDED_URL_PATTERNS, noindexPaths, noindexedPatterns: NOINDEX_URL_PATTERNS, nonIndexableEntries, robotsConfig, seoIndexationLimits: SEO_INDEXATION_LIMITS }));`
+  `import fs from "node:fs"; import robots from "./app/robots.ts"; import { buildSitemapEntries } from "./lib/sitemap-data.ts"; import { EXCLUDED_URL_PATTERNS, NOINDEX_EXACT_PATHS, NOINDEX_URL_PATTERNS, SEO_INDEXATION_LIMITS, getIndexableGuideIndustrySitemapPaths, getIndexableGuideWorkflowSitemapPaths, getIndexableStatusDomains, getIndexableStatusOutageHistoryDomains, getIndexableStatusTrendingSegments, getIndexationPolicy } from "./lib/seo/indexation-policy.ts"; const entries = buildSitemapEntries(new Date()).map((entry) => entry.url); const robotsConfig = robots(); const noindexPaths = Array.from(NOINDEX_EXACT_PATHS); const nonIndexableEntries = entries.map((entry) => new URL(entry).pathname).filter((path) => Boolean(getIndexationPolicy(path))); fs.writeFileSync(${JSON.stringify(PAYLOAD_PATH)}, JSON.stringify({ entries, excludedPatterns: EXCLUDED_URL_PATTERNS, indexableGuideIndustryPaths: getIndexableGuideIndustrySitemapPaths(), indexableGuideWorkflowPaths: getIndexableGuideWorkflowSitemapPaths(), indexableStatusDomains: getIndexableStatusDomains(), indexableStatusOutageHistoryDomains: getIndexableStatusOutageHistoryDomains(), indexableStatusTrendingSegments: getIndexableStatusTrendingSegments(), noindexPaths: Array.from(noindexPaths), noindexedPatterns: NOINDEX_URL_PATTERNS, nonIndexableEntries, robotsConfig, seoIndexationLimits: SEO_INDEXATION_LIMITS }));`
 )
 
 const payload = JSON.parse(await readFile(PAYLOAD_PATH, "utf8"))
@@ -139,6 +173,21 @@ const excludedPrefixesInSitemap = sitemapPaths.filter((entry) =>
 )
 const missingRequiredPaths = REQUIRED_PRIORITY_PATHS.filter((entry) => !sitemapPaths.includes(entry))
 const familyCounts = countByFamily(sitemapPaths)
+const guidePaths = sitemapPaths.filter((path) => path.startsWith("/guides/"))
+const statusPaths = sitemapPaths.filter((path) => path.startsWith("/status/"))
+const guideBuckets = buildGuideBuckets(guidePaths)
+const statusBuckets = buildStatusBuckets(statusPaths)
+const expectedGuideBuckets = {
+  industryHubs: payload.indexableGuideIndustryPaths.length,
+  workflowPages: payload.indexableGuideWorkflowPaths.length,
+}
+const expectedStatusBuckets = {
+  categories: 14,
+  domainPages: payload.indexableStatusDomains.length,
+  outageHistory: payload.indexableStatusOutageHistoryDomains.length,
+  trendingOverview: 1,
+  trendingSegments: payload.indexableStatusTrendingSegments.length,
+}
 
 const errors = []
 
@@ -174,6 +223,42 @@ if (excludedPrefixesInSitemap.length > 0) {
 
 if (missingRequiredPaths.length > 0) {
   errors.push(`Critical canonical pages missing from sitemap: ${missingRequiredPaths.join(", ")}`)
+}
+
+if (guideBuckets.industryHubs !== expectedGuideBuckets.industryHubs) {
+  errors.push(
+    `Guide industry hub count drifted from curated set: expected ${expectedGuideBuckets.industryHubs}, found ${guideBuckets.industryHubs}`
+  )
+}
+
+if (guideBuckets.workflowPages !== expectedGuideBuckets.workflowPages) {
+  errors.push(
+    `Guide workflow count drifted from curated set: expected ${expectedGuideBuckets.workflowPages}, found ${guideBuckets.workflowPages}`
+  )
+}
+
+if (statusBuckets.domainPages !== expectedStatusBuckets.domainPages) {
+  errors.push(
+    `Status domain count drifted from curated set: expected ${expectedStatusBuckets.domainPages}, found ${statusBuckets.domainPages}`
+  )
+}
+
+if (statusBuckets.outageHistory !== expectedStatusBuckets.outageHistory) {
+  errors.push(
+    `Status outage-history count drifted from curated set: expected ${expectedStatusBuckets.outageHistory}, found ${statusBuckets.outageHistory}`
+  )
+}
+
+if (statusBuckets.trendingSegments !== expectedStatusBuckets.trendingSegments) {
+  errors.push(
+    `Status trending-segment count drifted from curated set: expected ${expectedStatusBuckets.trendingSegments}, found ${statusBuckets.trendingSegments}`
+  )
+}
+
+if (statusBuckets.categories !== expectedStatusBuckets.categories) {
+  errors.push(
+    `Status category hub count drifted from curated set: expected ${expectedStatusBuckets.categories}, found ${statusBuckets.categories}`
+  )
 }
 
 const report = {
@@ -212,11 +297,67 @@ const report = {
     converterModifierLimit: payload.seoIndexationLimits.converterModifiers,
     converterOpenFormatLimit: payload.seoIndexationLimits.converterOpenFormats,
     converterPairLimit: payload.seoIndexationLimits.converterPairs,
+    guideIndustryHubLimit: payload.seoIndexationLimits.guideIndustryHubs,
+    guideWorkflowLimit: payload.seoIndexationLimits.guideWorkflowPages,
+    statusDomainLimit: payload.seoIndexationLimits.statusDomains,
+    statusOutageHistoryLimit: payload.seoIndexationLimits.statusOutageHistoryPages,
+    statusTrendingSegmentLimit: payload.seoIndexationLimits.statusTrendingSegments,
+  },
+  familyPruning: {
+    guides: {
+      before: FAMILY_BASELINES.guides,
+      after: guidePaths.length,
+      remainingIndexable: guideBuckets,
+      excludedPatterns: [
+        "/guides/<industry> outside the curated priority-industry hubs",
+        "/guides/<industry>/<workflow> outside the curated priority industry x workflow intersections",
+      ],
+      noindexedPatterns: [
+        "/guides/<industry> outside the curated priority-industry hubs",
+        "/guides/<industry>/<workflow> outside the curated priority industry x workflow intersections",
+      ],
+      consolidatedOrRedirected: [
+        "/guides/<non-priority-industry> consolidated to /guides at sitemap and internal-link level; route remains live with noindex.",
+        "/guides/<industry>/<non-priority-workflow> consolidated to the closest priority hub and matching tool page at sitemap and internal-link level; route remains live with noindex.",
+      ],
+      rationale: [
+        "The 58x61 workflow matrix created substantial near-duplicate templated pages with overlapping intent.",
+        "Priority industry hubs remain indexable because they provide clear navigation and stronger internal-link consolidation.",
+        "Only priority industry x priority workflow intersections remain indexable because they carry the strongest strategic and commercial intent.",
+      ],
+    },
+    status: {
+      before: FAMILY_BASELINES.status,
+      after: statusPaths.length,
+      remainingIndexable: statusBuckets,
+      excludedPatterns: [
+        "/status/<domain> outside the curated category-representative status set",
+        "/status/<domain>-outage-history outside the curated outage-history set",
+        "/status/trending-<segment> outside the primary status trend segments",
+      ],
+      noindexedPatterns: [
+        "/status/<domain> outside the curated category-representative status set",
+        "/status/<domain>-outage-history outside the curated outage-history set",
+        "/status/trending-<segment> outside the primary status trend segments",
+      ],
+      consolidatedOrRedirected: [
+        "/status/<non-curated-domain> consolidated to /status, /status/<category>, and /site-status at sitemap and hub-link level; route remains live with noindex.",
+        "/status/<non-curated-domain>-outage-history consolidated to the canonical domain page plus /status/trending and /site-status; route remains live with noindex.",
+        "/status/trending-<non-primary-segment> consolidated to /status/trending at sitemap and hub-link level; route remains live with noindex.",
+      ],
+      rationale: [
+        "Most status URLs are operational support pages rather than durable search landing pages.",
+        "Category hubs remain indexable because they group public search intent cleanly without forcing Google through every low-demand domain permutation.",
+        "Only representative status domains, primary trend segments, and a small outage-history subset remain indexable to preserve utility without polluting the sitemap.",
+      ],
+    },
   },
   crawlBudgetRecommendations: [
     "Keep parameterized URLs out of crawl paths with robots rules, but let duplicate public paths stay crawlable long enough for Google to see redirects or noindex directives.",
     "Only expose curated calculator and converter routes in sitemap and high-signal internal hubs.",
     "Leave low-value regional and ISP status permutations live for users but noindex them so they do not compete with canonical status pages.",
+    "Keep the /guides family limited to priority industry hubs and priority workflow intersections instead of the full generated matrix.",
+    "Keep the /status family limited to category hubs, representative domain pages, primary trending segments, and a small outage-history subset.",
     "Redirect legacy duplicate namespaces such as /pdf-tools/* and remove redirected aliases from internal links instead of blocking them in robots.txt.",
     "Monitor calculator and converter family counts before increasing any generated-route budgets.",
   ],

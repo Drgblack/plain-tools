@@ -4,9 +4,24 @@ Last updated: 2026-05-07
 
 ## Validation snapshot
 
-- Root XML sitemap count reduced from `205,448` to `10,177` URLs.
+- Root XML sitemap count reduced from `205,448` to `4,132` URLs after the second pruning pass.
 - Sitemap family mix now concentrates on canonical hubs and curated long-tail subsets instead of full generated matrices.
 - Current audit report: `generated/seo/indexing-hygiene-report.json`
+
+## Pass 2: guides and status pruning
+
+- `/guides/*` reduced from `3,596` to `300` indexable URLs.
+- `/status/*` reduced from `2,929` to `180` indexable URLs.
+- `/guides/*` now keeps only `15` priority industry hubs plus `285` priority workflow intersections.
+- `/status/*` now keeps only `14` category hubs, `112` representative domain pages, `43` outage-history pages, `10` primary trending segments, and the `/status/trending` overview.
+- Lower-value guide permutations and status support routes remain available when needed, but are now removed from sitemap promotion and served with route-level `noindex`.
+
+### Rationale
+
+- The professional workflow matrix was too broad: `58` industries multiplied by `61` workflows created large volumes of templated near-duplicates.
+- Status pages are partly operational support pages rather than durable search landing pages, so indexing the full domain, history, and trend universe diluted crawl priority.
+- Priority hubs remain indexable where they provide real navigation value and stronger internal-link consolidation.
+- Representative status routes remain indexable where they map to clear public search demand and complete user intent.
 
 ## Excluded URL patterns
 
@@ -17,6 +32,11 @@ Last updated: 2026-05-07
 - `/convert/<from>-to-<to>` when outside the curated converter-pair allowlist
 - `/convert/<from>-to-<to>/<modifier>` when outside the curated converter-modifier allowlist
 - `/convert/open-<format>` when outside the curated open-format guide allowlist
+- `/guides/<industry>` outside the curated priority-industry hubs
+- `/guides/<industry>/<workflow>` outside the curated priority industry x workflow intersections
+- `/status/<domain>` outside the curated category-representative status set
+- `/status/<domain>-outage-history` outside the curated outage-history set
+- `/status/trending-<segment>` outside the primary status trend segments
 - `/status/<site>-<country>` regional permutations
 - `/status/<isp>-in-<country>` ISP permutations
 
@@ -29,6 +49,11 @@ Last updated: 2026-05-07
 - `/convert/<from>-to-<to>` outside the curated converter set
 - `/convert/<from>-to-<to>/<modifier>` outside the curated converter-modifier set
 - `/convert/open-<format>` outside the curated open-format set
+- `/guides/<industry>` outside the curated priority-industry hubs
+- `/guides/<industry>/<workflow>` outside the curated priority industry x workflow intersections
+- `/status/<domain>` outside the curated category-representative status set
+- `/status/<domain>-outage-history` outside the curated outage-history set
+- `/status/trending-<segment>` outside the primary status trend segments
 - `/status/<site>-<country>`
 - `/status/<isp>-in-<country>`
 
@@ -56,4 +81,4 @@ Last updated: 2026-05-07
 - Do not increase calculator or converter generated-route budgets without reviewing sitemap family counts first.
 - Keep internal linking focused on canonical hubs, tool pages, curated calculator routes, and curated converter routes.
 - Avoid reintroducing `/pdf-tools/*`, `/file-converters/*` alias routes, or internal implementation paths into prominent navigation or XML sitemaps.
-- Monitor `/guides/*` and `/status/*` family counts next, since they are now the largest remaining sitemap clusters after calculators and converters were trimmed.
+- Monitor `/calculators/*` and `/convert/*` family counts next, since they are now the largest remaining sitemap clusters after the guides and status pruning pass.

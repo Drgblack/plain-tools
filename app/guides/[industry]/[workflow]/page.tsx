@@ -6,9 +6,10 @@ import { ToolWorkspaceEmbed } from "@/components/seo/tool-workspace-embed"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   type ProfessionalWorkflowRouteParams,
-  generateAllProfessionalWorkflowParams,
+  generateIndexableProfessionalWorkflowParams,
   getProfessionalWorkflowPage,
 } from "@/lib/professional-workflows-expanded"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 
 type PageProps = {
   params: Promise<ProfessionalWorkflowRouteParams>
@@ -25,7 +26,7 @@ function getPrebuildLimit() {
 }
 
 export function generateStaticParams() {
-  return generateAllProfessionalWorkflowParams(getPrebuildLimit())
+  return generateIndexableProfessionalWorkflowParams(getPrebuildLimit())
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -53,10 +54,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     type: "article",
   })
 
-  return {
-    ...metadata,
-    keywords: page.keywords,
-  }
+  return applyIndexationPolicy(
+    {
+      ...metadata,
+      keywords: page.keywords,
+    },
+    page.canonicalPath
+  )
 }
 
 export default async function ProfessionalWorkflowPageRoute({ params }: PageProps) {

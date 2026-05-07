@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
-import { getProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
+import { getIndexableProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -23,7 +23,7 @@ export const metadata: Metadata = buildPageMetadata({
   type: "article",
 })
 
-const industryHubs = getProfessionalWorkflowIndustryHubs()
+const industryHubs = getIndexableProfessionalWorkflowIndustryHubs()
 
 const schema = combineJsonLd([
   buildWebPageSchema({

@@ -9,10 +9,13 @@ import { getStatusHistorySummary } from "@/lib/status-trending"
 import { buildStatusHistoryWindows } from "@/lib/status-history"
 import {
   getStatusOutageHistoryBundle,
-  STATUS_OUTAGE_HISTORY_DOMAINS,
   statusOutageHistoryPathForDomain,
 } from "@/lib/status-extensions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
+import {
+  applyIndexationPolicy,
+  getIndexableStatusOutageHistoryDomains,
+} from "@/lib/seo/indexation-policy"
 import { normalizeSiteInput } from "@/lib/site-status"
 import { buildWebPageSchema } from "@/lib/structured-data"
 
@@ -31,7 +34,9 @@ function getPrebuildLimit() {
 }
 
 export function generateStaticParams() {
-  return STATUS_OUTAGE_HISTORY_DOMAINS.slice(0, getPrebuildLimit()).map((site) => ({ site }))
+  return getIndexableStatusOutageHistoryDomains()
+    .slice(0, getPrebuildLimit())
+    .map((site) => ({ site }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -52,13 +57,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getStatusOutageHistoryBundle(normalized)
   if (!page) notFound()
 
-  return buildPageMetadata({
-    description: page.desc,
-    googleNotranslate: true,
-    image: "/og/default.png",
-    path: page.canonicalPath,
-    title: page.title,
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      description: page.desc,
+      googleNotranslate: true,
+      image: "/og/default.png",
+      path: page.canonicalPath,
+      title: page.title,
+    }),
+    page.canonicalPath
+  )
 }
 
 function TimelineSection({

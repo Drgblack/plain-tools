@@ -15,6 +15,18 @@ import {
   generateAllExtendedConverterModifierParams,
 } from "@/lib/converter-specialized-ext"
 import {
+  getIndexableProfessionalWorkflowIndustryHubs,
+  getIndexableProfessionalWorkflowSitemapPaths,
+  isProfessionalWorkflowIndexable,
+  isProfessionalWorkflowIndustryHubIndexable,
+} from "@/lib/professional-workflows-expanded"
+import {
+  STATUS_CATEGORIES,
+  STATUS_DOMAINS_BY_CATEGORY,
+  STATUS_HIGH_DEMAND_SITES,
+  type StatusCategory,
+} from "@/lib/status-domains"
+import {
   parseStatusIspFlatSlug,
   parseStatusRegionFlatSlug,
 } from "@/lib/status-regions"
@@ -30,6 +42,11 @@ export const SEO_INDEXATION_LIMITS = {
   converterModifiers: 500,
   converterOpenFormats: 120,
   converterPairs: 140,
+  guideIndustryHubs: 15,
+  guideWorkflowPages: 285,
+  statusDomains: 112,
+  statusOutageHistoryPages: 43,
+  statusTrendingSegments: 10,
 } as const
 
 type IndexationPolicy = {
@@ -41,6 +58,10 @@ type IndexationPolicy = {
 type CalculatorParam = {
   category: CalculatorCategory
   expression: string
+}
+
+function unique<T>(items: T[]) {
+  return Array.from(new Set(items))
 }
 
 const CANONICAL_CALCULATOR_PARAMS = getPrebuildCalculatorParams(
@@ -78,6 +99,53 @@ const CANONICAL_OPEN_FORMAT_GUIDE_PATHS = new Set(
     SEO_INDEXATION_LIMITS.converterOpenFormats
   ).map(({ format }) => `/convert/open-${format}`)
 )
+const CANONICAL_GUIDE_INDUSTRY_PATHS = new Set(
+  getIndexableProfessionalWorkflowIndustryHubs().map((hub) => hub.canonicalPath)
+)
+const CANONICAL_GUIDE_WORKFLOW_PATHS = new Set(
+  getIndexableProfessionalWorkflowSitemapPaths()
+)
+const STATUS_INDEXABLE_DOMAIN_COUNT_PER_CATEGORY = 8
+const STATUS_INDEXABLE_OUTAGE_HISTORY_COUNT_PER_CATEGORY = 3
+const CANONICAL_STATUS_DOMAINS = unique(
+  [
+    ...STATUS_HIGH_DEMAND_SITES,
+    ...STATUS_CATEGORIES.flatMap((category) =>
+      STATUS_DOMAINS_BY_CATEGORY[category]
+        .slice(0, STATUS_INDEXABLE_DOMAIN_COUNT_PER_CATEGORY)
+        .map((entry) => entry.domain)
+    ),
+  ]
+)
+const CANONICAL_STATUS_DOMAIN_SET = new Set(CANONICAL_STATUS_DOMAINS)
+const CANONICAL_STATUS_OUTAGE_HISTORY_DOMAINS = unique(
+  [
+    ...STATUS_HIGH_DEMAND_SITES,
+    ...STATUS_CATEGORIES.flatMap((category) =>
+      STATUS_DOMAINS_BY_CATEGORY[category]
+        .slice(0, STATUS_INDEXABLE_OUTAGE_HISTORY_COUNT_PER_CATEGORY)
+        .map((entry) => entry.domain)
+    ),
+  ]
+)
+const CANONICAL_STATUS_OUTAGE_HISTORY_DOMAIN_SET = new Set(
+  CANONICAL_STATUS_OUTAGE_HISTORY_DOMAINS
+)
+const CANONICAL_STATUS_TRENDING_SEGMENTS = [
+  "social",
+  "streaming",
+  "ai-tools",
+  "developer",
+  "finance",
+  "ecommerce",
+  "productivity",
+  "cloud",
+  "gaming",
+  "news-media",
+] as const
+const CANONICAL_STATUS_TRENDING_SEGMENT_SET = new Set(
+  CANONICAL_STATUS_TRENDING_SEGMENTS
+)
 
 export const EXCLUDED_URL_PATTERNS = [
   "/faq",
@@ -87,6 +155,11 @@ export const EXCLUDED_URL_PATTERNS = [
   "/convert/<from>-to-<to> when outside the curated converter-pair allowlist",
   "/convert/<from>-to-<to>/<modifier> when outside the curated converter-modifier allowlist",
   "/convert/open-<format> when outside the curated open-format guide allowlist",
+  "/guides/<industry> outside the curated priority-industry hubs",
+  "/guides/<industry>/<workflow> outside the curated priority industry x workflow intersections",
+  "/status/<domain> outside the curated category-representative status set",
+  "/status/<domain>-outage-history outside the curated outage-history set",
+  "/status/trending-<segment> outside the primary status trend segments",
   "/status/<site>-<country> regional permutations",
   "/status/<isp>-in-<country> ISP permutations",
 ] as const
@@ -99,6 +172,11 @@ export const NOINDEX_URL_PATTERNS = [
   "/convert/<from>-to-<to> outside the curated converter set",
   "/convert/<from>-to-<to>/<modifier> outside the curated converter-modifier set",
   "/convert/open-<format> outside the curated open-format set",
+  "/guides/<industry> outside the curated priority-industry hubs",
+  "/guides/<industry>/<workflow> outside the curated priority industry x workflow intersections",
+  "/status/<domain> outside the curated category-representative status set",
+  "/status/<domain>-outage-history outside the curated outage-history set",
+  "/status/trending-<segment> outside the primary status trend segments",
   "/status/<site>-<country>",
   "/status/<isp>-in-<country>",
 ] as const
@@ -132,6 +210,31 @@ function isOpenFormatGuidePath(path: string) {
   return /^\/convert\/open-[^/]+$/.test(path)
 }
 
+function isGuideIndustryPath(path: string) {
+  return /^\/guides\/[^/]+$/.test(path)
+}
+
+function isGuideWorkflowPath(path: string) {
+  return /^\/guides\/[^/]+\/[^/]+$/.test(path)
+}
+
+function isStatusOutageHistoryPath(path: string) {
+  return /^\/status\/[^/]+-outage-history$/.test(path)
+}
+
+function isStatusTrendingSegmentPath(path: string) {
+  return /^\/status\/trending-[^/]+$/.test(path)
+}
+
+function isStatusDomainPath(path: string) {
+  return (
+    /^\/status\/[^/]+$/.test(path) &&
+    !path.startsWith("/status/trending") &&
+    !path.endsWith("-outage-history") &&
+    !STATUS_CATEGORIES.some((category) => path === `/status/${category}`)
+  )
+}
+
 function isDeprioritizedStatusPermutationPath(path: string) {
   const match = /^\/status\/([^/]+)$/.exec(path)
   if (!match) return false
@@ -162,6 +265,44 @@ export function getIndexableConverterModifierSitemapPaths() {
 
 export function getIndexableOpenFormatGuideSitemapPaths() {
   return Array.from(CANONICAL_OPEN_FORMAT_GUIDE_PATHS)
+}
+
+export function getIndexableGuideIndustrySitemapPaths() {
+  return Array.from(CANONICAL_GUIDE_INDUSTRY_PATHS)
+}
+
+export function getIndexableGuideWorkflowSitemapPaths() {
+  return Array.from(CANONICAL_GUIDE_WORKFLOW_PATHS)
+}
+
+export function getIndexableStatusDomains() {
+  return [...CANONICAL_STATUS_DOMAINS]
+}
+
+export function getIndexableStatusCategoryDomains(category: StatusCategory) {
+  return STATUS_DOMAINS_BY_CATEGORY[category].filter((entry) =>
+    CANONICAL_STATUS_DOMAIN_SET.has(entry.domain)
+  )
+}
+
+export function getIndexableStatusOutageHistoryDomains() {
+  return [...CANONICAL_STATUS_OUTAGE_HISTORY_DOMAINS]
+}
+
+export function getIndexableStatusTrendingSegments() {
+  return [...CANONICAL_STATUS_TRENDING_SEGMENTS]
+}
+
+export function isIndexableStatusDomain(domain: string) {
+  return CANONICAL_STATUS_DOMAIN_SET.has(domain.trim().toLowerCase())
+}
+
+export function isIndexableStatusOutageHistoryDomain(domain: string) {
+  return CANONICAL_STATUS_OUTAGE_HISTORY_DOMAIN_SET.has(domain.trim().toLowerCase())
+}
+
+export function isIndexableStatusTrendingSegment(segment: string) {
+  return CANONICAL_STATUS_TRENDING_SEGMENT_SET.has(segment.trim().toLowerCase())
 }
 
 export function getIndexationPolicy(path: string): IndexationPolicy | null {
@@ -216,6 +357,64 @@ export function getIndexationPolicy(path: string): IndexationPolicy | null {
       follow: false,
       index: false,
       reason: "deprioritized-open-format-guide",
+    }
+  }
+
+  if (isGuideIndustryPath(normalizedPath)) {
+    const [, , industry] = normalizedPath.split("/")
+    if (!isProfessionalWorkflowIndustryHubIndexable(industry ?? "")) {
+      return {
+        follow: false,
+        index: false,
+        reason: "deprioritized-guide-industry-hub",
+      }
+    }
+  }
+
+  if (isGuideWorkflowPath(normalizedPath)) {
+    const [, , industry, workflow] = normalizedPath.split("/")
+    if (!isProfessionalWorkflowIndexable(industry ?? "", workflow ?? "")) {
+      return {
+        follow: false,
+        index: false,
+        reason: "deprioritized-guide-workflow",
+      }
+    }
+  }
+
+  if (isStatusOutageHistoryPath(normalizedPath)) {
+    const match = /^\/status\/([^/]+)-outage-history$/.exec(normalizedPath)
+    const domain = decodeURIComponent(match?.[1] ?? "").trim().toLowerCase()
+    if (!isIndexableStatusOutageHistoryDomain(domain)) {
+      return {
+        follow: false,
+        index: false,
+        reason: "deprioritized-status-outage-history",
+      }
+    }
+  }
+
+  if (isStatusTrendingSegmentPath(normalizedPath)) {
+    const segment = normalizedPath.replace("/status/trending-", "")
+    if (!isIndexableStatusTrendingSegment(segment)) {
+      return {
+        follow: false,
+        index: false,
+        reason: "deprioritized-status-trending-segment",
+      }
+    }
+  }
+
+  if (isStatusDomainPath(normalizedPath)) {
+    const domain = decodeURIComponent(normalizedPath.replace("/status/", ""))
+      .trim()
+      .toLowerCase()
+    if (!isIndexableStatusDomain(domain)) {
+      return {
+        follow: false,
+        index: false,
+        reason: "deprioritized-status-domain",
+      }
     }
   }
 

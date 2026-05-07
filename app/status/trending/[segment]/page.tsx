@@ -12,6 +12,10 @@ import {
   statusTrendingPathForCategory,
 } from "@/lib/status-extensions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
+import {
+  applyIndexationPolicy,
+  getIndexableStatusTrendingSegments,
+} from "@/lib/seo/indexation-policy"
 import { buildWebPageSchema } from "@/lib/structured-data"
 
 type Props = {
@@ -22,7 +26,7 @@ export const revalidate = 3600
 export const dynamicParams = true
 
 export function generateStaticParams() {
-  return STATUS_TRENDING_SEGMENTS.map((entry) => ({ segment: entry.segment }))
+  return getIndexableStatusTrendingSegments().map((segment) => ({ segment }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -39,13 +43,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { ...invalid, robots: { follow: false, index: false } }
   }
 
-  return buildPageMetadata({
-    description: page.desc,
-    googleNotranslate: true,
-    image: "/og/default.png",
-    path: page.canonicalPath,
-    title: page.title,
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      description: page.desc,
+      googleNotranslate: true,
+      image: "/og/default.png",
+      path: page.canonicalPath,
+      title: page.title,
+    }),
+    page.canonicalPath
+  )
 }
 
 function TrendingResults({

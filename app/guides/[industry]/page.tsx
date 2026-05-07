@@ -7,9 +7,10 @@ import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { RelatedLinks } from "@/components/seo/related-links"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
+  getIndexableProfessionalWorkflowIndustryHubs,
   getProfessionalWorkflowIndustryHub,
-  getProfessionalWorkflowIndustryHubs,
 } from "@/lib/professional-workflows-expanded"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -25,7 +26,7 @@ type PageProps = {
 export const revalidate = 86400
 
 export function generateStaticParams() {
-  return getProfessionalWorkflowIndustryHubs().map((hub) => ({ industry: hub.slug }))
+  return getIndexableProfessionalWorkflowIndustryHubs().map((hub) => ({ industry: hub.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -43,13 +44,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     })
   }
 
-  return buildPageMetadata({
-    title: `${hub.label} PDF workflow guides`,
-    description: hub.description,
-    path: hub.canonicalPath,
-    image: "/og/tools.png",
-    type: "article",
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      title: `${hub.label} PDF workflow guides`,
+      description: hub.description,
+      path: hub.canonicalPath,
+      image: "/og/tools.png",
+      type: "article",
+    }),
+    hub.canonicalPath
+  )
 }
 
 export default async function IndustryGuidesHubPage({ params }: PageProps) {

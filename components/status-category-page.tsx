@@ -2,11 +2,11 @@ import Link from "next/link"
 
 import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
+import { getIndexableStatusCategoryDomains } from "@/lib/seo/indexation-policy"
 import {
   STATUS_CATEGORIES,
   STATUS_DOMAIN_COUNT,
   STATUS_CATEGORY_META,
-  STATUS_DOMAINS_BY_CATEGORY,
   type StatusCategory,
 } from "@/lib/status-domains"
 import { statusPathFor } from "@/lib/site-status"
@@ -27,7 +27,7 @@ function categoryTitle(category: StatusCategory) {
 
 export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
   const metadata = STATUS_CATEGORY_META[category]
-  const domains = STATUS_DOMAINS_BY_CATEGORY[category] ?? []
+  const domains = getIndexableStatusCategoryDomains(category)
   const categoryHref = `/status/${category}`
 
   const schema = combineJsonLd([
@@ -77,6 +77,7 @@ export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
             This hub is part of a curated {STATUS_DOMAIN_COUNT.toLocaleString()}-domain status dataset
             built for high-intent search queries and fast internal navigation between related services.
+            The list below intentionally focuses on representative public landing pages for this category.
           </p>
         </div>
       </section>

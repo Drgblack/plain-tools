@@ -269,7 +269,7 @@ const WORKFLOW_ENTRY_MAP = new Map(
   PROFESSIONAL_WORKFLOW_MATRIX.map((entry) => [`${entry.industry}/${entry.workflow}`, entry])
 )
 
-const PRIORITY_INDUSTRIES = new Set([
+export const PROFESSIONAL_WORKFLOW_PRIORITY_INDUSTRIES = [
   "legal",
   "hr-recruitment",
   "accounting-finance",
@@ -285,9 +285,9 @@ const PRIORITY_INDUSTRIES = new Set([
   "legal-advanced",
   "insurance-claims",
   "board-governance",
-])
+] as const
 
-const PRIORITY_WORKFLOWS = new Set([
+export const PROFESSIONAL_WORKFLOW_PRIORITY_WORKFLOWS = [
   "redact-for-gdpr",
   "sign-nda",
   "merge-contracts",
@@ -307,7 +307,23 @@ const PRIORITY_WORKFLOWS = new Set([
   "sign-contract-batch",
   "ocr-invoice-scan",
   "compress-legal-doc-secure",
-])
+] as const
+
+const PRIORITY_INDUSTRIES = new Set<string>(PROFESSIONAL_WORKFLOW_PRIORITY_INDUSTRIES)
+const PRIORITY_WORKFLOWS = new Set<string>(PROFESSIONAL_WORKFLOW_PRIORITY_WORKFLOWS)
+
+export function isProfessionalWorkflowIndustryHubIndexable(industrySlug: string) {
+  return PRIORITY_INDUSTRIES.has(industrySlug)
+}
+
+export function isProfessionalWorkflowIndexable(
+  industrySlug: string,
+  workflowSlug: string
+) {
+  return (
+    PRIORITY_INDUSTRIES.has(industrySlug) && PRIORITY_WORKFLOWS.has(workflowSlug)
+  )
+}
 
 function intro(tool: ToolDefinition, industry: IndustryDefinition, workflow: WorkflowDefinition) {
   return [
@@ -409,9 +425,11 @@ function relatedLinks(industry: IndustryDefinition, workflow: WorkflowDefinition
   const workflowVariantPath = resolveWorkflowVariantPath(workflow.canonicalVariantPath)
   const siblingWorkflows = WORKFLOWS.filter((entry) => entry.slug !== workflow.slug)
     .filter((entry) => entry.toolSlug === workflow.toolSlug || workflow.relatedToolSlugs.includes(entry.toolSlug))
+    .filter((entry) => isProfessionalWorkflowIndexable(industry.slug, entry.slug))
     .slice(0, 4)
     .map((entry) => ({ href: workflowPath(industry.slug, entry.slug), title: `${entry.title} for ${industry.label}` }))
   const crossIndustry = INDUSTRIES.filter((entry) => entry.slug !== industry.slug)
+    .filter((entry) => isProfessionalWorkflowIndexable(entry.slug, workflow.slug))
     .slice(0, 2)
     .map((entry) => ({ href: workflowPath(entry.slug, workflow.slug), title: `${workflow.title} for ${entry.label}` }))
   const support = [
@@ -540,8 +558,24 @@ export function generateAllProfessionalWorkflowParams(limit?: number): Professio
   return entries.map((entry) => ({ industry: entry.industry, workflow: entry.workflow }))
 }
 
+export function generateIndexableProfessionalWorkflowParams(
+  limit?: number
+): ProfessionalWorkflowRouteParams[] {
+  const orderedEntries = orderedWorkflowEntries().filter((entry) =>
+    isProfessionalWorkflowIndexable(entry.industry, entry.workflow)
+  )
+  const entries = typeof limit === "number" ? orderedEntries.slice(0, limit) : orderedEntries
+  return entries.map((entry) => ({ industry: entry.industry, workflow: entry.workflow }))
+}
+
 export function getProfessionalWorkflowSitemapPaths() {
   return PROFESSIONAL_WORKFLOW_MATRIX.map((entry) => workflowPath(entry.industry, entry.workflow))
+}
+
+export function getIndexableProfessionalWorkflowSitemapPaths() {
+  return PROFESSIONAL_WORKFLOW_MATRIX.filter((entry) =>
+    isProfessionalWorkflowIndexable(entry.industry, entry.workflow)
+  ).map((entry) => workflowPath(entry.industry, entry.workflow))
 }
 
 export function getRelatedProfessionalWorkflowLinks(industry: string, workflow: string) {
@@ -559,7 +593,10 @@ export function getProfessionalWorkflowIndustryHub(
   if (!industry) return null
 
   const entries = PROFESSIONAL_WORKFLOW_MATRIX.filter((entry) => entry.industry === industrySlug)
-  const featuredWorkflows = entries
+  const featuredEntries = entries.filter((entry) =>
+    isProfessionalWorkflowIndexable(entry.industry, entry.workflow)
+  )
+  const featuredWorkflows = (featuredEntries.length > 0 ? featuredEntries : entries)
     .slice(0, 12)
     .flatMap((entry) => {
       const page = getProfessionalWorkflowPage(entry.industry, entry.workflow)
@@ -597,13 +634,19 @@ export function getProfessionalWorkflowIndustryHub(
     label: industry.label,
     relatedToolLinks,
     slug: industry.slug,
-    workflowCount: entries.length,
+    workflowCount: featuredEntries.length > 0 ? featuredEntries.length : entries.length,
   }
 }
 
 export function getProfessionalWorkflowIndustryHubs() {
   return INDUSTRIES.map((industry) => getProfessionalWorkflowIndustryHub(industry.slug)).filter(
     (hub): hub is ProfessionalWorkflowIndustryHub => Boolean(hub)
+  )
+}
+
+export function getIndexableProfessionalWorkflowIndustryHubs() {
+  return getProfessionalWorkflowIndustryHubs().filter((hub) =>
+    isProfessionalWorkflowIndustryHubIndexable(hub.slug)
   )
 }
 

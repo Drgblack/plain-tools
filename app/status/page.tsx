@@ -6,14 +6,18 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { TrendingStatus } from "@/components/trending-status"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import {
+  getIndexableStatusDomains,
+  getIndexableStatusOutageHistoryDomains,
+  getIndexableStatusTrendingSegments,
+  isIndexableStatusDomain,
+} from "@/lib/seo/indexation-policy"
 import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import {
   STATUS_CATEGORIES,
   STATUS_CATEGORY_META,
   STATUS_DOMAIN_COUNT,
   STATUS_DOMAINS_BY_CATEGORY,
-  STATUS_HIGH_DEMAND_SITES,
-  STATUS_POPULAR_DOMAINS,
   STATUS_PRIMARY_CATEGORIES,
 } from "@/lib/status-domains"
 import { statusPathFor } from "@/lib/site-status"
@@ -28,6 +32,15 @@ import {
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
+
+const indexableStatusDomains = getIndexableStatusDomains()
+const indexableTrendingSegments = STATUS_TRENDING_SEGMENTS.filter((entry) =>
+  getIndexableStatusTrendingSegments().includes(entry.segment)
+)
+const indexableStatusQueryPages = STATUS_QUERY_PAGES.filter((entry) =>
+  isIndexableStatusDomain(entry.domain)
+)
+const indexableOutageHistoryDomains = getIndexableStatusOutageHistoryDomains()
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Website status checker directory",
@@ -84,9 +97,9 @@ export default function StatusDirectoryPage() {
             and move quickly between related network diagnostics.
           </p>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
-            Plain Tools currently pre-renders status routes for {STATUS_DOMAIN_COUNT.toLocaleString()} curated domains,
-            giving you crawlable pages for high-demand checks such as ChatGPT, GitHub, Netflix, Discord, and
-            other major consumer and infrastructure services.
+            Plain Tools tracks {STATUS_DOMAIN_COUNT.toLocaleString()} curated domains for live checks, but the XML
+            sitemap only promotes a smaller set of representative, high-demand public status pages so crawl
+            budget stays focused on the strongest landing routes.
           </p>
           <form action="/site-status" method="get" className="rounded-xl border border-border/70 bg-card/35 p-4">
             <label htmlFor="status-query" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -112,7 +125,7 @@ export default function StatusDirectoryPage() {
         <div className="mx-auto max-w-6xl">
           <TrendingStatus title="Trending checks today" limit={10} />
           <div className="mt-4 flex flex-wrap gap-2 text-xs">
-            {STATUS_TRENDING_SEGMENTS.map((entry) => (
+            {indexableTrendingSegments.map((entry) => (
               <Link
                 key={entry.segment}
                 href={statusTrendingPathForCategory(entry.segment)}
@@ -191,7 +204,7 @@ export default function StatusDirectoryPage() {
         <div className="mx-auto max-w-6xl">
           <h2 className="text-lg font-semibold text-foreground">Popular checks</h2>
           <ul className="mt-4 grid gap-2 md:grid-cols-2 lg:grid-cols-4">
-            {STATUS_POPULAR_DOMAINS.slice(0, 24).map((domain) => (
+            {indexableStatusDomains.slice(0, 24).map((domain) => (
               <li key={domain}>
                 <Link
                   href={statusPathFor(domain)}
@@ -214,7 +227,7 @@ export default function StatusDirectoryPage() {
             These query patterns are consolidated into canonical domain status pages.
           </p>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {STATUS_QUERY_PAGES.map((entry) => (
+            {indexableStatusQueryPages.map((entry) => (
               <li key={entry.slug}>
                 <Link
                   href={statusPathFor(entry.domain)}
@@ -235,7 +248,7 @@ export default function StatusDirectoryPage() {
             Flat outage-history pages built from aggregated status history only.
           </p>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {STATUS_HIGH_DEMAND_SITES.slice(0, 12).map((site) => (
+            {indexableOutageHistoryDomains.slice(0, 12).map((site) => (
               <li key={site}>
                 <Link
                   href={

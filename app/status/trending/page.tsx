@@ -5,6 +5,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { PageBreadcrumbs } from "@/components/seo/page-breadcrumbs"
 import { buildPageMetadata } from "@/lib/page-metadata"
 import {
+  getIndexableStatusOutageHistoryDomains,
+  getIndexableStatusTrendingSegments,
+  isIndexableStatusDomain,
+} from "@/lib/seo/indexation-policy"
+import {
   statusOutageHistoryPathForDomain,
   statusTrendingPathForCategory,
   STATUS_TRENDING_SEGMENTS,
@@ -13,7 +18,6 @@ import { getStatusObservabilityStorageInfo, getStatusTrends } from "@/lib/status
 import {
   STATUS_CATEGORIES,
   STATUS_CATEGORY_META,
-  STATUS_HIGH_DEMAND_SITES,
 } from "@/lib/status-domains"
 import { STATUS_QUERY_PAGES } from "@/lib/status-query-pages"
 import { statusPathFor } from "@/lib/site-status"
@@ -23,6 +27,14 @@ import {
   buildWebPageSchema,
   combineJsonLd,
 } from "@/lib/structured-data"
+
+const indexableTrendingSegments = STATUS_TRENDING_SEGMENTS.filter((entry) =>
+  getIndexableStatusTrendingSegments().includes(entry.segment)
+)
+const indexableOutageHistoryDomains = getIndexableStatusOutageHistoryDomains()
+const indexableStatusQueryPages = STATUS_QUERY_PAGES.filter((entry) =>
+  isIndexableStatusDomain(entry.domain)
+)
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Trending website status checks today",
@@ -38,14 +50,15 @@ export default async function StatusTrendingPage() {
   const storage = getStatusObservabilityStorageInfo()
   const [topChecks, ...segmentChecks] = await Promise.all([
     getStatusTrends({ limit: 100, segment: "all" }),
-    ...STATUS_TRENDING_SEGMENTS.map((entry) =>
+    ...indexableTrendingSegments.map((entry) =>
       getStatusTrends({ limit: 12, segment: entry.segment })
     ),
   ])
-  const segmentSections = STATUS_TRENDING_SEGMENTS.map((entry, index) => ({
+  const segmentSections = indexableTrendingSegments.map((entry, index) => ({
     ...entry,
-    entries: segmentChecks[index] ?? [],
+    entries: (segmentChecks[index] ?? []).filter((item) => isIndexableStatusDomain(item.domain)),
   }))
+  const filteredTopChecks = topChecks.filter((entry) => isIndexableStatusDomain(entry.domain))
 
   const schema = combineJsonLd([
     buildWebPageSchema({
@@ -61,7 +74,7 @@ export default async function StatusTrendingPage() {
     ]),
     buildItemListSchema(
       "Trending status checks today",
-      topChecks.slice(0, 50).map((entry) => ({
+      filteredTopChecks.slice(0, 50).map((entry) => ({
         name: `Is ${entry.domain} down?`,
         description: `Checked ${entry.count} times today.`,
         url: `https://plain.tools${entry.href}`,
@@ -147,7 +160,7 @@ export default async function StatusTrendingPage() {
             troubleshooting.
           </p>
           <ol className="mt-4 grid gap-2 md:grid-cols-2">
-            {topChecks.map((entry, index) => (
+            {filteredTopChecks.map((entry, index) => (
               <li key={entry.domain}>
                 <Link
                   href={entry.href}
@@ -194,7 +207,7 @@ export default async function StatusTrendingPage() {
             Trending segments
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
-            {STATUS_TRENDING_SEGMENTS.map((entry) => (
+            {indexableTrendingSegments.map((entry) => (
               <Link
                 key={entry.segment}
                 href={statusTrendingPathForCategory(entry.segment)}
@@ -213,7 +226,7 @@ export default async function StatusTrendingPage() {
               Recent outage history
             </h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {STATUS_HIGH_DEMAND_SITES.slice(0, 12).map((site) => (
+              {indexableOutageHistoryDomains.slice(0, 12).map((site) => (
                 <Link
                   key={site}
                   href={
@@ -235,7 +248,7 @@ export default async function StatusTrendingPage() {
             Popular canonical status routes
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
-            {STATUS_QUERY_PAGES.map((entry) => (
+            {indexableStatusQueryPages.map((entry) => (
               <Link
                 key={entry.slug}
                 href={statusPathFor(entry.domain)}
