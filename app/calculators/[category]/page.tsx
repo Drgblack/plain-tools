@@ -9,9 +9,9 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   CALCULATOR_CATEGORY_LABELS,
   CALCULATOR_PUBLIC_CATEGORY_ORDER,
-  generateCategoryCalculatorParams,
   isCalculatorCategory,
 } from "@/lib/calculator-financial-deep"
+import { getIndexableCalculatorCategoryParams } from "@/lib/seo/indexation-policy"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -164,7 +164,7 @@ export default async function CalculatorCategoryHubPage({ params }: Props) {
     notFound()
   }
 
-  const examples = generateCategoryCalculatorParams(category, 36)
+  const examples = getIndexableCalculatorCategoryParams(category, 24)
   const siblingCategories = CALCULATOR_PUBLIC_CATEGORY_ORDER.filter((entry) => entry !== category)
     .slice(0, 6)
     .map((entry) => ({

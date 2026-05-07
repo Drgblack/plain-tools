@@ -10,7 +10,13 @@ const ALLOWED_ROUTE_FILES = new Set([
   path.normalize("app/compress-pdf/page.tsx"),
   path.normalize("app/pdf-merge/page.tsx"),
   path.normalize("app/pdf-to-word/page.tsx"),
+  path.normalize("components/seo/PdfComparisonPage.tsx"),
+  path.normalize("components/seo/PdfToolVariantPage.tsx"),
   path.normalize("lib/seo/legacy-route-canonicals.ts"),
+  path.normalize("lib/pdf-actions-extended.ts"),
+  path.normalize("lib/pdf-tool-comparisons.ts"),
+  path.normalize("lib/pdf-tool-variants.ts"),
+  path.normalize("lib/pdf-variants.ts"),
   path.normalize("lib/status-query-pages.ts"),
   path.normalize("scripts/audit-internal-links.mjs"),
 ])
@@ -22,6 +28,10 @@ const LEGACY_TOOL_ROUTE_PATTERN =
   /(?:^|["'`\s(=])(\/compress-pdf|\/pdf-merge|\/pdf-to-word)(?!-)\b/
 const LEGACY_DUPLICATE_ROUTE_PATTERN =
   /(?:^|["'`\s(=])(\/sitemap(?!\.xml\b)|\/tools\/pdf-to-png|\/tools\/png-to-pdf)\b/
+const LEGACY_FILE_CONVERTER_ALIAS_PATTERN =
+  /(?:^|["'`\s(=])\/file-converters\/[a-z0-9-]+(?:\/|\b)/
+const LEGACY_PDF_TOOLS_ROUTE_PATTERN =
+  /(?:href\s*[:=]\s*["'`]|url:\s*buildCanonicalUrl\(["'`]|url:\s*["'`]https:\/\/plain\.tools["'`]|url:\s*["'`])\/pdf-tools(?:\/|\b)/
 
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true })
@@ -47,6 +57,8 @@ async function walk(dir) {
       const hasLegacyStatusHref = LEGACY_STATUS_ROUTE_PATTERN.test(line)
       const hasLegacyToolHref = LEGACY_TOOL_ROUTE_PATTERN.test(line)
       const hasLegacyDuplicateHref = LEGACY_DUPLICATE_ROUTE_PATTERN.test(line)
+      const hasLegacyFileConverterAliasHref = LEGACY_FILE_CONVERTER_ALIAS_PATTERN.test(line)
+      const hasLegacyPdfToolsHref = LEGACY_PDF_TOOLS_ROUTE_PATTERN.test(line)
       const usesLegacyHelper = line.includes("statusQueryPathForSlug(")
       const usesLegacyToolHelper = line.includes("getLegacyCanonicalRedirect(")
 
@@ -54,6 +66,8 @@ async function walk(dir) {
         !hasLegacyStatusHref &&
         !hasLegacyToolHref &&
         !hasLegacyDuplicateHref &&
+        !hasLegacyFileConverterAliasHref &&
+        !hasLegacyPdfToolsHref &&
         !usesLegacyHelper &&
         !usesLegacyToolHelper
       ) {

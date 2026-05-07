@@ -1,26 +1,84 @@
 {
-  "auditedAt": "2026-03-12T06:44:07.646Z",
-  "baseUrl": "https://www.plain.tools",
+  "auditedAt": "2026-05-07T16:03:34.484Z",
+  "baseUrl": "https://plain.tools",
   "counts": {
     "blockedInRobots": 0,
     "duplicates": 0,
     "missingRequiredPaths": 0,
     "noindexInSitemap": 0,
     "redirectPathsInSitemap": 0,
-    "sitemapPaths": 205448
+    "sitemapPaths": 10177
+  },
+  "familyCounts": {
+    "/guides/*": 3596,
+    "/status/*": 2929,
+    "/calculators/*": 1310,
+    "/convert/*": 722,
+    "/tools/*": 491,
+    "/network/*": 304,
+    "/programmatic/*": 288,
+    "/compare/*": 284,
+    "other": 172,
+    "/learn/*": 58,
+    "/blog/*": 23
   },
   "disallowRules": [
     "/api/",
     "/sign-in",
     "/sign-up",
     "/pro/",
-    "/pdf-tools"
+    "/*?*"
   ],
   "blockedInRobots": [],
+  "forbiddenDisallowRulesPresent": [],
   "duplicatePaths": [],
   "excludedPrefixesInSitemap": [],
+  "excludedPatterns": [
+    "/faq",
+    "/html-sitemap",
+    "/labs",
+    "/calculators/<category>/<expression> when outside the curated calculator allowlist",
+    "/convert/<from>-to-<to> when outside the curated converter-pair allowlist",
+    "/convert/<from>-to-<to>/<modifier> when outside the curated converter-modifier allowlist",
+    "/convert/open-<format> when outside the curated open-format guide allowlist",
+    "/status/<site>-<country> regional permutations",
+    "/status/<isp>-in-<country> ISP permutations"
+  ],
   "missingRequiredPaths": [],
   "noindexInSitemap": [],
+  "noindexedPatterns": [
+    "/faq",
+    "/html-sitemap",
+    "/labs",
+    "/calculators/<category>/<expression> outside the curated calculator set",
+    "/convert/<from>-to-<to> outside the curated converter set",
+    "/convert/<from>-to-<to>/<modifier> outside the curated converter-modifier set",
+    "/convert/open-<format> outside the curated open-format set",
+    "/status/<site>-<country>",
+    "/status/<isp>-in-<country>"
+  ],
   "redirectPathsInSitemap": [],
+  "canonicalStrategy": {
+    "host": "https://plain.tools",
+    "lowercasePaths": true,
+    "redirectAliases": true,
+    "selfReferencingCanonicals": true,
+    "trailingSlashPolicy": "strip trailing slash except root"
+  },
+  "sitemapStrategy": {
+    "dynamicSourceOfTruth": "lib/sitemap-data.ts",
+    "includeOnlyCanonicalIndexable200s": true,
+    "calculatorExpressionLimit": 1400,
+    "converterModifierLimit": 500,
+    "converterOpenFormatLimit": 120,
+    "converterPairLimit": 140
+  },
+  "crawlBudgetRecommendations": [
+    "Keep parameterized URLs out of crawl paths with robots rules, but let duplicate public paths stay crawlable long enough for Google to see redirects or noindex directives.",
+    "Only expose curated calculator and converter routes in sitemap and high-signal internal hubs.",
+    "Leave low-value regional and ISP status permutations live for users but noindex them so they do not compete with canonical status pages.",
+    "Redirect legacy duplicate namespaces such as /pdf-tools/* and remove redirected aliases from internal links instead of blocking them in robots.txt.",
+    "Monitor calculator and converter family counts before increasing any generated-route budgets."
+  ],
   "errors": []
 }

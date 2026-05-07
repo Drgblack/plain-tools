@@ -6,6 +6,7 @@ import { FinancialScopeNote } from "@/components/seo/financial-scope-note"
 import { CalculatorSummary } from "@/components/seo/calculator-summary"
 import { FinancialCalculatorEmbed } from "@/components/seo/financial-calculator-embed"
 import { buildPageMetadata, buildCanonicalUrl } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 import {
   type CalculatorRouteParams,
   CALCULATOR_FINANCIAL_METADATA_EXAMPLES,
@@ -86,10 +87,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     type: "article",
   })
 
-  return {
+  return applyIndexationPolicy(
+    {
     ...metadata,
     keywords: page.keywords,
-  }
+    },
+    page.canonicalPath
+  )
 }
 
 export default async function FinancialCalculatorPageRoute({ params }: PageProps) {

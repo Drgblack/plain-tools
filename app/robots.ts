@@ -6,13 +6,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Private, transactional, and legacy duplicate surfaces should stay out of crawl paths.
+        // Only block private and parameterized crawl traps. Public duplicate paths should stay
+        // crawlable so Google can see redirects or noindex directives instead of accumulating
+        // blocked-URL noise in Search Console.
         disallow: [
           "/api/",
           "/sign-in",
           "/sign-up",
           "/pro/",
-          "/pdf-tools",
+          "/*?*",
         ],
       },
     ],

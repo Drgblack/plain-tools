@@ -20,7 +20,7 @@ const ROOT_DIR = path.resolve(__dirname, "..")
 const PUBLIC_DIR = path.join(ROOT_DIR, "public")
 const targetSitemapPath = path.join(PUBLIC_DIR, "sitemap.xml")
 const targetSitemapChunkDir = path.join(PUBLIC_DIR, "sitemap")
-const SITE_URL = "https://www.plain.tools"
+const SITE_URL = "https://plain.tools"
 const isVercelBuild = process.env.VERCEL === "1"
 
 function runTsx(code) {
@@ -101,6 +101,16 @@ fs.writeFileSync(targetSitemapPath, sitemapXml, "utf8")
 
 if (sitemapPayload.chunks.length > 1) {
   fs.mkdirSync(targetSitemapChunkDir, { recursive: true })
+  const activeChunkNames = new Set(
+    sitemapPayload.chunks.map((chunk) => `${chunk.id}.xml`)
+  )
+
+  for (const file of fs.readdirSync(targetSitemapChunkDir)) {
+    if (!activeChunkNames.has(file)) {
+      fs.rmSync(path.join(targetSitemapChunkDir, file), { force: true })
+    }
+  }
+
   for (const chunk of sitemapPayload.chunks) {
     const chunkPath = path.join(targetSitemapChunkDir, `${chunk.id}.xml`)
     fs.writeFileSync(chunkPath, buildUrlSet(chunk.entries), "utf8")

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { buildStandardPageTitle, normalizeBrandCapitalization } from "@/lib/page-title"
 
-export const BASE_URL = "https://www.plain.tools"
+export const BASE_URL = "https://plain.tools"
 const MIN_DESCRIPTION_LENGTH = 140
 const MAX_DESCRIPTION_LENGTH = 160
 const DEFAULT_PAGE_DESCRIPTION =
@@ -40,7 +40,9 @@ export function buildMetaDescription(rawDescription: string): string {
 
 export function buildCanonicalUrl(path: string): string {
   if (!path || path === "/") return BASE_URL
-  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`
+  const pathname = path.startsWith("/") ? path : `/${path}`
+  const normalizedPath = pathname !== "/" ? pathname.replace(/\/+$/, "") || "/" : "/"
+  return `${BASE_URL}${normalizedPath}`
 }
 
 export function buildPageMetadata({

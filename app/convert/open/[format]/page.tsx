@@ -8,6 +8,7 @@ import {
   getExtendedOpenFormatGuidePage,
 } from "@/lib/converter-families-ext"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 
 type PageProps = {
   params: Promise<{ format: string }>
@@ -47,17 +48,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  return {
-    ...buildPageMetadata({
-      title: page.title,
-      description: page.description,
-      path: page.canonicalPath,
-      image: "/og/tools.png",
-      googleNotranslate: true,
-      type: "article",
-    }),
-    keywords: page.keywords,
-  }
+  return applyIndexationPolicy(
+    {
+      ...buildPageMetadata({
+        title: page.title,
+        description: page.description,
+        path: page.canonicalPath,
+        image: "/og/tools.png",
+        googleNotranslate: true,
+        type: "article",
+      }),
+      keywords: page.keywords,
+    },
+    page.canonicalPath
+  )
 }
 
 export default async function ConverterOpenFormatGuideRoute({ params }: PageProps) {

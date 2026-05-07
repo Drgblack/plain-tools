@@ -12,7 +12,7 @@ import {
   generateAllComparisonParams,
   getComparisonPage,
 } from "@/lib/compare-matrix"
-import { buildPageMetadata } from "@/lib/page-metadata"
+import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
 import {
   buildArticleSchema,
   buildBreadcrumbList,
@@ -77,18 +77,21 @@ export default async function CompareSlugPage({ params }: PageProps) {
     buildWebPageSchema({
       name: page.title,
       description: page.desc,
-      url: `https://www.plain.tools${page.canonicalPath}`,
+      url: buildCanonicalUrl(page.canonicalPath),
     }),
     buildArticleSchema({
       headline: page.title.replace(" | Plain Tools", ""),
       description: page.desc,
-      url: `https://www.plain.tools${page.canonicalPath}`,
+      url: buildCanonicalUrl(page.canonicalPath),
     }),
     buildFaqPageSchema(page.faq),
     buildBreadcrumbList([
-      { name: "Home", url: "https://www.plain.tools/" },
-      { name: "Compare", url: "https://www.plain.tools/compare" },
-      { name: page.title.replace(" | Plain Tools", ""), url: `https://www.plain.tools${page.canonicalPath}` },
+      { name: "Home", url: buildCanonicalUrl("/") },
+      { name: "Compare", url: buildCanonicalUrl("/compare") },
+      {
+        name: page.title.replace(" | Plain Tools", ""),
+        url: buildCanonicalUrl(page.canonicalPath),
+      },
     ]),
   ])
 

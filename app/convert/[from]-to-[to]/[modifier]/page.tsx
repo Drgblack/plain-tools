@@ -9,6 +9,7 @@ import {
   getExtendedConverterModifierPage,
 } from "@/lib/converter-specialized-ext"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 
 type PageProps = {
   params: Promise<ConverterModifierRouteParams>
@@ -52,10 +53,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     type: "article",
   })
 
-  return {
-    ...metadata,
-    keywords: page.keywords,
-  }
+  return applyIndexationPolicy(
+    {
+      ...metadata,
+      keywords: page.keywords,
+    },
+    page.canonicalPath
+  )
 }
 
 export default async function ConverterModifierRoute({ params }: PageProps) {

@@ -360,6 +360,11 @@ const nextConfig: NextConfig = {
 
       // Canonical root SEO routes.
       {
+        source: "/pdf-tools",
+        destination: "/tools",
+        permanent: true,
+      },
+      {
         source: "/pdf-tools/learn",
         destination: "/learn",
         permanent: true,
@@ -387,6 +392,71 @@ const nextConfig: NextConfig = {
       {
         source: "/pdf-tools/compare/:path*",
         destination: "/compare/:path*",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/comparisons",
+        destination: "/compare",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/comparisons/:path*",
+        destination: "/compare/:path*",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/about",
+        destination: "/about",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/privacy",
+        destination: "/privacy",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/terms",
+        destination: "/terms",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/support",
+        destination: "/support",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/faq",
+        destination: "/faq",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/how-it-works",
+        destination: "/how-it-works",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/offline-pdf-tools",
+        destination: "/offline-pdf-tools",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/extension",
+        destination: "/extension",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/labs",
+        destination: "/labs",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/variants",
+        destination: "/tools",
+        permanent: true,
+      },
+      {
+        source: "/pdf-tools/privacy-by-design",
+        destination: "/verify-claims",
         permanent: true,
       },
       {

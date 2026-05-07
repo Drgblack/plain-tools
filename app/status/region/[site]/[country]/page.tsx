@@ -9,6 +9,7 @@ import {
   statusRegionPathFor,
 } from "@/lib/status-regions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 import { normalizeSiteInput } from "@/lib/site-status"
 import { buildWebPageSchema } from "@/lib/structured-data"
 
@@ -48,13 +49,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getStatusRegionBundle(normalizedSite, country)
   if (!page) notFound()
 
-  return buildPageMetadata({
-    description: page.desc,
-    googleNotranslate: true,
-    image: "/og/default.png",
-    path: page.canonicalPath,
-    title: page.title,
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      description: page.desc,
+      googleNotranslate: true,
+      image: "/og/default.png",
+      path: page.canonicalPath,
+      title: page.title,
+    }),
+    page.canonicalPath
+  )
 }
 
 export default async function StatusRegionPage({ params }: Props) {

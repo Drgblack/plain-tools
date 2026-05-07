@@ -26,17 +26,17 @@ ${themeInitScript}
 const rootSchema = combineJsonLd([
   buildWebSiteSchema({
     name: "Plain Tools",
-    url: "https://www.plain.tools",
+    url: "https://plain.tools",
     description:
       "Trust-first utility platform for PDF workflows, file tasks, network diagnostics, and site availability checks.",
   }),
   buildOrganizationSchema({
     name: "Plain Tools",
-    url: "https://www.plain.tools",
-    logoUrl: "https://www.plain.tools/icon-512x512.png",
+    url: "https://plain.tools",
+    logoUrl: "https://plain.tools/icon-512x512.png",
     contactEmail: "hello@plain.tools",
     foundingDate: "2026-01-01",
-    publishingPrinciples: "https://www.plain.tools/editorial-policy",
+    publishingPrinciples: "https://plain.tools/editorial-policy",
     sameAs: ["https://github.com/Drgblack/plain-tools"],
   }),
 ])
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Plain Tools" }],
   creator: "Plain Tools",
-  metadataBase: new URL("https://www.plain.tools"),
+  metadataBase: new URL("https://plain.tools"),
   verification: siteVerificationMetadata,
   robots: {
     index: true,
@@ -105,8 +105,8 @@ export const metadata: Metadata = {
   alternates: {
     ...baseMetadata.alternates,
     languages: {
-      en: "https://www.plain.tools/",
-      "x-default": "https://www.plain.tools/",
+      en: "https://plain.tools/",
+      "x-default": "https://plain.tools/",
     },
   },
 }

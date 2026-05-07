@@ -9,6 +9,7 @@ import {
   getExtendedConverterPairPage,
 } from "@/lib/converter-families"
 import { buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 
 type PageProps = {
   params: Promise<ConverterRouteParams>
@@ -43,13 +44,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     })
   }
 
-  return buildPageMetadata({
-    title: page.title,
-    description: page.description,
-    path: page.canonicalPath,
-    image: "/og/tools.png",
-    googleNotranslate: true,
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      title: page.title,
+      description: page.description,
+      path: page.canonicalPath,
+      image: "/og/tools.png",
+      googleNotranslate: true,
+    }),
+    page.canonicalPath
+  )
 }
 
 export default async function ConverterPairPageRoute({ params }: PageProps) {

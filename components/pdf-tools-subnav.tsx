@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const subnavItems = [
-  { label: "Tools", href: "/pdf-tools#tool-catalogue", matches: ["/pdf-tools", "/pdf-tools/tools"] },
+  { label: "Tools", href: "/tools#tool-catalogue", matches: ["/tools"] },
   { label: "Learn", href: "/learn" },
   { label: "Blog", href: "/blog" },
   { label: "Compare", href: "/compare" },

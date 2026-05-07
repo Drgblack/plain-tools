@@ -1,5 +1,6 @@
 import { comparePages, learnPages } from "@/lib/seo/tranche1-content"
 import { converterPages } from "@/lib/seo/file-converters-content"
+import { getCanonicalFileConverterPath } from "@/lib/seo/file-converter-canonicals"
 import { workflowPages } from "@/lib/seo/workflows-content"
 import { getToolBySlug, TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 
@@ -510,7 +511,7 @@ const converterSlugSet = new Set(converterPages.map((page) => page.slug))
 
 function buildLearnRouteFromSlug(slug: string) {
   if (converterSlugSet.has(slug)) {
-    return `/file-converters/${slug}`
+    return getCanonicalFileConverterPath(slug)
   }
   return `/learn/${slug}`
 }

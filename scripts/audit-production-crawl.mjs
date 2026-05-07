@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 
-const BASE_URL = process.env.PROD_AUDIT_BASE_URL ?? "https://www.plain.tools"
+const BASE_URL = process.env.PROD_AUDIT_BASE_URL ?? "https://plain.tools"
 const MAX_PAGES = Number.parseInt(process.env.PROD_AUDIT_MAX_PAGES ?? "120", 10)
 const REPORT_DIR = path.join(process.cwd(), "generated", "seo")
 const REPORT_PATH = path.join(REPORT_DIR, "production-crawl-report.json")

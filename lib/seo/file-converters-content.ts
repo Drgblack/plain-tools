@@ -1,4 +1,5 @@
 import type { TrancheLearnArticle, TrancheTrustBox } from "@/lib/seo/tranche1-content"
+import { getCanonicalFileConverterPath } from "@/lib/seo/file-converter-canonicals"
 
 const NO_UPLOADS_LINE = "Runs locally in your browser. No uploads."
 
@@ -235,8 +236,14 @@ function createConverterArticle(config: ConverterConfig): TrancheLearnArticle {
       { label: "Learn centre", href: "/learn" },
       { label: "Compare offline vs online tools", href: "/compare" },
       { label: "Verify claims", href: "/verify-claims" },
-      { label: `Related converter: ${titleFromSlug(relatedA)}`, href: `/file-converters/${relatedA}` },
-      { label: `Related converter: ${titleFromSlug(relatedB)}`, href: `/file-converters/${relatedB}` },
+      {
+        label: `Related converter: ${titleFromSlug(relatedA)}`,
+        href: getCanonicalFileConverterPath(relatedA),
+      },
+      {
+        label: `Related converter: ${titleFromSlug(relatedB)}`,
+        href: getCanonicalFileConverterPath(relatedB),
+      },
     ],
     toolHref: config.toolHref,
     relatedLearn: [relatedA, relatedB],
@@ -246,7 +253,9 @@ function createConverterArticle(config: ConverterConfig): TrancheLearnArticle {
 
 export const converterPages: TrancheLearnArticle[] = converterConfigs.map(createConverterArticle)
 export const converterRouteSlugs = converterConfigs.map((config) => config.slug)
-export const converterSitemapUrls = converterRouteSlugs.map((slug) => `/file-converters/${slug}`)
+export const converterSitemapUrls = converterRouteSlugs.map((slug) =>
+  getCanonicalFileConverterPath(slug)
+)
 
 const converterMap = new Map(converterPages.map((page) => [page.slug, page]))
 

@@ -6,6 +6,7 @@ import type {
   ProgrammaticPageData,
   ProgrammaticRelatedTool,
 } from "@/lib/programmatic-content"
+import { getToolVariantPage } from "@/lib/tools-matrix"
 import { getToolBySlug, type ToolDefinition } from "@/lib/tools-catalogue"
 
 export type ProfessionalWorkflowRouteParams = {
@@ -217,6 +218,24 @@ function resolveWorkflowToolSlug(toolSlug: string) {
   return TOOL_SLUG_ALIASES[toolSlug] ?? toolSlug
 }
 
+function resolveWorkflowVariantPath(path?: string) {
+  if (!path) return null
+  if (!path.startsWith("/pdf-tools/")) return path
+
+  const [, pdfToolsPrefix, rawAction, rawModifier] = path.split("/")
+  if (pdfToolsPrefix !== "pdf-tools" || !rawAction) {
+    return null
+  }
+
+  const toolSlug = resolveWorkflowToolSlug(rawAction)
+  if (!rawModifier) {
+    return `/tools/${toolSlug}`
+  }
+
+  const variantPage = getToolVariantPage(toolSlug, rawModifier)
+  return variantPage?.path ?? `/tools/${toolSlug}`
+}
+
 function mustGetTool(toolSlug: string) {
   const tool = getToolBySlug(resolveWorkflowToolSlug(toolSlug))
   if (!tool) throw new Error(`Missing tool ${toolSlug}`)
@@ -387,6 +406,7 @@ function relatedTools(workflow: WorkflowDefinition): ProgrammaticRelatedTool[] {
 }
 
 function relatedLinks(industry: IndustryDefinition, workflow: WorkflowDefinition) {
+  const workflowVariantPath = resolveWorkflowVariantPath(workflow.canonicalVariantPath)
   const siblingWorkflows = WORKFLOWS.filter((entry) => entry.slug !== workflow.slug)
     .filter((entry) => entry.toolSlug === workflow.toolSlug || workflow.relatedToolSlugs.includes(entry.toolSlug))
     .slice(0, 4)
@@ -398,7 +418,9 @@ function relatedLinks(industry: IndustryDefinition, workflow: WorkflowDefinition
     { href: `/tools/${workflow.toolSlug}`, title: `Open ${mustGetTool(workflow.toolSlug).name}` },
     { href: "/tools", title: "Browse PDF tools" },
     { href: industry.comparePath, title: "Read the closest privacy comparison" },
-    ...(workflow.canonicalVariantPath ? [{ href: workflow.canonicalVariantPath, title: "Open the matching PDF variant" }] : []),
+    ...(workflowVariantPath
+      ? [{ href: workflowVariantPath, title: "Open the matching PDF variant" }]
+      : []),
   ]
 
   return [...siblingWorkflows, ...crossIndustry, ...support]
@@ -446,6 +468,7 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
   const blockCopy = blocks(industry, workflow)
   const privacyCopy = privacy(industry)
   const faqCopy = faq(industry, workflow, tool)
+  const workflowVariantPath = resolveWorkflowVariantPath(workflow.canonicalVariantPath)
   const wordCount = countWords([
     entry.title,
     entry.desc,
@@ -503,7 +526,9 @@ export function getProfessionalWorkflowPage(industrySlug: string, workflowSlug: 
       { href: `/tools/${tool.slug}`, label: `Open ${tool.name}` },
       { href: "/tools", label: "Browse PDF tools" },
       { href: industry.comparePath, label: "Read the closest privacy comparison" },
-      ...(workflow.canonicalVariantPath ? [{ href: workflow.canonicalVariantPath, label: "Open the matching PDF variant" }] : []),
+      ...(workflowVariantPath
+        ? [{ href: workflowVariantPath, label: "Open the matching PDF variant" }]
+        : []),
     ],
     wordCount,
   }

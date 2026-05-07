@@ -46,6 +46,58 @@ import {
   type Locale,
 } from "@/lib/i18n"
 
+const CANONICAL_HOST = "plain.tools"
+const CANONICAL_HOST_ALIASES = new Set([CANONICAL_HOST, "www.plain.tools"])
+
+function normalizeCanonicalPathname(pathname: string) {
+  const collapsed = pathname.replace(/\/{2,}/g, "/")
+  const withoutTrailingSlash =
+    collapsed !== "/" ? collapsed.replace(/\/+$/, "") || "/" : "/"
+
+  return withoutTrailingSlash.toLowerCase()
+}
+
+function shouldSkipCanonicalRedirect(pathname: string) {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.includes(".") ||
+    pathname.startsWith("/opengraph-image")
+  )
+}
+
+function getCanonicalRedirect(request: NextRequest) {
+  const { nextUrl } = request
+  const pathname = nextUrl.pathname
+
+  if (shouldSkipCanonicalRedirect(pathname)) {
+    return null
+  }
+
+  const normalizedPathname = normalizeCanonicalPathname(pathname)
+  const normalizedHost = nextUrl.hostname.toLowerCase()
+  const enforceCanonicalHost = CANONICAL_HOST_ALIASES.has(normalizedHost)
+
+  if (!enforceCanonicalHost && normalizedPathname === pathname) {
+    return null
+  }
+
+  if (enforceCanonicalHost && normalizedHost === CANONICAL_HOST && normalizedPathname === pathname) {
+    return null
+  }
+
+  const url = nextUrl.clone()
+  url.pathname = normalizedPathname
+
+  if (enforceCanonicalHost) {
+    url.protocol = "https:"
+    url.hostname = CANONICAL_HOST
+    url.port = ""
+  }
+
+  return NextResponse.redirect(url, 308)
+}
+
 /**
  * Get preferred locale from request headers
  */
@@ -152,6 +204,11 @@ const clerkProxy = clerkMiddleware(async (auth, request) => {
 })
 
 export function proxy(request: NextRequest, event: NextFetchEvent) {
+  const canonicalRedirect = getCanonicalRedirect(request)
+  if (canonicalRedirect) {
+    return canonicalRedirect
+  }
+
   if (!clerkConfigured) {
     if (!I18N_ENABLED) {
       return NextResponse.next()

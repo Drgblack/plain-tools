@@ -1,12 +1,8 @@
 import { MetadataRoute } from "next"
 
-import { getExtendedConverterModifierSitemapPaths } from "@/lib/converter-specialized-ext"
-import { getExtendedOpenFormatGuidePaths } from "@/lib/converter-families-ext"
 import { getCompareMatrixSitemapPaths } from "@/lib/compare-matrix"
 import { categories as blogCategories, posts as blogPosts } from "@/lib/blog-data"
-import { getCalculatorPaths } from "@/lib/calculator-financial-deep"
 import { CALCULATOR_PUBLIC_CATEGORY_ORDER } from "@/lib/calculator-financial-deep"
-import { getExtendedConverterSitemapPaths } from "@/lib/converter-specialized-ext"
 import { IP_SITEMAP_ADDRESSES } from "@/lib/network-ip"
 import { getNetworkOpsPaths } from "@/lib/network-ops"
 import { OUTAGE_HISTORY_PAGES, outageHistoryPathForSlug } from "@/lib/outage-history-pages"
@@ -33,9 +29,15 @@ import { TOOL_PROBLEM_PAGES } from "@/lib/tool-problem-pages"
 import { TOOL_VARIANT_PAGES } from "@/lib/tools-matrix"
 import { TOOL_CATALOGUE } from "@/lib/tools-catalogue"
 import { getProfessionalWorkflowIndustryHubs } from "@/lib/professional-workflows-expanded"
-import { isIndexablePath } from "@/lib/seo/indexation-policy"
+import {
+  getIndexableCalculatorSitemapPaths,
+  getIndexableConverterModifierSitemapPaths,
+  getIndexableConverterPairSitemapPaths,
+  getIndexableOpenFormatGuideSitemapPaths,
+  isIndexablePath,
+} from "@/lib/seo/indexation-policy"
 
-export const BASE_URL = "https://www.plain.tools"
+export const BASE_URL = "https://plain.tools"
 export const SITEMAP_CHUNK_SIZE = 10000
 const firstWavePriorityPathSet = new Set(FIRST_WAVE_PRIORITY_PATHS)
 const POPULAR_MATRIX_SIGNAL_GROUPS = [
@@ -274,16 +276,16 @@ export function buildSitemapEntries(now: Date = new Date()) {
   const pdfIntentPages = PDF_INTENT_PAGES.map((page) =>
     toEntry(pdfIntentPathFor(page.slug), now, "monthly", 0.82)
   )
-  const fileConverterPages = getExtendedConverterSitemapPaths().map((path) =>
+  const fileConverterPages = getIndexableConverterPairSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.8)
   )
-  const fileConverterModifierPages = getExtendedConverterModifierSitemapPaths().map((path) =>
+  const fileConverterModifierPages = getIndexableConverterModifierSitemapPaths().map((path) =>
     toEntry(path, now, "daily", 0.79)
   )
-  const openFormatGuidePages = getExtendedOpenFormatGuidePaths().map((path) =>
+  const openFormatGuidePages = getIndexableOpenFormatGuideSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.77)
   )
-  const calculatorPages = getCalculatorPaths().map((path) =>
+  const calculatorPages = getIndexableCalculatorSitemapPaths().map((path) =>
     toEntry(path, now, "monthly", 0.78)
   )
   const calculatorCategoryPages = CALCULATOR_PUBLIC_CATEGORY_ORDER.map((category) =>
@@ -390,6 +392,7 @@ export function buildSitemapEntries(now: Date = new Date()) {
     const canonical = normalizeCanonicalUrl(entry.url)
     if (!canonical) continue
     const canonicalPath = canonical.replace(BASE_URL, "") || "/"
+    if (!isIndexablePath(canonicalPath)) continue
     const boostedPriority = firstWavePriorityPathSet.has(canonicalPath)
       ? Math.max(entry.priority ?? 0.7, 0.95)
       : entry.priority

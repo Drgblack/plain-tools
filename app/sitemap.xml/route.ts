@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import { buildSitemapChunks } from "@/lib/sitemap-data"
 import { buildSitemapIndexXml, buildSitemapXml } from "@/lib/seo/sitemap-xml"
 
-const BASE_URL = "https://www.plain.tools"
+const BASE_URL = "https://plain.tools"
 const XML_HEADERS = {
   "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
   "Content-Type": "application/xml; charset=utf-8",

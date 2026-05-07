@@ -8,6 +8,7 @@ import {
   getStatusIspStaticParams,
 } from "@/lib/status-regions"
 import { buildCanonicalUrl, buildPageMetadata } from "@/lib/page-metadata"
+import { applyIndexationPolicy } from "@/lib/seo/indexation-policy"
 import { buildWebPageSchema } from "@/lib/structured-data"
 
 type Props = {
@@ -43,13 +44,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { ...invalid, robots: { follow: false, index: false } }
   }
 
-  return buildPageMetadata({
-    description: page.desc,
-    googleNotranslate: true,
-    image: "/og/default.png",
-    path: page.canonicalPath,
-    title: page.title,
-  })
+  return applyIndexationPolicy(
+    buildPageMetadata({
+      description: page.desc,
+      googleNotranslate: true,
+      image: "/og/default.png",
+      path: page.canonicalPath,
+      title: page.title,
+    }),
+    page.canonicalPath
+  )
 }
 
 export default async function StatusIspPage({ params }: Props) {

@@ -8,8 +8,8 @@ import { buildPageMetadata } from "@/lib/page-metadata"
 import {
   CALCULATOR_CATEGORY_LABELS,
   CALCULATOR_PUBLIC_CATEGORY_ORDER,
-  generateCategoryCalculatorParams,
 } from "@/lib/calculator-financial-deep"
+import { getIndexableCalculatorCategoryParams } from "@/lib/seo/indexation-policy"
 import {
   buildBreadcrumbList,
   buildCollectionPageSchema,
@@ -134,7 +134,7 @@ export default function CalculatorsHubPage() {
 
       <section className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {CALCULATOR_PUBLIC_CATEGORY_ORDER.map((category) => {
-          const examples = generateCategoryCalculatorParams(category, 3)
+          const examples = getIndexableCalculatorCategoryParams(category, 3)
           return (
             <article
               key={category}
