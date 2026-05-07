@@ -130,10 +130,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  const siteContext = getSiteStatusContext(normalizedSite)
+
   return applyIndexationPolicy(
     buildPageMetadata({
       title: `Is ${toSiteDisplayName(normalizedSite)} Down Right Now?`,
-      description: `Check whether ${toSiteDisplayName(normalizedSite)} is currently down or experiencing issues. Fast website availability check with troubleshooting steps.`,
+      description: `Check whether ${toSiteDisplayName(normalizedSite)} is down right now. Live availability signal, response-time context, and practical ${siteContext.segmentLabel.toLowerCase()} troubleshooting steps.`,
       path: statusPathFor(normalizedSite),
       image: "/og/default.png",
     }),
@@ -354,6 +356,10 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 A site may be up globally but still inaccessible for you if local DNS cache, ISP routing, firewall policy, or regional transit issues block your path.
               </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                This page is most useful for people who need a fast answer, a current signal, and a
+                clear next diagnostic step rather than a vague “service issue” headline.
+              </p>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
                 <Link
                   href={`/dns/${encodeURIComponent(normalizedSite)}`}
@@ -406,6 +412,12 @@ export default async function SiteStatusDynamicPage({ params }: Props) {
                 </p>
                 <p className="mt-3 leading-relaxed text-muted-foreground">
                   {siteSpecificContext.meaningNote}
+                </p>
+                <p className="mt-3 leading-relaxed text-muted-foreground">
+                  Users often land here from “is it down” searches expecting a complete answer on
+                  the first page. That is why the route combines the current check, explanation,
+                  troubleshooting path, and related diagnostics instead of acting as a thin status
+                  placeholder.
                 </p>
               </div>
             </section>

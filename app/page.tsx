@@ -45,9 +45,9 @@ import {
 
 // Homepage has explicit canonical URL
 export const metadata: Metadata = buildPageMetadata({
-  title: "Utility platform for PDF, status and network tools",
+  title: "Free PDF tools, website status checks and network diagnostics",
   description:
-    "43+ offline PDF, network, status and utility tools - 100% local processing, no uploads, no tracking, with privacy-first browser workflows today.",
+    "Use Plain Tools for free PDF workflows, website status checks, and network diagnostics. Priority pages focus on local processing, no-upload handling, and practical troubleshooting.",
   path: "/",
   image: "/og/default.png",
 })
@@ -554,10 +554,12 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-24">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              Utility platform for PDF workflows, uptime checks, and network diagnostics.
+              Free PDF tools, website status checks, and network diagnostics.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Plain Tools is built for practical, repeat-use utility tasks: document workflows, site-status checks, DNS and IP diagnostics, and trust-focused guides.
+              Plain Tools is built for practical, repeat-use utility tasks: document workflows,
+              site-status checks, DNS and IP diagnostics, and trust-focused guides that help users
+              verify what the tools actually do.
             </p>
             <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
               All core PDF &amp; utility tools 100% free forever - no sign-up, no limits on basic use
@@ -566,8 +568,9 @@ export default function HomePage() {
             {/* Intro paragraph for SEO/GEO */}
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
               Plain Tools gives you practical utilities across PDF processing, website uptime checks,
-              DNS and IP diagnostics, and file conversions. Use one platform for day-to-day utility
-              work with simple, trustworthy workflows.
+              DNS and IP diagnostics, and file conversions. The strongest indexable pages are the
+              ones that answer a real task end to end, so the homepage now pushes users into the
+              highest-value tool, guide, comparison, and status hubs first.
             </p>
 
             {/* Primary CTAs */}

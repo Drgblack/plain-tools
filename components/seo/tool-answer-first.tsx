@@ -18,6 +18,12 @@ export function ToolAnswerFirst({ toolName, content }: ToolAnswerFirstProps) {
           <h3 className="text-sm font-semibold text-foreground">What this tool does</h3>
           <p className="mt-1 text-sm text-muted-foreground">{content.whatItDoes}</p>
         </article>
+        {content.bestFor ? (
+          <article className="rounded-lg border border-border/60 bg-background/60 p-3">
+            <h3 className="text-sm font-semibold text-foreground">Who this is for</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{content.bestFor}</p>
+          </article>
+        ) : null}
         <article className="rounded-lg border border-border/60 bg-background/60 p-3">
           <h3 className="text-sm font-semibold text-foreground">What you provide</h3>
           <p className="mt-1 text-sm text-muted-foreground">{content.whatYouProvide}</p>
@@ -45,6 +51,24 @@ export function ToolAnswerFirst({ toolName, content }: ToolAnswerFirstProps) {
           ))}
         </ul>
       </div>
+
+      {content.commonUseCases && content.commonUseCases.length > 0 ? (
+        <div className="mt-4 rounded-lg border border-border/60 bg-background/60 p-3">
+          <h3 className="text-sm font-semibold text-foreground">Common use cases</h3>
+          <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
+            {content.commonUseCases.map((item) => (
+              <li key={`${toolName}-use-case-${item}`}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {content.nextStep ? (
+        <div className="mt-4 rounded-lg border border-accent/20 bg-accent/5 p-3">
+          <h3 className="text-sm font-semibold text-foreground">Best next action</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{content.nextStep}</p>
+        </div>
+      ) : null}
     </section>
   )
 }

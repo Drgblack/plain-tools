@@ -37,9 +37,9 @@ const indexableStatusQueryPages = STATUS_QUERY_PAGES.filter((entry) =>
 )
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Trending website status checks today",
+  title: "Trending website outage checks today",
   description:
-    "See the most checked website outage pages today on Plain Tools. Browse canonical status routes and jump into DNS, latency, and IP diagnostics.",
+    "See the most checked website outage pages today on Plain Tools. Browse canonical status routes, trend segments, and the next DNS, latency, and IP diagnostics.",
   path: "/status/trending",
   image: "/og/default.png",
 })
@@ -105,6 +105,10 @@ export default async function StatusTrendingPage() {
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
             We only store domain-level popularity and recent status snapshots. We do not store IP
             addresses, user identifiers, or file data.
+          </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            This page is intentionally selective: it routes traffic into canonical domain checks and
+            representative segments instead of promoting every possible status permutation equally.
           </p>
           <p className="max-w-4xl text-xs leading-relaxed text-muted-foreground">
             Storage mode: {storage.persistence}.

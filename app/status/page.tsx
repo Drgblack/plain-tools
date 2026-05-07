@@ -28,6 +28,7 @@ import {
 } from "@/lib/status-extensions"
 import {
   buildBreadcrumbList,
+  buildFaqPageSchema,
   buildItemListSchema,
   buildWebPageSchema,
   combineJsonLd,
@@ -43,9 +44,9 @@ const indexableStatusQueryPages = STATUS_QUERY_PAGES.filter((entry) =>
 const indexableOutageHistoryDomains = getIndexableStatusOutageHistoryDomains()
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Website status checker directory",
+  title: "Website status checker and outage directory",
   description:
-    "Check whether popular websites are down right now. Browse AI, messaging, streaming, developer, finance, and cloud status pages in one directory.",
+    "Check whether popular websites are down right now. Browse representative outage pages, trending checks, and the strongest status hubs in one directory.",
   path: "/status",
   image: "/og/default.png",
 })
@@ -60,6 +61,24 @@ const POPULAR_SAMPLE = [
   "gmail.com",
   "netflix.com",
 ] as const
+
+const STATUS_DIRECTORY_FAQS = [
+  {
+    question: "What is this status directory for?",
+    answer:
+      "It groups the strongest public status landing pages, category hubs, and related diagnostics so users can move from a broad outage search into the canonical domain check quickly.",
+  },
+  {
+    question: "Why are only some status pages promoted here?",
+    answer:
+      "Most status routes are operational utility pages rather than durable landing pages. This hub highlights only the representative domains, trend views, and category pages that have clearer public search value.",
+  },
+  {
+    question: "What should I do after a status check?",
+    answer:
+      "Use the canonical status result as a first signal, then confirm with DNS, latency, or IP checks when the issue might be local or regional.",
+  },
+]
 
 export default function StatusDirectoryPage() {
   const schema = combineJsonLd([
@@ -81,6 +100,7 @@ export default function StatusDirectoryPage() {
       })),
       "https://plain.tools/status"
     ),
+    buildFaqPageSchema(STATUS_DIRECTORY_FAQS),
   ])
 
   return (
@@ -100,6 +120,11 @@ export default function StatusDirectoryPage() {
             Plain Tools tracks {STATUS_DOMAIN_COUNT.toLocaleString()} curated domains for live checks, but the XML
             sitemap only promotes a smaller set of representative, high-demand public status pages so crawl
             budget stays focused on the strongest landing routes.
+          </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            Use this page when you are comparing services, scanning the most searched outage checks,
+            or trying to reach the right canonical status page without stepping through low-value
+            query variants.
           </p>
           <form action="/site-status" method="get" className="rounded-xl border border-border/70 bg-card/35 p-4">
             <label htmlFor="status-query" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">

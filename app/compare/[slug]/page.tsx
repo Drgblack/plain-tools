@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { CanonicalSelf } from "@/components/seo/canonical-self"
@@ -158,6 +159,41 @@ export default async function CompareSlugPage({ params }: PageProps) {
             </aside>
           </section>
 
+          <section className="mt-6 grid gap-4 lg:grid-cols-3">
+            <article className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                Best fit: {page.tool1Name}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {page.tool1BestFor}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {page.tool1PrivacySummary}
+              </p>
+            </article>
+            <article className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                Best fit: {page.tool2Name}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {page.tool2BestFor}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {page.tool2PrivacySummary}
+              </p>
+            </article>
+            <article className="rounded-2xl border border-accent/20 bg-accent/5 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                Decision checklist
+              </h2>
+              <ul className="mt-3 list-disc space-y-2 pl-4 text-sm leading-relaxed text-muted-foreground">
+                {page.decisionChecklist.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          </section>
+
           <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
               Feature table
@@ -214,6 +250,37 @@ export default async function CompareSlugPage({ params }: PageProps) {
               heading="Related comparisons and local tools"
             />
           </div>
+
+          <section className="mt-10 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] md:p-6">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              What to do next
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+              If this comparison narrowed the shortlist but did not settle the workflow question,
+              move into the canonical tool hub or the closest local-first route and test one
+              representative document end to end.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2 text-sm">
+              <Link
+                href="/tools"
+                className="rounded-full border border-border bg-background px-3 py-2 font-medium text-accent transition hover:border-accent/40 hover:underline"
+              >
+                Browse core PDF tools
+              </Link>
+              <Link
+                href="/compare"
+                className="rounded-full border border-border bg-background px-3 py-2 font-medium text-accent transition hover:border-accent/40 hover:underline"
+              >
+                Browse more comparisons
+              </Link>
+              <Link
+                href="/verify-claims"
+                className="rounded-full border border-border bg-background px-3 py-2 font-medium text-accent transition hover:border-accent/40 hover:underline"
+              >
+                Verify local-processing claims
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </div>

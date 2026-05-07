@@ -287,7 +287,9 @@ export default async function ToolPage({ params }: PageProps) {
                   <ToolSeoContent
                     toolName={tool.name}
                     description={buildToolSeoDescription(tool, profile)}
+                    overview={profile.overview}
                     steps={buildToolHowToSteps(tool)}
+                    useCases={profile.useCases}
                     faq={profile.faqs}
                     relatedTools={seoLinks?.relatedTools ?? []}
                   />

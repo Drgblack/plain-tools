@@ -15,9 +15,9 @@ import {
 } from "@/lib/structured-data"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Professional PDF workflow guides",
+  title: "Professional PDF workflow guides by industry",
   description:
-    "Browse industry-specific PDF workflow guides for legal, finance, HR, healthcare, operations, and regulated document handoffs on Plain Tools.",
+    "Browse industry-specific PDF workflow guides for legal, finance, HR, healthcare, operations, and other document-heavy teams on Plain Tools.",
   path: "/guides",
   image: "/og/tools.png",
   type: "article",
@@ -69,7 +69,42 @@ export default function GuidesHubPage() {
             It is designed to shorten click depth for legal, finance, HR, healthcare, operations,
             and other document-heavy teams.
           </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            The remaining indexable guides are intentionally selective. They focus on industries and
+            workflows where the landing page can answer a real operational question, not just repeat
+            a generic tool description with a different audience label.
+          </p>
         </header>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Who these guides help",
+              description:
+                "Teams handling sensitive, regulated, or repetitive PDF workflows that still need clear browser-first handling guidance.",
+            },
+            {
+              title: "How to use this hub",
+              description:
+                "Start with the closest industry, open the most relevant priority workflow, then move into the canonical tool if the guide confirms the route fits.",
+            },
+            {
+              title: "Why only priority pages remain",
+              description:
+                "The hub now promotes fewer, stronger guide pages so internal links and crawl signals stay concentrated on routes with clear intent and useful content.",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="rounded-2xl border border-border/70 bg-card/45 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]"
+            >
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">{item.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {item.description}
+              </p>
+            </article>
+          ))}
+        </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {industryHubs.map((hub) => (

@@ -27,9 +27,9 @@ import {
 } from "@/lib/seo/first-wave-pages"
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Utility tools directory",
+  title: "Free PDF tools and utility workflows",
   description:
-    "Browse Plain Tools for free PDF workflows, converters, and utilities. Core browser tools process files locally with no uploads and clear privacy guidance.",
+    "Browse Plain Tools for free PDF tools, converters, and utility workflows. Core browser pages focus on local processing, no-upload handling, and high-intent document tasks.",
   path: "/tools",
   image: "/og/tools.png",
 })
@@ -362,12 +362,14 @@ export default function ToolsPage() {
           <div className="mx-auto max-w-6xl space-y-4">
             <PageBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools" }]} />
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Utility tools directory
+              Free PDF tools and utility workflows
             </h1>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Plain Tools brings together multiple traffic-driving utility clusters: PDF workflows,
-              site status checks, network diagnostics, guides, and comparison pages. Core local workflows
-              process in-browser with no upload step.
+              Plain Tools brings together the main commercial and informational entry points that
+              still deserve index priority: core PDF tools, high-intent conversion workflows,
+              network diagnostics, practical guides, and comparison pages. The goal of this hub is
+              to get users from broad intent into the strongest task page within two to three
+              clicks.
             </p>
             <div className="max-w-3xl rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-300">
               43+ tools - all core features free forever. Privacy-first, no uploads.

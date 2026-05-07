@@ -8,6 +8,37 @@ Last updated: 2026-05-07
 - Sitemap family mix now concentrates on canonical hubs and curated long-tail subsets instead of full generated matrices.
 - Current audit report: `generated/seo/indexing-hygiene-report.json`
 
+## Pass 3: priority-page quality reinforcement
+
+### Page families improved
+
+- Homepage: tightened metadata and clarified the primary value proposition around free PDF tools, status checks, and network diagnostics.
+- Core tool pages: added stronger "who this is for", common use cases, and next-step guidance through the shared tool-content model.
+- Converter and workflow pages using the shared programmatic layout: improved section labelling and stronger internal-link framing so pages read like complete landing routes rather than thin wrappers.
+- Guide hubs and priority guide pages: added intent-setting copy explaining who the hub serves, how to use it, and why only priority routes remain indexable.
+- Status hubs and representative status pages: strengthened metadata, FAQ schema, and explanatory copy so the remaining indexable status routes justify their SEO weight.
+- Compare pages: added clearer decision support, best-fit summaries for each option, and stronger next-step links into core tools and verification content.
+
+### Metadata examples improved
+
+- Homepage title now emphasizes `Free PDF tools, website status checks and network diagnostics`.
+- `/tools` now emphasizes `Free PDF tools and utility workflows` instead of a generic directory label.
+- Representative status pages now describe the live signal plus the next diagnostic step instead of using near-boilerplate outage copy.
+- Trending status and guides hubs now use more specific titles and descriptions tied to curated indexable intent.
+
+### Internal-linking improvements
+
+- Shared programmatic pages now frame related links and silo links as explicit next-step paths within the same workflow cluster.
+- Compare pages now link users into the core tool hub, comparison hub, and trust-verification routes after the decision layer.
+- Guide hubs now explain how to move from industry hub to priority workflow to canonical tool within 2 to 3 clicks.
+- Status hubs now reinforce the move from directory or category page into canonical domain checks and follow-up diagnostics.
+
+### Remaining candidates for later noindex or removal review
+
+- Lower-priority compare combinations that still attract little engagement and offer weak differentiation beyond the shared comparison model.
+- Any priority guide page whose traffic or internal-link demand stays negligible after the quality reinforcement pass.
+- Representative status domains that do not show durable search demand once more GSC data is available.
+
 ## Pass 2: guides and status pruning
 
 - `/guides/*` reduced from `3,596` to `300` indexable URLs.

@@ -169,17 +169,22 @@ export function ProgrammaticLayout({
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+            <div className="rounded-2xl border border-border/80 bg-card/60 p-4 text-sm leading-relaxed text-muted-foreground shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
+              This page is built to stand on its own as a search landing page: it explains the use
+              case, gives you the live workflow, and links you to the closest next-step pages if
+              the first output still needs another pass.
+            </div>
           </header>
 
           <div className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
             <div className="space-y-8">
-              <Section title="Problem Explanation">
+              <Section title="Who this workflow helps">
                 {page.whyUsersNeedThis.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </Section>
 
-              <Section title="How-To Steps">
+              <Section title="How to complete the workflow">
                 {page.howItWorks.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
@@ -244,8 +249,9 @@ export function ProgrammaticLayout({
                     {relatedSectionTitle}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
-                    Strong internal linking keeps the route inside the same task silo instead of
-                    forcing users back to search results after one page.
+                    These links keep the route inside the same task cluster, strengthen hub and
+                    sibling signals, and give users a clear next step instead of sending them back
+                    to search after one page.
                   </p>
                 </div>
 
@@ -281,6 +287,7 @@ export function ProgrammaticLayout({
 
             <aside className="space-y-6 xl:sticky xl:top-24 xl:self-start">
               <section
+                id="live-tool-panel"
                 className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)] notranslate"
                 data-plain-tool-shell
                 translate="no"
@@ -297,11 +304,11 @@ export function ProgrammaticLayout({
 
               <section className="rounded-2xl border border-border/80 bg-card/60 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]">
                 <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                  Internal Link Silo
+                  Next pages in this cluster
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Search engines understand the route better when the page links back to its parent
-                  tool, sibling variants, and adjacent workflows inside the same document cluster.
+                  Move back to the parent hub, open the canonical tool, or continue to the most
+                  relevant sibling workflows without losing the context of this route.
                 </p>
                 <div className="mt-4 space-y-2 text-sm">
                   {resolvedSiloLinks.map((link) => (

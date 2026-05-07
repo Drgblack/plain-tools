@@ -18,7 +18,9 @@ type RelatedToolLink = {
 type ToolSeoContentProps = {
   toolName: string
   description: string
+  overview: string
   steps: string[]
+  useCases: string[]
   faq: ToolFaqItem[]
   relatedTools: RelatedToolLink[]
 }
@@ -43,7 +45,9 @@ function splitParagraphs(description: string) {
 export function ToolSeoContent({
   toolName,
   description,
+  overview,
   steps,
+  useCases,
   faq,
   relatedTools,
 }: ToolSeoContentProps) {
@@ -60,6 +64,25 @@ export function ToolSeoContent({
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
+          Who this tool is for
+        </h2>
+        <p className="mt-3 text-sm leading-7 text-muted-foreground md:text-base">{overview}</p>
+        {useCases.length > 0 ? (
+          <ul className="mt-3 grid gap-3 md:grid-cols-3">
+            {useCases.slice(0, 3).map((useCase) => (
+              <li
+                key={useCase}
+                className="rounded-xl border border-border/60 bg-background/60 px-4 py-3 text-sm leading-7 text-muted-foreground"
+              >
+                {useCase}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
       <div>
@@ -119,7 +142,9 @@ export function ToolSeoContentBySlug({ toolSlug, className }: ToolSeoContentBySl
       <ToolSeoContent
         toolName={tool.name}
         description={buildToolSeoDescription(tool, profile)}
+        overview={profile.overview}
         steps={buildToolHowToSteps(tool)}
+        useCases={profile.useCases}
         faq={profile.faqs}
         relatedTools={relatedTools}
       />

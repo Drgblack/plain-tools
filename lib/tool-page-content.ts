@@ -2,6 +2,9 @@ import type { ToolDefinition } from "@/lib/tools-catalogue"
 
 export type ToolAnswerFirstContent = {
   summary: string
+  bestFor?: string
+  commonUseCases?: string[]
+  nextStep?: string
   whatItDoes: string
   whatYouProvide: string
   whatYouGet: string
@@ -938,6 +941,7 @@ function buildDefaultToolFaqs(tool: ToolDefinition, limitation: string): ToolFaq
 
 function buildDefaultAnswerFirst(
   tool: ToolDefinition,
+  useCases: string[],
   overview: string,
   limitation: string
 ): ToolAnswerFirstContent {
@@ -948,6 +952,15 @@ function buildDefaultAnswerFirst(
 
   return {
     summary: `${tool.name} handles this workflow with a practical browser-first process and clear output download steps.`,
+    bestFor:
+      tool.category === "Network Tools"
+        ? "People troubleshooting a domain, hostname, or connection issue and needing a quick next diagnostic step."
+        : "People who want a routine workflow done quickly without sending the source file to a third-party service first.",
+    commonUseCases: useCases.slice(0, 3),
+    nextStep:
+      tool.category === "Network Tools"
+        ? "Use the result to decide whether you need a DNS, IP, or latency check next."
+        : "Review the exported file, then move to the closest related tool only if another constraint appears.",
     whatItDoes: overview,
     whatYouProvide: "Source file(s) and the tool-specific options shown in the workspace panel.",
     whatYouGet: "A processed output file ready to download on this page.",
@@ -974,13 +987,16 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
         "Run practical browser-first tasks on desktop or mobile.",
       ]
 
+    const defaultAnswerFirst = buildDefaultAnswerFirst(tool, useCases, overview, profile.limitation)
+
     return {
       ...profile,
       overview,
       useCases,
-      answerFirst:
-        TOOL_ANSWER_FIRST_OVERRIDES[tool.slug] ??
-        buildDefaultAnswerFirst(tool, overview, profile.limitation),
+      answerFirst: {
+        ...defaultAnswerFirst,
+        ...(TOOL_ANSWER_FIRST_OVERRIDES[tool.slug] ?? {}),
+      },
       faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? buildDefaultToolFaqs(tool, profile.limitation),
     }
   }
@@ -1006,7 +1022,16 @@ export function getToolPageProfile(tool: ToolDefinition): ResolvedToolPageProfil
       "Private handling for sensitive files",
       "Simple browser-based processing without extra software",
     ],
-    answerFirst: buildDefaultAnswerFirst(tool, overview, limitation),
+    answerFirst: buildDefaultAnswerFirst(
+      tool,
+      [
+        "Quick day-to-day document tasks",
+        "Private handling for sensitive files",
+        "Simple browser-based processing without extra software",
+      ],
+      overview,
+      limitation
+    ),
     faqs: TOOL_FAQ_OVERRIDES[tool.slug] ?? buildDefaultToolFaqs(tool, limitation),
   }
 }

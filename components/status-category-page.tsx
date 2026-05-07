@@ -12,6 +12,7 @@ import {
 import { statusPathFor } from "@/lib/site-status"
 import {
   buildBreadcrumbList,
+  buildFaqPageSchema,
   buildItemListSchema,
   buildWebPageSchema,
   combineJsonLd,
@@ -29,6 +30,23 @@ export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
   const metadata = STATUS_CATEGORY_META[category]
   const domains = getIndexableStatusCategoryDomains(category)
   const categoryHref = `/status/${category}`
+  const faqs = [
+    {
+      question: `What does the ${metadata.title.toLowerCase()} status hub cover?`,
+      answer:
+        `It groups representative canonical status pages for ${metadata.title.toLowerCase()} services so users can move from a broad category query into the right domain check quickly.`,
+    },
+    {
+      question: "Why are only some services listed here?",
+      answer:
+        "This hub is intentionally curated. It keeps the most useful landing pages for public search and leaves lower-demand utility permutations out of the sitemap and main navigation.",
+    },
+    {
+      question: "What should I check after opening a domain status page?",
+      answer:
+        "If the result is mixed, confirm with DNS lookup, latency checks, or a second network before assuming the outage is global.",
+    },
+  ]
 
   const schema = combineJsonLd([
     buildWebPageSchema({
@@ -50,6 +68,7 @@ export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
       })),
       `https://plain.tools${categoryHref}`
     ),
+    buildFaqPageSchema(faqs),
   ])
 
   return (
@@ -78,6 +97,10 @@ export function StatusCategoryPage({ category }: StatusCategoryPageProps) {
             This hub is part of a curated {STATUS_DOMAIN_COUNT.toLocaleString()}-domain status dataset
             built for high-intent search queries and fast internal navigation between related services.
             The list below intentionally focuses on representative public landing pages for this category.
+          </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            It is most useful when the search intent is still category-wide, for example when users
+            want to compare several services in the same cluster before opening the exact domain page.
           </p>
         </div>
       </section>

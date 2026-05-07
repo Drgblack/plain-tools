@@ -109,7 +109,41 @@ export default async function IndustryGuidesHubPage({ params }: PageProps) {
           <p className="max-w-4xl text-base leading-relaxed text-muted-foreground">
             {hub.description}
           </p>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+            This hub only keeps the priority workflows that still make sense as standalone landing
+            pages for {hub.label.toLowerCase()} teams. Each route is meant to get the user from the
+            industry context to the right tool path without unnecessary intermediate steps.
+          </p>
         </header>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Who this hub is for",
+              description: `Users inside ${hub.label.toLowerCase()} workflows who need a practical landing page before opening the live tool.`,
+            },
+            {
+              title: "What to expect",
+              description:
+                "Priority workflow pages with enough context to explain the task, the review points, and the related local tools.",
+            },
+            {
+              title: "How to move next",
+              description:
+                "Open the closest workflow guide first, then continue into the canonical tool page or sibling hub if the next constraint changes.",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="rounded-2xl border border-border/70 bg-card/45 p-5 shadow-[0_12px_40px_-28px_rgba(0,112,243,0.35)]"
+            >
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">{item.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {item.description}
+              </p>
+            </article>
+          ))}
+        </section>
 
         <section className="grid gap-4 md:grid-cols-2">
           {hub.featuredWorkflows.map((workflow) => (

@@ -44,6 +44,7 @@ type CompareTool = {
 
 export type ComparisonPage = ComparisonEntry & {
   canonicalPath: string
+  decisionChecklist: string[]
   faq: ComparisonFaq[]
   intro: string[]
   recommendation: {
@@ -54,8 +55,12 @@ export type ComparisonPage = ComparisonEntry & {
   relatedLinks: Array<{ href: string; title: string }>
   rows: ComparisonRow[]
   sections: ComparisonSection[]
+  tool1BestFor: string
   tool1Name: string
+  tool1PrivacySummary: string
+  tool2BestFor: string
   tool2Name: string
+  tool2PrivacySummary: string
   wordCount: number
 }
 
@@ -467,6 +472,13 @@ function buildSections(
       ],
     },
     {
+      title: "Who each tool is actually best for",
+      paragraphs: [
+        `${tool1.displayName} is strongest for ${tool1.bestFor}. ${tool2.displayName} is strongest for ${tool2.bestFor}.`,
+        `That is the practical lens to use when two products look similar on a feature checklist. The better landing page answer is not "which brand is bigger?" but "which workflow shape will create less friction for the documents and team I already have?"`,
+      ],
+    },
+    {
       title: "Speed, pricing, and day-to-day workflow friction",
       paragraphs: [
         `${tool1.displayName} tends to feel like ${tool1.speedSummary.toLowerCase()} ${tool2.displayName} tends to feel like ${tool2.speedSummary.toLowerCase()}`,
@@ -491,6 +503,15 @@ function buildSections(
         `That is also why these comparison pages link back into real tools and adjacent comparisons. They are designed as executable SEO surfaces, not dead-end opinion pages.`,
       ],
     },
+  ]
+}
+
+function buildDecisionChecklist(tool1: CompareTool, tool2: CompareTool) {
+  return [
+    `Choose ${tool1.displayName} if your workflow is closer to ${tool1.bestFor}.`,
+    `Choose ${tool2.displayName} if your workflow is closer to ${tool2.bestFor}.`,
+    "Treat upload policy as a real product difference, not a footnote, when the documents are sensitive.",
+    "Run one representative pilot with your real files before you standardise on the workflow.",
   ]
 }
 
@@ -551,6 +572,7 @@ export function getComparisonPage(slug: string): ComparisonPage | null {
   const recommendation = buildRecommendation(tool1, tool2)
   const intro = buildIntro(tool1, tool2)
   const sections = buildSections(tool1, tool2, recommendation)
+  const decisionChecklist = buildDecisionChecklist(tool1, tool2)
   const faq = buildFaq(tool1, tool2, recommendation.winner)
   const rows = buildRows(tool1, tool2)
   const relatedLinks = getRelatedComparisonLinks(slug)
@@ -565,14 +587,19 @@ export function getComparisonPage(slug: string): ComparisonPage | null {
   return {
     ...entry,
     canonicalPath: `/compare/${entry.slug}`,
+    decisionChecklist,
     faq,
     intro,
     recommendation,
     relatedLinks,
     rows,
     sections,
+    tool1BestFor: tool1.bestFor,
     tool1Name: tool1.displayName,
+    tool1PrivacySummary: tool1.privacySummary,
+    tool2BestFor: tool2.bestFor,
     tool2Name: tool2.displayName,
+    tool2PrivacySummary: tool2.privacySummary,
     wordCount,
   }
 }
