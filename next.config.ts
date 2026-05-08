@@ -1,6 +1,7 @@
 import type { NextConfig } from "next"
 import createBundleAnalyzer from "@next/bundle-analyzer"
 import { withAxiom } from "next-axiom"
+import { buildCanonicalHostRedirects, type RedirectRule } from "./lib/seo/canonical-host-redirects"
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -46,7 +47,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 })
 
-const legacyBlogSlugRedirects = [
+const legacyBlogSlugRedirects: readonly RedirectRule[] = [
   {
     source: "/blog/adobe-acrobat-alternative-free",
     destination: "/blog/offline-vs-online-tools-privacy",
@@ -248,7 +249,7 @@ const nextConfig: NextConfig = {
   // Force metadata to be included in the initial HTML for all user agents.
   htmlLimitedBots: /.*/,
   async redirects() {
-    return [
+    const baseRedirects: RedirectRule[] = [
       { source: "/pdf-tools/tools", destination: "/tools", permanent: true },
       { source: "/pdf-tools/tools/:path*", destination: "/tools/:path*", permanent: true },
       {
@@ -647,6 +648,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ]
+
+    return [...buildCanonicalHostRedirects(baseRedirects), ...baseRedirects]
   },
   async rewrites() {
     return [

@@ -1,8 +1,8 @@
 {
-  "auditedAt": "2026-03-11T10:46:02.497Z",
-  "baseUrl": "https://www.plain.tools",
+  "auditedAt": "2026-05-08T13:35:18.263Z",
+  "baseUrl": "https://plain.tools",
   "maxPages": 120,
-  "visitedCount": 123,
+  "visitedCount": 122,
   "seeds": [
     "/",
     "/tools",
@@ -68,14 +68,11 @@
     }
   },
   "sitemapChecks": {
-    "noindexPathsPresent": []
+    "excludedPathsPresent": [],
+    "missingCriticalPaths": []
   },
   "errors": [],
-  "warnings": [
-    "/tools/pdf-to-png redirected to /tools/pdf-to-jpg",
-    "/tools/png-to-pdf redirected to /tools/jpg-to-pdf",
-    "/sitemap redirected to /html-sitemap"
-  ],
+  "warnings": [],
   "visited": {
     "/": {
       "canonical": "/",
@@ -83,7 +80,7 @@
       "finalPath": "/",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 84
+      "linkCount": 83
     },
     "/tools": {
       "canonical": "/tools",
@@ -115,7 +112,7 @@
       "finalPath": "/guides",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 309
+      "linkCount": 94
     },
     "/status": {
       "canonical": "/status",
@@ -123,7 +120,7 @@
       "finalPath": "/status",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 181
+      "linkCount": 86
     },
     "/site-status": {
       "canonical": "/site-status",
@@ -204,14 +201,6 @@
       "robots": "index, follow",
       "status": 200,
       "linkCount": 25
-    },
-    "/pdf-tools": {
-      "canonical": "/pdf-tools",
-      "depth": 1,
-      "finalPath": "/pdf-tools",
-      "robots": "noindex, nofollow, nocache",
-      "status": 200,
-      "linkCount": 33
     },
     "/image-tools": {
       "canonical": "/image-tools",
@@ -317,21 +306,21 @@
       "status": 200,
       "linkCount": 36
     },
-    "/tools/pdf-to-png": {
-      "canonical": "/tools/pdf-to-jpg",
+    "/tools/extract-pdf": {
+      "canonical": "/tools/extract-pdf",
       "depth": 1,
-      "finalPath": "/tools/pdf-to-jpg",
+      "finalPath": "/tools/extract-pdf",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 36
+      "linkCount": 30
     },
-    "/tools/png-to-pdf": {
-      "canonical": "/tools/jpg-to-pdf",
+    "/tools/protect-pdf": {
+      "canonical": "/tools/protect-pdf",
       "depth": 1,
-      "finalPath": "/tools/jpg-to-pdf",
+      "finalPath": "/tools/protect-pdf",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 36
+      "linkCount": 32
     },
     "/compress-pdf-online": {
       "canonical": "/compress-pdf-online",
@@ -627,7 +616,7 @@
       "finalPath": "/status/trending",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 165
+      "linkCount": 68
     },
     "/tools/sign-pdf": {
       "canonical": "/tools/sign-pdf",
@@ -739,7 +728,7 @@
       "finalPath": "/roadmap",
       "robots": "index, follow",
       "status": 200,
-      "linkCount": 20
+      "linkCount": 19
     },
     "/changelog": {
       "canonical": "/changelog",
@@ -749,13 +738,13 @@
       "status": 200,
       "linkCount": 19
     },
-    "/sitemap": {
+    "/html-sitemap": {
       "canonical": "/html-sitemap",
       "depth": 1,
       "finalPath": "/html-sitemap",
       "robots": "noindex, follow",
       "status": 200,
-      "linkCount": 239
+      "linkCount": 236
     },
     "/what-is-my-ip": {
       "canonical": "/what-is-my-ip",
@@ -861,14 +850,6 @@
       "status": 200,
       "linkCount": 29
     },
-    "/tools/extract-pdf": {
-      "canonical": "/tools/extract-pdf",
-      "depth": 1,
-      "finalPath": "/tools/extract-pdf",
-      "robots": "index, follow",
-      "status": 200,
-      "linkCount": 30
-    },
     "/tools/watermark-pdf": {
       "canonical": "/tools/watermark-pdf",
       "depth": 1,
@@ -876,14 +857,6 @@
       "robots": "index, follow",
       "status": 200,
       "linkCount": 24
-    },
-    "/tools/protect-pdf": {
-      "canonical": "/tools/protect-pdf",
-      "depth": 1,
-      "finalPath": "/tools/protect-pdf",
-      "robots": "index, follow",
-      "status": 200,
-      "linkCount": 32
     },
     "/tools/unlock-pdf": {
       "canonical": "/tools/unlock-pdf",
@@ -1037,6 +1010,30 @@
       "status": 200,
       "linkCount": 27
     },
+    "/tools/batch-engine": {
+      "canonical": "/tools/batch-engine",
+      "depth": 1,
+      "finalPath": "/tools/batch-engine",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
+    "/tools/redact-pdf": {
+      "canonical": "/tools/redact-pdf",
+      "depth": 1,
+      "finalPath": "/tools/redact-pdf",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 24
+    },
+    "/tools/local-signer": {
+      "canonical": "/tools/local-signer",
+      "depth": 1,
+      "finalPath": "/tools/local-signer",
+      "robots": "index, follow",
+      "status": 200,
+      "linkCount": 25
+    },
     "/faq": {
       "canonical": "/faq",
       "depth": null,
@@ -1044,14 +1041,6 @@
       "robots": "noindex, follow",
       "status": 200,
       "linkCount": 34
-    },
-    "/html-sitemap": {
-      "canonical": "/html-sitemap",
-      "depth": null,
-      "finalPath": "/html-sitemap",
-      "robots": "noindex, follow",
-      "status": 200,
-      "linkCount": 254
     },
     "/labs": {
       "canonical": "/",
