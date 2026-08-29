@@ -1,4 +1,15 @@
 {
+  "functions": {
+    "app/calculators/**/page.tsx": {
+      "memory": 128
+    },
+    "app/convert/**/page.tsx": {
+      "memory": 128
+    },
+    "app/tools/**/page.tsx": {
+      "memory": 128
+    }
+  },
   "rewrites": [
     {
       "source": "/sitemap.xml",
