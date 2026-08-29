@@ -2983,6 +2983,33 @@ function relatedToolsForCalculator(parsed: ParsedCalculator): ProgrammaticRelate
   ]
 }
 
+function summarizeRows(rows: Array<{ label: string; value: string }>) {
+  return rows.map((row) => `${row.label}: ${row.value}`).join("; ")
+}
+
+function buildScenarioFaqs(
+  h1: string,
+  summaryRows: Array<{ label: string; value: string }>
+): ProgrammaticFaq[] {
+  const scenarioSummary = summarizeRows(summaryRows)
+  const resultRow = summaryRows[summaryRows.length - 1]
+  const inputRows = summaryRows.slice(0, Math.max(1, summaryRows.length - 1))
+  const inputSummary = summarizeRows(inputRows)
+
+  return [
+    {
+      question: `What does this calculator show for ${inputSummary}?`,
+      answer: resultRow
+        ? `For this exact page, ${inputSummary}. The calculated ${resultRow.label.toLowerCase()} is ${resultRow.value}.`
+        : `For this exact page, the visible inputs are ${scenarioSummary}.`,
+    },
+    {
+      question: `What values are used on the ${h1} page?`,
+      answer: `This page is generated for these specific values: ${scenarioSummary}.`,
+    },
+  ]
+}
+
 function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculator): CalculatorPage {
   const canonicalPath = buildCalculatorPath(entry.category, parsed.expression)
   const pageRelatedLinks = [
@@ -4238,7 +4265,16 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
     h1 = `Break-Even Point for ${formatCurrency(parsed.fixedCosts)} Fixed Costs at ${formatCurrency(parsed.unitPrice)} Price and ${formatCurrency(parsed.unitCost)} Cost`
   }
 
+  const scenarioSummary = summarizeRows(summaryRows)
+  const scenarioFaqs = buildScenarioFaqs(h1, summaryRows)
+
   explanationBlocks = [
+    {
+      title: "Exact values on this page",
+      paragraphs: [
+        `This calculator page is generated for one specific scenario: ${scenarioSummary}. Those values are part of the visible content so the page answers the exact expression instead of relying only on shared category copy.`,
+      ],
+    },
     ...explanationBlocks,
     {
       title: `How to compare nearby ${CATEGORY_LABELS[entry.category].toLowerCase()} scenarios`,
@@ -4267,6 +4303,7 @@ function buildCalculatorPageData(entry: CalculatorEntry, parsed: ParsedCalculato
   ]
 
   faq = [
+    ...scenarioFaqs,
     ...faq,
     {
       question: "Why does this page have its own exact-match URL?",
