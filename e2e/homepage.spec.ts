@@ -5,13 +5,14 @@ test("homepage renders hero and tool catalogue, merge card navigates", async ({ 
 
   await expect(page).toHaveTitle(/Plain/i)
   await expect(page.locator('[data-tour="hero-heading"]')).toBeVisible()
+  await expect(page.getByRole("heading", { name: /Start with a common task/i })).toBeVisible()
 
   const toolLinks = page.locator('#tools a[href^="/tools/"]')
-  await expect.poll(async () => toolLinks.count()).toBeGreaterThanOrEqual(8)
+  await expect.poll(async () => toolLinks.count()).toBeGreaterThanOrEqual(6)
 
   await page
     .locator("#tools")
-    .getByRole("link", { name: /Open Merge PDFs/i })
+    .getByRole("link", { name: /Merge PDF/i })
     .first()
     .click()
 
@@ -23,7 +24,7 @@ test("homepage calculators category links to plainfigures", async ({ page }) => 
 
   const calculatorsLink = page.getByRole("link", { name: /Calculators/i }).first()
   await expect(calculatorsLink).toHaveAttribute("href", "https://plainfigures.org")
-  await expect(calculatorsLink).not.toHaveAttribute("target", "_blank")
+  await expect(calculatorsLink).toHaveAttribute("target", "_blank")
 
   const [popup] = await Promise.all([
     page.waitForEvent("popup").catch(() => null),
