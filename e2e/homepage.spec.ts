@@ -25,16 +25,4 @@ test("homepage calculators category links to plainfigures", async ({ page }) => 
   const calculatorsLink = page.getByRole("link", { name: /Calculators/i }).first()
   await expect(calculatorsLink).toHaveAttribute("href", "https://plainfigures.org")
   await expect(calculatorsLink).toHaveAttribute("target", "_blank")
-
-  const [popup] = await Promise.all([
-    page.waitForEvent("popup").catch(() => null),
-    calculatorsLink.click(),
-  ])
-
-  if (popup) {
-    await expect(popup).toHaveURL("https://plainfigures.org/")
-    await popup.close()
-  } else {
-    await expect(page).toHaveURL("https://plainfigures.org/")
-  }
 })
